@@ -68,14 +68,14 @@ const SignUp = () => {
       </View>
       <View style={styles.verticallySpaced}>
         <Button
-          title="Login"
+          title="Sign Up"
           disabled={loading}
           onPress={() => signUpWithEmail()}
         />
       </View>
 
       <View style={styles.verticallySpaced}>
-        <Pressable onPress={() => navigation.navigate("SignUp")}>
+        <Pressable onPress={() => navigation.navigate("Login")}>
           <Text>Have An Account?</Text>
         </Pressable>
       </View>

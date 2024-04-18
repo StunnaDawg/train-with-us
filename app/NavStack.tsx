@@ -9,6 +9,8 @@ import { NavBar } from "../components"
 import Login from "./UserAuth/Login"
 import SignUp from "./UserAuth/SignUp"
 import { useAuth } from "./hooks/authcontext"
+import { FontAwesome6 } from "@expo/vector-icons"
+import Events from "./userSide/Events/Events"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -49,42 +51,42 @@ const Tab = createBottomTabNavigator<TabParamList>()
 //   )
 // }
 
-// const UserFooter = () => {
-//   return (
-//     <Tab.Navigator
-//       screenOptions={({ route }) => ({
-//         headerShown: false,
-//         tabBarIcon: () => {
-//           let iconName
+const UserFooter = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarIcon: () => {
+          let iconName
 
-//           if (route.name === "Events") {
-//             iconName = "calendar"
-//           } else if (route.name === "Gyms") {
-//             iconName = "dumbbell"
-//           } else if (route.name === "Profile") {
-//             iconName = "user-pen"
-//           } else if (route.name === "Connections") {
-//             iconName = "people-group"
-//           } else if (route.name === "Messages") {
-//             iconName = "message"
-//           }
+          if (route.name === "Events") {
+            iconName = "calendar"
+          } else if (route.name === "Gyms") {
+            iconName = "dumbbell"
+          } else if (route.name === "Profile") {
+            iconName = "user-pen"
+          } else if (route.name === "Connections") {
+            iconName = "people-group"
+          } else if (route.name === "Messages") {
+            iconName = "message"
+          }
 
-//           // You can return any component that you like here!
-//           return <FontAwesome6 name={iconName} size={20} color={"black"} />
-//         },
-//         tabBarActiveTintColor: "red",
-//         tabBarInactiveTintColor: "gray",
-//       })}
-//     >
-//       <Tab.Screen name="Events" component={Events} />
-//       <Tab.Screen name="Gyms" component={GymsTab} />
-//       <Tab.Screen name="Profile" component={UserProfile} />
-//       <Tab.Screen name="Connections" component={Meet} />
-//       <Tab.Screen name="Messages" component={MessageTab} />
-//       <Tab.Screen name="HomeGym" component={HomeGym} />
-//     </Tab.Navigator>
-//   )
-// }
+          // You can return any component that you like here!
+          return <FontAwesome6 name={iconName} size={20} color={"black"} />
+        },
+        tabBarActiveTintColor: "red",
+        tabBarInactiveTintColor: "gray",
+      })}
+    >
+      <Tab.Screen name="Events" component={Events} />
+      {/* <Tab.Screen name="Gyms" component={GymsTab} />
+      <Tab.Screen name="Profile" component={UserProfile} />
+      <Tab.Screen name="Connections" component={Meet} />
+      <Tab.Screen name="Messages" component={MessageTab} />
+      <Tab.Screen name="HomeGym" component={HomeGym} /> */}
+    </Tab.Navigator>
+  )
+}
 
 const NavStack = () => {
   const { user } = useAuth()
@@ -106,9 +108,9 @@ const NavStack = () => {
     >
       {user ? (
         <>
-          {/*<Stack.Group>
-             <Stack.Screen name="Footer" component={UserFooter} />
-            <Stack.Screen name="ViewGymTopTabs" component={GymTopTabs} />
+          <Stack.Group>
+            <Stack.Screen name="Footer" component={UserFooter} />
+            {/*<Stack.Screen name="ViewGymTopTabs" component={GymTopTabs} />
             <Stack.Screen name="UserDashboard" component={Dashboard} />
             <Stack.Screen name="AttendingEvent" component={AttendingEvent} />
             <Stack.Screen name="UserSettings" component={UserSettings} />
@@ -148,13 +150,13 @@ const NavStack = () => {
               component={IntialAddPhotos}
             />
             <Stack.Screen name="MessagingScreen" component={MessageScreen} />
-            <Stack.Screen name="GymScreens" component={GymScreens} />
+            <Stack.Screen name="GymScreens" component={GymScreens} />*/}
           </Stack.Group>
 
-          <Stack.Group screenOptions={{ presentation: "transparentModal" }}>
+          {/* <Stack.Group screenOptions={{ presentation: "transparentModal" }}>
             <Stack.Screen name="MatchModal" component={MatchModal} />
             <Stack.Screen name="LoadModal" component={LoadModal} /> 
-          </Stack.Group>*/}
+          </Stack.Group> */}
         </>
       ) : (
         <>
