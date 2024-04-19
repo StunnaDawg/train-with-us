@@ -22,11 +22,11 @@ export type RootStackParamList = {
   ViewUserProfile: {
     userProfile: UserProfile
   }
-  UserQuestionOne: undefined
-  UserQuestionTwo: undefined
-  UserQuestionThree: undefined
-  UserQuestionFour: undefined
-  UserQuestionFive: undefined
+  QuestionOne: undefined
+  QuestionTwo: undefined
+  QuestionThree: undefined
+  QuestionFour: undefined
+  QuestionFive: undefined
   UserInitalAddPhoto: undefined
   ChooseUserActivity: undefined
   GymQuestionOne: undefined

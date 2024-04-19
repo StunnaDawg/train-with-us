@@ -11,6 +11,17 @@ import SignUp from "./UserAuth/SignUp"
 import { useAuth } from "./hooks/authcontext"
 import { FontAwesome6 } from "@expo/vector-icons"
 import Events from "./userSide/Events/Events"
+import Question1 from "./UserOnBoard/Question1"
+import Question2 from "./UserOnBoard/Question2"
+import Question3 from "./UserOnBoard/Question3"
+import Question4 from "./UserOnBoard/Question4"
+import { useEffect, useState } from "react"
+import supabase from "../lib/supabase"
+import useCurrentUser from "./hooks/useCurrentUser"
+import { ca } from "date-fns/locale"
+import getUserId from "./hooks/getUserId"
+import { Database } from "./@types/supabase"
+import { set } from "date-fns"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -90,6 +101,29 @@ const UserFooter = () => {
 
 const NavStack = () => {
   const { user } = useAuth()
+  const [currentUserId, setCurrentUserId] = useState<string>("")
+  const [userProfile, setUserProfile] = useState<
+    Database["public"]["Tables"]["profiles"]["Row"] | null
+  >(null)
+
+  useEffect(() => {
+    getUserId(setCurrentUserId)
+  }, [])
+
+  useEffect(() => {
+    const setProfile = async () => {
+      try {
+        if (currentUserId) {
+          useCurrentUser(currentUserId, setUserProfile)
+        } else {
+          console.log("no user")
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    setProfile()
+  }, [currentUserId])
   // const { isUser } = useisUser()
 
   //   UserQuestionOne: undefined
@@ -151,6 +185,13 @@ const NavStack = () => {
             />
             <Stack.Screen name="MessagingScreen" component={MessageScreen} />
             <Stack.Screen name="GymScreens" component={GymScreens} />*/}
+          </Stack.Group>
+
+          <Stack.Group>
+            <Stack.Screen name="QuestionOne" component={Question1} />
+            <Stack.Screen name="QuestionTwo" component={Question2} />
+            <Stack.Screen name="QuestionThree" component={Question3} />
+            <Stack.Screen name="QuestionFour" component={Question4} />
           </Stack.Group>
 
           {/* <Stack.Group screenOptions={{ presentation: "transparentModal" }}>
