@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import { NavigationType, TabNavigationType } from "../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import supabase from "../../lib/supabase"
-import getUserId from "../hooks/getUserId"
+import getUserId from "../hooks/getFuncs/getUserId"
 
 const Question4 = () => {
   const [currentId, setCurrentId] = useState<string>("")

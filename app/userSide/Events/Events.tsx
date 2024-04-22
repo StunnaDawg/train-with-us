@@ -1,7 +1,7 @@
 import { View, Text } from "react-native"
 import React, { useEffect, useState } from "react"
-import useCurrentUser from "../../hooks/useCurrentUser"
-import getUserId from "../../hooks/getUserId"
+import useCurrentUser from "../../hooks/getFuncs/useCurrentUser"
+import getUserId from "../../hooks/getFuncs/getUserId"
 import { Database } from "../../@types/supabase"
 
 const Events = () => {

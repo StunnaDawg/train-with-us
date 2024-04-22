@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
-import supabase from "../../lib/supabase"
-import { Profile } from "../@types/supabaseTypes"
+import supabase from "../../../lib/supabase"
+import { Profile } from "../../@types/supabaseTypes"
 
 const getEventAttendees = async (
   eventId: string,

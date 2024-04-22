@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
-import supabase from "../../lib/supabase"
-import { Events } from "../@types/supabaseTypes"
+import supabase from "../../../lib/supabase"
+import { Events } from "../../@types/supabaseTypes"
 
 const getUpcomingEvents = async (
   setLoading: Dispatch<SetStateAction<boolean>>,

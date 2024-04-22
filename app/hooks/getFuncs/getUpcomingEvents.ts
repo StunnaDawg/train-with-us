@@ -1,14 +1,18 @@
 import { Dispatch, SetStateAction } from "react"
-import supabase from "../../lib/supabase"
-import { Events } from "../@types/supabaseTypes"
+import supabase from "../../../lib/supabase"
+import { Events } from "../../@types/supabaseTypes"
 
-const getAllEvents = async (
+const getUpcomingEvents = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   setEvents: Dispatch<SetStateAction<Events[] | null>>
 ) => {
   try {
     setLoading(true)
-    const { data: events, error } = await supabase.from("events").select()
+    const currentDate = new Date().toISOString()
+    const { data: events, error } = await supabase
+      .from("events")
+      .select()
+      .gt("date", currentDate)
 
     if (error) throw error
 
@@ -23,4 +27,4 @@ const getAllEvents = async (
   }
 }
 
-export default getAllEvents
+export default getUpcomingEvents

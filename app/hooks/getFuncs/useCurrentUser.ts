@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
-import supabase from "../../lib/supabase"
-import { Database, Tables } from "../@types/supabase"
-import { Profile } from "../@types/supabaseTypes"
+import supabase from "../../../lib/supabase"
+import { Profile } from "../../@types/supabaseTypes"
 
 const useCurrentUser = async (
   id: string,
