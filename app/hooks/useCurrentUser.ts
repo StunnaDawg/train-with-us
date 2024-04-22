@@ -1,12 +1,11 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../lib/supabase"
 import { Database, Tables } from "../@types/supabase"
+import { Profile } from "../@types/supabaseTypes"
 
 const useCurrentUser = async (
   id: string,
-  setUserProfile: Dispatch<
-    SetStateAction<Database["public"]["Tables"]["profiles"]["Row"] | null>
-  >
+  setUserProfile: Dispatch<SetStateAction<Profile | null>>
 ) => {
   try {
     const { data: profiles, error } = await supabase
