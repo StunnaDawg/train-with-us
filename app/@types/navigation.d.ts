@@ -1,18 +1,18 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { TabNavigationProp } from "@react-navigation/native"
-import { GymProfile, UserProfile } from "./supabase"
+import { CommunitiesProfile, UserProfile } from "./supabase"
 
 export type RootStackParamList = {
   Footer: undefined
-  GymScreens: { screen: string; params?: { screen: string } }
+  CommunitiesScreens: { screen: string; params?: { screen: string } }
   SignUp: undefined
   Login: undefined
-  CreateGym: undefined
+  CreateCommunities: undefined
   UserDashboard: undefined
   Meet: undefined
   Community: undefined
   FindWorkout: undefined
-  GymFooter: undefined
+  CommunitiesFooter: undefined
   ViewEvent: {
     id: string
     eventId: string
@@ -29,17 +29,17 @@ export type RootStackParamList = {
   QuestionFive: undefined
   UserInitalAddPhoto: undefined
   ChooseUserActivity: undefined
-  GymQuestionOne: undefined
-  GymQuestionTwo: undefined
-  GymQuestionThree: undefined
-  GymInitalAddPhoto: undefined
-  GymMessages: undefined
-  GymEditProfile: undefined
-  GymModerateMembers: undefined
+  CommunitiesQuestionOne: undefined
+  CommunitiesQuestionTwo: undefined
+  CommunitiesQuestionThree: undefined
+  CommunitiesInitalAddPhoto: undefined
+  CommunitiesMessages: undefined
+  CommunitiesEditProfile: undefined
+  CommunitiesModerateMembers: undefined
   MatchModal: undefined
   LoadModal: undefined
-  CurrentGymSettings: {
-    gymProfile: GymProfile
+  CurrentCommunitiesSettings: {
+    CommunitiesProfile: CommunitiesProfile
     id: string
   }
   CreateEvent: undefined
@@ -53,38 +53,38 @@ export type RootStackParamList = {
     id: string
     matchDocId: string
   }
-  GymMessagingScreen: {
+  CommunitiesMessagingScreen: {
     id: string
     userDocId: string
   }
-  ViewGymScreen: {
+  ViewCommunitiesScreen: {
     id?: string
-    gymId: string
+    CommunitiesId: string
   }
 
-  ViewGymMembersScreen: {
-    gymId: string
+  ViewCommunitiesMembersScreen: {
+    CommunitiesId: string
   }
-  ViewGymTopTabs: undefined
+  ViewCommunitiesTopTabs: undefined
   CreateNewChannel: undefined
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>
 
 export type TabParamList = {
-  GymDashboard: undefined
+  "My Communities": undefined
   Dashboard: undefined
   Profile: undefined
   Connections: undefined
   Messages: undefined
-  Gyms: undefined
+  Communities: undefined
   Requests: undefined
-  GymEvents: undefined
+  CommunitiesEvents: undefined
   Events: undefined
-  AboutGym: undefined
-  GymMembers: undefined
-  GymPhotos: undefined
-  HomeGym: undefined
+  AboutCommunities: undefined
+  CommunitiesMembers: undefined
+  CommunitiesPhotos: undefined
+  HomeCommunities: undefined
 }
 
 export type TabNavigationType = TabNavigationProp<TabParamList>
@@ -93,5 +93,5 @@ export type RouteParamsType = {
   id?: string
   matchDocId: string
   eventId: string
-  gymId: string
+  CommunitiesId: string
 }

@@ -8,7 +8,7 @@ const Question1 = () => {
   return (
     <View className="flex flex-1 justify-center">
       <Text>Question1</Text>
-      <Pressable onPress={() => navigation}>
+      <Pressable onPress={() => navigation.navigate("QuestionTwo")}>
         <Text>Next</Text>
       </Pressable>
     </View>

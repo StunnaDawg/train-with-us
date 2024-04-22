@@ -7,8 +7,8 @@ const Question2 = () => {
   const navigation = useNavigation<NavigationType>()
   return (
     <View className="flex flex-1 justify-center">
-      <Text>Question1</Text>
-      <Pressable onPress={() => navigation}>
+      <Text>Question2</Text>
+      <Pressable onPress={() => navigation.navigate("QuestionThree")}>
         <Text>Next</Text>
       </Pressable>
     </View>

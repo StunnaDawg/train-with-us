@@ -22,6 +22,11 @@ import { ca } from "date-fns/locale"
 import getUserId from "./hooks/getUserId"
 import { Database } from "./@types/supabase"
 import { set } from "date-fns"
+import CommunitiesHome from "./userSide/Communities/CommunitiesHome"
+import CommunitiesDash from "./userSide/UserCommunities/CommunitiesDash"
+import Profile from "./userSide/Profile/Profile"
+import MessagesHome from "./userSide/Messages/MessagesHome"
+import Connections from "./userSide/Connections/Connections"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -72,14 +77,16 @@ const UserFooter = () => {
 
           if (route.name === "Events") {
             iconName = "calendar"
-          } else if (route.name === "Gyms") {
-            iconName = "dumbbell"
+          } else if (route.name === "Communities") {
+            iconName = "user-group"
           } else if (route.name === "Profile") {
-            iconName = "user-pen"
+            iconName = "user"
           } else if (route.name === "Connections") {
             iconName = "people-group"
           } else if (route.name === "Messages") {
             iconName = "message"
+          } else if (route.name === "My Communities") {
+            iconName = "house"
           }
 
           // You can return any component that you like here!
@@ -90,11 +97,11 @@ const UserFooter = () => {
       })}
     >
       <Tab.Screen name="Events" component={Events} />
-      {/* <Tab.Screen name="Gyms" component={GymsTab} />
-      <Tab.Screen name="Profile" component={UserProfile} />
-      <Tab.Screen name="Connections" component={Meet} />
-      <Tab.Screen name="Messages" component={MessageTab} />
-      <Tab.Screen name="HomeGym" component={HomeGym} /> */}
+      <Tab.Screen name="Communities" component={CommunitiesHome} />
+      <Tab.Screen name="Connections" component={Connections} />
+      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="My Communities" component={CommunitiesDash} />
+      <Tab.Screen name="Messages" component={MessagesHome} />
     </Tab.Navigator>
   )
 }
@@ -142,62 +149,34 @@ const NavStack = () => {
     >
       {user ? (
         <>
-          <Stack.Group>
-            <Stack.Screen name="Footer" component={UserFooter} />
-            {/*<Stack.Screen name="ViewGymTopTabs" component={GymTopTabs} />
-            <Stack.Screen name="UserDashboard" component={Dashboard} />
-            <Stack.Screen name="AttendingEvent" component={AttendingEvent} />
-            <Stack.Screen name="UserSettings" component={UserSettings} />
-
-            <Stack.Screen name="CreateGym" component={CreateGymPage} />
-
-            <Stack.Screen
-              name="CurrentGymSettings"
-              component={CurrentGymSettings}
-            />
-
-            <Stack.Screen
-              name="ViewUserProfile"
-              component={ViewUserProfileScreen}
-            />
-            <Stack.Screen
-              name="ViewGymMembersScreen"
-              component={ViewGymMembers}
-            />
-            <Stack.Screen
-              name="ChooseUserActivity"
-              component={ChooseActivity}
-            />
-
-            <Stack.Screen name="Meet" component={Meet} />
-
-            <Stack.Screen name="UserEditProfile" component={EditProfileHome} />
-            <Stack.Screen name="ViewGymScreen" component={ViewGymProfile} />
-            <Stack.Screen name="ViewEvent" component={ViewEvent} />
-            <Stack.Screen name="UserQuestionOne" component={QuestionOne} />
-            <Stack.Screen name="UserQuestionTwo" component={QuestionTwo} />
-            <Stack.Screen name="UserQuestionThree" component={QuestionThree} />
-            <Stack.Screen name="UserQuestionFour" component={QuestionFour} />
-            <Stack.Screen name="UserQuestionFive" component={QuestionFive} />
-            <Stack.Screen
-              name="UserInitalAddPhoto"
-              component={IntialAddPhotos}
-            />
-            <Stack.Screen name="MessagingScreen" component={MessageScreen} />
-            <Stack.Screen name="GymScreens" component={GymScreens} />*/}
-          </Stack.Group>
-
-          <Stack.Group>
-            <Stack.Screen name="QuestionOne" component={Question1} />
-            <Stack.Screen name="QuestionTwo" component={Question2} />
-            <Stack.Screen name="QuestionThree" component={Question3} />
-            <Stack.Screen name="QuestionFour" component={Question4} />
-          </Stack.Group>
-
-          {/* <Stack.Group screenOptions={{ presentation: "transparentModal" }}>
-            <Stack.Screen name="MatchModal" component={MatchModal} />
-            <Stack.Screen name="LoadModal" component={LoadModal} /> 
-          </Stack.Group> */}
+          {userProfile?.onboard ? (
+            <Stack.Group>
+              <Stack.Screen name="Footer" component={UserFooter} />
+            </Stack.Group>
+          ) : (
+            <Stack.Group>
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="QuestionOne"
+                component={Question1}
+              />
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="QuestionTwo"
+                component={Question2}
+              />
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="QuestionThree"
+                component={Question3}
+              />
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="QuestionFour"
+                component={Question4}
+              />
+            </Stack.Group>
+          )}
         </>
       ) : (
         <>
