@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
-import { ConnectionsInteraction, Profile } from "../../@types/supabaseTypes"
+import { Profile } from "../../@types/supabaseTypes"
 
 const getConnectionUsers = async (
   userId: string,
