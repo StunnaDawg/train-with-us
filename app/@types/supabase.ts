@@ -89,6 +89,42 @@ export type Database = {
           }
         ]
       }
+      connection_interaction: {
+        Row: {
+          interaction_date: string
+          interaction_type: string | null
+          target_interaction: string
+          user_interaction: string
+        }
+        Insert: {
+          interaction_date?: string
+          interaction_type?: string | null
+          target_interaction: string
+          user_interaction?: string
+        }
+        Update: {
+          interaction_date?: string
+          interaction_type?: string | null
+          target_interaction?: string
+          user_interaction?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_connection_interaction_target_interaction_fkey"
+            columns: ["target_interaction"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_connection_interaction_user_interaction_fkey"
+            columns: ["user_interaction"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       events: {
         Row: {
           community_host: number | null
