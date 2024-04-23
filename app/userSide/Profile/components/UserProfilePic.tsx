@@ -1,6 +1,6 @@
 import { View, Text } from "react-native"
 import React from "react"
-import SinglePic from "../../components/SinglePic"
+import SinglePic from "../../../components/SinglePic"
 
 const UserProfilePic = () => {
   return (

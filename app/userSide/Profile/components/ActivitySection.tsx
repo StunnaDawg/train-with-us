@@ -1,6 +1,6 @@
 import { View, Text, ScrollView } from "react-native"
 import React from "react"
-import ActivityTags from "../../components/AcvitivityTags"
+import ActivityTags from "../../../components/AcvitivityTags"
 
 const ActivitySection = () => {
   return (

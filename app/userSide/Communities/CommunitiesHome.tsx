@@ -30,7 +30,7 @@ const CommunitiesHome = () => {
 
   useEffect(() => {
     getAllCommunities(setLoading, setCommunities)
-  }, [isFocused])
+  }, [])
 
   useEffect(() => {
     getAllCommunities(setLoading, setCommunities)
