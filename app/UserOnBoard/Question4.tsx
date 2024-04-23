@@ -1,6 +1,6 @@
 import { View, Text, Pressable } from "react-native"
 import React, { useEffect, useState } from "react"
-import { NavigationType, TabNavigationType } from "../@types/navigation"
+import { TabNavigationType } from "../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import supabase from "../../lib/supabase"
 import getUserId from "../supabaseFunctions/getFuncs/getUserId"

@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { Events } from "../../@types/supabaseTypes"
 
-const getUpcomingEvents = async (
+const getNewEvents = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   setEvents: Dispatch<SetStateAction<Events[] | null>>,
   limit: number
@@ -29,4 +29,4 @@ const getUpcomingEvents = async (
   }
 }
 
-export default getUpcomingEvents
+export default getNewEvents

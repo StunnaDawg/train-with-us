@@ -4,7 +4,8 @@ import { Events } from "../../@types/supabaseTypes"
 
 const getUpcomingEvents = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
-  setEvents: Dispatch<SetStateAction<Events[] | null>>
+  setEvents: Dispatch<SetStateAction<Events[] | null>>,
+  limit: number
 ) => {
   try {
     setLoading(true)
@@ -13,6 +14,7 @@ const getUpcomingEvents = async (
       .from("events")
       .select()
       .gt("date", currentDate)
+      .limit(limit)
 
     if (error) throw error
 

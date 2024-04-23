@@ -1,8 +1,4 @@
-import {
-  RootStackParamList,
-  TabNavigationType,
-  TabParamList,
-} from "./@types/navigation"
+import { RootStackParamList, TabParamList } from "./@types/navigation"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { NavBar } from "../components"
@@ -16,12 +12,9 @@ import Question2 from "./UserOnBoard/Question2"
 import Question3 from "./UserOnBoard/Question3"
 import Question4 from "./UserOnBoard/Question4"
 import { useEffect, useState } from "react"
-import supabase from "../lib/supabase"
 import useCurrentUser from "./supabaseFunctions/getFuncs/useCurrentUser"
-import { ca } from "date-fns/locale"
 import getUserId from "./supabaseFunctions/getFuncs/getUserId"
 import { Database } from "./@types/supabase"
-import { set } from "date-fns"
 import CommunitiesHome from "./userSide/Communities/CommunitiesHome"
 import CommunitiesDash from "./userSide/UserCommunities/CommunitiesDash"
 import Profile from "./userSide/Profile/Profile"

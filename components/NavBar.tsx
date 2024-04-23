@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Button, Pressable } from "react-native"
+import { Text, SafeAreaView, Pressable } from "react-native"
 import supabase from "../lib/supabase"
 import { FontAwesome6 } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"

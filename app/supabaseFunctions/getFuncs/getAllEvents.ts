@@ -4,11 +4,15 @@ import { Events } from "../../@types/supabaseTypes"
 
 const getAllEvents = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
-  setEvents: Dispatch<SetStateAction<Events[] | null>>
+  setEvents: Dispatch<SetStateAction<Events[] | null>>,
+  limit: number
 ) => {
   try {
     setLoading(true)
-    const { data: events, error } = await supabase.from("events").select()
+    const { data: events, error } = await supabase
+      .from("events")
+      .select()
+      .limit(limit)
 
     if (error) throw error
 

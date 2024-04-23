@@ -8,5 +8,7 @@ export const uploadImage = async (imageFile: string) => {
       contentType: "image/png",
     })
 
+  if (error) throw error
+
   data
 }
