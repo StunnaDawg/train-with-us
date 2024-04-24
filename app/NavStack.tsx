@@ -17,7 +17,7 @@ import getUserId from "./supabaseFunctions/getFuncs/getUserId"
 import { Database } from "./@types/supabase"
 import CommunitiesHome from "./userSide/Communities/CommunitiesHome"
 import CommunitiesDash from "./userSide/UserCommunities/CommunitiesDash"
-import Profile from "./userSide/Profile/components/Profile"
+import Profile from "./userSide/Profile/Profile"
 import MessagesHome from "./userSide/Messages/MessagesHome"
 import Connections from "./userSide/Connections/Connections"
 

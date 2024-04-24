@@ -1,9 +1,14 @@
 import { View, Text } from "react-native"
 import React from "react"
 
-const UserTopGyms = () => {
+type UserTopGymsProps = {
+  borderB: boolean
+  mt: boolean
+}
+
+const UserTopGyms = ({ borderB, mt }: UserTopGymsProps) => {
   return (
-    <View className="mt-8 ml-7 mr-7 ">
+    <View className={mt ? "mt-8 ml-7 mr-7 " : "mt-2 ml-7 mr-7"}>
       <View className="flex flex-row  ">
         <Text className="text-xl font-bold">
           Primary Gym: <Text className="font-semibold">Blended Athletics</Text>
@@ -14,7 +19,7 @@ const UserTopGyms = () => {
           Secondary Gym: <Text className="font-semibold">Shanti Yoga</Text>
         </Text>
       </View>
-      <View className="border-b mt-4" />
+      <View className={borderB ? "border-b mt-4" : "mt-4"} />
     </View>
   )
 }
