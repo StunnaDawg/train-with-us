@@ -49,10 +49,8 @@ export type RootStackParamList = {
   EditEvent: {
     eventId: string
   }
-  MessagingScreen: {
-    id: string
-    matchDocId: string
-  }
+  MessagingScreen: undefined
+
   CommunitiesMessagingScreen: {
     id: string
     userDocId: string
@@ -72,7 +70,7 @@ export type RootStackParamList = {
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>
 
 export type TabParamList = {
-  "My Communities": undefined
+  Community: undefined
   Dashboard: undefined
   Profile: undefined
   Connections: undefined

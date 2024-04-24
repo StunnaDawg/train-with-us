@@ -20,6 +20,7 @@ import CommunitiesDash from "./userSide/UserCommunities/CommunitiesDash"
 import Profile from "./userSide/Profile/Profile"
 import MessagesHome from "./userSide/Messages/MessagesHome"
 import Connections from "./userSide/Connections/Connections"
+import MessageScreen from "./userSide/UserCommunities/components/MessageScreen"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -78,7 +79,7 @@ const UserFooter = () => {
             iconName = "people-group"
           } else if (route.name === "Messages") {
             iconName = "message"
-          } else if (route.name === "My Communities") {
+          } else if (route.name === "Community") {
             iconName = "house"
           }
 
@@ -93,8 +94,7 @@ const UserFooter = () => {
       <Tab.Screen name="Communities" component={CommunitiesHome} />
       <Tab.Screen name="Connections" component={Connections} />
       <Tab.Screen name="Profile" component={Profile} />
-      <Tab.Screen name="My Communities" component={CommunitiesDash} />
-      <Tab.Screen name="Messages" component={MessagesHome} />
+      <Tab.Screen name="Community" component={CommunitiesDash} />
     </Tab.Navigator>
   )
 }
@@ -145,6 +145,11 @@ const NavStack = () => {
           {userProfile?.onboard ? (
             <Stack.Group>
               <Stack.Screen name="Footer" component={UserFooter} />
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="MessagingScreen"
+                component={MessageScreen}
+              />
             </Stack.Group>
           ) : (
             <Stack.Group>
