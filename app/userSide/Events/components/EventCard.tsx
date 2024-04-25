@@ -40,34 +40,31 @@ const EventCard = () => {
     },
   })
   return (
-    <ImageBackground
-      source={{
-        uri: "https://images.unsplash.com/photo-1615395255362-f0b24845e1df?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60",
-      }}
-      style={[avatarSize, styles.avatar]}
-      imageStyle={styles.image}
-    >
-      <View className="m-1">
-        <Text className="font-bold text-md text-white">9$</Text>
-      </View>
-      <Pressable
-        className="flex-1 flex-col items-start justify-end"
-        onPress={() => {
-          navigation
+    <Pressable onPress={() => navigation.navigate("ViewEvent")}>
+      <ImageBackground
+        source={{
+          uri: "https://images.unsplash.com/photo-1615395255362-f0b24845e1df?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60",
         }}
+        style={[avatarSize, styles.avatar]}
+        imageStyle={styles.image}
       >
-        <Text className="font-bold text-lg text-white">
-          {/* {eventDate},{eventTime} */} June 17th @ 3:30 pm
-        </Text>
-        <Text className="font-bold text-2xl text-white">
-          {/* {event.eventTitle} */} Bootcamp
-        </Text>
+        <View className="m-1">
+          <Text className="font-bold text-md text-white">9$</Text>
+        </View>
+        <View className="flex-1 flex-col items-start justify-end">
+          <Text className="font-bold text-lg text-white">
+            {/* {eventDate},{eventTime} */} June 17th @ 3:30 pm
+          </Text>
+          <Text className="font-bold text-2xl text-white">
+            {/* {event.eventTitle} */} Bootcamp
+          </Text>
 
-        <Text className="font-bold text-lg text-shadow text-white">
-          Blended
-        </Text>
-      </Pressable>
-    </ImageBackground>
+          <Text className="font-bold text-lg text-shadow text-white">
+            Blended
+          </Text>
+        </View>
+      </ImageBackground>
+    </Pressable>
   )
 }
 

@@ -18,9 +18,10 @@ import { Database } from "./@types/supabase"
 import CommunitiesHome from "./userSide/Communities/CommunitiesHome"
 import CommunitiesDash from "./userSide/UserCommunities/CommunitiesDash"
 import Profile from "./userSide/Profile/Profile"
-import MessagesHome from "./userSide/Messages/MessagesHome"
 import Connections from "./userSide/Connections/Connections"
 import MessageScreen from "./userSide/UserCommunities/components/MessageScreen"
+import ViewEvent from "./userSide/Events/ViewEvent"
+import EventCheckout from "./userSide/Events/EventCheckout"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -149,6 +150,17 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="MessagingScreen"
                 component={MessageScreen}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ViewEvent"
+                component={ViewEvent}
+              />
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="EventCheckout"
+                component={EventCheckout}
               />
             </Stack.Group>
           ) : (

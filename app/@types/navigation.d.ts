@@ -13,10 +13,7 @@ export type RootStackParamList = {
   Community: undefined
   FindWorkout: undefined
   CommunitiesFooter: undefined
-  ViewEvent: {
-    id: string
-    eventId: string
-  }
+  ViewEvent: undefined
   UserEditProfile: undefined
   UserSettings: undefined
   ViewUserProfile: {
@@ -65,6 +62,7 @@ export type RootStackParamList = {
   }
   ViewCommunitiesTopTabs: undefined
   CreateNewChannel: undefined
+  EventCheckout: undefined
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>
