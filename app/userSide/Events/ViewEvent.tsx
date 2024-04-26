@@ -7,9 +7,9 @@ import Checkout from "./components/Checkout"
 
 const ViewEvent = () => {
   return (
-    <>
-      <SafeAreaView className=" bg-yellow-300 flex-1">
-        <ScrollView>
+    <View className="flex-1 bg-yellow-300">
+      <SafeAreaView className="flex-1">
+        <ScrollView className="flex-1">
           <View>
             <ViewEventTitle />
           </View>
@@ -22,11 +22,11 @@ const ViewEvent = () => {
             <AboutViewEvent />
           </View>
         </ScrollView>
-        <View className="flex-1 bg-white/75">
+        <View className="absolute inset-x-0 bottom-0 pb-12 bg-white/75">
           <Checkout />
         </View>
       </SafeAreaView>
-    </>
+    </View>
   )
 }
 

@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native"
 import React, { useState } from "react"
 import { NavigationType } from "../../../@types/navigation"
 
-const Checkout = () => {
+const EventAdmissionCheckout = () => {
   const [count, setCount] = useState(0)
 
   // Function to decrement the count, not going below 0
@@ -15,11 +15,10 @@ const Checkout = () => {
   const incrementCount = () => {
     setCount((prev) => prev + 1)
   }
-  const navigation = useNavigation<NavigationType>()
   return (
-    <View className="flex flex-row justify-center">
+    <View className=" bg-white/50 mx-12 rounded-xl">
       <View className="items-center">
-        <View className="flex flex-row justify-between bg-white border rounded-full px-20 mx-12 py-3 mt-4 items-center ">
+        <View className="flex flex-row justify-between bg-white border rounded-full px-10 mx-12 py-3 mt-4 items-center ">
           <View>
             <Text className="font-bold">Admission</Text>
           </View>
@@ -44,18 +43,23 @@ const Checkout = () => {
             </Pressable>
           </View>
         </View>
-        <Pressable
-          onPress={() => {
-            navigation.navigate("EventCheckout")
-            console.log("Checkout")
-          }}
-          className=" bg-blue-400/90 border rounded-full px-32 my-2 py-2"
-        >
-          <Text className="font-bold">Checkout</Text>
-        </Pressable>
+      </View>
+
+      <View className="mt-3 mb-2">
+        <View>
+          <Text className="font-bold text-slate-500/90 text-sm px-12">
+            Total: ${10}+ Tax
+          </Text>
+        </View>
+
+        <View>
+          <Text className="font-bold text-slate-500/90 text-sm px-12">
+            Sales end May 8th, 2024
+          </Text>
+        </View>
       </View>
     </View>
   )
 }
 
-export default Checkout
+export default EventAdmissionCheckout
