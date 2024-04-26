@@ -20,8 +20,8 @@ const Tabs = ({
   } ${pressedMsg ? "bg-blue-700" : ""}`
 
   const communityTabStyle = `mx-2 p-1 px-4 border rounded-full ${
-    !userMessages ? "bg-green-500 text-white" : "bg-transparent text-black"
-  } ${pressedComm ? "bg-green-700" : ""}`
+    !userMessages ? "bg-yellow-500 text-white" : "bg-transparent text-black"
+  } ${pressedComm ? "bg-yellow-200" : ""}`
 
   return (
     <View className="flex flex-row justify-center">

@@ -23,6 +23,7 @@ import MessageScreen from "./userSide/UserCommunities/components/MessageScreen"
 import ViewEvent from "./userSide/Events/ViewEvent"
 import EventCheckout from "./userSide/Events/EventCheckout"
 import ViewCommunities from "./userSide/Communities/ViewCommunities"
+import { set } from "date-fns"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -104,6 +105,7 @@ const UserFooter = () => {
 const NavStack = () => {
   const { user } = useAuth()
   const [currentUserId, setCurrentUserId] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false)
   const [userProfile, setUserProfile] = useState<
     Database["public"]["Tables"]["profiles"]["Row"] | null
   >(null)
@@ -115,6 +117,7 @@ const NavStack = () => {
   useEffect(() => {
     const setProfile = async () => {
       try {
+        setLoading(true)
         if (currentUserId) {
           useCurrentUser(currentUserId, setUserProfile)
         } else {
@@ -122,20 +125,12 @@ const NavStack = () => {
         }
       } catch (error) {
         console.log(error)
+      } finally {
+        setLoading(false)
       }
     }
     setProfile()
   }, [currentUserId])
-  // const { isUser } = useisUser()
-
-  //   UserQuestionOne: undefined
-  //   UserQuestionTwo: undefined
-  //   UserQuestionThree: undefined
-  //   UserInitalAddPhoto: undefined
-  //   GymQuestionOne: undefined
-  //   GymQuestionTwo: undefined
-  //   GymQuestionThree: undefined
-  //   GymInitalAddPhoto: undefined
   return (
     <Stack.Navigator
       screenOptions={{
