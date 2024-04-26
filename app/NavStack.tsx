@@ -22,6 +22,7 @@ import Connections from "./userSide/Connections/Connections"
 import MessageScreen from "./userSide/UserCommunities/components/MessageScreen"
 import ViewEvent from "./userSide/Events/ViewEvent"
 import EventCheckout from "./userSide/Events/EventCheckout"
+import ViewCommunities from "./userSide/Communities/ViewCommunities"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -161,6 +162,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="EventCheckout"
                 component={EventCheckout}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ViewCommunitiesScreen"
+                component={ViewCommunities}
               />
             </Stack.Group>
           ) : (

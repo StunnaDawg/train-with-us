@@ -52,10 +52,7 @@ export type RootStackParamList = {
     id: string
     userDocId: string
   }
-  ViewCommunitiesScreen: {
-    id?: string
-    CommunitiesId: string
-  }
+  ViewCommunitiesScreen: undefined
 
   ViewCommunitiesMembersScreen: {
     CommunitiesId: string

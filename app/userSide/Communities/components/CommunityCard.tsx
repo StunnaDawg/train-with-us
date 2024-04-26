@@ -7,7 +7,11 @@ import SinglePic from "../../../components/SinglePic"
 const CommunityCard = () => {
   const navigation = useNavigation<NavigationType>()
   return (
-    <Pressable onPress={() => {}}>
+    <Pressable
+      onPress={() => {
+        navigation.navigate("ViewCommunitiesScreen")
+      }}
+    >
       <View className="flex flex-row items-center">
         <View className="m-2">
           <SinglePic
