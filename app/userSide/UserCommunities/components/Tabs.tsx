@@ -1,15 +1,46 @@
+import React, { useState } from "react"
 import { View, Text, Pressable } from "react-native"
-import React from "react"
 
-const Tabs = () => {
+type TabsProps = {
+  changeToCommunityTab: () => void
+  changeToMessagesTab: () => void
+  userMessages: boolean
+}
+
+const Tabs = ({
+  changeToCommunityTab,
+  changeToMessagesTab,
+  userMessages,
+}: TabsProps) => {
+  const [pressedMsg, setPressedMsg] = useState(false)
+  const [pressedComm, setPressedComm] = useState(false)
+
+  const messageTabStyle = `mx-2 p-1 px-4 border rounded-full ${
+    userMessages ? "bg-blue-500 text-white" : "bg-transparent text-black"
+  } ${pressedMsg ? "bg-blue-700" : ""}`
+
+  const communityTabStyle = `mx-2 p-1 px-4 border rounded-full ${
+    !userMessages ? "bg-green-500 text-white" : "bg-transparent text-black"
+  } ${pressedComm ? "bg-green-700" : ""}`
+
   return (
     <View className="flex flex-row justify-center">
-      <Pressable className=" mx-2 p-1 px-4 border rounded-full">
-        <Text className=" font-bold text-md">My Messages</Text>
+      <Pressable
+        onPress={changeToMessagesTab}
+        onPressIn={() => setPressedMsg(true)}
+        onPressOut={() => setPressedMsg(false)}
+        className={messageTabStyle}
+      >
+        <Text className="font-bold text-md">My Messages</Text>
       </Pressable>
 
-      <Pressable className=" mx-2 first-line:p-1 px-4 border rounded-full">
-        <Text className=" font-bold text-md">Communities</Text>
+      <Pressable
+        onPress={changeToCommunityTab}
+        onPressIn={() => setPressedComm(true)}
+        onPressOut={() => setPressedComm(false)}
+        className={communityTabStyle}
+      >
+        <Text className="font-bold text-md">Communities</Text>
       </Pressable>
     </View>
   )
