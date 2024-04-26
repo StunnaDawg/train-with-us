@@ -24,6 +24,7 @@ export type RootStackParamList = {
   QuestionThree: undefined
   QuestionFour: undefined
   QuestionFive: undefined
+  Sexuality: undefined
   UserInitalAddPhoto: undefined
   ChooseUserActivity: undefined
   CommunitiesQuestionOne: undefined
@@ -33,6 +34,9 @@ export type RootStackParamList = {
   CommunitiesMessages: undefined
   CommunitiesEditProfile: undefined
   CommunitiesModerateMembers: undefined
+  FitnessInterests: undefined
+  CommunitiesPreferences: undefined
+  ActivityTimePreference: undefined
   MatchModal: undefined
   LoadModal: undefined
   CurrentCommunitiesSettings: {

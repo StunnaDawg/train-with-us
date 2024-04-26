@@ -24,6 +24,10 @@ import ViewEvent from "./userSide/Events/ViewEvent"
 import EventCheckout from "./userSide/Events/EventCheckout"
 import ViewCommunities from "./userSide/Communities/ViewCommunities"
 import { set } from "date-fns"
+import Sexuality from "./UserOnBoard/Sexuality"
+import FitnessInterests from "./UserOnBoard/FitnessInterests"
+import CommunityPreference from "./UserOnBoard/CommunitiesPref"
+import ActivityTimePreference from "./UserOnBoard/ActvityTimePreference"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -186,6 +190,29 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="QuestionFour"
                 component={Question4}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="Sexuality"
+                component={Sexuality}
+              />
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="FitnessInterests"
+                component={FitnessInterests}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="CommunitiesPreferences"
+                component={CommunityPreference}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ActivityTimePreference"
+                component={ActivityTimePreference}
               />
             </Stack.Group>
           )}

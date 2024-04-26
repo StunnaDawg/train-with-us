@@ -1,36 +1,41 @@
-import { View, Text, Pressable, SafeAreaView, TextInput } from "react-native"
-import BouncyCheckbox from "react-native-bouncy-checkbox"
-import { useNavigation } from "@react-navigation/native"
-import React, { useState } from "react"
-import { NavigationType } from "../@types/navigation"
+import { View, Text, TextInput, SafeAreaView } from "react-native"
+import React from "react"
 import NextButton from "../components/NextButton"
+import { useNavigation } from "@react-navigation/native"
+import { useState } from "react"
+import BouncyCheckbox from "react-native-bouncy-checkbox"
+import { NavigationType } from "../@types/navigation"
 
-type GenderOption = "Male" | "Female" | "Non-Binary" | "Specify other..." | null
+type GenderOption =
+  | "Prefer not to say"
+  | "Straight"
+  | "Gay"
+  | "Lesbian"
+  | "Bisexual"
+  | null
 
-const Question3 = () => {
+const Sexuality = () => {
   const navigation = useNavigation<NavigationType>()
 
-  const [selectedGender, setSelectedGender] = useState<GenderOption>("Male")
-  const [specifyInput, setSpecifyInput] = useState<string>("")
+  const [selectedGender, setSelectedGender] =
+    useState<GenderOption>("Prefer not to say")
   const [displayOnProfile, setDisplayOnProfile] = useState<boolean>(false)
 
   const handleSelectGender = (gender: GenderOption) => {
     setSelectedGender(selectedGender === gender ? null : gender)
   }
   const genderOptions: GenderOption[] = [
-    "Male",
-    "Female",
-    "Non-Binary",
-    "Specify other...",
+    "Prefer not to say",
+    "Straight",
+    "Gay",
+    "Lesbian",
   ]
   return (
     <SafeAreaView className="flex-1">
       <View className="flex justify-center mx-12">
         <View className="items-start w-full">
           <View className="my-5">
-            <Text className="font-bold text-2xl">
-              Which Gender best describes you?
-            </Text>
+            <Text className="font-bold text-2xl">What is your Sexuality?</Text>
           </View>
 
           {genderOptions.map((gender, index) => (
@@ -43,15 +48,6 @@ const Question3 = () => {
                 isChecked={selectedGender === gender}
                 onPress={() => handleSelectGender(gender)}
               />
-              {gender === "Specify other..." &&
-                selectedGender === "Specify other..." && (
-                  <TextInput
-                    value={specifyInput}
-                    onChangeText={setSpecifyInput}
-                    placeholder="Specify your gender here..."
-                    className="h-9 border-2 w-48 rounded p-1"
-                  />
-                )}
             </View>
           ))}
           <View className="flex flex-row mt-2">
@@ -67,11 +63,11 @@ const Question3 = () => {
           </View>
         </View>
         <View className="mt-4 flex flex-row justify-end">
-          <NextButton onPress={() => navigation.navigate("Sexuality")} />
+          <NextButton onPress={() => navigation.navigate("FitnessInterests")} />
         </View>
       </View>
     </SafeAreaView>
   )
 }
 
-export default Question3
+export default Sexuality
