@@ -1,5 +1,6 @@
 import { View, Text, Button, Pressable } from "react-native"
 import { Image } from "expo-image"
+import * as FileSystem from "expo-file-system"
 import React, { useEffect, useState } from "react"
 import * as ImagePicker from "expo-image-picker"
 import { FontAwesome6 } from "@expo/vector-icons"
@@ -21,13 +22,6 @@ const SingleEditPic = ({ item }: SingleImageProp) => {
   const userId = user?.id
 
   const [image, setImage] = useState<string>("")
-
-  const getUniqueFilename = (userId: string | undefined) => {
-    if (userId === undefined) throw new Error("User ID is undefined")
-    const timestamp = new Date().getTime()
-    const fileExtension = "userPhoto".split(".").pop()
-    return `${userId}_${timestamp}.${fileExtension}`
-  }
 
   useEffect(() => {
     readImage()
@@ -57,13 +51,17 @@ const SingleEditPic = ({ item }: SingleImageProp) => {
     })
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri)
-      await uploadImage(
-        result.assets[0].uri,
-        getUniqueFilename(userId),
-        setImage
-      )
-      updateUserPhotos(user?.id, image)
+      const img = result.assets[0]
+      const base64 = await FileSystem.readAsStringAsync(img.uri, {
+        encoding: "base64",
+      })
+      const filePath = `${userId}/${new Date().getTime()}.${
+        img.type === "image"
+      }`
+      const contentType = "image/png"
+      await supabase.storage.from("photos").upload(filePath, decode(base64), {
+        contentType: contentType,
+      })
     }
   }
 

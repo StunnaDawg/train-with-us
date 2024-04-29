@@ -30,6 +30,7 @@ const uploadImage = async (
     throw new Error("Failed to retrieve public URL.")
   }
 
+  console.log("Public URL:", publicURL)
   setUrl(publicURL.publicUrl)
 
   return data
