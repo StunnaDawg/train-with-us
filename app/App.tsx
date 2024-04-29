@@ -1,12 +1,18 @@
 import { NavigationContainer } from "@react-navigation/native"
 import { NavStack } from "./NavStack"
 import { AuthProvider } from "./supabaseFunctions/authcontext"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 
 export default function App() {
   return (
     <AuthProvider>
       <NavigationContainer>
-        <NavStack />
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <BottomSheetModalProvider>
+            <NavStack />
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
       </NavigationContainer>
     </AuthProvider>
   )

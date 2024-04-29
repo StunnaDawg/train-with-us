@@ -1,14 +1,38 @@
 import { decode } from "base64-arraybuffer"
 import supabase from "../../../lib/supabase"
+import { Dispatch, SetStateAction } from "react"
 
-export const uploadImage = async (imageFile: string) => {
+const uploadImage = async (
+  base64Content: string, // Base64 encoded content of the image
+  fileName: string, // Name of the file to save as in storage
+  setUrl: Dispatch<SetStateAction<string>>
+) => {
+  // Decode the base64 string to a buffer
+  const buffer = decode(base64Content)
+
+  // Upload the file to Supabase Storage
   const { data, error } = await supabase.storage
-    .from("avatars")
-    .upload(imageFile, decode("base64FileData"), {
+    .from("photos")
+    .upload(fileName, buffer, {
       contentType: "image/png",
     })
 
-  if (error) throw error
+  if (error) throw new Error(error.message)
 
-  data
+  console.log("Upload Data:", data)
+
+  const { data: publicURL } = supabase.storage
+    .from("photos")
+    .getPublicUrl(fileName)
+
+  // Check if publicURL is obtained successfully
+  if (!publicURL) {
+    throw new Error("Failed to retrieve public URL.")
+  }
+
+  setUrl(publicURL.publicUrl)
+
+  return data
 }
+
+export default uploadImage

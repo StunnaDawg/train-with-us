@@ -28,6 +28,7 @@ import Sexuality from "./UserOnBoard/Sexuality"
 import FitnessInterests from "./UserOnBoard/FitnessInterests"
 import CommunityPreference from "./UserOnBoard/CommunitiesPref"
 import ActivityTimePreference from "./UserOnBoard/ActvityTimePreference"
+import EditProfile from "./userSide/Profile/EditProfile"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -167,6 +168,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="ViewCommunitiesScreen"
                 component={ViewCommunities}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="UserEditProfile"
+                component={EditProfile}
               />
             </Stack.Group>
           ) : (
