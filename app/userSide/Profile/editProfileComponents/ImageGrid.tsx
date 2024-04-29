@@ -21,30 +21,61 @@ const ImageGrid = () => {
       setFiles(data)
     }
   }
+
   return (
     <View className="flex flex-row flex-wrap justify-center">
       <View className="mx-1">
-        <SingleEditPic item={files[0]} />
+        <SingleEditPic
+          item={files[0]}
+          listIndex={0}
+          files={files}
+          setFiles={setFiles}
+        />
       </View>
 
       <View className="mx-1">
-        <SingleEditPic item={files[1]} />
+        <SingleEditPic
+          item={files[1]}
+          listIndex={1}
+          files={files}
+          setFiles={setFiles}
+        />
       </View>
 
       <View className="mx-1">
-        <SingleEditPic item={files[2]} />
+        <SingleEditPic
+          item={files[2]}
+          listIndex={2}
+          files={files}
+          setFiles={setFiles}
+        />
       </View>
 
       <View className="mx-1">
-        <SingleEditPic item={files[3]} />
+        <SingleEditPic
+          item={files[3]}
+          listIndex={3}
+          files={files}
+          setFiles={setFiles}
+        />
       </View>
 
       <View className="mx-1">
-        <SingleEditPic item={files[4]} />
+        <SingleEditPic
+          item={files[4]}
+          listIndex={4}
+          files={files}
+          setFiles={setFiles}
+        />
       </View>
 
       <View className="mx-1">
-        <SingleEditPic item={files[5]} />
+        <SingleEditPic
+          item={files[5]}
+          listIndex={5}
+          files={files}
+          setFiles={setFiles}
+        />
       </View>
     </View>
   )

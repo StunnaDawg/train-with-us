@@ -14,9 +14,17 @@ import updateUserPhotos from "../supabaseFunctions/imageFuncs/updateUserPhotos"
 
 type SingleImageProp = {
   item: FileObject
+  listIndex: number
+  files: FileObject[]
+  setFiles: React.Dispatch<React.SetStateAction<FileObject[]>>
 }
 
-const SingleEditPic = ({ item }: SingleImageProp) => {
+const SingleEditPic = ({
+  item,
+  listIndex,
+  files,
+  setFiles,
+}: SingleImageProp) => {
   const { user } = useAuth()
   const avatarSize = { height: 150, width: 150 }
   const userId = user?.id
@@ -65,6 +73,25 @@ const SingleEditPic = ({ item }: SingleImageProp) => {
     }
   }
 
+  const onRemoveImage = async (item: FileObject, listIndex: number) => {
+    console.log(`${userId}/${item.name}`)
+    const { data, error } = await supabase.storage
+      .from("photos")
+      .remove([`${userId}/${item.name}`])
+
+    if (error) {
+      console.log("Error removing image")
+      return
+    }
+
+    const newFiles = [...files]
+    newFiles.splice(listIndex, 1)
+    setFiles(newFiles)
+
+    console.log(newFiles)
+    console.log("Removed Image")
+  }
+
   return (
     <View className="flex flex-row justify-center flex-wrap">
       {image !== "" ? (
@@ -77,13 +104,10 @@ const SingleEditPic = ({ item }: SingleImageProp) => {
           <Pressable
             className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded hover:bg-blue-800 m-2"
             onPress={async () => {
-              //   await pickImage()
-              //   await deleteImage(image)
-              //   await deletePhotoFromFireStore(image)
-              //   await uploadImage(image, "image", image + id, submitNewUserPhotos)
+              onRemoveImage(item, listIndex)
             }}
           >
-            <FontAwesome6 name="circle-plus" size={24} color="black" />
+            <FontAwesome6 name="trash" size={24} color="black" />
           </Pressable>
         </View>
       ) : (
