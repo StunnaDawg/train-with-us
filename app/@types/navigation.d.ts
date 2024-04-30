@@ -39,6 +39,7 @@ export type RootStackParamList = {
   ActivityTimePreference: undefined
   MatchModal: undefined
   LoadModal: undefined
+  CreateCommunity: undefined
   CurrentCommunitiesSettings: {
     CommunitiesProfile: CommunitiesProfile
     id: string

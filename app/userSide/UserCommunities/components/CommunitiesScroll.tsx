@@ -1,14 +1,37 @@
-import { View, Text, ScrollView } from "react-native"
+import { View, Text, ScrollView, StyleSheet, Pressable } from "react-native"
 import React, { useState } from "react"
 import SinglePic from "../../../components/SinglePic"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import { FileObject } from "@supabase/storage-js"
 import { useEffect } from "react"
 import supabase from "../../../../lib/supabase"
+import { useNavigation } from "@react-navigation/native"
+import { NavigationType } from "../../../@types/navigation"
+
+const styles = StyleSheet.create({
+  avatar: {
+    borderRadius: 100,
+    overflow: "hidden",
+    maxWidth: "100%",
+  },
+  image: {
+    objectFit: "cover",
+    paddingTop: 0,
+  },
+  noImage: {
+    backgroundColor: "#333",
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "rgb(200, 200, 200)",
+    borderRadius: 100,
+  },
+})
 
 const CommunitiesScroll = () => {
   const [files, setFiles] = useState<FileObject[]>([])
   const { user } = useAuth()
+  const avatarSize = { height: 55, width: 55 }
+  const navigation = useNavigation<NavigationType>()
 
   useEffect(() => {
     if (!user) return
@@ -29,6 +52,14 @@ const CommunitiesScroll = () => {
       </View>
       <ScrollView horizontal={true}>
         <View className="flex flex-row">
+          <Pressable
+            onPress={() => {
+              navigation.navigate("CreateCommunity")
+            }}
+            className="m-2"
+          >
+            <View style={[avatarSize, styles.avatar, styles.noImage]} />
+          </Pressable>
           <View className="m-2">
             <SinglePic
               size={55}

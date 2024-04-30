@@ -8,9 +8,6 @@ import supabase from "../../lib/supabase"
 import { FileObject } from "@supabase/storage-js"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import { decode } from "base64-arraybuffer"
-import uploadImage from "../supabaseFunctions/imageFuncs/uploadImage"
-import { set } from "date-fns"
-import updateUserPhotos from "../supabaseFunctions/imageFuncs/updateUserPhotos"
 
 type SingleImageProp = {
   item: FileObject

@@ -29,6 +29,7 @@ import FitnessInterests from "./UserOnBoard/FitnessInterests"
 import CommunityPreference from "./UserOnBoard/CommunitiesPref"
 import ActivityTimePreference from "./UserOnBoard/ActvityTimePreference"
 import EditProfile from "./userSide/Profile/EditProfile"
+import CreateCommunity from "./userSide/CreateCommunity/CreateCommunity"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -151,6 +152,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="MessagingScreen"
                 component={MessageScreen}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="CreateCommunity"
+                component={CreateCommunity}
               />
 
               <Stack.Screen
