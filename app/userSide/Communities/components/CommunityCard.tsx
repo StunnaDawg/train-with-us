@@ -1,11 +1,30 @@
 import { View, Text, Pressable } from "react-native"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { NavigationType } from "../../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import SinglePic from "../../../components/SinglePic"
+import { useAuth } from "../../../supabaseFunctions/authcontext"
+import supabase from "../../../../lib/supabase"
+import { FileObject } from "@supabase/storage-js"
 
 const CommunityCard = () => {
+  const [files, setFiles] = useState<FileObject[]>([])
+  const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
+
+  useEffect(() => {
+    if (!user) return
+
+    loadImages()
+  }, [user])
+
+  const loadImages = async () => {
+    const { data } = await supabase.storage.from("photos").list(user!.id)
+    if (data) {
+      setFiles(data)
+    }
+  }
+
   return (
     <Pressable
       onPress={() => {
@@ -16,7 +35,7 @@ const CommunityCard = () => {
         <View className="m-2">
           <SinglePic
             size={90}
-            picNumber={0}
+            item={files[0]}
             avatarRadius={100}
             noAvatarRadius={100}
           />
