@@ -3,7 +3,7 @@ import { User } from "@supabase/supabase-js"
 import { FileObject } from "@supabase/storage-js"
 import supabase from "../../../lib/supabase"
 
-const loadImages = async (
+const loadCurrentUsersImages = async (
   setFiles: Dispatch<SetStateAction<FileObject[]>>,
   user: User | null | undefined,
   setLoading: Dispatch<SetStateAction<boolean>>
@@ -21,4 +21,4 @@ const loadImages = async (
   }
 }
 
-export default loadImages
+export default loadCurrentUsersImages
