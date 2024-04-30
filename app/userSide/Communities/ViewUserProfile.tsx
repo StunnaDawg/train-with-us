@@ -27,14 +27,14 @@ const ViewUserProfile = () => {
         </View>
 
         <View>
-          <UserTopGyms borderB={false} mt={false} />
+          <UserTopGyms profile={member} borderB={false} mt={false} />
         </View>
 
         <View>
           <View className="ml-7">
             <Text className="font-medium">My Styles of Fitness:</Text>
           </View>
-          <ActivitySection />
+          <ActivitySection profile={member} />
         </View>
 
         <View className="mt-2">
@@ -42,7 +42,7 @@ const ViewUserProfile = () => {
         </View>
 
         <View>
-          <UserAboutSection />
+          <UserAboutSection profile={member} />
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -1,7 +1,12 @@
 import { View, Text, ScrollView } from "react-native"
 import React from "react"
+import { Profile } from "../../../@types/supabaseTypes"
 
-const UserAboutSection = () => {
+type UserAboutSectionProps = {
+  profile: Profile | null
+}
+
+const UserAboutSection = ({ profile }: UserAboutSectionProps) => {
   return (
     <View className="mt-4 ml-7 mr-7 ">
       {/* About */}

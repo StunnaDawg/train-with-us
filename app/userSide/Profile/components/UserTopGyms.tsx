@@ -1,12 +1,14 @@
 import { View, Text } from "react-native"
 import React from "react"
+import { Profile } from "../../../@types/supabaseTypes"
 
 type UserTopGymsProps = {
   borderB: boolean
   mt: boolean
+  profile: Profile | null
 }
 
-const UserTopGyms = ({ borderB, mt }: UserTopGymsProps) => {
+const UserTopGyms = ({ borderB, mt, profile }: UserTopGymsProps) => {
   return (
     <View className={mt ? "mt-8 ml-7 mr-7 " : "mt-2 ml-7 mr-7"}>
       <View className="flex flex-row  ">

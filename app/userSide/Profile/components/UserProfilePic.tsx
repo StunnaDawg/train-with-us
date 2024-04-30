@@ -12,9 +12,10 @@ import { Profile } from "../../../@types/supabaseTypes"
 
 type UserProfilePicProps = {
   refresh: boolean
+  profile: Profile | null
 }
 
-const UserProfilePic = ({ refresh }: UserProfilePicProps) => {
+const UserProfilePic = ({ refresh, profile }: UserProfilePicProps) => {
   const [files, setFiles] = useState<FileObject[]>([])
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const navigation = useNavigation<NavigationType>()
@@ -65,7 +66,7 @@ const UserProfilePic = ({ refresh }: UserProfilePicProps) => {
           noAvatarRadius={230}
         />
         <View className="flex flex-row justify-center mt-4 items-center">
-          <Text className="font-bold text-3xl mx-2">Kimberley</Text>
+          <Text className="font-bold text-3xl mx-2">{profile?.first_name}</Text>
           <Pressable
             onPress={() => {
               navigation.navigate("UserEditProfile")
