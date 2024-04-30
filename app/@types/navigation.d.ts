@@ -1,6 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { TabNavigationProp } from "@react-navigation/native"
 import { CommunitiesProfile, UserProfile } from "./supabase"
+import { Profile } from "./supabaseTypes"
 
 export type RootStackParamList = {
   Footer: undefined
@@ -19,7 +20,7 @@ export type RootStackParamList = {
   UserEditProfile: undefined
   UserSettings: undefined
   ViewUserProfile: {
-    userProfile: UserProfile
+    userProfile: Profile
   }
   QuestionOne: undefined
   QuestionTwo: undefined
@@ -59,10 +60,12 @@ export type RootStackParamList = {
     id: string
     userDocId: string
   }
-  ViewCommunitiesScreen: undefined
+  ViewCommunitiesScreen: {
+    communityId: number
+  }
 
   ViewCommunitiesMembersScreen: {
-    CommunitiesId: string
+    communityId: number
   }
   ViewCommunitiesTopTabs: undefined
   CreateNewChannel: undefined

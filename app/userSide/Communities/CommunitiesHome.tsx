@@ -50,13 +50,13 @@ const CommunitiesHome = () => {
           communities && communities.length > 0 ? (
             communities.map((community) => (
               <View key={community.id} className="m-2">
-                <CommunityCard />
+                <CommunityCard community={community} />
               </View>
             ))
           ) : (
             <>
               <View className="m-2">
-                <CommunityCard />
+                <Text>No Communities near!</Text>
               </View>
             </>
           )

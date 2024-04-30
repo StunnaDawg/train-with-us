@@ -1,19 +1,39 @@
 import { View, Text, Pressable } from "react-native"
 import React from "react"
 import WhiteSkinnyButton from "../../../components/WhiteSkinnyButton"
+import { Communities } from "../../../@types/supabaseTypes"
+import { useNavigation } from "@react-navigation/native"
+import { NavigationType } from "../../../@types/navigation"
 
-const ViewCommunityTitle = () => {
+type ViewCommunityTitleProps = {
+  community: Communities | null
+  communityId: number
+}
+
+const ViewCommunityTitle = ({
+  community,
+  communityId,
+}: ViewCommunityTitleProps) => {
+  const navigation = useNavigation<NavigationType>()
   const requestToJoin = () => {}
   return (
     <View className="mx-12">
       <View className="items-center">
-        <Text className="font-bold text-3xl">Blended Athletics</Text>
+        <Text className="font-bold text-3xl">{community?.community_title}</Text>
       </View>
 
       <View className="flex flex-row justify-between items-center">
-        <View>
-          <Text className="font-bold text-xl">2233 Members</Text>
-        </View>
+        <Pressable
+          onPress={() =>
+            navigation.navigate("ViewCommunitiesMembersScreen", {
+              communityId: communityId,
+            })
+          }
+        >
+          <Text className="font-bold text-xl">
+            {community?.community_members?.length} Members
+          </Text>
+        </Pressable>
         <View>
           <WhiteSkinnyButton
             text="+ Request to Join"

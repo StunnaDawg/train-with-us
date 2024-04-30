@@ -1,10 +1,16 @@
 import { ActivityIndicator, ScrollView, Text, View } from "react-native"
 import React, { useEffect, useState } from "react"
 import EventCard from "../../Events/components/EventCard"
-import { Events } from "../../../@types/supabaseTypes"
+import { Communities, Events } from "../../../@types/supabaseTypes"
 import getUpcomingEvents from "../../../supabaseFunctions/getFuncs/getUpcomingEvents"
 
-const UpcomingCommunityEvents = () => {
+type UpcomingCommunityEventsProps = {
+  community: Communities | null
+}
+
+const UpcomingCommunityEvents = ({
+  community,
+}: UpcomingCommunityEventsProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [upcomingEvents, setUpcomingEvents] = useState<Events[] | null>([])
   // Make sure to change the function name from getUpcomingEvents to getUpcomingCommunityEvents

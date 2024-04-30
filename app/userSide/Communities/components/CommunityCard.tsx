@@ -6,8 +6,13 @@ import SinglePic from "../../../components/SinglePic"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
 import { FileObject } from "@supabase/storage-js"
+import { Communities } from "../../../@types/supabaseTypes"
 
-const CommunityCard = () => {
+type CommunityCardProps = {
+  community: Communities
+}
+
+const CommunityCard = ({ community }: CommunityCardProps) => {
   const [files, setFiles] = useState<FileObject[]>([])
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
@@ -28,7 +33,9 @@ const CommunityCard = () => {
   return (
     <Pressable
       onPress={() => {
-        navigation.navigate("ViewCommunitiesScreen")
+        navigation.navigate("ViewCommunitiesScreen", {
+          communityId: community.id,
+        })
       }}
     >
       <View className="flex flex-row items-center">
@@ -42,7 +49,9 @@ const CommunityCard = () => {
         </View>
 
         <View className="flex-col flex-1">
-          <Text className="font-bold text-2xl">Blended</Text>
+          <Text className="font-bold text-2xl">
+            {community.community_title}
+          </Text>
           <Text className="text-xs">10km away</Text>
           <View className="border-b p-3" />
         </View>

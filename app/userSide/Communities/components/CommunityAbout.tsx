@@ -1,7 +1,12 @@
 import { View, Text } from "react-native"
 import React from "react"
+import { Communities } from "../../../@types/supabaseTypes"
 
-const CommunityAbout = () => {
+type CommunityAboutProps = {
+  community: Communities | null
+}
+
+const CommunityAbout = ({ community }: CommunityAboutProps) => {
   return (
     <View className="items-center">
       <View className="">

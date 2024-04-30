@@ -1,8 +1,13 @@
 import { View, Text } from "react-native"
 import React from "react"
 import WhiteSkinnyButton from "../../../components/WhiteSkinnyButton"
+import { Communities } from "../../../@types/supabaseTypes"
 
-const CommunityContact = () => {
+type CommunityContactProps = {
+  community: Communities | null
+}
+
+const CommunityContact = ({ community }: CommunityContactProps) => {
   const callFunc = () => {
     console.log("Calling")
   }

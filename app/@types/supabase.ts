@@ -27,6 +27,7 @@ export type Database = {
       communities: {
         Row: {
           channels: string[] | null
+          community_members: string[] | null
           community_owner: string | null
           community_photos: string[] | null
           community_style: string | null
@@ -36,6 +37,7 @@ export type Database = {
         }
         Insert: {
           channels?: string[] | null
+          community_members?: string[] | null
           community_owner?: string | null
           community_photos?: string[] | null
           community_style?: string | null
@@ -45,6 +47,7 @@ export type Database = {
         }
         Update: {
           channels?: string[] | null
+          community_members?: string[] | null
           community_owner?: string | null
           community_photos?: string[] | null
           community_style?: string | null
