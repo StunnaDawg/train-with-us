@@ -5,7 +5,12 @@ import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
 import { FileObject } from "@supabase/storage-js"
 
-const ViewEventTitle = () => {
+type ViewEventTitleProps = {
+  title: string | null | undefined
+  date: string | null | undefined
+}
+
+const ViewEventTitle = ({ title, date }: ViewEventTitleProps) => {
   const [files, setFiles] = useState<FileObject[]>([])
   const { user } = useAuth()
 
@@ -24,9 +29,9 @@ const ViewEventTitle = () => {
   return (
     <View className="flex flex-row items-center justify-center">
       <View className="m-5 items-center">
-        <Text className="text-xl font-bold">Friday, May 10th</Text>
+        <Text className="text-xl font-bold">{date}</Text>
         <View className="border rounded-full p-1 px-4 bg-white border-white">
-          <Text className="text-xl font-semibold">Blended Athletics</Text>
+          <Text className="text-xl font-semibold">{title}</Text>
         </View>
         <Text className="text-xl font-bold">Event Type</Text>
       </View>

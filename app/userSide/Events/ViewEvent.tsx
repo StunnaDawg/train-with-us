@@ -1,25 +1,51 @@
 import { View, ScrollView, SafeAreaView } from "react-native"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import ViewEventTitle from "./components/ViewEventTitle"
 import ViewEventDetails from "./components/ViewEventDetails"
 import AboutViewEvent from "./components/AboutViewEvent"
 import Checkout from "./components/Checkout"
+import { useAuth } from "../../supabaseFunctions/authcontext"
+import { NavigationType, RootStackParamList } from "../../@types/navigation"
+import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
+import { Events, Profile } from "../../@types/supabaseTypes"
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native"
+import getSingleEvent from "../../supabaseFunctions/getFuncs/getSingleEvent"
 
 const ViewEvent = () => {
+  const [loading, setLoading] = useState<boolean>(false)
+  const { user } = useAuth()
+  const [userProfile, setUserProfile] = useState<Profile | null>(null)
+  const navigation = useNavigation<NavigationType>()
+  const [event, setEvent] = useState<Events | null>(null)
+  const route = useRoute<RouteProp<RootStackParamList, "ViewEvent">>()
+  const eventId = route.params.eventId
+
+  useEffect(() => {
+    const getUser = async () => {
+      if (!user) return
+      await useCurrentUser(user?.id, setUserProfile)
+    }
+    getUser()
+  }, [])
+
+  useEffect(() => {
+    if (eventId === undefined) return
+    getSingleEvent(setLoading, eventId, setEvent)
+  }, [])
   return (
     <View className="flex-1 bg-yellow-300">
       <SafeAreaView className="flex-1">
         <ScrollView className="flex-1">
           <View>
-            <ViewEventTitle />
+            <ViewEventTitle title={event?.event_title} date={event?.date} />
           </View>
 
           <View className="mx-5 mt-2">
-            <ViewEventDetails />
+            <ViewEventDetails date={event?.date} />
           </View>
 
           <View>
-            <AboutViewEvent />
+            <AboutViewEvent description={event?.event_description} />
           </View>
         </ScrollView>
         <View className="absolute inset-x-0 bottom-0 pb-12 bg-white/75">

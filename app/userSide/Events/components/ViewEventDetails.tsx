@@ -2,13 +2,17 @@ import { View, Text } from "react-native"
 import React from "react"
 import ShowMap from "./ShowMap"
 
-const ViewEventDetails = () => {
+type ViewEventDetailsProps = {
+  date: string | null | undefined
+}
+
+const ViewEventDetails = ({ date }: ViewEventDetailsProps) => {
   return (
     <View>
       {/* Date and Time */}
       <View className="mb-2">
         <Text className=" font-bold text-lg pb-1">Date and Time:</Text>
-        <Text className="font-bold text-lg ">Friday May 10th @ 3pm</Text>
+        <Text className="font-bold text-lg ">{date}</Text>
       </View>
 
       {/* Location */}

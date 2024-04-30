@@ -30,6 +30,7 @@ const AllEvents = () => {
         ) : allEvents && allEvents?.length > 0 ? (
           allEvents?.map((event) => (
             <EventCard
+              eventId={event.id}
               title={event.event_title}
               date={event.date}
               communityId={event.community_host}

@@ -13,7 +13,9 @@ export type RootStackParamList = {
   Community: undefined
   FindWorkout: undefined
   CommunitiesFooter: undefined
-  ViewEvent: undefined
+  ViewEvent: {
+    eventId: number
+  }
   UserEditProfile: undefined
   UserSettings: undefined
   ViewUserProfile: {

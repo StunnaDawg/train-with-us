@@ -12,12 +12,13 @@ import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCom
 import { Communities } from "../../../@types/supabaseTypes"
 
 type EventCardProps = {
+  eventId: number
   title: string | null
   date: string | null
   communityId: number | null
 }
 
-const EventCard = ({ title, date, communityId }: EventCardProps) => {
+const EventCard = ({ title, date, communityId, eventId }: EventCardProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [community, setCommunity] = useState<Communities | null>(
     {} as Communities
@@ -57,7 +58,13 @@ const EventCard = ({ title, date, communityId }: EventCardProps) => {
     console.log("community", community?.community_title)
   }, [community])
   return (
-    <Pressable onPress={() => navigation.navigate("ViewEvent")}>
+    <Pressable
+      onPress={() =>
+        navigation.navigate("ViewEvent", {
+          eventId: eventId,
+        })
+      }
+    >
       <ImageBackground
         source={{
           uri: "https://images.unsplash.com/photo-1615395255362-f0b24845e1df?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60",

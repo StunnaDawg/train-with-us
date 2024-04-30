@@ -4,7 +4,7 @@ import { Events } from "../../@types/supabaseTypes"
 
 const getSingleEvent = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
-  id: string,
+  id: number,
   setEvent: Dispatch<SetStateAction<Events | null>>
 ) => {
   try {

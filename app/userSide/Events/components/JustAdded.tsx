@@ -19,6 +19,7 @@ const JustAdded = () => {
         ) : justAddedEvents && justAddedEvents?.length > 0 ? (
           justAddedEvents?.map((event) => (
             <EventCard
+              eventId={event.id}
               communityId={event.community_host}
               key={event.id}
               title={event.event_title}

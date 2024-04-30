@@ -20,6 +20,7 @@ const UpcomingCommunityEvents = () => {
         ) : upcomingEvents && upcomingEvents?.length > 0 ? (
           upcomingEvents?.map((event) => (
             <EventCard
+              eventId={event.id}
               communityId={event.community_host}
               title={event.event_title}
               date={event.date}
