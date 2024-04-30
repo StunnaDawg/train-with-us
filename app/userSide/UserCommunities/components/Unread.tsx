@@ -1,11 +1,31 @@
 import { View, Text, Pressable } from "react-native"
-import React from "react"
+import React, { useState } from "react"
 import SinglePic from "../../../components/SinglePic"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
+import { fi } from "date-fns/locale"
+import { useEffect } from "react"
+import { FileObject } from "@supabase/storage-js"
+import { useAuth } from "../../../supabaseFunctions/authcontext"
+import supabase from "../../../../lib/supabase"
 
 const Unread = () => {
   const navigation = useNavigation<NavigationType>()
+  const [files, setFiles] = useState<FileObject[]>([])
+  const { user } = useAuth()
+
+  useEffect(() => {
+    if (!user) return
+
+    loadImages()
+  }, [user])
+
+  const loadImages = async () => {
+    const { data } = await supabase.storage.from("photos").list(user!.id)
+    if (data) {
+      setFiles(data)
+    }
+  }
   return (
     <View className="mt-8 mx-8 border-b pb-2">
       <View>
@@ -23,7 +43,7 @@ const Unread = () => {
             size={55}
             avatarRadius={100}
             noAvatarRadius={100}
-            picNumber={0}
+            item={files[0]}
           />
         </View>
 
@@ -39,7 +59,7 @@ const Unread = () => {
             size={55}
             avatarRadius={100}
             noAvatarRadius={100}
-            picNumber={0}
+            item={files[0]}
           />
         </View>
 

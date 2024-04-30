@@ -1,23 +1,44 @@
 import { Image } from "expo-image"
 import { useState, useEffect } from "react"
 import { StyleSheet, View } from "react-native"
+import { FileObject } from "@supabase/storage-js"
+import supabase from "../../lib/supabase"
+import { useAuth } from "../supabaseFunctions/authcontext"
 
 type SinglePicProps = {
-  id?: string
   size: number
-  picNumber: number
+  item: FileObject
   avatarRadius: number
   noAvatarRadius: number
 }
 
 export default function SinglePic({
   size = 150,
-  picNumber,
+  item,
   avatarRadius,
   noAvatarRadius,
 }: SinglePicProps) {
-  const [avatarUrl, setAvatarUrl] = useState<string[]>(["", ""])
+  const { user } = useAuth()
+  const [avatarUrl, setAvatarUrl] = useState<string>("")
   const avatarSize = { height: size, width: size }
+
+  useEffect(() => {
+    readImage()
+  }, [item])
+
+  const readImage = () => {
+    if (item === undefined) return
+    supabase.storage
+      .from("photos")
+      .download(`${user?.id}/${item.name}`)
+      .then(({ data }) => {
+        const fr = new FileReader()
+        fr.readAsDataURL(data!)
+        fr.onload = () => {
+          setAvatarUrl(fr.result as string)
+        }
+      })
+  }
 
   const styles = StyleSheet.create({
     avatar: {
@@ -40,9 +61,9 @@ export default function SinglePic({
 
   return (
     <View>
-      {avatarUrl[picNumber] !== "" ? (
+      {avatarUrl !== "" ? (
         <Image
-          source={{ uri: avatarUrl[picNumber] }}
+          source={{ uri: avatarUrl }}
           accessibilityLabel="Avatar"
           style={[avatarSize, styles.avatar, styles.image]}
         />
