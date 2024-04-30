@@ -8,6 +8,9 @@ import supabase from "../../lib/supabase"
 import { FileObject } from "@supabase/storage-js"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import { decode } from "base64-arraybuffer"
+import insertPhoto from "../supabaseFunctions/updateFuncs/insertPhoto"
+import { Profile } from "../@types/supabaseTypes"
+import useCurrentUser from "../supabaseFunctions/getFuncs/useCurrentUser"
 
 type SingleImageProp = {
   item: FileObject
@@ -22,6 +25,8 @@ const SingleEditPic = ({
   files,
   setFiles,
 }: SingleImageProp) => {
+  const [loading, setLoading] = useState(false)
+  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
   const avatarSize = { height: 150, width: 150 }
   const userId = user?.id
@@ -31,6 +36,11 @@ const SingleEditPic = ({
   useEffect(() => {
     readImage()
   }, [item])
+
+  useEffect(() => {
+    if (userId === undefined) return
+    useCurrentUser(userId, setCurrentUser)
+  }, [])
 
   const readImage = () => {
     if (item === undefined) return
@@ -67,6 +77,16 @@ const SingleEditPic = ({
       await supabase.storage.from("photos").upload(filePath, decode(base64), {
         contentType: contentType,
       })
+
+      if (userId === undefined) return
+      insertPhoto(
+        setLoading,
+        currentUser?.photos_url,
+        filePath,
+        userId,
+        "profiles",
+        "photos_url"
+      )
     }
   }
 

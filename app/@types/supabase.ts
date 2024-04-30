@@ -26,21 +26,27 @@ export type Database = {
       }
       communities: {
         Row: {
+          channels: string[] | null
           community_owner: string | null
+          community_photos: string[] | null
           community_style: string | null
           community_title: string | null
           created_at: string
           id: number
         }
         Insert: {
+          channels?: string[] | null
           community_owner?: string | null
+          community_photos?: string[] | null
           community_style?: string | null
           community_title?: string | null
           created_at?: string
           id?: number
         }
         Update: {
+          channels?: string[] | null
           community_owner?: string | null
+          community_photos?: string[] | null
           community_style?: string | null
           community_title?: string | null
           created_at?: string
@@ -55,6 +61,33 @@ export type Database = {
             referencedColumns: ["id"]
           }
         ]
+      }
+      community_channels: {
+        Row: {
+          admin: string | null
+          channel_uuid: string | null
+          created_at: string
+          id: number
+          messages: string | null
+          name: string | null
+        }
+        Insert: {
+          admin?: string | null
+          channel_uuid?: string | null
+          created_at?: string
+          id?: number
+          messages?: string | null
+          name?: string | null
+        }
+        Update: {
+          admin?: string | null
+          channel_uuid?: string | null
+          created_at?: string
+          id?: number
+          messages?: string | null
+          name?: string | null
+        }
+        Relationships: []
       }
       community_members: {
         Row: {
@@ -134,7 +167,7 @@ export type Database = {
           event_host: string
           event_title: string | null
           id: number
-          price: string | null
+          price: number | null
         }
         Insert: {
           community_host?: number | null
@@ -144,7 +177,7 @@ export type Database = {
           event_host: string
           event_title?: string | null
           id?: number
-          price?: string | null
+          price?: number | null
         }
         Update: {
           community_host?: number | null
@@ -154,7 +187,7 @@ export type Database = {
           event_host?: string
           event_title?: string | null
           id?: number
-          price?: string | null
+          price?: number | null
         }
         Relationships: [
           {
