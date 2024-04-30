@@ -8,6 +8,8 @@ const getConnectedIgnoredProfiles = async (userId: string) => {
       .eq("id", userId)
       .single()
 
+    console.log("Connected and Ignored data", data)
+
     if (error) {
       console.error("Error fetching user connections:", error.message)
       return null

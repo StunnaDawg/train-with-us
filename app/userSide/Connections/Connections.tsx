@@ -17,6 +17,10 @@ const Connections = () => {
     getConnectionProfiles(setLoading, user?.id, setConnectionProfiles)
   }, [])
 
+  useEffect(() => {
+    console.log("connectionProfiles", connectionProfiles)
+  }, [connectionProfiles])
+
   return (
     <View>
       {connectionProfiles ? (

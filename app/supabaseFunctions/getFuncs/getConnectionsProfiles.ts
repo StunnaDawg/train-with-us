@@ -11,29 +11,29 @@ const getConnectionProfiles = async (
   try {
     setLoading(true)
     const connections = await getConnectedIgnoredProfiles(userId)
-    if (!connections) {
-      console.log("No connection data found for the user.")
-      return
+
+    let query = supabase.from("profiles").select("*").not("id", "eq", userId) // Exclude the current user's profile by default
+
+    if (connections) {
+      const { connected_users, ignored_users } = connections
+      const excludeIds = [
+        ...new Set([...(connected_users || []), ...(ignored_users || [])]),
+      ]
+
+      // Apply the filter only if there are IDs to exclude
+      if (excludeIds.length > 0) {
+        query = query.not("id", "in", excludeIds)
+      }
     }
 
-    const { connected_users, ignored_users } = connections
-
-    const excludeIds = [
-      ...new Set([...(connected_users || []), ...(ignored_users || [])]),
-    ]
-
-    const { data: profiles, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .not("id", "in", excludeIds)
-      .not("id", "eq", userId)
+    const { data: profiles, error } = await query
 
     if (error) throw error
 
     setProfiles(profiles || null)
     console.log("got profiles,", profiles)
   } catch (error) {
-    console.log("Error in getting profiles:", error)
+    console.error("Error in getting profiles:", error)
   } finally {
     setLoading(false)
   }

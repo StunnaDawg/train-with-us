@@ -276,10 +276,12 @@ export type Database = {
           activities: string[] | null
           birthday: string | null
           community_created: number | null
+          connected_users: string[] | null
           created_at: string | null
           first_name: string | null
           gender: string | null
           id: string
+          ignored_users: string[] | null
           intentions: string | null
           last_name: string | null
           onboard: boolean
@@ -290,10 +292,12 @@ export type Database = {
           activities?: string[] | null
           birthday?: string | null
           community_created?: number | null
+          connected_users?: string[] | null
           created_at?: string | null
           first_name?: string | null
           gender?: string | null
           id: string
+          ignored_users?: string[] | null
           intentions?: string | null
           last_name?: string | null
           onboard?: boolean
@@ -304,10 +308,12 @@ export type Database = {
           activities?: string[] | null
           birthday?: string | null
           community_created?: number | null
+          connected_users?: string[] | null
           created_at?: string | null
           first_name?: string | null
           gender?: string | null
           id?: string
+          ignored_users?: string[] | null
           intentions?: string | null
           last_name?: string | null
           onboard?: boolean

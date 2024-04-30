@@ -33,6 +33,7 @@ import CreateCommunity from "./userSide/CreateCommunity/CreateCommunity"
 import CreateEvent from "./userSide/Events/CreateEvent"
 import CommunityMembers from "./userSide/Communities/CommunityMembers"
 import ViewUserProfile from "./userSide/Communities/ViewUserProfile"
+import ProfileView from "./userSide/Profile/Profile"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -105,7 +106,7 @@ const UserFooter = () => {
       <Tab.Screen name="Events" component={Events} />
       <Tab.Screen name="Communities" component={CommunitiesHome} />
       <Tab.Screen name="Connections" component={Connections} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Profile" component={ProfileView} />
       <Tab.Screen name="Community" component={CommunitiesDash} />
     </Tab.Navigator>
   )

@@ -10,7 +10,7 @@ import { Profile } from "../../@types/supabaseTypes"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 
-const Profile = () => {
+const ProfileView = () => {
   const { user } = useAuth()
   const [loading, setLoading] = useState<boolean>(true)
   const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -47,4 +47,4 @@ const Profile = () => {
   )
 }
 
-export default Profile
+export default ProfileView
