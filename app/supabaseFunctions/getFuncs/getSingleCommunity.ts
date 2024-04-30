@@ -2,24 +2,27 @@ import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { Communities } from "../../@types/supabaseTypes"
 
-const getAllCommunities = async (
+const getSingleCommunity = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
-  id: string,
-  setUserProfile: Dispatch<SetStateAction<Communities[] | null>>
+  id: number,
+  setCommunity: Dispatch<SetStateAction<Communities | null>>
 ) => {
   try {
     setLoading(true)
-    const { data: communities, error } = await supabase
-      .from("communities")
-      .select()
-      .eq("id", id)
+    if (id) {
+      console.log("events in get func, ", id)
+      const { data: communities, error } = await supabase
+        .from("communities")
+        .select()
+        .eq("id", id)
 
-    if (error) throw error
+      if (error) throw error
 
-    const communitiesArray = communities ?? null
-    console.log("events, communitiesArray")
+      const community = communities[0] ?? null
+      console.log("got communitiesArray,", community)
 
-    setUserProfile(communitiesArray)
+      setCommunity(community)
+    }
   } catch (error) {
     console.log(error)
   } finally {
@@ -27,4 +30,4 @@ const getAllCommunities = async (
   }
 }
 
-export default getAllCommunities
+export default getSingleCommunity

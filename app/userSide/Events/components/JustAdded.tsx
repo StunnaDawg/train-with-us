@@ -14,14 +14,20 @@ const JustAdded = () => {
     <View className="flex flex-col m-5">
       <Text className="text-xl font-bold m-1">Just Added</Text>
       <ScrollView horizontal={true}>
-        {/* {loading ? (
+        {loading ? (
           <ActivityIndicator />
         ) : justAddedEvents && justAddedEvents?.length > 0 ? (
-          justAddedEvents?.map((event) => <EventCard key={event.id} />)
+          justAddedEvents?.map((event) => (
+            <EventCard
+              communityId={event.community_host}
+              key={event.id}
+              title={event.event_title}
+              date={event.date}
+            />
+          ))
         ) : (
           <Text>No upcoming events</Text>
-        )} */}
-        <EventCard />
+        )}
       </ScrollView>
     </View>
   )

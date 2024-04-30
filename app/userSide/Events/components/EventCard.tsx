@@ -6,15 +6,22 @@ import {
   StyleSheet,
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { NavigationType } from "../../../@types/navigation"
+import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
+import { Communities } from "../../../@types/supabaseTypes"
 
-const EventCard = () => {
-  // const [gymProfile, setGymProfile] = useState<GymProfile>({} as GymProfile)
-  // const [loading, setLoading] = useState<boolean>(false)
-  // const navigation = useNavigation<NavigationType>()
-  // const [eventDate, setEventDate] = useState<string>("")
-  // const [eventTime, setEventTime] = useState<string>("")
+type EventCardProps = {
+  title: string | null
+  date: string | null
+  communityId: number | null
+}
+
+const EventCard = ({ title, date, communityId }: EventCardProps) => {
+  const [loading, setLoading] = useState<boolean>(false)
+  const [community, setCommunity] = useState<Communities | null>(
+    {} as Communities
+  )
   const navigation = useNavigation<NavigationType>()
   const avatarSize = {
     width: 200,
@@ -39,6 +46,16 @@ const EventCard = () => {
       borderRadius: 10,
     },
   })
+
+  useEffect(() => {
+    if (communityId === null) return
+    console.log("communityId", communityId)
+    getSingleCommunity(setLoading, communityId, setCommunity)
+  }, [])
+
+  useEffect(() => {
+    console.log("community", community?.community_title)
+  }, [community])
   return (
     <Pressable onPress={() => navigation.navigate("ViewEvent")}>
       <ImageBackground
@@ -56,11 +73,11 @@ const EventCard = () => {
             {/* {eventDate},{eventTime} */} June 17th @ 3:30 pm
           </Text>
           <Text className="font-bold text-2xl text-white">
-            {/* {event.eventTitle} */} Bootcamp
+            {/* {event.eventTitle} */} {title}
           </Text>
 
           <Text className="font-bold text-lg text-shadow text-white">
-            Blended
+            {/* {event.communityName} */} {community?.community_title}
           </Text>
         </View>
       </ImageBackground>

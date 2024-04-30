@@ -17,7 +17,14 @@ const Upcoming = () => {
         {loading ? (
           <ActivityIndicator />
         ) : upcomingEvents && upcomingEvents?.length > 0 ? (
-          upcomingEvents?.map((event) => <EventCard key={event.id} />)
+          upcomingEvents?.map((event) => (
+            <EventCard
+              title={event.event_title}
+              date={event.date}
+              communityId={event.community_host}
+              key={event.id}
+            />
+          ))
         ) : (
           <Text>No upcoming events</Text>
         )}
