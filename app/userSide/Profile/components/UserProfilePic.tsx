@@ -7,23 +7,52 @@ import { useNavigation } from "@react-navigation/native"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
 import { FileObject } from "@supabase/storage-js"
+import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
+import { Profile } from "../../../@types/supabaseTypes"
 
-const UserProfilePic = () => {
+type UserProfilePicProps = {
+  refresh: boolean
+}
+
+const UserProfilePic = ({ refresh }: UserProfilePicProps) => {
   const [files, setFiles] = useState<FileObject[]>([])
+  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const navigation = useNavigation<NavigationType>()
 
   const { user } = useAuth()
 
   useEffect(() => {
     if (!user) return
-
-    loadImages()
+    useCurrentUser(user.id, setCurrentUser)
   }, [user])
 
+  useEffect(() => {
+    if (!user) return
+    useCurrentUser(user.id, setCurrentUser)
+  }, [refresh])
+
+  useEffect(() => {
+    if (!user) return
+
+    // Load user images
+    loadImages()
+  }, [currentUser])
+
   const loadImages = async () => {
-    const { data } = await supabase.storage.from("photos").list(user!.id)
-    if (data) {
-      setFiles(data)
+    if (!currentUser?.id) return
+
+    try {
+      const { data, error } = await supabase.storage
+        .from("photos")
+        .list(currentUser.id) // Assuming 'photos/userId' is the folder structure.
+
+      if (error) throw error
+
+      if (data) {
+        setFiles(data)
+      }
+    } catch (error) {
+      console.error("Failed to load images:", error)
     }
   }
   return (
