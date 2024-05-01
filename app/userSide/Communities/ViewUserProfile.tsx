@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, ScrollView } from "react-native"
-import React from "react"
+import React, { useState } from "react"
 import PhotoArray from "../Connections/components/PhotoArray"
 import MessageButton from "../Connections/components/MessageButton"
 import UserTopGyms from "../Profile/components/UserTopGyms"
@@ -10,6 +10,7 @@ import { RouteProp } from "@react-navigation/native"
 import { RootStackParamList } from "../../@types/navigation"
 
 const ViewUserProfile = () => {
+  const [loading, setLoading] = useState<boolean>(false)
   const route = useRoute<RouteProp<RootStackParamList, "ViewUserProfile">>()
   const member = route.params.userProfile
   return (
@@ -23,7 +24,12 @@ const ViewUserProfile = () => {
         </View>
 
         <View>
-          <MessageButton profileId={member.id} coach={false} />
+          <MessageButton
+            setLoading={setLoading}
+            loading={loading}
+            profileId={member.id}
+            coach={false}
+          />
         </View>
 
         <View>

@@ -12,6 +12,12 @@ const insertPhoto = async (
   try {
     setLoading(true)
 
+    const { data: photoPath } = supabase.storage
+      .from("photos")
+      .getPublicUrl(photoUrl)
+
+    console.log("photoPath", photoPath)
+
     const newArray = [...(currentArray || []), photoUrl]
 
     const { error } = await supabase
