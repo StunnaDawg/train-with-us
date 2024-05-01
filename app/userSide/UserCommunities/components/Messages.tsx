@@ -23,6 +23,11 @@ const Messages = () => {
     getAllUserChatSessions(user!.id, setChatSessions)
   }, [])
 
+  useEffect(() => {
+    if (!chatSessions) return
+    console.log(chatSessions)
+  }, [chatSessions])
+
   const loadImages = async () => {
     const { data } = await supabase.storage.from("photos").list(user!.id)
     if (data) {

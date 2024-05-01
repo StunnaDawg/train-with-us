@@ -87,7 +87,6 @@ const MessageButton = ({ coach, profileId }: MessageButtonProps) => {
             onPress={async () => {
               if (!profileId || !user) return
               console.log("profileId", profileId)
-              await createNewChatSession(user?.id, profileId)
 
               console.log("chatSessionId", chatSessionId)
               await sendNewMessage(message, user?.id, profileId)

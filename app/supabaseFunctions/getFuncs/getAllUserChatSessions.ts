@@ -10,8 +10,7 @@ const getAllUserChatSessions = async (
     const { data: chatSessions, error } = await supabase
       .from("chat_sessions")
       .select("*")
-      .or(`user1.eq.${userId}`)
-      .or(`user2.eq.${userId}`)
+      .or(`user1.eq.${userId}` || `user2.eq.${userId}`)
 
     if (error) throw error
     if (!chatSessions || chatSessions.length === 0) {
