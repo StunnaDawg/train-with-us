@@ -1,24 +1,37 @@
 import { View, Text, Pressable, TextInput } from "react-native"
-import React, { useCallback, useMemo, useRef, useState } from "react"
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import insertIgnoreUser from "../../../supabaseFunctions/updateFuncs/addIgnoreUser"
 import { BottomSheetModal, useBottomSheetModal } from "@gorhom/bottom-sheet"
 import sendNewMessage from "../../../supabaseFunctions/addFuncs/sendNewMessage"
-import createNewChatSession from "../../../supabaseFunctions/addFuncs/newChatSession"
-import getChatSession from "../../../supabaseFunctions/getFuncs/getChatSession"
+
 import { ChatSession } from "../../../@types/supabaseTypes"
+import { set } from "date-fns"
 
 type MessageButtonProps = {
   coach: boolean
   profileId: string | undefined
+  loading: boolean
+  setLoading: Dispatch<SetStateAction<boolean>>
 }
 
-const MessageButton = ({ coach, profileId }: MessageButtonProps) => {
+const MessageButton = ({
+  coach,
+  profileId,
+  setLoading,
+  loading,
+}: MessageButtonProps) => {
   const [message, setMessageToSend] = useState<string>("")
   const [chatSessionId, setChatSessionId] = useState<ChatSession>(
     {} as ChatSession
   )
-  const [loading, setLoading] = useState<boolean>(false)
   const { user } = useAuth()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const { dismiss } = useBottomSheetModal()
@@ -34,7 +47,7 @@ const MessageButton = ({ coach, profileId }: MessageButtonProps) => {
 
   const handleIgnorePress = () => {
     if (!user || !profileId) return
-    insertIgnoreUser(user?.id, profileId)
+    insertIgnoreUser(setLoading, user?.id, profileId)
   }
   return (
     <>
@@ -85,11 +98,13 @@ const MessageButton = ({ coach, profileId }: MessageButtonProps) => {
           <Pressable
             className="mx-2"
             onPress={async () => {
+              setLoading(true)
               if (!profileId || !user) return
               console.log("profileId", profileId)
 
               console.log("chatSessionId", chatSessionId)
               await sendNewMessage(message, user?.id, profileId)
+              setLoading(false)
               dismiss()
             }}
           >

@@ -1,27 +1,23 @@
 import { Dispatch, SetStateAction } from "react"
-import supabase from "../../../lib/supabase"
-import { Profile } from "../../@types/supabaseTypes"
 import getConnectedIgnoredProfiles from "../getFuncs/getConnectedIgnoredProfiles"
-import { fi } from "date-fns/locale"
+import supabase from "../../../lib/supabase"
 
-const insertIgnoreUser = async (
+const insertConnectedUser = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   userId: string,
-  ignoreUserId: string
+  connectedUserId: string
 ) => {
   try {
     setLoading(true)
-    console.log("Inserting user...", ignoreUserId)
+    console.log("Inserting user...")
     const currentArray = await getConnectedIgnoredProfiles(userId)
 
-    // Inserting the ignored user into the current user's ignored_users array
-
-    const newArray = [...(currentArray?.ignored_users || []), ignoreUserId]
-    console.log("Inserting ignored user...", newArray)
+    const newArray = [...(currentArray?.connected_users || []), connectedUserId]
+    console.log("Inserting connected user...", newArray)
 
     const { error } = await supabase
       .from("profiles")
-      .upsert({ id: userId, ignored_users: newArray })
+      .upsert({ id: userId, connectedUsers: newArray })
 
     if (error) throw error
 
@@ -33,4 +29,4 @@ const insertIgnoreUser = async (
   }
 }
 
-export default insertIgnoreUser
+export default insertConnectedUser

@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from "react-native"
-import React from "react"
+import React, { Dispatch, SetStateAction } from "react"
 import PhotoArray from "./PhotoArray"
 import ActivitySection from "../../Profile/components/ActivitySection"
 import UserAboutSection from "../../Profile/components/UserAboutSection"
@@ -11,9 +11,15 @@ import { Profile } from "../../../@types/supabaseTypes"
 
 type ConnectionsCardProps = {
   profile: Profile | null
+  loading: boolean
+  setLoading: Dispatch<SetStateAction<boolean>>
 }
 
-const ConnectionsCard = ({ profile }: ConnectionsCardProps) => {
+const ConnectionsCard = ({
+  profile,
+  loading,
+  setLoading,
+}: ConnectionsCardProps) => {
   return (
     <ScrollView>
       <View className="flex flex-row justify-center mt-8 mb-2">
@@ -24,7 +30,12 @@ const ConnectionsCard = ({ profile }: ConnectionsCardProps) => {
       </View>
 
       <View>
-        <MessageButton profileId={profile?.id} coach={false} />
+        <MessageButton
+          setLoading={setLoading}
+          loading={loading}
+          profileId={profile?.id}
+          coach={false}
+        />
       </View>
 
       <View>

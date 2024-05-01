@@ -6,7 +6,7 @@ import { Profile } from "../../@types/supabaseTypes"
 const getConnectionProfiles = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   userId: string,
-  setProfiles: Dispatch<SetStateAction<Profile[] | null>>
+  setProfiles: Dispatch<SetStateAction<Profile[]>>
 ) => {
   try {
     setLoading(true)
@@ -28,10 +28,12 @@ const getConnectionProfiles = async (
 
     const { data: profiles, error } = await query
 
-    if (error) throw error
+    if (error) {
+      setProfiles([])
+      throw error
+    }
 
-    setProfiles(profiles || null)
-    console.log("got profiles,", profiles)
+    setProfiles(profiles)
   } catch (error) {
     console.error("Error in getting profiles:", error)
   } finally {
