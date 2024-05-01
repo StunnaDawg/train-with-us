@@ -19,9 +19,10 @@ import { get } from "mongoose"
 import getAllUserChatSessions from "../../../supabaseFunctions/getFuncs/getAllUserChatSessions"
 import { Messages } from "../../../@types/supabaseTypes"
 import getChatSessionMessages from "../../../supabaseFunctions/getFuncs/getChatSessionMessages"
+import { useAuth } from "../../../supabaseFunctions/authcontext"
 
 type UserMessage = {
-  message: string
+  message: string | null
 }
 
 const UserMessage = ({ message }: UserMessage) => {
@@ -38,7 +39,7 @@ const UserMessage = ({ message }: UserMessage) => {
 }
 
 type MatchesMessageProps = {
-  message: string
+  message: string | null
 }
 
 const MatchesMessage = ({ message }: MatchesMessageProps) => {
@@ -64,6 +65,7 @@ const MatchesMessage = ({ message }: MatchesMessageProps) => {
 const MessageScreen = () => {
   const route = useRoute<RouteProp<RootStackParamList, "MessagingScreen">>()
   const chatId = route.params.chatId
+  const { user } = useAuth()
 
   const [serverMessages, setServerMessages] = useState<Messages[] | null>([])
 
@@ -75,7 +77,7 @@ const MessageScreen = () => {
 
   const sendMessage = () => {
     if (messageToSend.trim().length === 0) {
-      return // Avoid sending empty messages
+      return
     }
 
     // Add new message to the state
@@ -120,14 +122,14 @@ const MessageScreen = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <FlatList
             className="m-2"
-            data={messages}
+            data={serverMessages}
             inverted={true}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) =>
-              item.id === "1" ? (
-                <UserMessage message={item.text} />
+              item.id === user?.id ? (
+                <UserMessage message={item.message} />
               ) : (
-                <MatchesMessage message={item.text} />
+                <MatchesMessage message={item.message} />
               )
             }
           />
