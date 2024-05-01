@@ -31,7 +31,7 @@ const ViewCommunities = () => {
         </View>
 
         <View className="mt-2">
-          <PhotoArray />
+          {community ? <PhotoArray community={community} /> : null}
         </View>
 
         <View className="flex flex-row justify-center items-center mt-4">

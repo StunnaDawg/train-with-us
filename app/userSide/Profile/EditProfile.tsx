@@ -9,22 +9,8 @@ import supabase from "../../../lib/supabase"
 
 const EditProfile = () => {
   const { user } = useAuth()
-  const [files, setFiles] = useState<FileObject[]>([])
   const zodiac = "Gemini"
 
-  useEffect(() => {
-    if (!user) return
-
-    // Load user images
-    loadImages()
-  }, [user])
-
-  const loadImages = async () => {
-    const { data } = await supabase.storage.from("files").list(user!.id)
-    if (data) {
-      setFiles(data)
-    }
-  }
   return (
     <SafeAreaView className="flex-1">
       <ScrollView>

@@ -4,28 +4,31 @@ import SinglePic from "../../../components/SinglePic"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
 import { FileObject } from "@supabase/storage-js"
+import { Events } from "../../../@types/supabaseTypes"
+import getSingleEvent from "../../../supabaseFunctions/getFuncs/getSingleEvent"
 
 type ViewEventTitleProps = {
   title: string | null | undefined
   date: string | null | undefined
+  eventId: number | null | undefined
 }
 
-const ViewEventTitle = ({ title, date }: ViewEventTitleProps) => {
-  const [files, setFiles] = useState<FileObject[]>([])
+const ViewEventTitle = ({ title, date, eventId }: ViewEventTitleProps) => {
+  const [loading, setLoading] = useState<boolean>(false)
+  const [currentEvent, setCurrentEvent] = useState<Events | null>({} as Events)
+  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const { user } = useAuth()
 
   useEffect(() => {
-    if (!user) return
+    if (!user && eventId !== null && eventId !== undefined) return
 
-    loadImages()
+    getSingleEvent(setLoading, eventId, setCurrentEvent)
   }, [user])
 
-  const loadImages = async () => {
-    const { data } = await supabase.storage.from("photos").list(user!.id)
-    if (data) {
-      setFiles(data)
-    }
-  }
+  useEffect(() => {
+    if (currentEvent?.event_photos === null || undefined) return
+    setImageFiles(currentEvent?.event_photos)
+  }, [currentEvent])
   return (
     <View className="flex flex-row items-center justify-center">
       <View className="m-5 items-center">
@@ -41,7 +44,7 @@ const ViewEventTitle = ({ title, date }: ViewEventTitleProps) => {
           size={150}
           avatarRadius={0}
           noAvatarRadius={0}
-          item={files[0]}
+          item={imageFiles?.[0]}
         />
       </View>
     </View>

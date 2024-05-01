@@ -7,7 +7,7 @@ import { useAuth } from "../supabaseFunctions/authcontext"
 
 type SinglePicProps = {
   size: number
-  item: FileObject
+  item: string | null | undefined
   avatarRadius: number
   noAvatarRadius: number
 }
@@ -30,7 +30,7 @@ export default function SinglePic({
     if (item === undefined) return
     supabase.storage
       .from("photos")
-      .download(`${user?.id}/${item.name}`)
+      .download(`${item}`)
       .then(({ data }) => {
         const fr = new FileReader()
         fr.readAsDataURL(data!)

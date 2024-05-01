@@ -156,6 +156,7 @@ export type Database = {
           date: string | null
           event_description: string | null
           event_host: string
+          event_photos: string[] | null
           event_title: string | null
           id: number
           price: number | null
@@ -166,6 +167,7 @@ export type Database = {
           date?: string | null
           event_description?: string | null
           event_host: string
+          event_photos?: string[] | null
           event_title?: string | null
           id?: number
           price?: number | null
@@ -176,6 +178,7 @@ export type Database = {
           date?: string | null
           event_description?: string | null
           event_host?: string
+          event_photos?: string[] | null
           event_title?: string | null
           id?: number
           price?: number | null
@@ -229,7 +232,7 @@ export type Database = {
       }
       messages: {
         Row: {
-          chat_session: string | null
+          chat_session: string
           id: string
           message: string | null
           read: boolean
@@ -237,7 +240,7 @@ export type Database = {
           sent_at: string
         }
         Insert: {
-          chat_session?: string | null
+          chat_session: string
           id?: string
           message?: string | null
           read?: boolean
@@ -245,7 +248,7 @@ export type Database = {
           sent_at?: string
         }
         Update: {
-          chat_session?: string | null
+          chat_session?: string
           id?: string
           message?: string | null
           read?: boolean

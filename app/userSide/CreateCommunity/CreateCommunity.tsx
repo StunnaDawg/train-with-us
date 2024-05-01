@@ -6,17 +6,27 @@ import addNewCommunity from "../../supabaseFunctions/addFuncs/addNewCommunity"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { NavigationType } from "../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
+import * as ImagePicker from "expo-image-picker"
 
 const CreateCommunity = () => {
   const { user } = useAuth()
   const [communityName, setCommunityName] = useState("")
   const [communityStyle, setCommunityStyle] = useState("")
+
+  const [communityProfilePic, setCommunityProfilePic] =
+    useState<ImagePicker.ImagePickerAsset>({} as ImagePicker.ImagePickerAsset)
   const [loading, setLoading] = useState(false)
   const navigation = useNavigation<NavigationType>()
 
   const createCommunity = () => {
     if (user === null) return
-    addNewCommunity(setLoading, communityName, user!.id, communityStyle)
+    addNewCommunity(
+      setLoading,
+      communityProfilePic,
+      communityName,
+      user!.id,
+      communityStyle
+    )
     navigation.goBack()
   }
 
@@ -27,7 +37,7 @@ const CreateCommunity = () => {
       </View>
 
       <View>
-        <NewPhoto type="community" />
+        <NewPhoto setProfilePic={setCommunityProfilePic} />
       </View>
 
       <View className="flex flex-row mx-5">

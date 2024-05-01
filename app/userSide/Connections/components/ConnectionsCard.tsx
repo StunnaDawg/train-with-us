@@ -26,7 +26,7 @@ const ConnectionsCard = ({
         <Text className="text-3xl font-bold">{profile?.first_name}</Text>
       </View>
       <View>
-        <PhotoArray />
+        <PhotoArray profileId={profile?.id} />
       </View>
 
       <View>
@@ -50,7 +50,7 @@ const ConnectionsCard = ({
       </View>
 
       <View className="mt-2">
-        <PhotoArray />
+        <PhotoArray profileId={profile?.id} />
       </View>
 
       <View>

@@ -6,29 +6,33 @@ import SinglePic from "../../../components/SinglePic"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
 import { FileObject } from "@supabase/storage-js"
-import { Communities } from "../../../@types/supabaseTypes"
+import { Communities, Profile } from "../../../@types/supabaseTypes"
+import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
+import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
 
 type CommunityCardProps = {
   community: Communities
 }
 
 const CommunityCard = ({ community }: CommunityCardProps) => {
-  const [files, setFiles] = useState<FileObject[]>([])
-  const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
+  const [loading, setLoading] = useState<boolean>(false)
+  const [currentCommunity, setCurrentCommunity] = useState<Communities | null>(
+    {} as Communities
+  )
+  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
+  const { user } = useAuth()
 
   useEffect(() => {
     if (!user) return
 
-    loadImages()
+    getSingleCommunity(setLoading, community.id, setCurrentCommunity)
   }, [user])
 
-  const loadImages = async () => {
-    const { data } = await supabase.storage.from("photos").list(user!.id)
-    if (data) {
-      setFiles(data)
-    }
-  }
+  useEffect(() => {
+    if (currentCommunity?.community_photos === null || undefined) return
+    setImageFiles(currentCommunity?.community_photos)
+  }, [currentCommunity])
 
   return (
     <Pressable
@@ -42,7 +46,7 @@ const CommunityCard = ({ community }: CommunityCardProps) => {
         <View className="m-2">
           <SinglePic
             size={90}
-            item={files[0]}
+            item={imageFiles?.[0]}
             avatarRadius={100}
             noAvatarRadius={100}
           />

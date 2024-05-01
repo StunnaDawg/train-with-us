@@ -16,52 +16,34 @@ type UserProfilePicProps = {
 }
 
 const UserProfilePic = ({ refresh, profile }: UserProfilePicProps) => {
-  const [files, setFiles] = useState<FileObject[]>([])
-  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const navigation = useNavigation<NavigationType>()
 
+  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
+  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const { user } = useAuth()
 
   useEffect(() => {
     if (!user) return
-    useCurrentUser(user.id, setCurrentUser)
+
+    useCurrentUser(user?.id, setCurrentUser)
   }, [user])
 
   useEffect(() => {
     if (!user) return
-    useCurrentUser(user.id, setCurrentUser)
+
+    useCurrentUser(user?.id, setCurrentUser)
   }, [refresh])
 
   useEffect(() => {
-    if (!user) return
-
-    // Load user images
-    loadImages()
+    if (currentUser?.photos_url === null || undefined) return
+    setImageFiles(currentUser?.photos_url)
   }, [currentUser])
-
-  const loadImages = async () => {
-    if (!currentUser?.id) return
-
-    try {
-      const { data, error } = await supabase.storage
-        .from("photos")
-        .list(currentUser.id) // Assuming 'photos/userId' is the folder structure.
-
-      if (error) throw error
-
-      if (data) {
-        setFiles(data)
-      }
-    } catch (error) {
-      console.error("Failed to load images:", error)
-    }
-  }
   return (
     <View className="flex flex-row flex-1 justify-center mt-12">
       <View>
         <SinglePic
           size={230}
-          item={files[0]}
+          item={imageFiles?.[0]}
           avatarRadius={230}
           noAvatarRadius={230}
         />

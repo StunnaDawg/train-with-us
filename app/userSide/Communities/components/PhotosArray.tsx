@@ -4,23 +4,31 @@ import SinglePic from "../../../components/SinglePic"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
 import { FileObject } from "@supabase/storage-js"
+import { Communities } from "../../../@types/supabaseTypes"
+import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
 
-const PhotoArray = () => {
-  const [files, setFiles] = useState<FileObject[]>([])
+type PhotoArrayProps = {
+  community: Communities
+}
+
+const PhotoArray = ({ community }: PhotoArrayProps) => {
+  const [loading, setLoading] = useState<boolean>(false)
+  const [currentCommunity, setCurrentCommunity] = useState<Communities | null>(
+    {} as Communities
+  )
+  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const { user } = useAuth()
 
   useEffect(() => {
     if (!user) return
 
-    loadImages()
+    getSingleCommunity(setLoading, community.id, setCurrentCommunity)
   }, [user])
 
-  const loadImages = async () => {
-    const { data } = await supabase.storage.from("photos").list(user!.id)
-    if (data) {
-      setFiles(data)
-    }
-  }
+  useEffect(() => {
+    if (currentCommunity?.community_photos === null || undefined) return
+    setImageFiles(currentCommunity?.community_photos)
+  }, [currentCommunity])
   return (
     <View>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -29,7 +37,7 @@ const PhotoArray = () => {
             size={165}
             avatarRadius={10}
             noAvatarRadius={10}
-            item={files[0]}
+            item={imageFiles?.[0]}
           />
         </View>
 
@@ -38,7 +46,7 @@ const PhotoArray = () => {
             size={165}
             avatarRadius={10}
             noAvatarRadius={10}
-            item={files[1]}
+            item={imageFiles?.[1]}
           />
         </View>
         <View className="m-1">
@@ -46,7 +54,7 @@ const PhotoArray = () => {
             size={165}
             avatarRadius={10}
             noAvatarRadius={10}
-            item={files[2]}
+            item={imageFiles?.[2]}
           />
         </View>
         <View className="m-1">
@@ -54,7 +62,7 @@ const PhotoArray = () => {
             size={165}
             avatarRadius={10}
             noAvatarRadius={10}
-            item={files[3]}
+            item={imageFiles?.[3]}
           />
         </View>
       </ScrollView>

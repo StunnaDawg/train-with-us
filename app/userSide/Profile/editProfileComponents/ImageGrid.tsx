@@ -9,7 +9,6 @@ import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import { Profile } from "../../../@types/supabaseTypes"
 
 const ImageGrid = () => {
-  const [files, setFiles] = useState<FileObject[]>([])
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const { user } = useAuth()
@@ -18,8 +17,6 @@ const ImageGrid = () => {
     if (!user) return
 
     useCurrentUser(user?.id, setCurrentUser)
-
-    loadImages()
   }, [user])
 
   useEffect(() => {
@@ -27,39 +24,32 @@ const ImageGrid = () => {
     setImageFiles(currentUser?.photos_url)
   }, [currentUser])
 
-  const loadImages = async () => {
-    const { data } = await supabase.storage.from("photos").list(user!.id)
-    if (data) {
-      setFiles(data)
-    }
-  }
-
   return (
     <View className="flex flex-row flex-wrap justify-center">
       <View className="mx-1">
-        <SingleEditPic
-          item={files[0]}
-          listIndex={0}
-          files={files}
-          setFiles={setFiles}
-        />
-      </View>
-
-      <View className="mx-1">
-        <SingleEditPic
-          item={files[1]}
-          listIndex={1}
-          files={files}
-          setFiles={setFiles}
-        />
-      </View>
-
-      <View className="mx-1">
-        <SingleEditPic
-          item={files[2]}
+        <SingleImageSupa
+          imageUrl={imageFiles?.[0]}
           listIndex={2}
-          files={files}
-          setFiles={setFiles}
+          imageUrls={currentUser?.photos_url}
+          setImageUrls={setImageFiles}
+        />
+      </View>
+
+      <View className="mx-1">
+        <SingleImageSupa
+          imageUrl={imageFiles?.[1]}
+          listIndex={2}
+          imageUrls={currentUser?.photos_url}
+          setImageUrls={setImageFiles}
+        />
+      </View>
+
+      <View className="mx-1">
+        <SingleImageSupa
+          imageUrl={imageFiles?.[2]}
+          listIndex={2}
+          imageUrls={currentUser?.photos_url}
+          setImageUrls={setImageFiles}
         />
       </View>
 
@@ -73,20 +63,20 @@ const ImageGrid = () => {
       </View>
 
       <View className="mx-1">
-        <SingleEditPic
-          item={files[4]}
-          listIndex={4}
-          files={files}
-          setFiles={setFiles}
+        <SingleImageSupa
+          imageUrl={imageFiles?.[4]}
+          listIndex={2}
+          imageUrls={currentUser?.photos_url}
+          setImageUrls={setImageFiles}
         />
       </View>
 
       <View className="mx-1">
-        <SingleEditPic
-          item={files[5]}
-          listIndex={5}
-          files={files}
-          setFiles={setFiles}
+        <SingleImageSupa
+          imageUrl={imageFiles?.[5]}
+          listIndex={2}
+          imageUrls={currentUser?.photos_url}
+          setImageUrls={setImageFiles}
         />
       </View>
     </View>

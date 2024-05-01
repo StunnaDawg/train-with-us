@@ -37,7 +37,11 @@ const ViewEvent = () => {
       <SafeAreaView className="flex-1">
         <ScrollView className="flex-1">
           <View>
-            <ViewEventTitle title={event?.event_title} date={event?.date} />
+            <ViewEventTitle
+              eventId={event?.id}
+              title={event?.event_title}
+              date={event?.date}
+            />
           </View>
 
           <View className="mx-5 mt-2">

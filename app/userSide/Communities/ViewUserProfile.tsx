@@ -20,7 +20,7 @@ const ViewUserProfile = () => {
           <Text className="text-3xl font-bold">{member.first_name}</Text>
         </View>
         <View>
-          <PhotoArray />
+          <PhotoArray profileId={member.id} />
         </View>
 
         <View>
@@ -44,7 +44,7 @@ const ViewUserProfile = () => {
         </View>
 
         <View className="mt-2">
-          <PhotoArray />
+          <PhotoArray profileId={member.id} />
         </View>
 
         <View>
