@@ -11,18 +11,42 @@ export type Database = {
     Tables: {
       chat_sessions: {
         Row: {
-          created_at: string | null
-          session_id: number
+          created_at: string
+          id: string
+          messages: string[] | null
+          user1: string | null
+          user2: string | null
         }
         Insert: {
-          created_at?: string | null
-          session_id?: number
+          created_at?: string
+          id?: string
+          messages?: string[] | null
+          user1?: string | null
+          user2?: string | null
         }
         Update: {
-          created_at?: string | null
-          session_id?: number
+          created_at?: string
+          id?: string
+          messages?: string[] | null
+          user1?: string | null
+          user2?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "chat_sessions_user1_fkey"
+            columns: ["user1"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_sessions_user2_fkey1"
+            columns: ["user2"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       communities: {
         Row: {
@@ -125,42 +149,6 @@ export type Database = {
           }
         ]
       }
-      connection_interaction: {
-        Row: {
-          interaction_date: string
-          interaction_type: string | null
-          target_interaction: string
-          user_interaction: string
-        }
-        Insert: {
-          interaction_date?: string
-          interaction_type?: string | null
-          target_interaction: string
-          user_interaction?: string
-        }
-        Update: {
-          interaction_date?: string
-          interaction_type?: string | null
-          target_interaction?: string
-          user_interaction?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "public_connection_interaction_target_interaction_fkey"
-            columns: ["target_interaction"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "public_connection_interaction_user_interaction_fkey"
-            columns: ["user_interaction"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
       events: {
         Row: {
           community_host: number | null
@@ -241,33 +229,40 @@ export type Database = {
       }
       messages: {
         Row: {
+          chat_session: string | null
+          id: string
           message: string | null
-          message_id: number
-          sender_id: number | null
-          sent_at: string | null
-          session_id: number | null
+          sender: string | null
+          sent_at: string
         }
         Insert: {
+          chat_session?: string | null
+          id?: string
           message?: string | null
-          message_id?: number
-          sender_id?: number | null
-          sent_at?: string | null
-          session_id?: number | null
+          sender?: string | null
+          sent_at?: string
         }
         Update: {
+          chat_session?: string | null
+          id?: string
           message?: string | null
-          message_id?: number
-          sender_id?: number | null
-          sent_at?: string | null
-          session_id?: number | null
+          sender?: string | null
+          sent_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "messages_session_id_fkey"
-            columns: ["session_id"]
+            foreignKeyName: "messages_chat session_fkey"
+            columns: ["chat_session"]
             isOneToOne: false
             referencedRelation: "chat_sessions"
-            referencedColumns: ["session_id"]
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_sender_fkey"
+            columns: ["sender"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           }
         ]
       }

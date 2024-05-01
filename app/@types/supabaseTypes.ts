@@ -17,9 +17,6 @@ export type EventAttendees = Database["public"]["Tables"]["events_users"]["Row"]
 
 export type ChatSession = Database["public"]["Tables"]["chat_sessions"]["Row"]
 
-export type ConnectionsInteraction =
-  Database["public"]["Tables"]["connection_interaction"]["Row"]
-
 // Inserting data into the database
 
 export type NewProfile = Database["public"]["Tables"]["profiles"]["Insert"]
@@ -38,6 +35,3 @@ export type NewEventAttendee =
 
 export type NewChatSession =
   Database["public"]["Tables"]["chat_sessions"]["Insert"]
-
-export type NewConnectionsInteraction =
-  Database["public"]["Tables"]["connection_interaction"]["Insert"]

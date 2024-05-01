@@ -1,4 +1,4 @@
-import { View } from "react-native"
+import { Text, View } from "react-native"
 import React, { useEffect, useState } from "react"
 import ConnectionsCard from "./components/ConnectionsCard"
 import { Profile } from "../../@types/supabaseTypes"
@@ -23,9 +23,16 @@ const Connections = () => {
 
   return (
     <View>
-      {connectionProfiles ? (
-        <ConnectionsCard profile={connectionProfiles[0]} />
-      ) : null}
+      {connectionProfiles && connectionProfiles?.length > 0 ? (
+        <ConnectionsCard
+          profile={connectionProfiles[0]}
+          connectionsArray={connectionProfiles}
+        />
+      ) : (
+        <View className="flex flex-row justify-center">
+          <Text>No Users at the Moment!</Text>
+        </View>
+      )}
     </View>
   )
 }

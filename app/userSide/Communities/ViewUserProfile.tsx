@@ -23,7 +23,7 @@ const ViewUserProfile = () => {
         </View>
 
         <View>
-          <MessageButton coach={false} />
+          <MessageButton profileId={member.id} coach={false} />
         </View>
 
         <View>

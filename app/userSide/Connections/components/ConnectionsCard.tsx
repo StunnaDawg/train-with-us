@@ -17,14 +17,14 @@ const ConnectionsCard = ({ profile }: ConnectionsCardProps) => {
   return (
     <ScrollView>
       <View className="flex flex-row justify-center mt-8 mb-2">
-        <Text className="text-3xl font-bold">Jordan Forbes</Text>
+        <Text className="text-3xl font-bold">{profile?.first_name}</Text>
       </View>
       <View>
         <PhotoArray />
       </View>
 
       <View>
-        <MessageButton coach={false} />
+        <MessageButton profileId={profile?.id} coach={false} />
       </View>
 
       <View>
