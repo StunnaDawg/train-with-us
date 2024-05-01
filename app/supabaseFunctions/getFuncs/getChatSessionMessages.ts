@@ -12,6 +12,7 @@ const getChatSessionMessages = async (
       .from("messages")
       .select("*")
       .eq("chat_session", chatSessionId)
+      .order("sent_at", { ascending: false })
 
     if (error) {
       console.error("Failed to fetch messages:", error.message)

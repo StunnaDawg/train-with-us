@@ -9,6 +9,7 @@ import { ChatSession, Profile } from "../../../@types/supabaseTypes"
 import getSingleProfile from "../../../supabaseFunctions/getFuncs/getSingleProfile"
 import { NavigationType } from "../../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
+import { set } from "date-fns"
 
 const Messages = () => {
   const [files, setFiles] = useState<FileObject[]>([])
@@ -29,7 +30,7 @@ const Messages = () => {
 
   useEffect(() => {
     if (!chatSessions) return
-    console.log(chatSessions)
+    console.log("chat sessions obtaiend", chatSessions)
   }, [chatSessions])
 
   const loadImages = async () => {

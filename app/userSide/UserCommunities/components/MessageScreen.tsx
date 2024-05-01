@@ -20,6 +20,8 @@ import getAllUserChatSessions from "../../../supabaseFunctions/getFuncs/getAllUs
 import { Messages } from "../../../@types/supabaseTypes"
 import getChatSessionMessages from "../../../supabaseFunctions/getFuncs/getChatSessionMessages"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
+import sendMessage from "../../../supabaseFunctions/addFuncs/sendMessage"
+import supabase from "../../../../lib/supabase"
 
 type UserMessage = {
   message: string | null
@@ -69,24 +71,25 @@ const MessageScreen = () => {
 
   const [serverMessages, setServerMessages] = useState<Messages[] | null>([])
 
-  const [messages, setMessages] = useState([
-    { id: "2", text: "Hello, how are you?" },
-    { id: "1", text: "Hi! I am fine, thanks. How about you?" },
-  ])
   const [messageToSend, setMessageToSend] = useState("")
 
-  const sendMessage = () => {
-    if (messageToSend.trim().length === 0) {
+  supabase
+    .channel("messages")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "messages" },
+      (payload) => {
+        getChatSessionMessages(chatId, setServerMessages)
+      }
+    )
+    .subscribe()
+
+  const sendMessageAction = () => {
+    if (messageToSend.trim().length === 0 || !user?.id) {
       return
     }
-
-    // Add new message to the state
-    setMessages((prevMessages) => [
-      { id: Date.now().toString(), text: messageToSend },
-      ...prevMessages,
-    ])
-
-    setMessageToSend("") // Clear the input field
+    sendMessage(messageToSend, user?.id, chatId)
+    setMessageToSend("")
   }
 
   useEffect(() => {
@@ -126,7 +129,7 @@ const MessageScreen = () => {
             inverted={true}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) =>
-              item.id === user?.id ? (
+              item.sender === user?.id ? (
                 <UserMessage message={item.message} />
               ) : (
                 <MatchesMessage message={item.message} />
@@ -142,7 +145,7 @@ const MessageScreen = () => {
             value={messageToSend}
             onChangeText={setMessageToSend}
           />
-          <Pressable className="mx-2" onPress={sendMessage}>
+          <Pressable className="mx-2" onPress={() => sendMessageAction()}>
             <Text className="text-xl font-bold">Send</Text>
           </Pressable>
         </View>

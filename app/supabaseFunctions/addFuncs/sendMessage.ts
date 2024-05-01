@@ -1,6 +1,10 @@
 import supabase from "../../../lib/supabase"
 
-const sendNewMessage = async (message: string, userId: string) => {
+const sendMessage = async (
+  message: string,
+  userId: string,
+  chatSessionId: string
+) => {
   try {
     console.log("sending message", message, userId)
     const { error } = await supabase.from("messages").insert([
@@ -8,6 +12,7 @@ const sendNewMessage = async (message: string, userId: string) => {
         message: message,
         sent_at: new Date(),
         sender: userId,
+        chat_session: chatSessionId,
       },
     ])
 
@@ -20,4 +25,4 @@ const sendNewMessage = async (message: string, userId: string) => {
   }
 }
 
-export default sendNewMessage
+export default sendMessage
