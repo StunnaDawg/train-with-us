@@ -107,10 +107,10 @@ const MessageScreen = () => {
         <View className="items-center">
           <View className="mb-2">
             <SinglePic
-              size={50}
-              picNumber={0}
-              avatarRadius={150}
+              size={55}
+              avatarRadius={100}
               noAvatarRadius={100}
+              item={imageFiles?.[0]}
             />
           </View>
           <Text className="font-bold text-md">Jordan Forbes</Text>

@@ -8,24 +8,26 @@ import { useEffect } from "react"
 import { FileObject } from "@supabase/storage-js"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
+import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
+import { Profile } from "../../../@types/supabaseTypes"
 
 const Unread = () => {
   const navigation = useNavigation<NavigationType>()
-  const [files, setFiles] = useState<FileObject[]>([])
+
+  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
+  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const { user } = useAuth()
 
   useEffect(() => {
     if (!user) return
 
-    loadImages()
+    useCurrentUser(user?.id, setCurrentUser)
   }, [user])
 
-  const loadImages = async () => {
-    const { data } = await supabase.storage.from("photos").list(user!.id)
-    if (data) {
-      setFiles(data)
-    }
-  }
+  useEffect(() => {
+    if (currentUser?.photos_url === null || undefined) return
+    setImageFiles(currentUser?.photos_url)
+  }, [currentUser])
   return (
     <View className="mt-8 mx-8 border-b pb-2">
       <View>
@@ -43,7 +45,7 @@ const Unread = () => {
             size={55}
             avatarRadius={100}
             noAvatarRadius={100}
-            item={files[0]}
+            item={imageFiles?.[0]}
           />
         </View>
 
@@ -59,7 +61,7 @@ const Unread = () => {
             size={55}
             avatarRadius={100}
             noAvatarRadius={100}
-            item={files[0]}
+            item={imageFiles?.[0]}
           />
         </View>
 

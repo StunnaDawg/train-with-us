@@ -7,8 +7,13 @@ import { useEffect } from "react"
 import supabase from "../../../../lib/supabase"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
-import { Profile } from "../../../@types/supabaseTypes"
+import { Communities, Profile } from "../../../@types/supabaseTypes"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
+import CommunityBubble from "./CommunityBubble"
+
+type CommunitiesScrollProps = {
+  communities: Communities[] | null
+}
 
 const styles = StyleSheet.create({
   avatar: {
@@ -29,7 +34,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const CommunitiesScroll = () => {
+const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
   const [files, setFiles] = useState<FileObject[]>([])
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const { user } = useAuth()
@@ -65,30 +70,13 @@ const CommunitiesScroll = () => {
               <View style={[avatarSize, styles.avatar, styles.noImage]} />
             </Pressable>
           ) : null}
-          <View className="m-2">
-            <SinglePic
-              size={55}
-              avatarRadius={100}
-              noAvatarRadius={100}
-              item={files[0]}
-            />
-          </View>
-          <View className="m-2">
-            <SinglePic
-              size={55}
-              avatarRadius={100}
-              noAvatarRadius={100}
-              item={files[1]}
-            />
-          </View>
-          <View className="m-2">
-            <SinglePic
-              size={55}
-              avatarRadius={100}
-              noAvatarRadius={100}
-              item={files[2]}
-            />
-          </View>
+
+          {communities &&
+            communities?.map((community) => (
+              <View key={community.id} className="m-2">
+                <CommunityBubble community={community.id} />
+              </View>
+            ))}
         </View>
       </ScrollView>
     </View>
