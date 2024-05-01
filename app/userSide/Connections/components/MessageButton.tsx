@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useRef, useState } from "react"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import insertIgnoreUser from "../../../supabaseFunctions/updateFuncs/addIgnoreUser"
 import { BottomSheetModal, useBottomSheetModal } from "@gorhom/bottom-sheet"
-import sendNewMessage from "../../../supabaseFunctions/addFuncs/sendMessage"
+import sendNewMessage from "../../../supabaseFunctions/addFuncs/sendNewMessage"
 import createNewChatSession from "../../../supabaseFunctions/addFuncs/newChatSession"
 import getChatSession from "../../../supabaseFunctions/getFuncs/getChatSession"
 import { ChatSession } from "../../../@types/supabaseTypes"
@@ -88,10 +88,9 @@ const MessageButton = ({ coach, profileId }: MessageButtonProps) => {
               if (!profileId || !user) return
               console.log("profileId", profileId)
               await createNewChatSession(user?.id, profileId)
-              const chatSession = await getChatSession(user?.id, profileId)
 
               console.log("chatSessionId", chatSessionId)
-              await sendNewMessage(message, user?.id, chatSession?.id || "")
+              await sendNewMessage(message, user?.id, profileId)
               dismiss()
             }}
           >

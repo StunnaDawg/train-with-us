@@ -232,6 +232,7 @@ export type Database = {
           chat_session: string | null
           id: string
           message: string | null
+          read: boolean
           sender: string | null
           sent_at: string
         }
@@ -239,6 +240,7 @@ export type Database = {
           chat_session?: string | null
           id?: string
           message?: string | null
+          read?: boolean
           sender?: string | null
           sent_at?: string
         }
@@ -246,6 +248,7 @@ export type Database = {
           chat_session?: string | null
           id?: string
           message?: string | null
+          read?: boolean
           sender?: string | null
           sent_at?: string
         }

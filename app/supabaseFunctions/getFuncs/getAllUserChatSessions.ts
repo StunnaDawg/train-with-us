@@ -2,26 +2,32 @@ import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { ChatSession } from "../../@types/supabaseTypes"
 
-const getChatSession = async (userId: string, user2Id: string) => {
+const getAllUserChatSessions = async (
+  userId: string,
+  setChatSessions: Dispatch<SetStateAction<ChatSession[] | null>>
+) => {
   try {
-    console.log(`user1.eq.${userId}.user2.eq.${user2Id}`)
     const { data: chatSessions, error } = await supabase
       .from("chat_sessions")
       .select("*")
-      .or(`user1.eq.${userId},user2.eq.${user2Id}`)
+      .or(`user1.eq.${userId}`)
+      .or(`user2.eq.${userId}`)
 
     if (error) throw error
     if (!chatSessions || chatSessions.length === 0) {
       throw new Error("No chat session found")
     }
+    const chatSession: ChatSession[] = chatSessions
 
-    const chatSession: ChatSession = chatSessions[0] // Assuming you want the first matching session
-    console.log("chatSession", chatSession)
-    return chatSession
+    if (!chatSession) {
+      setChatSessions(null)
+      throw new Error("No chat session found")
+    }
+    setChatSessions(chatSession)
   } catch (error) {
     console.error("Error fetching chat session:", error)
     return null // Consider returning null or appropriate error handling
   }
 }
 
-export default getChatSession
+export default getAllUserChatSessions

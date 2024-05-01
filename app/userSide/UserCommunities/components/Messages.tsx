@@ -4,9 +4,12 @@ import SinglePic from "../../../components/SinglePic"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
 import { FileObject } from "@supabase/storage-js"
+import getAllUserChatSessions from "../../../supabaseFunctions/getFuncs/getAllUserChatSessions"
+import { ChatSession } from "../../../@types/supabaseTypes"
 
 const Messages = () => {
   const [files, setFiles] = useState<FileObject[]>([])
+  const [chatSessions, setChatSessions] = useState<ChatSession[] | null>([])
   const { user } = useAuth()
 
   useEffect(() => {
@@ -14,6 +17,11 @@ const Messages = () => {
 
     loadImages()
   }, [user])
+
+  useEffect(() => {
+    if (!user) return
+    getAllUserChatSessions(user!.id, setChatSessions)
+  }, [])
 
   const loadImages = async () => {
     const { data } = await supabase.storage.from("photos").list(user!.id)
@@ -40,37 +48,6 @@ const Messages = () => {
         <View>
           <Text className="font-bold mb-1">Jordan Forbes</Text>
           <Text className="text-sm">Hey, how are you?</Text>
-        </View>
-      </Pressable>
-
-      <Pressable className="flex flex-row items-center">
-        <View className="m-2">
-          <SinglePic
-            size={55}
-            avatarRadius={100}
-            noAvatarRadius={100}
-            item={files[1]}
-          />
-        </View>
-
-        <View>
-          <Text className="font-bold mb-1">Jules Lemire</Text>
-          <Text className="text-sm">Ya, I agree. that wou...</Text>
-        </View>
-      </Pressable>
-
-      <Pressable className="flex flex-row items-center">
-        <View className="m-2">
-          <SinglePic
-            size={55}
-            avatarRadius={100}
-            noAvatarRadius={100}
-            item={files[2]}
-          />
-        </View>
-        <View>
-          <Text className="font-bold mb-1">Jules Lemire</Text>
-          <Text className="text-sm">Ya, I agree. that wou...</Text>
         </View>
       </Pressable>
     </View>
