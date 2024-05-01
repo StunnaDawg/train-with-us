@@ -31,9 +31,9 @@ const CommunitiesUnRead = () => {
       </View>
 
       <Pressable
-        onPress={() => {
-          navigation.navigate("MessagingScreen")
-        }}
+        // onPress={() => {
+        //   navigation.navigate("MessagingScreen")
+        // }}
         className="flex flex-row items-center"
       >
         <View className="m-2">

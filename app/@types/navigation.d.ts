@@ -54,7 +54,9 @@ export type RootStackParamList = {
   EditEvent: {
     eventId: string
   }
-  MessagingScreen: undefined
+  MessagingScreen: {
+    chatId: string
+  }
 
   CommunitiesMessagingScreen: {
     id: string

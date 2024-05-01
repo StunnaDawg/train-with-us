@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
   View,
   Text,
@@ -13,6 +13,12 @@ import {
   SafeAreaView,
 } from "react-native"
 import SinglePic from "../../../components/SinglePic"
+import { RootStackParamList } from "../../../@types/navigation"
+import { RouteProp, useRoute } from "@react-navigation/native"
+import { get } from "mongoose"
+import getAllUserChatSessions from "../../../supabaseFunctions/getFuncs/getAllUserChatSessions"
+import { Messages } from "../../../@types/supabaseTypes"
+import getChatSessionMessages from "../../../supabaseFunctions/getFuncs/getChatSessionMessages"
 
 type UserMessage = {
   message: string
@@ -46,12 +52,7 @@ const MatchesMessage = ({ message }: MatchesMessageProps) => {
         </Text>
       </View>
       <View className="flex flex-row justify-start flex-wrap mt-2 items-center m-1 my-2">
-        <SinglePic
-          size={30}
-          picNumber={0}
-          avatarRadius={150}
-          noAvatarRadius={10}
-        />
+        <SinglePic size={30} avatarRadius={150} noAvatarRadius={10} />
         <View className="rounded-2xl border mx-1 bg-slate-200 p-2">
           <Text className="text-xs">{message}</Text>
         </View>
@@ -61,6 +62,11 @@ const MatchesMessage = ({ message }: MatchesMessageProps) => {
 }
 
 const MessageScreen = () => {
+  const route = useRoute<RouteProp<RootStackParamList, "MessagingScreen">>()
+  const chatId = route.params.chatId
+
+  const [serverMessages, setServerMessages] = useState<Messages[] | null>([])
+
   const [messages, setMessages] = useState([
     { id: "2", text: "Hello, how are you?" },
     { id: "1", text: "Hi! I am fine, thanks. How about you?" },
@@ -80,6 +86,15 @@ const MessageScreen = () => {
 
     setMessageToSend("") // Clear the input field
   }
+
+  useEffect(() => {
+    getChatSessionMessages(chatId, setServerMessages)
+  }, [chatId])
+
+  useEffect(() => {
+    if (!serverMessages) return
+    console.log(serverMessages)
+  }, [serverMessages])
 
   return (
     <SafeAreaView className="flex-1">
