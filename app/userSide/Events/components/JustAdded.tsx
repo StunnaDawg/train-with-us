@@ -12,7 +12,7 @@ const JustAdded = () => {
   }, [])
   return (
     <View className="flex flex-col m-5">
-      <Text className="text-xl font-bold m-1">Just Added</Text>
+      <Text className="text-2xl font-bold m-1">Just Added</Text>
       <ScrollView horizontal={true}>
         {loading ? (
           <ActivityIndicator />
@@ -24,6 +24,7 @@ const JustAdded = () => {
               key={event.id}
               title={event.event_title}
               date={event.date}
+              eventCoverPhoto={event.event_cover_photo}
             />
           ))
         ) : (

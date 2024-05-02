@@ -12,7 +12,7 @@ const Upcoming = () => {
   }, [])
   return (
     <View className="flex flex-col m-5">
-      <Text className="text-xl font-bold m-1">Upcoming</Text>
+      <Text className="text-2xl font-bold m-1">Upcoming</Text>
       <ScrollView horizontal={true}>
         {loading ? (
           <ActivityIndicator />
@@ -23,6 +23,7 @@ const Upcoming = () => {
               title={event.event_title}
               date={event.date}
               communityId={event.community_host}
+              eventCoverPhoto={event.event_cover_photo}
               key={event.id}
             />
           ))

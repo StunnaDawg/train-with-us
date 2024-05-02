@@ -19,7 +19,7 @@ const AllEvents = () => {
   return (
     <View className="flex flex-col m-5">
       <View className="flex flex-row items-center justify-between">
-        <Text className="text-xl font-bold m-1 ">All Events</Text>
+        <Text className="text-2xl font-bold m-1 ">All Events</Text>
         <Pressable>
           <Text className="underline">View All</Text>
         </Pressable>
@@ -28,15 +28,24 @@ const AllEvents = () => {
         {loading ? (
           <ActivityIndicator />
         ) : allEvents && allEvents?.length > 0 ? (
-          allEvents?.map((event) => (
-            <EventCard
-              eventId={event.id}
-              title={event.event_title}
-              date={event.date}
-              communityId={event.community_host}
-              key={event.id}
-            />
-          ))
+          allEvents?.map(
+            (event) => (
+              console.log(
+                "event cover photo allEvents",
+                event.event_cover_photo
+              ),
+              (
+                <EventCard
+                  eventId={event.id}
+                  title={event.event_title}
+                  date={event.date}
+                  communityId={event.community_host}
+                  eventCoverPhoto={event.event_cover_photo}
+                  key={event.id}
+                />
+              )
+            )
+          )
         ) : (
           <Text>No upcoming events</Text>
         )}

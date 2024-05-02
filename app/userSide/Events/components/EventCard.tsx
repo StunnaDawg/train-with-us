@@ -4,91 +4,134 @@ import {
   Pressable,
   ImageBackground,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import React, { useEffect, useState } from "react"
 import { NavigationType } from "../../../@types/navigation"
 import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
 import { Communities } from "../../../@types/supabaseTypes"
+import supabase from "../../../../lib/supabase"
 
 type EventCardProps = {
   eventId: number
   title: string | null
   date: string | null
   communityId: number | null
+  eventCoverPhoto: string | null
 }
 
-const EventCard = ({ title, date, communityId, eventId }: EventCardProps) => {
+const EventCard = ({
+  title,
+  date,
+  communityId,
+  eventId,
+  eventCoverPhoto,
+}: EventCardProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [community, setCommunity] = useState<Communities | null>(
     {} as Communities
   )
+  const [coverPhotoState, setCoverPhotoState] = useState<string | null>(null)
   const navigation = useNavigation<NavigationType>()
-  const avatarSize = {
-    width: 200,
-    height: 200,
+
+  let coverPhoto = {
+    uri:
+      coverPhotoState !== null
+        ? coverPhotoState
+        : "https://rfkabunqcmmsoqijcrhp.supabase.co/storage/v1/object/sign/photos/TWU-Logo.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwaG90b3MvVFdVLUxvZ28ucG5nIiwiaWF0IjoxNzE0Njc4NzA0LCJleHAiOjE3MTUyODM1MDR9.Ak5z5068yCE6QFlBwcSHlcs_bH2Kg4PUUY8r6TuiaeU&t=2024-05-02T19%3A38%3A24.726Z",
   }
 
+  useEffect(() => {
+    console.log("eventCoverPhoto", eventCoverPhoto)
+    readImage()
+  }, [eventCoverPhoto])
+
+  const readImage = () => {
+    if (eventCoverPhoto === undefined) return
+    console.log("reading", `${eventCoverPhoto}`)
+    supabase.storage
+      .from("photos")
+      .download(`${eventCoverPhoto}`)
+      .then(({ data }) => {
+        const fr = new FileReader()
+        fr.readAsDataURL(data!)
+        fr.onload = () => {
+          setCoverPhotoState(fr.result as string)
+        }
+      })
+  }
   const styles = StyleSheet.create({
-    avatar: {
-      borderRadius: 0,
+    container: {
+      width: 200,
+      height: 200,
+      borderRadius: 10,
       overflow: "hidden",
-      maxWidth: "100%",
+      borderWidth: 8,
+      borderColor: "white",
+      backgroundColor: "black",
     },
     image: {
-      objectFit: "cover",
-      paddingTop: 0,
+      height: 200,
+      resizeMode: "cover",
     },
-    noImage: {
-      backgroundColor: "#333",
-      borderWidth: 1,
-      borderStyle: "solid",
-      borderColor: "rgb(200, 200, 200)",
-      borderRadius: 10,
+    textContainer: {
+      marginHorizontal: 10,
+      marginBottom: 10,
+    },
+    text: {
+      backgroundColor: "white",
+      fontWeight: "bold",
+      color: "black",
+    },
+    subText: {
+      fontWeight: "bold",
+      fontSize: 18,
+      color: "white",
+    },
+    price: {
+      fontWeight: "bold",
+      fontSize: 16,
+      color: "white",
     },
   })
 
   useEffect(() => {
-    if (communityId === null) return
-    console.log("communityId", communityId)
-    getSingleCommunity(setLoading, communityId, setCommunity)
-  }, [])
+    if (communityId !== null) {
+      getSingleCommunity(setLoading, communityId, setCommunity)
+    }
+  }, [communityId])
 
-  useEffect(() => {
-    console.log("community", community?.community_title)
-  }, [community])
-  return (
+  return !loading ? (
     <Pressable
-      onPress={() =>
-        navigation.navigate("ViewEvent", {
-          eventId: eventId,
-        })
-      }
+      className="mx-1"
+      onPress={() => navigation.navigate("ViewEvent", { eventId })}
     >
       <ImageBackground
-        source={{
-          uri: "https://images.unsplash.com/photo-1615395255362-f0b24845e1df?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60",
-        }}
-        style={[avatarSize, styles.avatar]}
+        source={coverPhoto}
+        style={styles.container}
         imageStyle={styles.image}
       >
-        <View className="m-1">
-          <Text className="font-bold text-md text-white">9$</Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.price}>$9</Text>
         </View>
-        <View className="flex-1 flex-col items-start justify-end">
-          <Text className="font-bold text-lg text-white">
-            {/* {eventDate},{eventTime} */} June 17th @ 3:30 pm
+        <View
+          style={[
+            styles.textContainer,
+            { flex: 1, justifyContent: "flex-end" },
+          ]}
+        >
+          <Text className="text-xl" style={styles.text}>
+            {title}
           </Text>
-          <Text className="font-bold text-2xl text-white">
-            {/* {event.eventTitle} */} {title}
-          </Text>
-
-          <Text className="font-bold text-lg text-shadow text-white">
-            {/* {event.communityName} */} {community?.community_title}
+          <Text className="text-sm" style={styles.text}>
+            {date}
           </Text>
         </View>
       </ImageBackground>
     </Pressable>
+  ) : (
+    <ActivityIndicator />
   )
 }
 

@@ -35,6 +35,7 @@ const Events = () => {
 
   return (
     <ScrollView
+      className="bg-yellow-300/90"
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
