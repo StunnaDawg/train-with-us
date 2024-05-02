@@ -11,6 +11,7 @@ type DOBPickerProps = {
 
 const DOBPicker = ({ setDate, date }: DOBPickerProps) => {
   const onChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    console.log("event", event)
     const currentDate = selectedDate || date
 
     setDate(currentDate)

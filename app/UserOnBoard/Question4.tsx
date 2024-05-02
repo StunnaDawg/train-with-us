@@ -26,7 +26,7 @@ const Question4 = () => {
       console.log("Error updating onBoard status", error)
     }
     setLoading(false)
-    navigation.navigate("Events")
+    throw Error("Error updating onBoard status")
   }
   return (
     <View className="flex flex-1 justify-center">
@@ -34,10 +34,14 @@ const Question4 = () => {
         <Text>Loading</Text>
       ) : (
         <>
-          <Text>Question4</Text>
-          <Pressable onPress={async () => await finishOnBoard()}>
-            <Text>Next</Text>
-          </Pressable>
+          <View className="flex flex-row justify-center">
+            <Pressable onPress={async () => await finishOnBoard()}>
+              <Text className="font-bold text-3xl text-center">Press Me</Text>
+              <Text className="font-semibold text-lg">
+                Now restart the app... IDK how to fix this yet
+              </Text>
+            </Pressable>
+          </View>
         </>
       )}
     </View>

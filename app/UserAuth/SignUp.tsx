@@ -8,6 +8,8 @@ import {
   Button,
   Pressable,
   Text,
+  Image,
+  SafeAreaView,
 } from "react-native"
 import supabase from "../../lib/supabase"
 import { NavigationType } from "../@types/navigation"
@@ -48,54 +50,55 @@ const SignUp = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <TextInput
-          onChangeText={(text: string) => setEmail(text)}
-          value={email}
-          placeholder="email@address.com"
-          autoCapitalize={"none"}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <TextInput
-          onChangeText={(text: string) => setPassword(text)}
-          value={password}
-          secureTextEntry={true}
-          placeholder="Password"
-          autoCapitalize={"none"}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Button
-          title="Sign Up"
-          disabled={loading}
-          onPress={() => signUpWithEmail()}
-        />
-      </View>
+    <SafeAreaView className="flex-1 bg-yellow-300">
+      <View className="flex flex-row justify-center">
+        <View className="flex-1 mx-10">
+          <View className="items-center">
+            <Image
+              source={require("./TWU-Logo.png")}
+              style={{ width: 300, height: 300 }}
+            />
+            <Text className="font-bold text-3xl">Train With Us</Text>
+            <Text className="font-semibold text-xl">Beyond Fitness</Text>
+          </View>
+          <View className="border-b py-2">
+            <TextInput
+              className="w-full text-xl font-bold px-2"
+              onChangeText={(text: string) => setEmail(text)}
+              value={email}
+              placeholder="email@address.com"
+              autoCapitalize={"none"}
+            />
+          </View>
+          <View className="border-b py-2">
+            <TextInput
+              className="w-full text-xl font-bold px-2"
+              onChangeText={(text: string) => setPassword(text)}
+              value={password}
+              secureTextEntry={true}
+              placeholder="Password"
+              autoCapitalize={"none"}
+            />
+          </View>
+          <View>
+            <Button
+              title="Sign Up"
+              disabled={loading}
+              onPress={() => signUpWithEmail()}
+            />
+          </View>
 
-      <View style={styles.verticallySpaced}>
-        <Pressable onPress={() => navigation.navigate("Login")}>
-          <Text>Have An Account?</Text>
-        </Pressable>
+          <View className="items-center">
+            <Pressable onPress={() => navigation.navigate("Login")}>
+              <Text className="font-bold text-xl">
+                Already Have An Account?
+              </Text>
+            </Pressable>
+          </View>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 40,
-    padding: 12,
-  },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
-  },
-  mt20: {
-    marginTop: 20,
-  },
-})
 
 export default SignUp

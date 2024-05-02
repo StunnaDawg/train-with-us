@@ -5,8 +5,10 @@ import { useNavigation } from "@react-navigation/native"
 import { useState } from "react"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import { NavigationType } from "../@types/navigation"
+import { useAuth } from "../supabaseFunctions/authcontext"
+import supabase from "../../lib/supabase"
 
-type GenderOption =
+type ActvitiesOption =
   | "Aerobics"
   | "Boxing"
   | "Crossfit"
@@ -17,13 +19,35 @@ type GenderOption =
 const FitnessInterests = () => {
   const navigation = useNavigation<NavigationType>()
 
-  const [selectedGender, setSelectedGender] = useState<GenderOption>("Aerobics")
-  const [displayOnProfile, setDisplayOnProfile] = useState<boolean>(false)
+  const [selectedActvities, setSelectedActvities] = useState<ActvitiesOption[]>(
+    ["Aerobics"]
+  )
+  const { user } = useAuth()
 
-  const handleSelectGender = (gender: GenderOption) => {
-    setSelectedGender(selectedGender === gender ? null : gender)
+  const handleSelectActivities = (activity: ActvitiesOption) => {
+    if (!selectedActvities.includes(activity)) {
+      setSelectedActvities([...selectedActvities, activity])
+    }
   }
-  const genderOptions: GenderOption[] = [
+
+  const handleUserUpdate = async () => {
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          activities: [selectedActvities],
+        })
+        .eq("id", user?.id)
+
+      if (error) throw error
+
+      navigation.navigate("CommunitiesPreferences")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const ActvitiesOptions: ActvitiesOption[] = [
     "Aerobics",
     "Boxing",
     "Crossfit",
@@ -40,23 +64,20 @@ const FitnessInterests = () => {
             </Text>
           </View>
 
-          {genderOptions.map((gender, index) => (
+          {ActvitiesOptions.map((Actvities, index) => (
             <View
               key={index}
               className="w-full border-b flex flex-row justify-between items-center p-2"
             >
-              <Text className="text-lg font-semibold">{gender}</Text>
+              <Text className="text-lg font-semibold">{Actvities}</Text>
               <BouncyCheckbox
-                isChecked={selectedGender === gender}
-                onPress={() => handleSelectGender(gender)}
+                onPress={() => handleSelectActivities(Actvities)}
               />
             </View>
           ))}
         </View>
         <View className="mt-4 flex flex-row justify-end">
-          <NextButton
-            onPress={() => navigation.navigate("CommunitiesPreferences")}
-          />
+          <NextButton onPress={() => handleUserUpdate()} />
         </View>
       </View>
     </SafeAreaView>

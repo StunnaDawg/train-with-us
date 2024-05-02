@@ -4,6 +4,8 @@ import { useNavigation } from "@react-navigation/native"
 import React, { useState } from "react"
 import { NavigationType } from "../@types/navigation"
 import NextButton from "../components/NextButton"
+import supabase from "../../lib/supabase"
+import { useAuth } from "../supabaseFunctions/authcontext"
 
 type GenderOption = "Male" | "Female" | "Non-Binary" | "Specify other..." | null
 
@@ -13,6 +15,25 @@ const Question3 = () => {
   const [selectedGender, setSelectedGender] = useState<GenderOption>("Male")
   const [specifyInput, setSpecifyInput] = useState<string>("")
   const [displayOnProfile, setDisplayOnProfile] = useState<boolean>(false)
+
+  const { user } = useAuth()
+
+  const handleUserUpdate = async () => {
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          gender: selectedGender,
+        })
+        .eq("id", user?.id)
+
+      if (error) throw error
+
+      navigation.navigate("Sexuality")
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleSelectGender = (gender: GenderOption) => {
     setSelectedGender(selectedGender === gender ? null : gender)
@@ -67,7 +88,7 @@ const Question3 = () => {
           </View>
         </View>
         <View className="mt-4 flex flex-row justify-end">
-          <NextButton onPress={() => navigation.navigate("Sexuality")} />
+          <NextButton onPress={() => handleUserUpdate()} />
         </View>
       </View>
     </SafeAreaView>

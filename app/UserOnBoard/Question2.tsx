@@ -1,14 +1,38 @@
 import { View, Text, Pressable, SafeAreaView, TextInput } from "react-native"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { NavigationType } from "../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import NextButton from "../components/NextButton"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import DOBPicker from "../components/DOBPicker"
+import supabase from "../../lib/supabase"
+import { useAuth } from "../supabaseFunctions/authcontext"
 
 const Question2 = () => {
   const [date, setDate] = useState(new Date())
   const navigation = useNavigation<NavigationType>()
+  const { user } = useAuth()
+
+  const handleUserUpdate = async () => {
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          birthday: date,
+        })
+        .eq("id", user?.id)
+
+      if (error) throw error
+
+      navigation.navigate("QuestionThree")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    console.log("date", date)
+  }, [date])
   return (
     <SafeAreaView className="flex-1">
       <View className="flex justify-center mx-12">
@@ -24,7 +48,7 @@ const Question2 = () => {
           </View>
         </View>
         <View className="mt-4 flex flex-row justify-end">
-          <NextButton onPress={() => navigation.navigate("QuestionThree")} />
+          <NextButton onPress={() => handleUserUpdate()} />
         </View>
       </View>
     </SafeAreaView>

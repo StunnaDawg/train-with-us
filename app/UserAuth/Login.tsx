@@ -8,10 +8,12 @@ import {
   Button,
   Pressable,
   Text,
+  Image,
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import supabase from "../../lib/supabase"
 import { NavigationType } from "../@types/navigation"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -44,38 +46,52 @@ const Login = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <TextInput
-          onChangeText={(text: string) => setEmail(text)}
-          value={email}
-          placeholder="email@address.com"
-          autoCapitalize={"none"}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <TextInput
-          onChangeText={(text: string) => setPassword(text)}
-          value={password}
-          secureTextEntry={true}
-          placeholder="Password"
-          autoCapitalize={"none"}
-        />
-      </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title="Sign in"
-          disabled={loading}
-          onPress={() => signInWithEmail()}
-        />
-      </View>
+    <SafeAreaView className="flex-1 bg-yellow-300">
+      <View className="flex flex-row justify-center">
+        <View className="flex-1 mx-10">
+          <View className="items-center">
+            <Image
+              source={require("./TWU-Logo.png")}
+              style={{ width: 300, height: 300 }}
+            />
+            <Text className="font-bold text-3xl">Train With Us</Text>
+            <Text className="font-semibold text-xl">Beyond Fitness</Text>
+          </View>
+          <View className="border-b py-2">
+            <TextInput
+              className="w-full text-xl font-bold px-2"
+              onChangeText={(text: string) => setEmail(text)}
+              value={email}
+              placeholder="email@address.com"
+              autoCapitalize={"none"}
+            />
+          </View>
+          <View className="border-b py-2">
+            <TextInput
+              className="w-full text-xl font-bold px-2"
+              onChangeText={(text: string) => setPassword(text)}
+              value={password}
+              secureTextEntry={true}
+              placeholder="Password"
+              autoCapitalize={"none"}
+            />
+          </View>
+          <View>
+            <Button
+              title="Log in"
+              disabled={loading}
+              onPress={() => signInWithEmail()}
+            />
+          </View>
 
-      <View style={styles.verticallySpaced}>
-        <Pressable onPress={() => navigation.navigate("SignUp")}>
-          <Text>Don't have an Account?</Text>
-        </Pressable>
+          <View className="items-center">
+            <Pressable onPress={() => navigation.navigate("SignUp")}>
+              <Text className="font-bold text-xl">Don't Have an Account?</Text>
+            </Pressable>
+          </View>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 

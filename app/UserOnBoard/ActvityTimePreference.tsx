@@ -5,8 +5,10 @@ import { useNavigation } from "@react-navigation/native"
 import { useState } from "react"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import { NavigationType } from "../@types/navigation"
+import supabase from "../../lib/supabase"
+import { useAuth } from "../supabaseFunctions/authcontext"
 
-type GenderOption =
+type TimeOption =
   | "Morning"
   | "Afternoon"
   | "Evening"
@@ -17,13 +19,30 @@ type GenderOption =
 const ActivityTimePreference = () => {
   const navigation = useNavigation<NavigationType>()
 
-  const [selectedGender, setSelectedGender] = useState<GenderOption>("Morning")
+  const [selectedTime, setSelectedTime] = useState<TimeOption>("Morning")
   const [displayOnProfile, setDisplayOnProfile] = useState<boolean>(false)
+  const { user } = useAuth()
 
-  const handleSelectGender = (gender: GenderOption) => {
-    setSelectedGender(selectedGender === gender ? null : gender)
+  const handleSelectTime = (Time: TimeOption) => {
+    setSelectedTime(selectedTime === Time ? null : Time)
   }
-  const genderOptions: GenderOption[] = [
+
+  const handleUserUpdate = async () => {
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ actvitiy_time: selectedTime })
+        .eq("id", user?.id)
+
+      if (error) throw error
+
+      // Navigate to the next preference page
+      navigation.navigate("QuestionFour")
+    } catch (error) {
+      console.error("Failed to update community preferences:", error)
+    }
+  }
+  const TimeOptions: TimeOption[] = [
     "Morning",
     "Afternoon",
     "Evening",
@@ -36,25 +55,25 @@ const ActivityTimePreference = () => {
         <View className="items-start w-full">
           <View className="my-5">
             <Text className="font-bold text-2xl">
-              What are your fitness interests
+              What Time Do You Prefer to Workout?
             </Text>
           </View>
 
-          {genderOptions.map((gender, index) => (
+          {TimeOptions.map((Time, index) => (
             <View
               key={index}
               className="w-full border-b flex flex-row justify-between items-center p-2"
             >
-              <Text className="text-lg font-semibold">{gender}</Text>
+              <Text className="text-lg font-semibold">{Time}</Text>
               <BouncyCheckbox
-                isChecked={selectedGender === gender}
-                onPress={() => handleSelectGender(gender)}
+                isChecked={selectedTime === Time}
+                onPress={() => handleSelectTime(Time)}
               />
             </View>
           ))}
         </View>
         <View className="mt-4 flex flex-row justify-end">
-          <NextButton onPress={() => navigation.navigate("QuestionFour")} />
+          <NextButton onPress={() => handleUserUpdate()} />
         </View>
       </View>
     </SafeAreaView>

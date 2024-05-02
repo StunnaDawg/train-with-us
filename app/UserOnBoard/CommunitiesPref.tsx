@@ -1,14 +1,16 @@
-import { View, Text, TextInput, SafeAreaView } from "react-native"
-import React from "react"
-import NextButton from "../components/NextButton"
+import React, { useState } from "react"
+import { View, Text, SafeAreaView } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import { useState } from "react"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
+import NextButton from "../components/NextButton"
+import supabase from "../../lib/supabase"
+import { useAuth } from "../supabaseFunctions/authcontext"
 import { NavigationType } from "../@types/navigation"
 
-type GenderOption =
+// Define the types for community options
+type CommunitiesOption =
   | "Gym Based Groups"
-  | "Outdoor Actvitities"
+  | "Outdoor Activities"
   | "Beginner Groups"
   | "Advanced Athlete Groups"
   | "Wellness Groups"
@@ -16,21 +18,42 @@ type GenderOption =
 
 const CommunityPreference = () => {
   const navigation = useNavigation<NavigationType>()
+  const [selectedCommunities, setSelectedCommunities] =
+    useState<CommunitiesOption | null>(null)
+  const { user } = useAuth()
 
-  const [selectedGender, setSelectedGender] =
-    useState<GenderOption>("Gym Based Groups")
-  const [displayOnProfile, setDisplayOnProfile] = useState<boolean>(false)
+  // Function to handle updating the user's community preferences in the database
+  const handleUserUpdate = async () => {
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ community_preference: [selectedCommunities] })
+        .eq("id", user?.id)
 
-  const handleSelectGender = (gender: GenderOption) => {
-    setSelectedGender(selectedGender === gender ? null : gender)
+      if (error) throw error
+
+      // Navigate to the next preference page
+      navigation.navigate("ActivityTimePreference")
+    } catch (error) {
+      console.error("Failed to update community preferences:", error)
+    }
   }
-  const genderOptions: GenderOption[] = [
+
+  // Function to handle the selection of communities
+  const handleSelectCommunities = (community: CommunitiesOption) => {
+    // Toggle community selection or set it to null if it's already selected
+    setSelectedCommunities(selectedCommunities === community ? null : community)
+  }
+
+  // List of available community options
+  const CommunitiesOptions: CommunitiesOption[] = [
     "Gym Based Groups",
-    "Outdoor Actvitities",
+    "Outdoor Activities", // Corrected typo
     "Beginner Groups",
     "Advanced Athlete Groups",
     "Wellness Groups",
   ]
+
   return (
     <SafeAreaView className="flex-1">
       <View className="flex justify-center mx-12">
@@ -41,23 +64,21 @@ const CommunityPreference = () => {
             </Text>
           </View>
 
-          {genderOptions.map((gender, index) => (
+          {CommunitiesOptions.map((community, index) => (
             <View
               key={index}
               className="w-full border-b flex flex-row justify-between items-center p-2"
             >
-              <Text className="text-lg font-semibold">{gender}</Text>
+              <Text className="text-lg font-semibold">{community}</Text>
               <BouncyCheckbox
-                isChecked={selectedGender === gender}
-                onPress={() => handleSelectGender(gender)}
+                isChecked={selectedCommunities === community}
+                onPress={() => handleSelectCommunities(community)}
               />
             </View>
           ))}
         </View>
         <View className="mt-4 flex flex-row justify-end">
-          <NextButton
-            onPress={() => navigation.navigate("ActivityTimePreference")}
-          />
+          <NextButton onPress={handleUserUpdate} />
         </View>
       </View>
     </SafeAreaView>

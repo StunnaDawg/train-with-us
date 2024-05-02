@@ -5,8 +5,10 @@ import { useNavigation } from "@react-navigation/native"
 import { useState } from "react"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import { NavigationType } from "../@types/navigation"
+import { useAuth } from "../supabaseFunctions/authcontext"
+import supabase from "../../lib/supabase"
 
-type GenderOption =
+type SexualityOption =
   | "Prefer not to say"
   | "Straight"
   | "Gay"
@@ -17,14 +19,32 @@ type GenderOption =
 const Sexuality = () => {
   const navigation = useNavigation<NavigationType>()
 
-  const [selectedGender, setSelectedGender] =
-    useState<GenderOption>("Prefer not to say")
+  const [selectedSexuality, setSelectedSexuality] =
+    useState<SexualityOption>("Prefer not to say")
   const [displayOnProfile, setDisplayOnProfile] = useState<boolean>(false)
 
-  const handleSelectGender = (gender: GenderOption) => {
-    setSelectedGender(selectedGender === gender ? null : gender)
+  const handleSelectSexuality = (Sexuality: SexualityOption) => {
+    setSelectedSexuality(selectedSexuality === Sexuality ? null : Sexuality)
   }
-  const genderOptions: GenderOption[] = [
+  const { user } = useAuth()
+
+  const handleUserUpdate = async () => {
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          sexuality: selectedSexuality,
+        })
+        .eq("id", user?.id)
+
+      if (error) throw error
+
+      navigation.navigate("FitnessInterests")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const SexualityOptions: SexualityOption[] = [
     "Prefer not to say",
     "Straight",
     "Gay",
@@ -38,15 +58,15 @@ const Sexuality = () => {
             <Text className="font-bold text-2xl">What is your Sexuality?</Text>
           </View>
 
-          {genderOptions.map((gender, index) => (
+          {SexualityOptions.map((Sexuality, index) => (
             <View
               key={index}
               className="w-full border-b flex flex-row justify-between items-center p-2"
             >
-              <Text className="text-lg font-semibold">{gender}</Text>
+              <Text className="text-lg font-semibold">{Sexuality}</Text>
               <BouncyCheckbox
-                isChecked={selectedGender === gender}
-                onPress={() => handleSelectGender(gender)}
+                isChecked={selectedSexuality === Sexuality}
+                onPress={() => handleSelectSexuality(Sexuality)}
               />
             </View>
           ))}
@@ -63,7 +83,7 @@ const Sexuality = () => {
           </View>
         </View>
         <View className="mt-4 flex flex-row justify-end">
-          <NextButton onPress={() => navigation.navigate("FitnessInterests")} />
+          <NextButton onPress={() => handleUserUpdate()} />
         </View>
       </View>
     </SafeAreaView>
