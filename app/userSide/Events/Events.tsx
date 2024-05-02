@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Pressable } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import getUserId from "../../supabaseFunctions/getFuncs/getUserId"
 import { Database } from "../../@types/supabase"
@@ -10,11 +10,20 @@ import { Profile } from "../../@types/supabaseTypes"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../@types/navigation"
+import { RefreshControl } from "react-native-gesture-handler"
 
 const Events = () => {
   const { user } = useAuth()
+  const [refreshing, setRefreshing] = useState<boolean>(false)
   const [userProfile, setUserProfile] = useState<Profile | null>(null)
   const navigation = useNavigation<NavigationType>()
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true)
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 2000)
+  }, [])
 
   useEffect(() => {
     const getUser = async () => {
@@ -25,7 +34,11 @@ const Events = () => {
   }, [])
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View className="flex flex-row justify-end m-3">
         <Pressable
           onPress={() => {

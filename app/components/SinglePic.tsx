@@ -7,7 +7,7 @@ import { useAuth } from "../supabaseFunctions/authcontext"
 
 type SinglePicProps = {
   size: number
-  item: string | null | undefined
+  item: string | undefined | null
   avatarRadius: number
   noAvatarRadius: number
 }
@@ -23,11 +23,13 @@ export default function SinglePic({
   const avatarSize = { height: size, width: size }
 
   useEffect(() => {
+    console.log("item", item)
     readImage()
   }, [item])
 
   const readImage = () => {
     if (item === undefined) return
+    console.log("reading", `${item}`)
     supabase.storage
       .from("photos")
       .download(`${item}`)

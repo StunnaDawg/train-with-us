@@ -54,6 +54,7 @@ export type Database = {
           community_members: string[] | null
           community_owner: string | null
           community_photos: string[] | null
+          community_profile_pic: string | null
           community_style: string | null
           community_title: string | null
           created_at: string
@@ -64,6 +65,7 @@ export type Database = {
           community_members?: string[] | null
           community_owner?: string | null
           community_photos?: string[] | null
+          community_profile_pic?: string | null
           community_style?: string | null
           community_title?: string | null
           created_at?: string
@@ -74,6 +76,7 @@ export type Database = {
           community_members?: string[] | null
           community_owner?: string | null
           community_photos?: string[] | null
+          community_profile_pic?: string | null
           community_style?: string | null
           community_title?: string | null
           created_at?: string
@@ -169,6 +172,7 @@ export type Database = {
           community_host: number | null
           created_at: string
           date: string | null
+          event_cover_photo: string | null
           event_description: string | null
           event_host: string
           event_photos: string[] | null
@@ -180,6 +184,7 @@ export type Database = {
           community_host?: number | null
           created_at?: string
           date?: string | null
+          event_cover_photo?: string | null
           event_description?: string | null
           event_host: string
           event_photos?: string[] | null
@@ -191,6 +196,7 @@ export type Database = {
           community_host?: number | null
           created_at?: string
           date?: string | null
+          event_cover_photo?: string | null
           event_description?: string | null
           event_host?: string
           event_photos?: string[] | null

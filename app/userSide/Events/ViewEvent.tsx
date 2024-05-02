@@ -1,5 +1,5 @@
-import { View, ScrollView, SafeAreaView } from "react-native"
-import React, { useEffect, useState } from "react"
+import { View, ScrollView, SafeAreaView, RefreshControl } from "react-native"
+import React, { useCallback, useEffect, useState } from "react"
 import ViewEventTitle from "./components/ViewEventTitle"
 import ViewEventDetails from "./components/ViewEventDetails"
 import AboutViewEvent from "./components/AboutViewEvent"
@@ -17,8 +17,16 @@ const ViewEvent = () => {
   const [userProfile, setUserProfile] = useState<Profile | null>(null)
   const navigation = useNavigation<NavigationType>()
   const [event, setEvent] = useState<Events | null>(null)
+  const [refreshing, setRefreshing] = useState<boolean>(false)
   const route = useRoute<RouteProp<RootStackParamList, "ViewEvent">>()
   const eventId = route.params.eventId
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true)
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 2000)
+  }, [])
 
   useEffect(() => {
     const getUser = async () => {
@@ -35,12 +43,18 @@ const ViewEvent = () => {
   return (
     <View className="flex-1 bg-yellow-300">
       <SafeAreaView className="flex-1">
-        <ScrollView className="flex-1">
+        <ScrollView
+          className="flex-1"
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
           <View>
             <ViewEventTitle
               eventId={event?.id}
               title={event?.event_title}
               date={event?.date}
+              eventPhoto={event?.event_cover_photo}
             />
           </View>
 

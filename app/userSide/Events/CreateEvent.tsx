@@ -18,6 +18,8 @@ import { set } from "date-fns"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { Profile } from "../../@types/supabaseTypes"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
+import NewPhoto from "../../components/NewPhoto"
+import * as ImagePicker from "expo-image-picker"
 
 const CreateEvent = () => {
   const { user } = useAuth()
@@ -26,7 +28,8 @@ const CreateEvent = () => {
   const [eventTitle, setEventTitle] = useState<string>("")
   const [date, setDate] = useState<Date>(new Date())
   const [price, setPrice] = useState<string>("")
-  const [eventPicture, setEventPicture] = useState<string>("")
+  const [eventPicture, setEventPicture] =
+    useState<ImagePicker.ImagePickerAsset>({} as ImagePicker.ImagePickerAsset)
   const [show, setShow] = useState(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const navigation = useNavigation<NavigationType>()
@@ -49,6 +52,10 @@ const CreateEvent = () => {
       <ScrollView className=" p-4 bg-white">
         <View className="flex flex-row items-center mb-8">
           <Text className="mx-1 text-3xl font-semibold ">Create Event</Text>
+        </View>
+
+        <View>
+          <NewPhoto setProfilePic={setEventPicture} />
         </View>
 
         <View className="mb-4">
@@ -117,8 +124,10 @@ const CreateEvent = () => {
                   currentUser?.id,
                   eventTitle,
                   currentUser?.community_created,
+                  date,
                   Number(price),
-                  description
+                  description,
+                  eventPicture
                 )
                 navigation.goBack()
               }, 2000)
@@ -128,13 +137,6 @@ const CreateEvent = () => {
             <Text className="text-white text-xl font-bold">Create Event</Text>
           </Pressable>
         </View>
-
-        {/* <View className="mb-8">
-        <Text className="mb-2 text-lg font-semibold text-gray">
-          Event Image
-        </Text>
-        <UploadEventImage setUri={setEventPicture} uri={eventPicture} />
-      </View> */}
       </ScrollView>
     </SafeAreaView>
   )

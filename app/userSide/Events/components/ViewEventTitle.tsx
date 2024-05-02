@@ -6,17 +6,25 @@ import supabase from "../../../../lib/supabase"
 import { FileObject } from "@supabase/storage-js"
 import { Events } from "../../../@types/supabaseTypes"
 import getSingleEvent from "../../../supabaseFunctions/getFuncs/getSingleEvent"
+import { set } from "date-fns"
 
 type ViewEventTitleProps = {
   title: string | null | undefined
   date: string | null | undefined
   eventId: number | null | undefined
+  eventPhoto: string | null | undefined
 }
 
-const ViewEventTitle = ({ title, date, eventId }: ViewEventTitleProps) => {
+const ViewEventTitle = ({
+  title,
+  date,
+  eventId,
+  eventPhoto,
+}: ViewEventTitleProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [currentEvent, setCurrentEvent] = useState<Events | null>({} as Events)
   const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
+  const [coverImage, setCoverImage] = useState<string>("")
   const { user } = useAuth()
 
   useEffect(() => {
@@ -26,8 +34,15 @@ const ViewEventTitle = ({ title, date, eventId }: ViewEventTitleProps) => {
   }, [user])
 
   useEffect(() => {
-    if (currentEvent?.event_photos === null || undefined) return
-    setImageFiles(currentEvent?.event_photos)
+    setLoading(true)
+    if (
+      currentEvent?.event_cover_photo === null ||
+      currentEvent?.event_cover_photo === undefined
+    )
+      return
+    console.log("getting currentEvent", currentEvent)
+    setCoverImage(currentEvent.event_cover_photo)
+    setLoading(false)
   }, [currentEvent])
   return (
     <View className="flex flex-row items-center justify-center">
@@ -44,7 +59,7 @@ const ViewEventTitle = ({ title, date, eventId }: ViewEventTitleProps) => {
           size={150}
           avatarRadius={0}
           noAvatarRadius={0}
-          item={imageFiles?.[0]}
+          item={eventPhoto}
         />
       </View>
     </View>
