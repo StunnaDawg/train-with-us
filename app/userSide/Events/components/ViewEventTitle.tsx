@@ -20,7 +20,7 @@ const ViewEventTitle = ({ title, date, eventId }: ViewEventTitleProps) => {
   const { user } = useAuth()
 
   useEffect(() => {
-    if (!user && eventId !== null && eventId !== undefined) return
+    if (!user && eventId) return
 
     getSingleEvent(setLoading, eventId, setCurrentEvent)
   }, [user])

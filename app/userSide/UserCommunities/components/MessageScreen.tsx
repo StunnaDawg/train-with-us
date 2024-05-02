@@ -17,11 +17,12 @@ import { RootStackParamList } from "../../../@types/navigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import { get } from "mongoose"
 import getAllUserChatSessions from "../../../supabaseFunctions/getFuncs/getAllUserChatSessions"
-import { Messages } from "../../../@types/supabaseTypes"
+import { Messages, Profile } from "../../../@types/supabaseTypes"
 import getChatSessionMessages from "../../../supabaseFunctions/getFuncs/getChatSessionMessages"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import sendMessage from "../../../supabaseFunctions/addFuncs/sendMessage"
 import supabase from "../../../../lib/supabase"
+import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 
 type UserMessage = {
   message: string | null
@@ -42,9 +43,10 @@ const UserMessage = ({ message }: UserMessage) => {
 
 type MatchesMessageProps = {
   message: string | null
+  imageFiles: string[] | null | undefined
 }
 
-const MatchesMessage = ({ message }: MatchesMessageProps) => {
+const MatchesMessage = ({ message, imageFiles }: MatchesMessageProps) => {
   const [loading, setLoading] = useState<boolean>(false)
 
   return (
@@ -55,7 +57,12 @@ const MatchesMessage = ({ message }: MatchesMessageProps) => {
         </Text>
       </View>
       <View className="flex flex-row justify-start flex-wrap mt-2 items-center m-1 my-2">
-        <SinglePic size={30} avatarRadius={150} noAvatarRadius={10} />
+        <SinglePic
+          size={55}
+          avatarRadius={100}
+          noAvatarRadius={100}
+          item={imageFiles?.[0]}
+        />
         <View className="rounded-2xl border mx-1 bg-slate-200 p-2">
           <Text className="text-xs">{message}</Text>
         </View>
@@ -66,12 +73,28 @@ const MatchesMessage = ({ message }: MatchesMessageProps) => {
 
 const MessageScreen = () => {
   const route = useRoute<RouteProp<RootStackParamList, "MessagingScreen">>()
-  const chatId = route.params.chatId
-  const { user } = useAuth()
+  const chatSession = route.params.chatSession
 
   const [serverMessages, setServerMessages] = useState<Messages[] | null>([])
 
   const [messageToSend, setMessageToSend] = useState("")
+
+  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
+  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
+  const { user } = useAuth()
+  const otherUserId =
+    chatSession.user1 === user?.id ? chatSession.user2 : chatSession.user1
+
+  useEffect(() => {
+    if (!user || !otherUserId) return
+
+    useCurrentUser(otherUserId, setCurrentUser)
+  }, [user])
+
+  useEffect(() => {
+    if (currentUser?.photos_url === null || undefined) return
+    setImageFiles(currentUser?.photos_url)
+  }, [currentUser])
 
   supabase
     .channel("messages")
@@ -79,7 +102,7 @@ const MessageScreen = () => {
       "postgres_changes",
       { event: "INSERT", schema: "public", table: "messages" },
       (payload) => {
-        getChatSessionMessages(chatId, setServerMessages)
+        getChatSessionMessages(chatSession.id, setServerMessages)
       }
     )
     .subscribe()
@@ -88,13 +111,13 @@ const MessageScreen = () => {
     if (messageToSend.trim().length === 0 || !user?.id) {
       return
     }
-    sendMessage(messageToSend, user?.id, chatId)
+    sendMessage(messageToSend, user?.id, chatSession.id)
     setMessageToSend("")
   }
 
   useEffect(() => {
-    getChatSessionMessages(chatId, setServerMessages)
-  }, [chatId])
+    getChatSessionMessages(chatSession.id, setServerMessages)
+  }, [chatSession])
 
   useEffect(() => {
     if (!serverMessages) return
@@ -113,7 +136,7 @@ const MessageScreen = () => {
               item={imageFiles?.[0]}
             />
           </View>
-          <Text className="font-bold text-md">Jordan Forbes</Text>
+          <Text className="font-bold text-md">{currentUser?.first_name}</Text>
         </View>
       </View>
 
@@ -132,7 +155,10 @@ const MessageScreen = () => {
               item.sender === user?.id ? (
                 <UserMessage message={item.message} />
               ) : (
-                <MatchesMessage message={item.message} />
+                <MatchesMessage
+                  imageFiles={imageFiles}
+                  message={item.message}
+                />
               )
             }
           />

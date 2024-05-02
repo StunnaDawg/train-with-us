@@ -10,6 +10,7 @@ import getSingleProfile from "../../../supabaseFunctions/getFuncs/getSingleProfi
 import { NavigationType } from "../../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import { set } from "date-fns"
+import MessageCard from "./MessageCard"
 
 const Messages = () => {
   const [files, setFiles] = useState<FileObject[]>([])
@@ -46,34 +47,21 @@ const Messages = () => {
       </View>
 
       {chatSessions?.map((session, index) => {
-        if (!session.user1 || !session.user2) return
-        const profile: Profile = getSingleProfile(
+        const otherUserId =
           session.user1 === user?.id ? session.user2 : session.user1
-        )
         return (
-          <Pressable
-            onPress={() => {
-              navigation.navigate("MessagingScreen", {
-                chatId: session.id,
-              })
-            }}
-            key={session.id}
-            className="flex flex-row items-center"
-          >
-            <View className="m-2">
-              <SinglePic
-                size={55}
-                avatarRadius={100}
-                noAvatarRadius={100}
-                item={files[0]} // Ensure this is correctly pointing to what you want to display
-              />
-            </View>
-
-            <View>
-              <Text className="font-bold mb-1">{profile.first_name}</Text>
-              <Text className="text-sm">Hey, how are you?</Text>
-            </View>
-          </Pressable>
+          <View key={session.id}>
+            <Pressable
+              onPress={() => {
+                navigation.navigate("MessagingScreen", {
+                  chatSession: session,
+                })
+              }}
+              className="flex flex-row items-center"
+            >
+              <MessageCard otherUserId={otherUserId} />
+            </Pressable>
+          </View>
         )
       })}
     </View>

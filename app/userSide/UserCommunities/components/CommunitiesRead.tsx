@@ -4,23 +4,27 @@ import SinglePic from "../../../components/SinglePic"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
 import { FileObject } from "@supabase/storage-js"
+import { Communities } from "../../../@types/supabaseTypes"
+import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
 
 const CommunitiesRead = () => {
-  const [files, setFiles] = useState<FileObject[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
+  const [currentCommunity, setCurrentCommunity] = useState<Communities | null>(
+    {} as Communities
+  )
+  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const { user } = useAuth()
 
   useEffect(() => {
-    if (!user) return
+    if (!user || !currentCommunity) return
 
-    loadImages()
+    getSingleCommunity(setLoading, currentCommunity?.id, setCurrentCommunity)
   }, [user])
 
-  const loadImages = async () => {
-    const { data } = await supabase.storage.from("photos").list(user!.id)
-    if (data) {
-      setFiles(data)
-    }
-  }
+  useEffect(() => {
+    if (currentCommunity?.community_photos === null || undefined) return
+    setImageFiles(currentCommunity?.community_photos)
+  }, [currentCommunity])
   return (
     <View className="mt-8 mx-8 pb-2">
       <View>
@@ -33,44 +37,13 @@ const CommunitiesRead = () => {
             size={55}
             avatarRadius={100}
             noAvatarRadius={100}
-            item={files[0]}
+            item={imageFiles?.[0]}
           />
         </View>
 
         <View>
           <Text className="font-bold mb-1">#5AM</Text>
           <Text className="text-sm">Hey, how are you?</Text>
-        </View>
-      </Pressable>
-
-      <Pressable className="flex flex-row items-center">
-        <View className="m-2">
-          <SinglePic
-            size={55}
-            avatarRadius={100}
-            noAvatarRadius={100}
-            item={files[1]}
-          />
-        </View>
-
-        <View>
-          <Text className="font-bold mb-1">#5PM</Text>
-          <Text className="text-sm">Ya, I agree. that wou...</Text>
-        </View>
-      </Pressable>
-
-      <Pressable className="flex flex-row items-center">
-        <View className="m-2">
-          <SinglePic
-            size={55}
-            avatarRadius={100}
-            noAvatarRadius={100}
-            item={files[2]}
-          />
-        </View>
-        <View>
-          <Text className="font-bold mb-1">Jules Lemire</Text>
-          <Text className="text-sm">Ya, I agree. that wou...</Text>
         </View>
       </Pressable>
     </View>

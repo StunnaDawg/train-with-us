@@ -4,7 +4,6 @@ import CommunitiesScroll from "./components/CommunitiesScroll"
 import Tabs from "./components/Tabs"
 import Unread from "./components/Unread"
 import Messages from "./components/Messages"
-import CommunitiesUnRead from "./components/CommunitiesUnread"
 import CommunitiesRead from "./components/CommunitiesRead"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
@@ -52,26 +51,17 @@ const CommunitiesDash = () => {
           />
         </View>
       </View>
-
-      {userMessages ? (
+      {loading ? (
         <View>
-          <View>
-            <Unread />
-          </View>
-
-          <View>
-            <Messages />
-          </View>
+          <Text>Loading...</Text>
+        </View>
+      ) : userMessages ? (
+        <View>
+          <Messages />
         </View>
       ) : (
         <View>
-          <View>
-            <CommunitiesUnRead />
-          </View>
-
-          <View>
-            <CommunitiesRead />
-          </View>
+          <CommunitiesRead />
         </View>
       )}
     </ScrollView>

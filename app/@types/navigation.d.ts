@@ -1,7 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { TabNavigationProp } from "@react-navigation/native"
 import { CommunitiesProfile, UserProfile } from "./supabase"
-import { Profile } from "./supabaseTypes"
+import { ChatSession, Profile } from "./supabaseTypes"
 
 export type RootStackParamList = {
   Footer: undefined
@@ -55,7 +55,7 @@ export type RootStackParamList = {
     eventId: string
   }
   MessagingScreen: {
-    chatId: string
+    chatSession: ChatSession
   }
 
   CommunitiesMessagingScreen: {
