@@ -1,9 +1,12 @@
 import { View, Text, Pressable } from "react-native"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import WhiteSkinnyButton from "../../../components/WhiteSkinnyButton"
-import { Communities } from "../../../@types/supabaseTypes"
+import { Communities, Profile } from "../../../@types/supabaseTypes"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
+import requestToJoin from "../../../supabaseFunctions/addFuncs/requestToJoin"
+import { useAuth } from "../../../supabaseFunctions/authcontext"
+import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 
 type ViewCommunityTitleProps = {
   community: Communities | null
@@ -14,8 +17,15 @@ const ViewCommunityTitle = ({
   community,
   communityId,
 }: ViewCommunityTitleProps) => {
+  const [currentProfile, setCurrentProfile] = useState<Profile | null>(null)
+  const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
-  const requestToJoin = () => {}
+
+  useEffect(() => {
+    if (!user) return
+    useCurrentUser(user?.id, setCurrentProfile)
+  }, [])
+
   return (
     <View className="mx-12">
       <View className="items-center">
@@ -37,7 +47,12 @@ const ViewCommunityTitle = ({
         <View>
           <WhiteSkinnyButton
             text="+ Request to Join"
-            buttonFunction={requestToJoin}
+            buttonFunction={() => {
+              console.log("user?.id", user?.id)
+              if (user?.id === undefined || !currentProfile?.first_name) return
+
+              requestToJoin(communityId, user?.id, currentProfile?.first_name)
+            }}
           />
         </View>
       </View>

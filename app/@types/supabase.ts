@@ -170,35 +170,38 @@ export type Database = {
       community_requests: {
         Row: {
           created_at: string
+          first_name: string | null
           id: string
           requested_community: number | null
           user_id: string | null
         }
         Insert: {
           created_at?: string
+          first_name?: string | null
           id?: string
           requested_community?: number | null
           user_id?: string | null
         }
         Update: {
           created_at?: string
+          first_name?: string | null
           id?: string
           requested_community?: number | null
           user_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "community_requests_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "community_requests_requested_community_fkey"
             columns: ["requested_community"]
             isOneToOne: false
             referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]

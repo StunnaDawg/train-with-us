@@ -81,6 +81,18 @@ export type RootStackParamList = {
   MyCommunitySettings: {
     community: Communities
   }
+
+  MyCommunityRequests: {
+    communityId: number
+  }
+
+  MyCommunityMembers: {
+    communityId: number
+  }
+
+  ViewRequestProfile: {
+    userId: string
+  }
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

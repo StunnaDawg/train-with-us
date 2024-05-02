@@ -27,6 +27,7 @@ const UpcomingCommunityEvents = ({
           upcomingEvents?.map((event) => (
             <EventCard
               eventId={event.id}
+              eventCoverPhoto={event.event_cover_photo}
               communityId={event.community_host}
               title={event.event_title}
               date={event.date}

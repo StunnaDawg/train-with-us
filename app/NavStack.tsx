@@ -37,6 +37,10 @@ import ProfileView from "./userSide/Profile/Profile"
 import CommunityHome from "./userSide/MyCommunity/CommunityHome"
 import CommunitySettings from "./userSide/MyCommunity/CommunitySettings"
 import CreateChannel from "./userSide/MyCommunity/CreateChannel"
+import CommunityRequests from "./userSide/MyCommunity/CommunityRequests"
+import ManageCommunityMembers from "./userSide/MyCommunity/ManageCommunityMembers"
+import CommunityRequestsPage from "./userSide/MyCommunity/CommunityRequests"
+import ViewRequestProfile from "./userSide/MyCommunity/ViewRequestProfile"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -166,6 +170,24 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="MyCommunitySettings"
                 component={CommunitySettings}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ViewRequestProfile"
+                component={ViewRequestProfile}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="MyCommunityRequests"
+                component={CommunityRequestsPage}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="MyCommunityMembers"
+                component={ManageCommunityMembers}
               />
 
               <Stack.Screen

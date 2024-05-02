@@ -70,6 +70,33 @@ const CommunityHome = () => {
             </Pressable>
           </View>
         </View>
+
+        <View className="border rounded-xl mx-3 py-2  mt-5">
+          <View className="border-b pb-2">
+            <Pressable
+              onPress={() => {
+                navigation.navigate("MyCommunityRequests", {
+                  communityId: communityId,
+                })
+              }}
+            >
+              <Text className="mx-2 font-bold text-xl">View Requests</Text>
+            </Pressable>
+          </View>
+
+          <View>
+            <Pressable
+              className="pt-2"
+              onPress={() => {
+                navigation.navigate("MyCommunityMembers", {
+                  communityId: communityId,
+                })
+              }}
+            >
+              <Text className="mx-2 font-bold text-xl">Manage Members</Text>
+            </Pressable>
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   )
