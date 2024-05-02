@@ -5,7 +5,7 @@ const insertPhoto = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   currentArray: string[] | null | undefined,
   photoUrl: string,
-  userId: string,
+  userId: string | number,
   tableName: string,
   arrayColumn: string
 ) => {
@@ -19,6 +19,8 @@ const insertPhoto = async (
     console.log("photoPath", photoPath)
 
     const newArray = [...(currentArray || []), photoUrl]
+
+    console.log("id in insert", userId)
 
     const { error } = await supabase
       .from(tableName)

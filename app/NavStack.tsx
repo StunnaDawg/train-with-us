@@ -34,6 +34,9 @@ import CreateEvent from "./userSide/Events/CreateEvent"
 import CommunityMembers from "./userSide/Communities/CommunityMembers"
 import ViewUserProfile from "./userSide/Communities/ViewUserProfile"
 import ProfileView from "./userSide/Profile/Profile"
+import CommunityHome from "./userSide/MyCommunity/CommunityHome"
+import CommunitySettings from "./userSide/MyCommunity/CommunitySettings"
+import CreateChannel from "./userSide/MyCommunity/CreateChannel"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -152,6 +155,25 @@ const NavStack = () => {
           {userProfile?.onboard ? (
             <Stack.Group>
               <Stack.Screen name="Footer" component={UserFooter} />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="MyCommunityHome"
+                component={CommunityHome}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="MyCommunitySettings"
+                component={CommunitySettings}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="CreateChannel"
+                component={CreateChannel}
+              />
+
               <Stack.Screen
                 options={{ headerShown: false }}
                 name="MessagingScreen"

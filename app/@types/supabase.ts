@@ -91,30 +91,45 @@ export type Database = {
       }
       community_channels: {
         Row: {
-          admin: string | null
-          channel_uuid: string | null
+          channel_title: string | null
+          channel_type: string
+          community: number
+          community_owner: string | null
           created_at: string
-          id: number
-          messages: string | null
-          name: string | null
+          id: string
         }
         Insert: {
-          admin?: string | null
-          channel_uuid?: string | null
+          channel_title?: string | null
+          channel_type?: string
+          community: number
+          community_owner?: string | null
           created_at?: string
-          id?: number
-          messages?: string | null
-          name?: string | null
+          id?: string
         }
         Update: {
-          admin?: string | null
-          channel_uuid?: string | null
+          channel_title?: string | null
+          channel_type?: string
+          community?: number
+          community_owner?: string | null
           created_at?: string
-          id?: number
-          messages?: string | null
-          name?: string | null
+          id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "community_channels_community_fkey"
+            columns: ["community"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_channels_community_owner_fkey"
+            columns: ["community_owner"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       community_members: {
         Row: {

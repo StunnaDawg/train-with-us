@@ -55,8 +55,23 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
   }
   return (
     <View className="mt-8 px-5">
-      <View className="px-3 mb-3">
-        <Text className="font-bold text-3xl">My Communities</Text>
+      <View className="flex flex-row justify-between px-3 mb-3 items-center">
+        <View>
+          <Text className="font-bold text-3xl">My Communities</Text>
+        </View>
+
+        <Pressable
+          onPress={() => {
+            if (!currentUser?.community_created) return
+            navigation.navigate("MyCommunityHome", {
+              communityId: currentUser?.community_created,
+            })
+          }}
+          className="px-2"
+        >
+          <Text className="text-blue-600">My Community</Text>
+          <Text className="text-blue-600 text-center">Home</Text>
+        </Pressable>
       </View>
       <ScrollView horizontal={true}>
         <View className="flex flex-row">

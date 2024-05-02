@@ -31,6 +31,7 @@ const addNewCommunity = async (
         created_at: new Date(),
         community_style: communityStyle,
         community_photos: [filePath],
+        community_profile_pic: filePath,
       },
     ])
 
