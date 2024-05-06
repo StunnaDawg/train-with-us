@@ -64,3 +64,10 @@ grant trigger on table "public"."community_channel_messages" to "service_role";
 grant truncate on table "public"."community_channel_messages" to "service_role";
 
 grant update on table "public"."community_channel_messages" to "service_role";
+
+create policy "Enable read access for all users"
+on "public"."community_channel_messages"
+as permissive
+for select
+to public
+using (true);

@@ -88,7 +88,11 @@ const ChannelMessageScreen = () => {
     .channel("community_channel_messages")
     .on(
       "postgres_changes",
-      { event: "INSERT", schema: "public", table: "messages" },
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "community_channel_messages",
+      },
       (payload) => {
         getChannelSessionMessages(channel.id, setServerMessages)
       }
