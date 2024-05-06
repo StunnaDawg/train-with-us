@@ -12,14 +12,13 @@ const getConnectionProfiles = async (
     setLoading(true)
     const connections = await getConnectedIgnoredProfiles(userId)
 
-    let query = supabase.from("profiles").select("*").not("id", "eq", userId) // Exclude the current user's profile by default
+    let query = supabase.from("profiles").select("*").not("id", "eq", userId)
 
     if (connections) {
       const { connected_users } = connections
       const excludeIds = [...new Set([...(connected_users || [])])]
       console.log("Exclude IDs", excludeIds)
 
-      // Apply the filter only if there are IDs to exclude
       if (excludeIds.length > 0) {
         const tupleIds = `(${excludeIds.join(", ")})`
         query = query.not("id", "in", tupleIds)

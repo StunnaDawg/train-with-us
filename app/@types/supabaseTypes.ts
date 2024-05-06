@@ -20,6 +20,9 @@ export type ChatSession = Database["public"]["Tables"]["chat_sessions"]["Row"]
 export type CommunityRequests =
   Database["public"]["Tables"]["community_requests"]["Row"]
 
+export type CommunityChannel =
+  Database["public"]["Tables"]["community_channels"]["Row"]
+
 // Inserting data into the database
 
 export type NewProfile = Database["public"]["Tables"]["profiles"]["Insert"]
