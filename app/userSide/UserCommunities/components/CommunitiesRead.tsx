@@ -7,9 +7,12 @@ import { FileObject } from "@supabase/storage-js"
 import { Communities, CommunityChannel } from "../../../@types/supabaseTypes"
 import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
 import getUserPinnedChannels from "../../../supabaseFunctions/getFuncs/getUserPinnedChannels"
+import { useNavigation } from "@react-navigation/native"
+import { NavigationType } from "../../../@types/navigation"
 
 const CommunitiesRead = () => {
   const [loading, setLoading] = useState<boolean>(false)
+  const navigation = useNavigation<NavigationType>()
 
   const [communityChannels, setCommunityChannels] = useState<
     CommunityChannel[] | null
@@ -31,7 +34,14 @@ const CommunitiesRead = () => {
       </View>
 
       {!loading && communityChannels && communityChannels.length > 0 ? (
-        <Pressable className="flex flex-row items-center">
+        <Pressable
+          onPress={() =>
+            navigation.navigate("ChannelScreen", {
+              channelId: communityChannels[0],
+            })
+          }
+          className="flex flex-row items-center"
+        >
           {/* <View className="m-2">
           <SinglePic
             size={55}

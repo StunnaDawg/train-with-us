@@ -1,7 +1,12 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { TabNavigationProp } from "@react-navigation/native"
 import { CommunitiesProfile, UserProfile } from "./supabase"
-import { ChatSession, Communities, Profile } from "./supabaseTypes"
+import {
+  ChatSession,
+  Communities,
+  CommunityChannel,
+  Profile,
+} from "./supabaseTypes"
 
 export type RootStackParamList = {
   Footer: undefined
@@ -92,6 +97,9 @@ export type RootStackParamList = {
 
   ViewRequestProfile: {
     userId: string
+  }
+  ChannelScreen: {
+    channelId: CommunityChannel
   }
 }
 

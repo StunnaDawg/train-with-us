@@ -23,6 +23,9 @@ export type CommunityRequests =
 export type CommunityChannel =
   Database["public"]["Tables"]["community_channels"]["Row"]
 
+export type CommunityChannelMessages =
+  Database["public"]["Tables"]["community_channel_messages"]["Row"]
+
 // Inserting data into the database
 
 export type NewProfile = Database["public"]["Tables"]["profiles"]["Insert"]
