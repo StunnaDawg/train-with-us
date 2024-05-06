@@ -4,7 +4,7 @@ const getConnectedIgnoredProfiles = async (userId: string) => {
   try {
     const { data, error } = await supabase
       .from("profiles")
-      .select("connected_users, ignored_users")
+      .select("connected_users")
       .eq("id", userId)
       .single()
 
