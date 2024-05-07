@@ -6,6 +6,7 @@ import UserAboutSection from "../../Profile/components/UserAboutSection"
 import UserTopGyms from "../../Profile/components/UserTopGyms"
 import MessageButton from "./MessageButton"
 import { Profile } from "../../../@types/supabaseTypes"
+import Animated from "react-native-reanimated"
 
 // Shares components with profile page
 
@@ -21,7 +22,7 @@ const ConnectionsCard = ({
   setLoading,
 }: ConnectionsCardProps) => {
   return (
-    <ScrollView>
+    <View className="h-100">
       <View className="flex flex-row justify-center mt-8 mb-2">
         <Text className="text-3xl font-bold">{profile?.first_name}</Text>
       </View>
@@ -56,7 +57,7 @@ const ConnectionsCard = ({
       <View>
         <UserAboutSection profile={profile} />
       </View>
-    </ScrollView>
+    </View>
   )
 }
 

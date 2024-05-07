@@ -62,15 +62,6 @@ const MessageButton = ({
             >
               <Text className="text-2xl font-bold">Say Hi</Text>
             </Pressable>
-
-            <Pressable
-              onPress={() => {
-                handleIgnorePress()
-              }}
-              className="bg-red-500  border-2 rounded-full p-3 px-5 mx-1"
-            >
-              <Text className="text-2xl font-bold">X</Text>
-            </Pressable>
           </View>
         ) : (
           <Pressable className="border-2 rounded-full p-3">
