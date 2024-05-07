@@ -22,8 +22,8 @@ const ConnectionsCard = ({
   setLoading,
 }: ConnectionsCardProps) => {
   return (
-    <View className="h-100">
-      <View className="flex flex-row justify-center mt-8 mb-2">
+    <View style={{ height: 750 }}>
+      <View className="flex flex-row justify-center mt-1 mb-2">
         <Text className="text-3xl font-bold">{profile?.first_name}</Text>
       </View>
       <View>

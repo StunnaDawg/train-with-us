@@ -6,6 +6,7 @@ import getConnectionProfiles from "../../supabaseFunctions/getFuncs/getConnectio
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import Animated, {
   ReduceMotion,
+  runOnJS,
   useAnimatedProps,
   useAnimatedScrollHandler,
   useAnimatedStyle,
@@ -14,6 +15,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
+import { he } from "date-fns/locale"
 
 const Connections = () => {
   const { user } = useAuth()
@@ -21,21 +23,17 @@ const Connections = () => {
   const [newConnection, setNewConnection] = useState<boolean>(false)
   const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
   const [refreshing, setRefreshing] = useState<boolean>(false)
+  const [lastIndex, setLastIndex] = useState(0)
   const [currentIndex, setCurrentIndex] = useState(0)
-  const cardHeight = 600
+  const cardHeight = 750
   const scrollEnabled = useSharedValue(true)
   const translationY = useSharedValue(0)
   const startY = useSharedValue(0)
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: -translationY.value }],
-    }
-  })
-
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: (event) => {
-      startY.value = event.contentOffset.y // Capture the start position
+      startY.value = event.contentOffset.y
+      console.log("startY", startY.value)
     },
     onScroll: (event) => {
       translationY.value = event.contentOffset.y
@@ -44,7 +42,7 @@ const Connections = () => {
       const offsetY = event.contentOffset.y
       const distance = offsetY - startY.value
       const targetIndex =
-        distance < 0
+        distance < 500
           ? Math.floor(offsetY / cardHeight)
           : Math.ceil(offsetY / cardHeight)
       const targetOffset = targetIndex * cardHeight
@@ -60,16 +58,6 @@ const Connections = () => {
       setLoading(false)
     }
   }
-
-  const stylez = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: translationY.value,
-        },
-      ],
-    }
-  })
 
   useEffect(() => {
     fetchConnectionProfiles()
@@ -88,8 +76,13 @@ const Connections = () => {
       console.log("gottenn profiles", [...connectionProfiles])
   }, [connectionProfiles])
 
+  useEffect(() => {
+    scrollEnabled.value = true // Re-enable scrolling when the data changes (new fetch etc.)
+  }, [connectionProfiles])
+
   return (
     <Animated.ScrollView
+      showsVerticalScrollIndicator={false}
       onScroll={scrollHandler}
       scrollEventThrottle={16}
       snapToInterval={cardHeight} // Optional, native snapping to help with alignment
