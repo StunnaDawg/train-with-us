@@ -101,6 +101,10 @@ export type RootStackParamList = {
   ChannelScreen: {
     channelId: CommunityChannel
   }
+
+  AddMoreUserInfo: {
+    userProfile: UserProfile
+  }
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

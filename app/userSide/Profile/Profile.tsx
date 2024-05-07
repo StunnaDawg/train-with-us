@@ -9,12 +9,16 @@ import PictureSection from "./components/PictureSection"
 import { Profile } from "../../@types/supabaseTypes"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { useAuth } from "../../supabaseFunctions/authcontext"
+import WhiteSkinnyButton from "../../components/WhiteSkinnyButton"
+import { useNavigation } from "@react-navigation/native"
+import { NavigationType } from "../../@types/navigation"
 
 const ProfileView = () => {
   const { user } = useAuth()
   const [loading, setLoading] = useState<boolean>(true)
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
+  const navigation = useNavigation<NavigationType>()
 
   const onRefresh = useCallback(() => {
     setRefreshing(true)
@@ -37,6 +41,21 @@ const ProfileView = () => {
       <UserProfilePic profile={currentUser} refresh={refreshing} />
 
       <UserTopGyms profile={currentUser} borderB={true} mt={true} />
+
+      <View className="flex flex-row justify-center mt-3">
+        <WhiteSkinnyButton
+          textSize="text-xl"
+          width={150}
+          text="Add More Info"
+          buttonFunction={() => {
+            if (currentUser) {
+              navigation.navigate("AddMoreUserInfo", {
+                userProfile: currentUser,
+              })
+            }
+          }}
+        />
+      </View>
 
       <UserAboutSection profile={currentUser} />
 

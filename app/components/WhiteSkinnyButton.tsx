@@ -4,11 +4,15 @@ import React, { useState } from "react"
 type WhiteSkinnyButtonProps = {
   text: string
   buttonFunction: () => void
+  width?: number
+  textSize?: string
 }
 
 const WhiteSkinnyButton = ({
   text,
   buttonFunction,
+  width,
+  textSize,
 }: WhiteSkinnyButtonProps) => {
   const [isPressed, setIsPressed] = useState(false)
 
@@ -22,14 +26,15 @@ const WhiteSkinnyButton = ({
 
   return (
     <Pressable
+      style={{ width: width ? width : 150 }}
       onPress={() => buttonFunction()}
       onPressIn={handleOnPressIn}
       onPressOut={handleOnPressOut}
-      className={`rounded-full border p-2 ${
+      className={` rounded-full border p-2 items-center font-bold ${
         isPressed ? "bg-gray-200 border-gray-200" : "bg-white border-white"
       }`}
     >
-      <Text className="font-bold">{text}</Text>
+      <Text className={`font-bold ${textSize} `}>{text}</Text>
     </Pressable>
   )
 }

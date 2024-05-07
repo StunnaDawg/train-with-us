@@ -42,6 +42,7 @@ import ManageCommunityMembers from "./userSide/MyCommunity/ManageCommunityMember
 import CommunityRequestsPage from "./userSide/MyCommunity/CommunityRequests"
 import ViewRequestProfile from "./userSide/MyCommunity/ViewRequestProfile"
 import ChannelMessageScreen from "./userSide/UserCommunities/components/ChannelMessages"
+import AddMoreInfo from "./userSide/Profile/AddMoreInfo"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -171,6 +172,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="MyCommunitySettings"
                 component={CommunitySettings}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="AddMoreUserInfo"
+                component={AddMoreInfo}
               />
 
               <Stack.Screen
