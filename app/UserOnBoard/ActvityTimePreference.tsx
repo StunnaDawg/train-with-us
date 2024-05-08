@@ -37,7 +37,7 @@ const ActivityTimePreference = () => {
       if (error) throw error
 
       // Navigate to the next preference page
-      navigation.navigate("QuestionFour")
+      navigation.goBack()
     } catch (error) {
       console.error("Failed to update community preferences:", error)
     }

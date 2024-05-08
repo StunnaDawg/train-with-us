@@ -1,4 +1,4 @@
-import { View, Text, Button, Pressable } from "react-native"
+import { View, Text, Button, Pressable, ActivityIndicator } from "react-native"
 import { Image } from "expo-image"
 import * as FileSystem from "expo-file-system"
 import React, { useEffect, useState } from "react"
@@ -11,6 +11,8 @@ import { decode } from "base64-arraybuffer"
 import insertPhoto from "../supabaseFunctions/updateFuncs/insertPhoto"
 import { Profile } from "../@types/supabaseTypes"
 import useCurrentUser from "../supabaseFunctions/getFuncs/useCurrentUser"
+import { set } from "date-fns"
+import removePhoto from "../supabaseFunctions/deleteFuncs/removePhoto"
 
 type SingleImageProp = {
   imageUrl: string | null | undefined
@@ -19,6 +21,7 @@ type SingleImageProp = {
   setImageUrls: React.Dispatch<
     React.SetStateAction<string[] | null | undefined>
   >
+  setLoadingNewPic: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const SingleImageSupa = ({
@@ -26,6 +29,7 @@ const SingleImageSupa = ({
   listIndex,
   imageUrls,
   setImageUrls,
+  setLoadingNewPic,
 }: SingleImageProp) => {
   const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
@@ -69,6 +73,7 @@ const SingleImageSupa = ({
     })
 
     if (!result.canceled) {
+      setLoadingNewPic(true)
       const img = result.assets[0]
       const base64 = await FileSystem.readAsStringAsync(img.uri, {
         encoding: "base64",
@@ -90,6 +95,8 @@ const SingleImageSupa = ({
         "profiles",
         "photos_url"
       )
+      setImage(img.uri)
+      setLoadingNewPic(false)
     }
   }
 
@@ -97,16 +104,26 @@ const SingleImageSupa = ({
     itemUrl: string | null | undefined,
     listIndex: number
   ) => {
-    if (itemUrl === "" || !imageUrls) return
+    if (
+      itemUrl === "" ||
+      !imageUrls ||
+      itemUrl === null ||
+      itemUrl === undefined
+    )
+      return
     console.log(`${itemUrl}`)
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from("photos")
       .remove([`${itemUrl}`])
+
+    removePhoto(itemUrl, userId!)
 
     if (error) {
       console.log("Error removing image")
       return
     }
+
+    setImage("")
 
     const newFiles = [...imageUrls]
     newFiles.splice(listIndex, 1)
@@ -125,6 +142,7 @@ const SingleImageSupa = ({
             source={{ uri: image }}
             style={{ width: 150, height: 150 }}
           />
+          {loading ? <ActivityIndicator /> : null}
           <Pressable
             className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded hover:bg-blue-800 m-2"
             onPress={async () => {
@@ -139,6 +157,7 @@ const SingleImageSupa = ({
           className="m-1 relative overflow-hidden max-w-full rounded-lg bg-gray-600 border-1 border-solid border-gray-200 border-r-10"
           style={[avatarSize]}
         >
+          {loading ? <ActivityIndicator /> : null}
           <Pressable
             onPress={async () => {
               await pickImage()

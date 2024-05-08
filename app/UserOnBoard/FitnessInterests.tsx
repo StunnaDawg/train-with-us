@@ -41,7 +41,7 @@ const FitnessInterests = () => {
 
       if (error) throw error
 
-      navigation.navigate("CommunitiesPreferences")
+      navigation.goBack()
     } catch (error) {
       console.log(error)
     }

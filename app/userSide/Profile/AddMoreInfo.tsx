@@ -45,11 +45,11 @@ const AddMoreInfo = () => {
           </View>
         ) : aboutMe ? (
           <View>
-            <AboutMeEdit currentUser={currentUser} />
+            <AboutMeEdit currentUserId={currentUser.id} />
           </View>
         ) : (
           <View>
-            <InterestsEdit currentUser={currentUser} />
+            <InterestsEdit currentUserId={currentUser.id} />
           </View>
         )}
       </ScrollView>

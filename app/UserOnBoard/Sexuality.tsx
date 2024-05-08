@@ -39,7 +39,7 @@ const Sexuality = () => {
 
       if (error) throw error
 
-      navigation.navigate("FitnessInterests")
+      navigation.goBack()
     } catch (error) {
       console.log(error)
     }

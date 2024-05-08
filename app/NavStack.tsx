@@ -262,30 +262,6 @@ const NavStack = () => {
                 name="UserEditProfile"
                 component={EditProfile}
               />
-            </Stack.Group>
-          ) : (
-            <Stack.Group>
-              <Stack.Screen
-                options={{ headerShown: false }}
-                name="QuestionOne"
-                component={Question1}
-              />
-              <Stack.Screen
-                options={{ headerShown: false }}
-                name="QuestionTwo"
-                component={Question2}
-              />
-              <Stack.Screen
-                options={{ headerShown: false }}
-                name="QuestionThree"
-                component={Question3}
-              />
-              <Stack.Screen
-                options={{ headerShown: false }}
-                name="QuestionFour"
-                component={Question4}
-              />
-
               <Stack.Screen
                 options={{ headerShown: false }}
                 name="Sexuality"
@@ -307,6 +283,31 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="ActivityTimePreference"
                 component={ActivityTimePreference}
+              />
+              {/* Question 3 is gender */}
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="QuestionThree"
+                component={Question3}
+              />
+            </Stack.Group>
+          ) : (
+            <Stack.Group>
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="QuestionOne"
+                component={Question1}
+              />
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="QuestionTwo"
+                component={Question2}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="QuestionFour"
+                component={Question4}
               />
             </Stack.Group>
           )}
