@@ -5,6 +5,7 @@ import {
   ChatSession,
   Communities,
   CommunityChannel,
+  Events,
   Profile,
 } from "./supabaseTypes"
 
@@ -76,7 +77,11 @@ export type RootStackParamList = {
   }
   ViewCommunitiesTopTabs: undefined
   CreateNewChannel: undefined
-  EventCheckout: undefined
+  EventCheckout: {
+    event: Events
+    ticketNumber: number
+    ticketPrice: number
+  }
   MyCommunityHome: {
     communityId: number
   }
@@ -105,6 +110,10 @@ export type RootStackParamList = {
   AddMoreUserInfo: {
     userProfile: UserProfile
   }
+
+  PurchaseScreen: undefined
+
+  MyEvents: undefined
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

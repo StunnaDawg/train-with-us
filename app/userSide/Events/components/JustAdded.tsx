@@ -13,7 +13,7 @@ const JustAdded = () => {
   return (
     <View className="flex flex-col m-5">
       <Text className="text-2xl font-bold m-1">Just Added</Text>
-      <ScrollView horizontal={true}>
+      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         {loading ? (
           <ActivityIndicator />
         ) : justAddedEvents && justAddedEvents?.length > 0 ? (

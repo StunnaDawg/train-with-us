@@ -67,7 +67,10 @@ const ViewEvent = () => {
           </View>
         </ScrollView>
         <View className="absolute inset-x-0 bottom-0 pb-12 bg-white/75">
-          <Checkout />
+          <Checkout
+            ticketPrice={event?.price ? event.price : 0}
+            event={event}
+          />
         </View>
       </SafeAreaView>
     </View>

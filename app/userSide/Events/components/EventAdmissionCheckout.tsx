@@ -1,10 +1,19 @@
 import { View, Text, Pressable } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import React, { useState } from "react"
-import { NavigationType } from "../../../@types/navigation"
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 
-const EventAdmissionCheckout = () => {
-  const [count, setCount] = useState(0)
+type EventAdmissionCheckoutProps = {
+  firstAmountTickets: number
+  tickets: number
+  setTickets: Dispatch<SetStateAction<number>>
+}
+
+const EventAdmissionCheckout = ({
+  tickets,
+  setTickets,
+  firstAmountTickets,
+}: EventAdmissionCheckoutProps) => {
+  const [count, setCount] = useState(firstAmountTickets)
 
   // Function to decrement the count, not going below 0
   const decrementCount = () => {
@@ -15,6 +24,10 @@ const EventAdmissionCheckout = () => {
   const incrementCount = () => {
     setCount((prev) => prev + 1)
   }
+
+  useEffect(() => {
+    setTickets(count)
+  }, [count])
   return (
     <View className=" bg-white/50 mx-12 rounded-xl">
       <View className="items-center">

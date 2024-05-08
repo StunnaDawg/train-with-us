@@ -314,14 +314,20 @@ export type Database = {
       events_users: {
         Row: {
           event_id: number
+          first_name: string | null
+          last_name: string | null
           user_id: string
         }
         Insert: {
           event_id: number
+          first_name?: string | null
+          last_name?: string | null
           user_id: string
         }
         Update: {
           event_id?: number
+          first_name?: string | null
+          last_name?: string | null
           user_id?: string
         }
         Relationships: [

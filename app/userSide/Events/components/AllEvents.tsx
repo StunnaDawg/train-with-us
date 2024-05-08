@@ -24,7 +24,7 @@ const AllEvents = () => {
           <Text className="underline">View All</Text>
         </Pressable>
       </View>
-      <ScrollView horizontal={true}>
+      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         {loading ? (
           <ActivityIndicator />
         ) : allEvents && allEvents?.length > 0 ? (

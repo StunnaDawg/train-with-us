@@ -2,8 +2,14 @@ import { View, Text, Pressable } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import React, { useState } from "react"
 import { NavigationType } from "../../../@types/navigation"
+import { Events } from "../../../@types/supabaseTypes"
 
-const Checkout = () => {
+type CheckoutProps = {
+  ticketPrice: number
+  event: Events | null
+}
+
+const Checkout = ({ ticketPrice, event }: CheckoutProps) => {
   const [count, setCount] = useState(0)
 
   // Function to decrement the count, not going below 0
@@ -46,7 +52,14 @@ const Checkout = () => {
         </View>
         <Pressable
           onPress={() => {
-            navigation.navigate("EventCheckout")
+            console.log("trying")
+            console.log(event)
+            if (!event) return
+            navigation.navigate("EventCheckout", {
+              event: event,
+              ticketNumber: count,
+              ticketPrice: 9,
+            })
             console.log("Checkout")
           }}
           className=" bg-blue-400/90 border rounded-full px-32 my-2 py-2"

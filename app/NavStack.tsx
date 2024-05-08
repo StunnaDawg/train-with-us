@@ -43,6 +43,8 @@ import CommunityRequestsPage from "./userSide/MyCommunity/CommunityRequests"
 import ViewRequestProfile from "./userSide/MyCommunity/ViewRequestProfile"
 import ChannelMessageScreen from "./userSide/UserCommunities/components/ChannelMessages"
 import AddMoreInfo from "./userSide/Profile/AddMoreInfo"
+import PurchaseScreen from "./userSide/Events/PurchaseScreen"
+import MyEvents from "./userSide/Events/MyEvents"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -173,6 +175,14 @@ const NavStack = () => {
                 name="MyCommunitySettings"
                 component={CommunitySettings}
               />
+
+              <Stack.Screen
+                options={{ headerShown: false, gestureEnabled: false }}
+                name="PurchaseScreen"
+                component={PurchaseScreen}
+              />
+
+              <Stack.Screen name="MyEvents" component={MyEvents} />
 
               <Stack.Screen
                 options={{ headerShown: false }}

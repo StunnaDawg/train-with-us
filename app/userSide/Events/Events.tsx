@@ -40,7 +40,7 @@ const Events = () => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <View className="flex flex-row justify-end m-3">
+      {/* <View className="flex flex-row justify-end m-3">
         <Pressable
           onPress={() => {
             if (!userProfile?.community_created) {
@@ -52,7 +52,7 @@ const Events = () => {
         >
           <Text className="font-bold text-xl">Create Event +</Text>
         </Pressable>
-      </View>
+      </View> */}
       <View>
         <JustAdded />
       </View>

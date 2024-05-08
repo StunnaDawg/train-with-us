@@ -9,6 +9,8 @@ create table "public"."community_channel_messages" (
 
 alter table "public"."community_channel_messages" enable row level security;
 
+alter table "public"."profiles" add column "profile_pic" text;
+
 alter table "public"."profiles" add column "pinned_channels" uuid[];
 
 CREATE UNIQUE INDEX community_channel_messages_pkey ON public.community_channel_messages USING btree (id);
