@@ -19,7 +19,7 @@ const UserProfilePic = ({ refresh, profile }: UserProfilePicProps) => {
   const navigation = useNavigation<NavigationType>()
 
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
-  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
+  const [profilePic, setProfilePic] = useState<string | null>(null)
   const { user } = useAuth()
 
   useEffect(() => {
@@ -35,15 +35,20 @@ const UserProfilePic = ({ refresh, profile }: UserProfilePicProps) => {
   }, [refresh])
 
   useEffect(() => {
-    if (currentUser?.photos_url === null || undefined) return
-    setImageFiles(currentUser?.photos_url)
+    if (
+      currentUser?.profile_pic === null ||
+      currentUser?.profile_pic === undefined
+    )
+      return
+    console.log("Profile picture", currentUser?.profile_pic)
+    setProfilePic(currentUser?.profile_pic)
   }, [currentUser])
   return (
     <View className="flex flex-row flex-1 justify-center mt-12">
       <View>
         <SinglePic
           size={230}
-          item={imageFiles?.[0]}
+          item={profilePic}
           avatarRadius={230}
           noAvatarRadius={230}
         />

@@ -29,7 +29,7 @@ export default function SinglePic({
 
   const readImage = () => {
     if (item === undefined) return
-    console.log("reading", `${item}`)
+    console.log("reading ya mom", `${item}`)
     supabase.storage
       .from("photos")
       .download(`${item}`)

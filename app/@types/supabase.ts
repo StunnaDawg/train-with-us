@@ -397,6 +397,7 @@ export type Database = {
           onboard: boolean
           photos_url: string[] | null
           pinned_channels: string[] | null
+          profile_pic: string | null
           sexuality: string | null
           username: string | null
         }
@@ -417,6 +418,7 @@ export type Database = {
           onboard?: boolean
           photos_url?: string[] | null
           pinned_channels?: string[] | null
+          profile_pic?: string | null
           sexuality?: string | null
           username?: string | null
         }
@@ -437,6 +439,7 @@ export type Database = {
           onboard?: boolean
           photos_url?: string[] | null
           pinned_channels?: string[] | null
+          profile_pic?: string | null
           sexuality?: string | null
           username?: string | null
         }

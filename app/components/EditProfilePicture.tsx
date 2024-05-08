@@ -11,23 +11,21 @@ import { decode } from "base64-arraybuffer"
 import insertPhoto from "../supabaseFunctions/updateFuncs/insertPhoto"
 import { Profile } from "../@types/supabaseTypes"
 import useCurrentUser from "../supabaseFunctions/getFuncs/useCurrentUser"
-import { set } from "date-fns"
 import removePhoto from "../supabaseFunctions/deleteFuncs/removePhoto"
+import removeUpdateProfilePic from "../supabaseFunctions/deleteFuncs/removeProfilePic"
+import removeProfilePic from "../supabaseFunctions/deleteFuncs/removeProfilePic"
+import updateProfilePic from "../supabaseFunctions/imageFuncs/addProiflePic"
 
 type SingleImageProp = {
   imageUrl: string | null | undefined
-  listIndex: number
-  imageUrls: string[] | null | undefined
-  setImageUrls: React.Dispatch<
-    React.SetStateAction<string[] | null | undefined>
-  >
+  imageUrlToRead: string | null | undefined
+  setImageUrl: React.Dispatch<React.SetStateAction<string | null | undefined>>
 }
 
-const SingleImageSupa = ({
+const ProfilePicSupa = ({
   imageUrl,
-  listIndex,
-  imageUrls,
-  setImageUrls,
+  imageUrlToRead,
+  setImageUrl,
 }: SingleImageProp) => {
   const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
@@ -66,8 +64,7 @@ const SingleImageSupa = ({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       aspect: [9, 16],
       quality: 1,
-      allowsMultipleSelection: true,
-      selectionLimit: 6,
+      allowsEditing: true,
     })
 
     if (!result.canceled) {
@@ -84,27 +81,19 @@ const SingleImageSupa = ({
       })
 
       if (userId === undefined) return
-      insertPhoto(
-        setLoading,
-        currentUser?.photos_url,
-        filePath,
-        userId,
-        "profiles",
-        "photos_url"
-      )
+      updateProfilePic(userId, filePath)
+      setImageUrl(filePath)
       setImage(img.uri)
     }
   }
 
-  const onRemoveImage = async (
-    itemUrl: string | null | undefined,
-    listIndex: number
-  ) => {
+  const onRemoveImage = async (itemUrl: string | null | undefined) => {
     if (
       itemUrl === "" ||
-      !imageUrls ||
+      !imageUrlToRead ||
       itemUrl === null ||
-      itemUrl === undefined
+      itemUrl === undefined ||
+      userId === undefined
     )
       return
     console.log(`${itemUrl}`)
@@ -112,7 +101,7 @@ const SingleImageSupa = ({
       .from("photos")
       .remove([`${itemUrl}`])
 
-    removePhoto(itemUrl, userId!)
+    removeProfilePic(userId)
 
     if (error) {
       console.log("Error removing image")
@@ -120,13 +109,6 @@ const SingleImageSupa = ({
     }
 
     setImage("")
-
-    const newFiles = [...imageUrls]
-    newFiles.splice(listIndex, 1)
-    setImageUrls(newFiles)
-
-    console.log(newFiles)
-    console.log("Removed Image")
   }
 
   return (
@@ -134,7 +116,7 @@ const SingleImageSupa = ({
       {image !== "" ? (
         <View>
           <Image
-            className="m-1 relative overflow-hidden max-w-full rounded-lg bg-gray-800 border-1 border-solid border-gray-200 border-r-10"
+            className="m-1 relative overflow-hidden max-w-full rounded-full bg-gray-800 border-1 border-solid border-gray-200 border-r-10"
             source={{ uri: image }}
             style={{ width: 150, height: 150 }}
           />
@@ -142,7 +124,7 @@ const SingleImageSupa = ({
           <Pressable
             className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded hover:bg-blue-800 m-2"
             onPress={async () => {
-              onRemoveImage(imageUrl, listIndex)
+              onRemoveImage(imageUrl)
             }}
           >
             <FontAwesome6 name="trash" size={24} color="black" />
@@ -169,4 +151,4 @@ const SingleImageSupa = ({
   )
 }
 
-export default SingleImageSupa
+export default ProfilePicSupa
