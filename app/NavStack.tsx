@@ -47,6 +47,7 @@ import PurchaseScreen from "./userSide/Events/PurchaseScreen"
 import MyEvents from "./userSide/Events/MyEvents"
 import ViewEventGoers from "./userSide/Events/ViewEventGoers"
 import ManageEvents from "./userSide/Events/ManageEvents"
+import * as SplashScreen from "expo-splash-screen"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -129,6 +130,7 @@ const NavStack = () => {
   const { user } = useAuth()
   const [currentUserId, setCurrentUserId] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
+  const [appReady, setAppReady] = useState<boolean>(false)
   const [userProfile, setUserProfile] = useState<
     Database["public"]["Tables"]["profiles"]["Row"] | null
   >(null)
@@ -154,6 +156,15 @@ const NavStack = () => {
     }
     setProfile()
   }, [currentUserId])
+
+  useEffect(() => {
+    if (userProfile) {
+      setAppReady(true)
+      setTimeout(() => {
+        SplashScreen.hideAsync()
+      }, 1000)
+    }
+  }, [userProfile])
   return (
     <Stack.Navigator
       screenOptions={{
