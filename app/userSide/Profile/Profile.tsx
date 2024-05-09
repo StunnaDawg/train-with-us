@@ -12,6 +12,7 @@ import { useAuth } from "../../supabaseFunctions/authcontext"
 import WhiteSkinnyButton from "../../components/WhiteSkinnyButton"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../@types/navigation"
+import MyEventsButton from "../../components/MyEventsButton"
 
 const ProfileView = () => {
   const { user } = useAuth()
@@ -38,6 +39,8 @@ const ProfileView = () => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
+      <MyEventsButton />
+
       <UserProfilePic profile={currentUser} refresh={refreshing} />
 
       <UserTopGyms profile={currentUser} borderB={true} mt={true} />

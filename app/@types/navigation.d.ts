@@ -112,8 +112,14 @@ export type RootStackParamList = {
   }
 
   PurchaseScreen: undefined
-
+  ViewEventGoers: {
+    eventId: number
+  }
   MyEvents: undefined
+
+  ManageEvents: {
+    events: Events[]
+  }
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

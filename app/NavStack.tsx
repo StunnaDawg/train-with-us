@@ -45,6 +45,8 @@ import ChannelMessageScreen from "./userSide/UserCommunities/components/ChannelM
 import AddMoreInfo from "./userSide/Profile/AddMoreInfo"
 import PurchaseScreen from "./userSide/Events/PurchaseScreen"
 import MyEvents from "./userSide/Events/MyEvents"
+import ViewEventGoers from "./userSide/Events/ViewEventGoers"
+import ManageEvents from "./userSide/Events/ManageEvents"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -281,6 +283,18 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="FitnessInterests"
                 component={FitnessInterests}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ManageEvents"
+                component={ManageEvents}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ViewEventGoers"
+                component={ViewEventGoers}
               />
 
               <Stack.Screen

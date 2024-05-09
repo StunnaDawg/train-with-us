@@ -262,6 +262,7 @@ export type Database = {
       events: {
         Row: {
           community_host: number | null
+          community_host_name: string | null
           created_at: string
           date: string | null
           event_cover_photo: string | null
@@ -274,6 +275,7 @@ export type Database = {
         }
         Insert: {
           community_host?: number | null
+          community_host_name?: string | null
           created_at?: string
           date?: string | null
           event_cover_photo?: string | null
@@ -286,6 +288,7 @@ export type Database = {
         }
         Update: {
           community_host?: number | null
+          community_host_name?: string | null
           created_at?: string
           date?: string | null
           event_cover_photo?: string | null
