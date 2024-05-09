@@ -49,6 +49,7 @@ import ViewEventGoers from "./userSide/Events/ViewEventGoers"
 import ManageEvents from "./userSide/Events/ManageEvents"
 import * as SplashScreen from "expo-splash-screen"
 import ManageCommunityEvents from "./userSide/MyCommunity/ManageCommunityEvents"
+import EditEvent from "./userSide/MyCommunity/EditEvent"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -187,7 +188,7 @@ const NavStack = () => {
               <Stack.Screen
                 options={{ headerShown: false }}
                 name="EditEvent"
-                component={CommunityHome}
+                component={EditEvent}
               />
 
               <Stack.Screen

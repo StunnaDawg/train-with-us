@@ -21,7 +21,7 @@ type SingleImageProp = {
   eventId: number
 }
 
-const CommunityProfilePicSupa = ({
+const EventCoverPhotoEdit = ({
   imageUrl,
   imageUrlToRead,
   setImageUrl,
@@ -156,4 +156,4 @@ const CommunityProfilePicSupa = ({
   )
 }
 
-export default CommunityProfilePicSupa
+export default EventCoverPhotoEdit
