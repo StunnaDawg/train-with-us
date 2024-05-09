@@ -14,7 +14,7 @@ const CommunityBubble = ({ community }: CommunityBubbleProps) => {
   const [currentCommunity, setCurrentCommunity] = useState<Communities | null>(
     {} as Communities
   )
-  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
+  const [imageFile, setImageFile] = useState<string | null | undefined>(null)
   const { user } = useAuth()
 
   useEffect(() => {
@@ -24,16 +24,25 @@ const CommunityBubble = ({ community }: CommunityBubbleProps) => {
   }, [user])
 
   useEffect(() => {
-    if (currentCommunity?.community_photos === null || undefined) return
-    setImageFiles(currentCommunity?.community_photos)
+    if (
+      currentCommunity?.community_profile_pic === null ||
+      currentCommunity?.community_profile_pic === undefined
+    )
+      return
+    setImageFile(currentCommunity?.community_profile_pic)
   }, [currentCommunity])
   return (
-    <SinglePic
-      size={55}
-      avatarRadius={100}
-      noAvatarRadius={100}
-      item={imageFiles?.[0]}
-    />
+    <View className="items-center">
+      <SinglePic
+        size={55}
+        avatarRadius={100}
+        noAvatarRadius={100}
+        item={imageFile}
+      />
+      <View className="m-1">
+        <Text className="text-xs">{currentCommunity?.community_title}</Text>
+      </View>
+    </View>
   )
 }
 

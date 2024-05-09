@@ -1,10 +1,11 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
+import { Events } from "../../@types/supabaseTypes"
 
 const getCommunityEvents = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
-  communityId: string,
-  setUserProfile: Dispatch<SetStateAction<Event[] | null>>
+  communityId: number,
+  setUserProfile: Dispatch<SetStateAction<Events[] | null>>
 ) => {
   try {
     setLoading(true)

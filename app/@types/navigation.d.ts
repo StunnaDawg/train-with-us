@@ -58,7 +58,7 @@ export type RootStackParamList = {
     eventId: string
   }
   EditEvent: {
-    eventId: string
+    eventId: number
   }
   MessagingScreen: {
     chatSession: ChatSession
@@ -119,6 +119,10 @@ export type RootStackParamList = {
 
   ManageEvents: {
     events: Events[]
+  }
+
+  MyCommunityEvents: {
+    communityId: number
   }
 }
 

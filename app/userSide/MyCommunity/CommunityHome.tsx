@@ -84,7 +84,7 @@ const CommunityHome = () => {
             </Pressable>
           </View>
 
-          <View>
+          <View className="border-b pb-2">
             <Pressable
               className="pt-2"
               onPress={() => {
@@ -94,6 +94,19 @@ const CommunityHome = () => {
               }}
             >
               <Text className="mx-2 font-bold text-xl">Manage Members</Text>
+            </Pressable>
+          </View>
+
+          <View>
+            <Pressable
+              className="pt-2"
+              onPress={() => {
+                navigation.navigate("MyCommunityEvents", {
+                  communityId: communityId,
+                })
+              }}
+            >
+              <Text className="mx-2 font-bold text-xl">Manage Events</Text>
             </Pressable>
           </View>
         </View>

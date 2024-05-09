@@ -1,34 +1,31 @@
-import { View, Text, Button, Pressable } from "react-native"
+import { View, Text, Button, Pressable, ActivityIndicator } from "react-native"
 import { Image } from "expo-image"
 import * as FileSystem from "expo-file-system"
 import React, { useEffect, useState } from "react"
 import * as ImagePicker from "expo-image-picker"
 import { FontAwesome6 } from "@expo/vector-icons"
 import supabase from "../../lib/supabase"
-import { FileObject } from "@supabase/storage-js"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import { decode } from "base64-arraybuffer"
-import insertPhoto from "../supabaseFunctions/updateFuncs/insertPhoto"
 import { Profile } from "../@types/supabaseTypes"
 import useCurrentUser from "../supabaseFunctions/getFuncs/useCurrentUser"
-import { fi } from "date-fns/locale"
+import removeProfilePic from "../supabaseFunctions/deleteFuncs/removeProfilePic"
+import updateProfilePic from "../supabaseFunctions/imageFuncs/addProiflePic"
+import updateCommunityOrEventProfilePic from "../supabaseFunctions/imageFuncs/addComunityOrEventProfilePic"
+import removeCommunityOrEventProfilePic from "../supabaseFunctions/deleteFuncs/removeCommunityOrEventProfilePic"
 
 type SingleImageProp = {
   imageUrl: string | null | undefined
-  listIndex: number
-  imageUrls: string[] | null | undefined
-  setImageUrls: React.Dispatch<
-    React.SetStateAction<string[] | null | undefined>
-  >
-  communityId: number
+  imageUrlToRead: string | null | undefined
+  setImageUrl: React.Dispatch<React.SetStateAction<string | null | undefined>>
+  eventId: number
 }
 
-const SingleImageSupaCommunity = ({
+const CommunityProfilePicSupa = ({
   imageUrl,
-  listIndex,
-  imageUrls,
-  setImageUrls,
-  communityId,
+  imageUrlToRead,
+  setImageUrl,
+  eventId,
 }: SingleImageProp) => {
   const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
@@ -67,8 +64,7 @@ const SingleImageSupaCommunity = ({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       aspect: [9, 16],
       quality: 1,
-      allowsMultipleSelection: true,
-      selectionLimit: 6,
+      allowsEditing: true,
     })
 
     if (!result.canceled) {
@@ -76,7 +72,7 @@ const SingleImageSupaCommunity = ({
       const base64 = await FileSystem.readAsStringAsync(img.uri, {
         encoding: "base64",
       })
-      const filePath = `${userId}/community/${new Date().getTime()}.${
+      const filePath = `${userId}/events/${new Date().getTime()}.${
         img.type === "image"
       }`
       const contentType = "image/png"
@@ -85,42 +81,39 @@ const SingleImageSupaCommunity = ({
       })
 
       if (userId === undefined) return
-      insertPhoto(
-        setLoading,
-        currentUser?.photos_url,
+      updateCommunityOrEventProfilePic(
+        eventId,
         filePath,
-        communityId,
-        "communities",
-        "community_photos"
+        "events",
+        "event_cover_photo"
       )
-      const { error } = await supabase
-        .from("communities")
-        .upsert({ id: userId, community_profile_pic: filePath })
-      if (error) throw error
+      setImageUrl(filePath)
+      setImage(img.uri)
     }
   }
 
-  const onRemoveImage = async (
-    itemUrl: string | null | undefined,
-    listIndex: number
-  ) => {
-    if (itemUrl === "" || !imageUrls) return
+  const onRemoveImage = async (itemUrl: string | null | undefined) => {
+    if (
+      itemUrl === "" ||
+      !imageUrlToRead ||
+      itemUrl === null ||
+      itemUrl === undefined ||
+      userId === undefined
+    )
+      return
     console.log(`${itemUrl}`)
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from("photos")
       .remove([`${itemUrl}`])
+
+    removeCommunityOrEventProfilePic(eventId, "events", "event_cover_photo")
 
     if (error) {
       console.log("Error removing image")
       return
     }
 
-    const newFiles = [...imageUrls]
-    newFiles.splice(listIndex, 1)
-    setImageUrls(newFiles)
-
-    console.log(newFiles)
-    console.log("Removed Image")
+    setImage("")
   }
 
   return (
@@ -128,14 +121,15 @@ const SingleImageSupaCommunity = ({
       {image !== "" ? (
         <View>
           <Image
-            className="m-1 relative overflow-hidden max-w-full rounded-lg bg-gray-800 border-1 border-solid border-gray-200 border-r-10"
+            className="m-1 relative overflow-hidden max-w-full rounded-full bg-gray-800 border-1 border-solid border-gray-200 border-r-10"
             source={{ uri: image }}
             style={{ width: 150, height: 150 }}
           />
+          {loading ? <ActivityIndicator /> : null}
           <Pressable
             className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded hover:bg-blue-800 m-2"
             onPress={async () => {
-              onRemoveImage(imageUrl, listIndex)
+              onRemoveImage(imageUrl)
             }}
           >
             <FontAwesome6 name="trash" size={24} color="black" />
@@ -143,9 +137,10 @@ const SingleImageSupaCommunity = ({
         </View>
       ) : (
         <View
-          className="m-1 relative overflow-hidden max-w-full rounded-lg bg-gray-600 border-1 border-solid border-gray-200 border-r-10"
+          className="m-1 relative overflow-hidden max-w-full rounded-2xl bg-gray-600 border-1 border-solid border-gray-200 border-r-10"
           style={[avatarSize]}
         >
+          {loading ? <ActivityIndicator /> : null}
           <Pressable
             onPress={async () => {
               await pickImage()
@@ -161,4 +156,4 @@ const SingleImageSupaCommunity = ({
   )
 }
 
-export default SingleImageSupaCommunity
+export default CommunityProfilePicSupa
