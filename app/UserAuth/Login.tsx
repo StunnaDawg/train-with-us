@@ -14,6 +14,8 @@ import { useNavigation } from "@react-navigation/native"
 import supabase from "../../lib/supabase"
 import { NavigationType } from "../@types/navigation"
 import { SafeAreaView } from "react-native-safe-area-context"
+import AppleAuth from "./AppleAuth"
+import GoogleAuth from "./GoogleAuth"
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -82,6 +84,14 @@ const Login = () => {
               disabled={loading}
               onPress={() => signInWithEmail()}
             />
+          </View>
+
+          <View>
+            <AppleAuth />
+          </View>
+
+          <View>
+            <GoogleAuth />
           </View>
 
           <View className="items-center">

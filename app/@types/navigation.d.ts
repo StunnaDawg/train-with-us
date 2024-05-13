@@ -124,6 +124,8 @@ export type RootStackParamList = {
   MyCommunityEvents: {
     communityId: number
   }
+  Notifications: undefined
+  Location: undefined
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

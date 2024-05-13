@@ -74,5 +74,16 @@ for select
 to public
 using (true);
 
+drop policy "event update" on "public"."events";
+
+alter table "public"."events" alter column "date" set data type timestamp with time zone using "date"::timestamp with time zone;
+
+create policy "event update"
+on "public"."events"
+as permissive
+for update
+to authenticated
+using ((( SELECT auth.uid() AS uid) = event_host));
+
 
 

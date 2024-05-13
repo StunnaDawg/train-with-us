@@ -7,6 +7,7 @@ import BouncyCheckbox from "react-native-bouncy-checkbox"
 import { NavigationType } from "../@types/navigation"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import supabase from "../../lib/supabase"
+import * as Updates from "expo-updates"
 
 type SexualityOption =
   | "Prefer not to say"
@@ -28,6 +29,17 @@ const Sexuality = () => {
   }
   const { user } = useAuth()
 
+  const finishOnBoard = async () => {
+    if (!user?.id) return
+    const { error } = await supabase
+      .from("profiles")
+      .update({ onboard: true })
+      .eq("id", user?.id)
+
+    if (error) throw error
+    await Updates.reloadAsync()
+  }
+
   const handleUserUpdate = async () => {
     try {
       const { error } = await supabase
@@ -38,8 +50,6 @@ const Sexuality = () => {
         .eq("id", user?.id)
 
       if (error) throw error
-
-      navigation.goBack()
     } catch (error) {
       console.log(error)
     }
@@ -83,7 +93,12 @@ const Sexuality = () => {
           </View>
         </View>
         <View className="mt-4 flex flex-row justify-end">
-          <NextButton onPress={() => handleUserUpdate()} />
+          <NextButton
+            onPress={async () => {
+              await handleUserUpdate()
+              await finishOnBoard()
+            }}
+          />
         </View>
       </View>
     </SafeAreaView>

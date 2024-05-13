@@ -50,6 +50,8 @@ import ManageEvents from "./userSide/Events/ManageEvents"
 import * as SplashScreen from "expo-splash-screen"
 import ManageCommunityEvents from "./userSide/MyCommunity/ManageCommunityEvents"
 import EditEvent from "./userSide/MyCommunity/EditEvent"
+import EnableNotifcations from "./UserOnBoard/EnableNotifcations"
+import Location from "./UserOnBoard/Location"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -352,10 +354,35 @@ const NavStack = () => {
                 name="QuestionOne"
                 component={Question1}
               />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="Sexuality"
+                component={Sexuality}
+              />
+
               <Stack.Screen
                 options={{ headerShown: false }}
                 name="QuestionTwo"
                 component={Question2}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="QuestionThree"
+                component={Question3}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="Notifications"
+                component={EnableNotifcations}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="Location"
+                component={Location}
               />
 
               <Stack.Screen

@@ -29,7 +29,7 @@ const Question3 = () => {
 
       if (error) throw error
 
-      navigation.goBack()
+      navigation.navigate("Sexuality")
     } catch (error) {
       console.log(error)
     }

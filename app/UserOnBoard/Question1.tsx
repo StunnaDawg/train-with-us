@@ -24,7 +24,7 @@ const Question1 = () => {
 
       if (error) throw error
 
-      navigation.navigate("QuestionTwo")
+      navigation.navigate("Notifications")
     } catch (error) {
       console.log(error)
     }
