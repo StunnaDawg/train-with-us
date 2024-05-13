@@ -14,6 +14,7 @@ import {
 import supabase from "../../lib/supabase"
 import { NavigationType } from "../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
+import AppleAuth from "./AppleAuth"
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -94,6 +95,10 @@ const SignUp = () => {
                 Already Have An Account?
               </Text>
             </Pressable>
+          </View>
+
+          <View>
+            <AppleAuth />
           </View>
         </View>
       </View>

@@ -165,6 +165,11 @@ const NavStack = () => {
       setTimeout(() => {
         SplashScreen.hideAsync()
       }, 1000)
+    } else {
+      setAppReady(true)
+      setTimeout(() => {
+        SplashScreen.hideAsync()
+      }, 1000)
     }
   }, [userProfile])
   return (

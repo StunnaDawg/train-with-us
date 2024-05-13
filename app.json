@@ -13,6 +13,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "plugins": [
+      "expo-apple-authentication",
       [
         "expo-image-picker",
         {
@@ -23,7 +24,8 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.stunnacat.trainwithus",
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
