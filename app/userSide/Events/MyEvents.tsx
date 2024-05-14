@@ -48,24 +48,10 @@ const MyEvents = () => {
             </View>
             <Text className="font-medium text-xl">
               Hosted by:
-              <Text className="font-bold">{event.community_host_name}</Text>
+              <Text className="font-bold"> {event.community_host_name}</Text>
             </Text>
           </Pressable>
         ))}
-        <View className="flex flex-row justify-center">
-          <WhiteSkinnyButton
-            text={"Manage Events"}
-            textSize="text-xl"
-            width={200}
-            buttonFunction={() => {
-              if (userEvents) {
-                navigation.navigate("ManageEvents", {
-                  events: userEvents,
-                })
-              }
-            }}
-          />
-        </View>
       </View>
     </SafeAreaView>
   )

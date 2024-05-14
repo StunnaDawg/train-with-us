@@ -1,6 +1,8 @@
 import { View, Text } from "react-native"
 import React from "react"
 import ShowMap from "./ShowMap"
+import formatBirthdate from "../../../utilFunctions/calculateDOB"
+import formatTimestamp from "../../../utilFunctions/formatTimeStamp"
 
 type ViewEventDetailsProps = {
   date: string | null | undefined
@@ -12,7 +14,9 @@ const ViewEventDetails = ({ date }: ViewEventDetailsProps) => {
       {/* Date and Time */}
       <View className="mb-2">
         <Text className=" font-bold text-lg pb-1">Date and Time:</Text>
-        <Text className="font-bold text-lg ">{date}</Text>
+        <Text className="font-bold text-lg ">
+          {date ? formatTimestamp(date) : "No Date"}
+        </Text>
       </View>
 
       {/* Location */}

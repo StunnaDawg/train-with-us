@@ -7,6 +7,7 @@ import { FileObject } from "@supabase/storage-js"
 import { Events } from "../../../@types/supabaseTypes"
 import getSingleEvent from "../../../supabaseFunctions/getFuncs/getSingleEvent"
 import { set } from "date-fns"
+import formatBirthdate from "../../../utilFunctions/calculateDOB"
 
 type ViewEventTitleProps = {
   title: string | null | undefined
@@ -47,7 +48,9 @@ const ViewEventTitle = ({
   return (
     <View className="flex flex-row items-center justify-center">
       <View className="m-5 items-center">
-        <Text className="text-xl font-bold">{date}</Text>
+        <Text className="text-xl font-bold">
+          {currentEvent?.date ? formatBirthdate(currentEvent?.date) : "No Date"}
+        </Text>
         <View className="border rounded-full p-1 px-4 bg-white border-white">
           <Text className="text-xl font-semibold">{title}</Text>
         </View>

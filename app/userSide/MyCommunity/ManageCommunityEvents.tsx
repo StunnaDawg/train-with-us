@@ -51,20 +51,6 @@ const ManageCommunityEvents = () => {
             </Text>
           </Pressable>
         ))}
-        <View className="flex flex-row justify-center">
-          <WhiteSkinnyButton
-            text={"Manage Events"}
-            textSize="text-xl"
-            width={200}
-            buttonFunction={() => {
-              if (communityEvents) {
-                navigation.navigate("ManageEvents", {
-                  events: communityEvents,
-                })
-              }
-            }}
-          />
-        </View>
       </View>
     </SafeAreaView>
   )
