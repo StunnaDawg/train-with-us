@@ -1,8 +1,11 @@
-import { View, Text } from "react-native"
+import { View, Text, Pressable, Platform } from "react-native"
 import React from "react"
 import ShowMap from "./ShowMap"
 import formatBirthdate from "../../../utilFunctions/calculateDOB"
 import formatTimestamp from "../../../utilFunctions/formatTimeStamp"
+import GenericButton from "../../../components/GenericButton"
+import openInAppleMaps from "../../../utilFunctions/openAppleMaps"
+import openInGoogleMaps from "../../../utilFunctions/openGoogleMaps"
 
 type ViewEventDetailsProps = {
   date: string | null | undefined
@@ -21,12 +24,64 @@ const ViewEventDetails = ({ date }: ViewEventDetailsProps) => {
 
       {/* Location */}
       <View className="mb-1">
-        <Text className="pb-1 font-bold text-lg ">Location:</Text>
-        <Text className="font-bold text-lg ">580 Wright Ave, Dartmouth NS</Text>
-      </View>
+        <View>
+          <Text className="pb-1 font-bold text-lg ">Location:</Text>
+          <Text className="font-bold text-lg ">
+            580 Wright Ave, Dartmouth NS
+          </Text>
+        </View>
 
-      <View>
-        <ShowMap />
+        {Platform.OS === "ios" ? (
+          <View>
+            <View className="my-2">
+              <GenericButton
+                text="Open in Apple Maps"
+                buttonFunction={() =>
+                  openInAppleMaps("580 Wright Ave, Dartmouth NS")
+                }
+                roundness="rounded-xl"
+                textSize="text-sm"
+                width={200}
+                colourPressed="bg-slate-200"
+                colourDefault="bg-white"
+                borderColourPressed="border-gray-200"
+                borderColourDefault="border-black"
+              />
+            </View>
+
+            <View className="my-2">
+              <GenericButton
+                text="Open in Google Maps"
+                buttonFunction={() =>
+                  openInGoogleMaps("580 Wright Ave, Dartmouth NS")
+                }
+                roundness="rounded-xl"
+                textSize="text-sm"
+                width={200}
+                colourPressed="bg-slate-200"
+                colourDefault="bg-white"
+                borderColourPressed="border-gray-200"
+                borderColourDefault="border-black"
+              />
+            </View>
+          </View>
+        ) : (
+          <View className="my-2">
+            <GenericButton
+              text="Open in Google Maps"
+              buttonFunction={() =>
+                openInGoogleMaps("580 Wright Ave, Dartmouth NS")
+              }
+              roundness="rounded-xl"
+              textSize="text-sm"
+              width={200}
+              colourPressed="bg-slate-200"
+              colourDefault="bg-white"
+              borderColourPressed="border-gray-200"
+              borderColourDefault="border-black"
+            />
+          </View>
+        )}
       </View>
     </View>
   )
