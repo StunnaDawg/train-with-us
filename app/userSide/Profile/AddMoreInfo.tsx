@@ -25,7 +25,7 @@ const AddMoreInfo = () => {
 
   return (
     <SafeAreaView className="flex-1">
-      <ScrollView className="flex-1">
+      <ScrollView scrollEnabled={false} className="flex-1">
         <View className="flex flex-row justify-center">
           <Text className="text-2xl font-bold m-1">My Profile</Text>
         </View>

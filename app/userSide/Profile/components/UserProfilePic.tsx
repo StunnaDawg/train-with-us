@@ -59,7 +59,10 @@ const UserProfilePic = ({ refresh, profile }: UserProfilePicProps) => {
               navigation.navigate("UserEditProfile")
             }}
           >
-            <FontAwesome6 name="edit" size={24} color="blue" />
+            <View className="flex flex-row items-center">
+              <Text className="font-bold text-xl mx-2">Change</Text>
+              <FontAwesome6 name="edit" size={24} color="blue" />
+            </View>
           </Pressable>
         </View>
       </View>

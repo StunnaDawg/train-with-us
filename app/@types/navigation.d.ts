@@ -43,7 +43,9 @@ export type RootStackParamList = {
   CommunitiesMessages: undefined
   CommunitiesEditProfile: undefined
   CommunitiesModerateMembers: undefined
-  FitnessInterests: undefined
+  FitnessInterests: {
+    userProfile: Profile
+  }
   CommunitiesPreferences: undefined
   ActivityTimePreference: undefined
   MatchModal: undefined
@@ -126,6 +128,21 @@ export type RootStackParamList = {
   }
   Notifications: undefined
   Location: undefined
+  MusicPreference: {
+    userProfile: Profile
+  }
+
+  FitnessGoals: {
+    userProfile: Profile
+  }
+  FitnessLevel: {
+    userProfile: Profile
+  }
+  Hobbies: {
+    userProfile: Profile
+  }
+  FitnessRecords: { userProfile: Profile }
+  FitnessBucketList: { userProfile: Profile }
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

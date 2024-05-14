@@ -74,6 +74,7 @@ export type Database = {
       communities: {
         Row: {
           channels: string[] | null
+          city: string
           community_members: string[] | null
           community_owner: string | null
           community_photos: string[] | null
@@ -85,6 +86,7 @@ export type Database = {
         }
         Insert: {
           channels?: string[] | null
+          city?: string
           community_members?: string[] | null
           community_owner?: string | null
           community_photos?: string[] | null
@@ -96,6 +98,7 @@ export type Database = {
         }
         Update: {
           channels?: string[] | null
+          city?: string
           community_members?: string[] | null
           community_owner?: string | null
           community_photos?: string[] | null
@@ -393,16 +396,22 @@ export type Database = {
           activities: string[] | null
           actvitiy_time: string | null
           birthday: string | null
+          city: string
           community_created: number | null
           community_preference: string[] | null
           connected_users: string[] | null
           created_at: string | null
           first_name: string | null
+          fitness_goals: string[] | null
+          fitness_lvl: string | null
+          fitness_records: string[] | null
           gender: string | null
+          hobbies: string[] | null
           id: string
           ignored_users: string[] | null
           intentions: string | null
           last_name: string | null
+          music_pref: string[] | null
           onboard: boolean
           photos_url: string[] | null
           pinned_channels: string[] | null
@@ -414,16 +423,22 @@ export type Database = {
           activities?: string[] | null
           actvitiy_time?: string | null
           birthday?: string | null
+          city?: string
           community_created?: number | null
           community_preference?: string[] | null
           connected_users?: string[] | null
           created_at?: string | null
           first_name?: string | null
+          fitness_goals?: string[] | null
+          fitness_lvl?: string | null
+          fitness_records?: string[] | null
           gender?: string | null
+          hobbies?: string[] | null
           id: string
           ignored_users?: string[] | null
           intentions?: string | null
           last_name?: string | null
+          music_pref?: string[] | null
           onboard?: boolean
           photos_url?: string[] | null
           pinned_channels?: string[] | null
@@ -435,16 +450,22 @@ export type Database = {
           activities?: string[] | null
           actvitiy_time?: string | null
           birthday?: string | null
+          city?: string
           community_created?: number | null
           community_preference?: string[] | null
           connected_users?: string[] | null
           created_at?: string | null
           first_name?: string | null
+          fitness_goals?: string[] | null
+          fitness_lvl?: string | null
+          fitness_records?: string[] | null
           gender?: string | null
+          hobbies?: string[] | null
           id?: string
           ignored_users?: string[] | null
           intentions?: string | null
           last_name?: string | null
+          music_pref?: string[] | null
           onboard?: boolean
           photos_url?: string[] | null
           pinned_channels?: string[] | null

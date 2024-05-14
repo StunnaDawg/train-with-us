@@ -52,6 +52,11 @@ import ManageCommunityEvents from "./userSide/MyCommunity/ManageCommunityEvents"
 import EditEvent from "./userSide/MyCommunity/EditEvent"
 import EnableNotifcations from "./UserOnBoard/EnableNotifcations"
 import Location from "./UserOnBoard/Location"
+import MusicPref from "./userSide/Profile/AddInfoComponents/MusicPref"
+import FitnessGoals from "./userSide/Profile/AddInfoComponents/FitnessGoals"
+import ExperienceLvl from "./userSide/Profile/AddInfoComponents/ExperienceLvl"
+import OtherHobbies from "./userSide/Profile/AddInfoComponents/OtherHobbies"
+import FitnessBucketList from "./userSide/Profile/AddInfoComponents/FitnessBucketList"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -196,6 +201,36 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="EditEvent"
                 component={EditEvent}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="MusicPreference"
+                component={MusicPref}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="FitnessBucketList"
+                component={FitnessBucketList}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="FitnessGoals"
+                component={FitnessGoals}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="FitnessLevel"
+                component={ExperienceLvl}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="Hobbies"
+                component={OtherHobbies}
               />
 
               <Stack.Screen

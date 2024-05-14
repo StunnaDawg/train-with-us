@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native"
+import { View, Text, Pressable, ScrollView } from "react-native"
 import React, { useCallback, useState } from "react"
 import { Profile } from "../../../@types/supabaseTypes"
 import { FontAwesome6 } from "@expo/vector-icons"
@@ -28,10 +28,10 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
       return () => {
         // Optional cleanup actions
       }
-    }, [currentUserId, setCurrentUserState]) // Ensure dependencies are correctly listed
+    }, [currentUserId, setCurrentUserState])
   )
   return (
-    <View className="mx-7">
+    <ScrollView className="mx-7">
       <View className="border-b border-black/45 p-2">
         <Pressable
           onPress={() => {
@@ -51,9 +51,12 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
       <View className="border-b border-black/45 p-2">
         <Pressable
           onPress={() => {
-            navigation.navigate("FitnessInterests")
+            if (currentUserState) {
+              navigation.navigate("FitnessInterests", {
+                userProfile: currentUserState,
+              })
+            }
           }}
-          p-2
           className="flex flex-row justify-between items-center"
         >
           <Text className=" font-bold text-xl">
@@ -64,19 +67,85 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
       </View>
 
       <View className="border-b border-black/45 p-2">
-        <Pressable p-2 className="flex flex-row justify-between items-center">
+        <Pressable
+          onPress={() => {
+            if (currentUserState) {
+              navigation.navigate("FitnessGoals", {
+                userProfile: currentUserState,
+              })
+            }
+          }}
+          className="flex flex-row justify-between items-center"
+        >
           <Text className=" font-bold text-xl">Fitness Goals -</Text>
           <FontAwesome6 name="edit" size={20} color="blue" />
         </Pressable>
       </View>
 
       <View className="border-b border-black/45 p-2">
-        <Pressable p-2 className="flex flex-row justify-between items-center">
-          <Text className=" font-bold text-xl">Loaction - N/A</Text>
+        <Pressable
+          onPress={() => {
+            if (currentUserState) {
+              navigation.navigate("FitnessBucketList", {
+                userProfile: currentUserState,
+              })
+            }
+          }}
+          className="flex flex-row justify-between items-center"
+        >
+          <Text className=" font-bold text-xl">Fitness Bucket List</Text>
           <FontAwesome6 name="edit" size={20} color="blue" />
         </Pressable>
       </View>
-    </View>
+
+      <View className="border-b border-black/45 p-2">
+        <Pressable
+          onPress={() => {
+            if (currentUserState) {
+              navigation.navigate("FitnessLevel", {
+                userProfile: currentUserState,
+              })
+            }
+          }}
+          className="flex flex-row justify-between items-center"
+        >
+          <Text className=" font-bold text-xl">Fitness Experience Level</Text>
+          <FontAwesome6 name="edit" size={20} color="blue" />
+        </Pressable>
+      </View>
+
+      <View className="border-b border-black/45 p-2">
+        <Pressable
+          onPress={() => {
+            if (currentUserState) {
+              navigation.navigate("Hobbies", {
+                userProfile: currentUserState,
+              })
+            }
+          }}
+          className="flex flex-row justify-between items-center"
+        >
+          <Text className=" font-bold text-xl">Hobbies and Interests</Text>
+          <FontAwesome6 name="edit" size={20} color="blue" />
+        </Pressable>
+      </View>
+
+      <View className="border-b border-black/45 p-2">
+        <Pressable
+          onPress={() => {
+            if (currentUserState) {
+              navigation.navigate("MusicPreference", {
+                userProfile: currentUserState,
+              })
+            }
+          }}
+          className="flex flex-row justify-between items-center"
+        >
+          <Text className=" font-bold text-xl">Music Preference</Text>
+          <FontAwesome6 name="edit" size={20} color="blue" />
+        </Pressable>
+      </View>
+    </ScrollView>
   )
 }
 

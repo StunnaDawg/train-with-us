@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native"
+import { View, Text, Pressable, ScrollView } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import { Profile } from "../../../@types/supabaseTypes"
 import formatBirthdate from "../../../utilFunctions/calculateDOB"
@@ -32,7 +32,7 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
     }, [currentUserId, setCurrentUserState])
   )
   return (
-    <View className="mx-7">
+    <ScrollView className=" mx-7">
       <View className="border-b border-black/45 p-2">
         <Pressable className="flex flex-row justify-between items-center">
           <Text className=" font-bold text-xl">
@@ -75,7 +75,7 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
           <FontAwesome6 name="edit" size={20} color="blue" />
         </Pressable>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
