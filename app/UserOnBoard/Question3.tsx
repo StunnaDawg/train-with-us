@@ -1,4 +1,11 @@
-import { View, Text, Pressable, SafeAreaView, TextInput } from "react-native"
+import {
+  View,
+  Text,
+  Pressable,
+  SafeAreaView,
+  TextInput,
+  Alert,
+} from "react-native"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import { useNavigation } from "@react-navigation/native"
 import React, { useState } from "react"
@@ -18,7 +25,26 @@ const Question3 = () => {
 
   const { user } = useAuth()
 
+  const showAlert = () =>
+    Alert.alert(
+      "Missing Information",
+      "Please Select an Option.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    )
+
   const handleUserUpdate = async () => {
+    if (selectedGender === null) {
+      showAlert()
+      return
+    }
     try {
       const { error } = await supabase
         .from("profiles")

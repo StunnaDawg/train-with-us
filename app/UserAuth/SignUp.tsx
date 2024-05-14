@@ -16,6 +16,7 @@ import { NavigationType } from "../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import AppleAuth from "./AppleAuth"
 import GoogleAuth from "./GoogleAuth"
+import * as Updates from "expo-updates"
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -49,6 +50,7 @@ const SignUp = () => {
     if (error) Alert.alert(error.message)
     if (!session) Alert.alert("Please check your inbox for email verification!")
     setLoading(false)
+    await Updates.reloadAsync()
   }
 
   return (

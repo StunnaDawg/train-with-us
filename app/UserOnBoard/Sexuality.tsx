@@ -1,4 +1,4 @@
-import { View, Text, TextInput, SafeAreaView } from "react-native"
+import { View, Text, TextInput, SafeAreaView, Alert } from "react-native"
 import React from "react"
 import NextButton from "../components/NextButton"
 import { useNavigation } from "@react-navigation/native"
@@ -29,7 +29,26 @@ const Sexuality = () => {
   }
   const { user } = useAuth()
 
+  const showAlert = () =>
+    Alert.alert(
+      "Missing Information",
+      "Please Select an Option.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    )
+
   const finishOnBoard = async () => {
+    if (selectedSexuality === null) {
+      showAlert()
+      return
+    }
     if (!user?.id) return
     const { error } = await supabase
       .from("profiles")
@@ -41,6 +60,10 @@ const Sexuality = () => {
   }
 
   const handleUserUpdate = async () => {
+    if (selectedSexuality === null) {
+      showAlert()
+      return
+    }
     try {
       const { error } = await supabase
         .from("profiles")

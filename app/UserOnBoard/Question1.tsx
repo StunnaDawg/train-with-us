@@ -1,4 +1,11 @@
-import { View, Text, Pressable, SafeAreaView, TextInput } from "react-native"
+import {
+  View,
+  Text,
+  Pressable,
+  SafeAreaView,
+  TextInput,
+  Alert,
+} from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import React, { useState } from "react"
 import { NavigationType } from "../@types/navigation"
@@ -12,7 +19,26 @@ const Question1 = () => {
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
 
+  const showAlert = () =>
+    Alert.alert(
+      "Missing Information",
+      "Please enter your First Name.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    )
+
   const handleUserUpdate = async () => {
+    if (first_name === "") {
+      showAlert()
+      return
+    }
     try {
       const { error } = await supabase
         .from("profiles")
