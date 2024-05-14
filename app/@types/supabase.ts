@@ -396,6 +396,7 @@ export type Database = {
           activities: string[] | null
           actvitiy_time: string | null
           birthday: string | null
+          bucket_list: string[] | null
           city: string
           community_created: number | null
           community_preference: string[] | null
@@ -423,6 +424,7 @@ export type Database = {
           activities?: string[] | null
           actvitiy_time?: string | null
           birthday?: string | null
+          bucket_list?: string[] | null
           city?: string
           community_created?: number | null
           community_preference?: string[] | null
@@ -450,6 +452,7 @@ export type Database = {
           activities?: string[] | null
           actvitiy_time?: string | null
           birthday?: string | null
+          bucket_list?: string[] | null
           city?: string
           community_created?: number | null
           community_preference?: string[] | null

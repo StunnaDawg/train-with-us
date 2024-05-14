@@ -66,7 +66,7 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
         </Pressable>
       </View>
 
-      <View className="border-b border-black/45 p-2">
+      {/* <View className="border-b border-black/45 p-2">
         <Pressable
           onPress={() => {
             if (currentUserState) {
@@ -80,7 +80,7 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
           <Text className=" font-bold text-xl">Fitness Goals -</Text>
           <FontAwesome6 name="edit" size={20} color="blue" />
         </Pressable>
-      </View>
+      </View> */}
 
       <View className="border-b border-black/45 p-2">
         <Pressable
@@ -114,6 +114,22 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
         </Pressable>
       </View>
 
+      {/* <View className="border-b border-black/45 p-2">
+        <Pressable
+          onPress={() => {
+            if (currentUserState) {
+              navigation.navigate("FitnessRecords", {
+                userProfile: currentUserState,
+              })
+            }
+          }}
+          className="flex flex-row justify-between items-center"
+        >
+          <Text className=" font-bold text-xl">Fitness Records</Text>
+          <FontAwesome6 name="edit" size={20} color="blue" />
+        </Pressable>
+      </View> */}
+
       <View className="border-b border-black/45 p-2">
         <Pressable
           onPress={() => {
@@ -125,7 +141,7 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
           }}
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-xl">Hobbies and Interests</Text>
+          <Text className=" font-bold text-xl">Hobbies</Text>
           <FontAwesome6 name="edit" size={20} color="blue" />
         </Pressable>
       </View>

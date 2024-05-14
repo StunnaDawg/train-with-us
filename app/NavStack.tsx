@@ -57,6 +57,7 @@ import FitnessGoals from "./userSide/Profile/AddInfoComponents/FitnessGoals"
 import ExperienceLvl from "./userSide/Profile/AddInfoComponents/ExperienceLvl"
 import OtherHobbies from "./userSide/Profile/AddInfoComponents/OtherHobbies"
 import FitnessBucketList from "./userSide/Profile/AddInfoComponents/FitnessBucketList"
+import FitnessRecords from "./userSide/Profile/AddInfoComponents/FitnessRecords"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -225,6 +226,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="FitnessLevel"
                 component={ExperienceLvl}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="FitnessRecords"
+                component={FitnessRecords}
               />
 
               <Stack.Screen
