@@ -3,6 +3,26 @@ import supabase from "../../../lib/supabase"
 import getConnectedIgnoredProfiles from "./getConnectedIgnoredProfiles"
 import { Profile } from "../../@types/supabaseTypes"
 
+function shuffleArray(array: any[]) {
+  let currentIndex = array.length,
+    randomIndex
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex)
+    currentIndex--
+
+    // And swap it with the current element.
+    ;[array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ]
+  }
+
+  return array
+}
+
 const getConnectionProfiles = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   userId: string,
@@ -31,8 +51,8 @@ const getConnectionProfiles = async (
       setProfiles([])
       throw error
     }
-
-    setProfiles(profiles)
+    const shuffledProfiles = shuffleArray(profiles || [])
+    setProfiles(shuffledProfiles)
   } catch (error) {
     console.error("Error in getting profiles:", error)
   } finally {
