@@ -45,10 +45,6 @@ const MessageButton = ({
     console.log("handleSheetChanges", index)
   }, [])
 
-  const handleIgnorePress = () => {
-    if (!user || !profileId) return
-    insertIgnoreUser(setLoading, user?.id, profileId)
-  }
   return (
     <>
       <View className="flex flex-row justify-center m-3">
