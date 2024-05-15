@@ -85,5 +85,31 @@ for update
 to authenticated
 using ((( SELECT auth.uid() AS uid) = event_host));
 
+alter table "public"."communities" add column "about" text;
+
+alter table "public"."communities" add column "city" text not null default 'Halifax'::text;
+
+alter table "public"."communities" add column "location" text;
+
+alter table "public"."community_channels" add column "channel_pic" text;
+
+alter table "public"."community_members" add column "role" text not null default 'Member'::text;
+
+alter table "public"."events" add column "location" text;
+
+alter table "public"."profiles" add column "bucket_list" text[];
+
+alter table "public"."profiles" add column "city" text not null default 'Halifax'::text;
+
+alter table "public"."profiles" add column "fitness_goals" text[];
+
+alter table "public"."profiles" add column "fitness_lvl" text;
+
+alter table "public"."profiles" add column "fitness_records" text[];
+
+alter table "public"."profiles" add column "hobbies" text[];
+
+alter table "public"."profiles" add column "music_pref" text[];
+
 
 
