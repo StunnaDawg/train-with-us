@@ -14,7 +14,6 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker"
 import addNewEvent from "../../supabaseFunctions/addFuncs/addEvent"
-import { set } from "date-fns"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { Profile } from "../../@types/supabaseTypes"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
@@ -24,6 +23,7 @@ import * as ImagePicker from "expo-image-picker"
 const CreateEvent = () => {
   const { user } = useAuth()
   const [loading, setLoading] = useState<boolean>(false)
+  const [location, setLocation] = useState<string>("")
   const [description, setDescription] = useState<string>("")
   const [eventTitle, setEventTitle] = useState<string>("")
   const [date, setDate] = useState<Date>(new Date())
@@ -115,28 +115,41 @@ const CreateEvent = () => {
             className="border  p-2 rounded-lg"
             keyboardType="numeric"
           />
-          <Pressable
-            onPress={async () => {
-              setTimeout(() => {
-                if (!currentUser?.id && !currentUser?.community_created) return
-                addNewEvent(
-                  setLoading,
-                  currentUser?.id,
-                  eventTitle,
-                  currentUser?.community_created,
-                  date,
-                  Number(price),
-                  description,
-                  eventPicture
-                )
-                navigation.goBack()
-              }, 2000)
-            }}
-            className=" bg-black p-4 rounded-lg items-center mb-20"
-          >
-            <Text className="text-white text-xl font-bold">Create Event</Text>
-          </Pressable>
         </View>
+
+        <View className="mb-4">
+          <Text className="mb-2 text-lg font-semibold text-gray">Location</Text>
+          <TextInput
+            value={location}
+            onChangeText={setLocation}
+            placeholder="Set a valid location"
+            className="border  p-2 rounded-lg"
+            keyboardType="numeric"
+          />
+        </View>
+
+        <Pressable
+          onPress={async () => {
+            setTimeout(() => {
+              if (!currentUser?.id && !currentUser?.community_created) return
+              addNewEvent(
+                setLoading,
+                currentUser?.id,
+                eventTitle,
+                currentUser?.community_created,
+                date,
+                Number(price),
+                description,
+                eventPicture,
+                location
+              )
+              navigation.goBack()
+            }, 2000)
+          }}
+          className=" bg-black p-4 rounded-lg items-center mb-20"
+        >
+          <Text className="text-white text-xl font-bold">Create Event</Text>
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   )

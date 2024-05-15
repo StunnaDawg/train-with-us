@@ -13,13 +13,9 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker"
-import addNewEvent from "../../supabaseFunctions/addFuncs/addEvent"
-import { set } from "date-fns"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { Events, Profile } from "../../@types/supabaseTypes"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
-import NewPhoto from "../../components/NewPhoto"
-import * as ImagePicker from "expo-image-picker"
 import getSingleEvent from "../../supabaseFunctions/getFuncs/getSingleEvent"
 import EventCoverPhotoEdit from "../../components/EventCoverPhoto"
 import updateSingleEventTrait from "../../supabaseFunctions/updateFuncs/updateSingleEventTrait"
@@ -28,6 +24,7 @@ const EditEvent = () => {
   const { user } = useAuth()
   const [event, setEvent] = useState<Events | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
+  const [location, setLocation] = useState<string>("")
   const [description, setDescription] = useState<string>("")
   const [eventTitle, setEventTitle] = useState<string>("")
   const [date, setDate] = useState<Date>(new Date())
@@ -69,12 +66,13 @@ const EditEvent = () => {
     setPrice(event?.price?.toString() || "0")
     setDate(editDate || new Date())
     setEventPicture(event?.event_cover_photo || null)
+    setLocation(event?.location || "")
   }, [event])
   return (
     <SafeAreaView className="flex-1">
       <ScrollView className=" p-4 bg-white">
         <View className="flex flex-row items-center mb-8">
-          <Text className="mx-1 text-3xl font-semibold ">Create Event</Text>
+          <Text className="mx-1 text-3xl font-semibold ">Update Event</Text>
         </View>
 
         <View>
@@ -143,61 +141,82 @@ const EditEvent = () => {
             className="border  p-2 rounded-lg"
             keyboardType="numeric"
           />
-          <Pressable
-            onPress={async () => {
-              setTimeout(() => {
-                if (!currentUser?.id && !currentUser?.community_created) return
-                if (!event) return
-
-                console.log(event.event_host, eventId)
-
-                if (!eventTitle.trim()) {
-                  alert("Title is required.")
-                  return
-                }
-
-                if (event.event_title !== eventTitle) {
-                  updateSingleEventTrait(
-                    setLoading,
-                    eventId,
-                    "event_title",
-                    eventTitle
-                  )
-                }
-
-                if (event.event_description !== description) {
-                  updateSingleEventTrait(
-                    setLoading,
-                    eventId,
-                    "event_description",
-                    description
-                  )
-                }
-
-                if (event.price !== Number(price)) {
-                  updateSingleEventTrait(
-                    setLoading,
-                    eventId,
-                    "price",
-                    Number(price)
-                  )
-                }
-                if (event.date !== null) {
-                  const dateVar = Date.parse(event?.date)
-                  const editDate = new Date(dateVar)
-                  if (editDate !== date) {
-                    updateSingleEventTrait(setLoading, eventId, "date", date)
-                  }
-                }
-
-                navigation.goBack()
-              }, 2000)
-            }}
-            className=" bg-black p-4 rounded-lg items-center mb-20"
-          >
-            <Text className="text-white text-xl font-bold">Update Event</Text>
-          </Pressable>
         </View>
+
+        <View className="mb-4">
+          <Text className="mb-2 text-lg font-semibold text-gray">Location</Text>
+          <TextInput
+            value={location || ""}
+            onChangeText={setLocation}
+            placeholder="Set Location"
+            className="border  p-2 rounded-lg"
+            keyboardType="numeric"
+          />
+        </View>
+
+        <Pressable
+          onPress={async () => {
+            setTimeout(() => {
+              if (!currentUser?.id && !currentUser?.community_created) return
+              if (!event) return
+
+              console.log(event.event_host, eventId)
+
+              if (!eventTitle.trim()) {
+                alert("Title is required.")
+                return
+              }
+
+              if (event.event_title !== eventTitle) {
+                updateSingleEventTrait(
+                  setLoading,
+                  eventId,
+                  "event_title",
+                  eventTitle
+                )
+              }
+
+              if (event.event_description !== description) {
+                updateSingleEventTrait(
+                  setLoading,
+                  eventId,
+                  "event_description",
+                  description
+                )
+              }
+
+              if (event.location !== location) {
+                updateSingleEventTrait(
+                  setLoading,
+                  eventId,
+                  "location",
+                  location
+                )
+              }
+
+              if (event.price !== Number(price)) {
+                updateSingleEventTrait(
+                  setLoading,
+                  eventId,
+                  "price",
+                  Number(price)
+                )
+              }
+              if (event.date !== null) {
+                const dateVar = Date.parse(event?.date)
+                const editDate = new Date(dateVar)
+                if (editDate !== date) {
+                  updateSingleEventTrait(setLoading, eventId, "date", date)
+                }
+              }
+
+              navigation.goBack()
+            }, 2000)
+          }}
+          className=" bg-black p-4 rounded-lg items-center mb-20"
+        >
+          <Text className="text-white text-xl font-bold">Update Event</Text>
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   )

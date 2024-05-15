@@ -1,14 +1,28 @@
-import { View, Text, SafeAreaView } from "react-native"
+import { View, Text, SafeAreaView, Pressable, ScrollView } from "react-native"
 import React, { useEffect, useState } from "react"
-import { RouteProp, useRoute } from "@react-navigation/native"
-import { RootStackParamList } from "../../@types/navigation"
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
+import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import SingleImageSupa from "../../components/SingleImageSupa"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommunity"
 import SingleImageSupaCommunity from "../../components/EditCommunityPicture"
 import CommunityProfilePicSupa from "../../components/CommunityProfilePicture"
+import { TextInput } from "react-native-gesture-handler"
+import BasicButton from "../../components/BasicButton"
+import { Communities } from "../../@types/supabaseTypes"
+import updateSingleCommunityTrait from "../../supabaseFunctions/updateFuncs/updateSingleCommunityTrait"
+import CommunityImageGrid from "./ImageGrid"
 
 const CommunitySettings = () => {
+  const [communityState, setCommunityState] = useState<Communities | null>(
+    {} as Communities
+  )
+  const [location, setLocation] = useState("")
+  const [communityName, setCommunityName] = useState("")
+  const [communityStyle, setCommunityStyle] = useState("")
+  const [communityAbout, setCommunityAbout] = useState("")
+  const [loading, setLoading] = useState(false)
+  const navigation = useNavigation<NavigationType>()
   const route = useRoute<RouteProp<RootStackParamList, "MyCommunitySettings">>()
   const community = route.params.community
 
@@ -26,16 +40,122 @@ const CommunitySettings = () => {
     setImageFiles(community.community_photos)
   }, [community])
 
+  useEffect(() => {
+    getSingleCommunity(setLoading, community.id, setCommunityState)
+  }, [user])
+
+  useEffect(() => {
+    if (communityState === null) return
+    setCommunityName(communityState.community_title || "")
+    setCommunityStyle(communityState.community_style || "")
+    setLocation(communityState.location || "")
+    setCommunityAbout(communityState.about || "")
+  }, [communityState])
+
+  const updateCommunity = () => {
+    setTimeout(() => {
+      if (!user?.id) return
+      if (!community) return
+
+      if (!communityName.trim()) {
+        alert("Title is required.")
+        return
+      }
+
+      if (communityName !== communityState?.community_title) {
+        updateSingleCommunityTrait(
+          setLoading,
+          community.id,
+          "community_title",
+          communityName
+        )
+      }
+
+      if (community.about !== communityAbout) {
+        updateSingleCommunityTrait(
+          setLoading,
+          community.id,
+          "about",
+          communityAbout
+        )
+      }
+
+      if (community.location !== location) {
+        updateSingleCommunityTrait(
+          setLoading,
+          community.id,
+          "location",
+          location
+        )
+      }
+
+      navigation.goBack()
+    }, 2000)
+  }
+
   return (
     <SafeAreaView className="flex-1">
-      <View>
-        <CommunityProfilePicSupa
-          communityId={community.id}
-          imageUrl={singleImageFile}
-          imageUrlToRead={singleImageFile}
-          setImageUrl={setSingleImageFile}
-        />
-      </View>
+      <ScrollView>
+        <View>
+          <CommunityProfilePicSupa
+            communityId={community.id}
+            imageUrl={singleImageFile}
+            imageUrlToRead={singleImageFile}
+            setImageUrl={setSingleImageFile}
+          />
+        </View>
+
+        <View className="flex flex-row mx-5">
+          <View className="w-full">
+            <Text className="font-medium text-lg">Community Name</Text>
+            <View className="border rounded-lg p-2 w-full">
+              <TextInput
+                value={communityName} // Binds the TextInput value to the state
+                onChangeText={setCommunityName}
+              />
+            </View>
+
+            <Text className="font-medium text-lg">Community Description</Text>
+            <View className="border rounded-lg p-2 w-full">
+              <TextInput
+                value={communityAbout}
+                onChangeText={setCommunityAbout} // Increased font size, padding and fixed height
+                placeholder="Description of your community..."
+                multiline={true} // Allow multi-line input
+                numberOfLines={10} // Default number of lines when multiline is true
+                className="h-20"
+              />
+            </View>
+
+            <Text className="font-medium text-lg">Community Style</Text>
+            <View className="border rounded-lg p-2 w-full">
+              <TextInput
+                value={communityStyle} // Binds the TextInput value to the state
+                onChangeText={setCommunityStyle}
+              />
+            </View>
+
+            <Text className="font-medium text-lg">Community Location</Text>
+            <View className="border rounded-lg p-2 w-full">
+              <TextInput
+                value={location}
+                onChangeText={setLocation}
+                placeholder="Please input an accurate location"
+              />
+            </View>
+          </View>
+        </View>
+        <View>
+          <CommunityImageGrid community={community} />
+        </View>
+
+        <View className="flex flex-row justify-center my-2">
+          <BasicButton
+            text="Update Community"
+            buttonFunction={updateCommunity}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }

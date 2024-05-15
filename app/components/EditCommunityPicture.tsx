@@ -12,6 +12,9 @@ import insertPhoto from "../supabaseFunctions/updateFuncs/insertPhoto"
 import { Profile } from "../@types/supabaseTypes"
 import useCurrentUser from "../supabaseFunctions/getFuncs/useCurrentUser"
 import { fi } from "date-fns/locale"
+import { set } from "date-fns"
+import removePhoto from "../supabaseFunctions/deleteFuncs/removePhoto"
+import removeCommunityPhoto from "../supabaseFunctions/deleteFuncs/removeCommunityPhoto"
 
 type SingleImageProp = {
   imageUrl: string | null | undefined
@@ -67,8 +70,7 @@ const SingleImageSupaCommunity = ({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       aspect: [9, 16],
       quality: 1,
-      allowsMultipleSelection: true,
-      selectionLimit: 6,
+      allowsEditing: true,
     })
 
     if (!result.canceled) {
@@ -87,7 +89,7 @@ const SingleImageSupaCommunity = ({
       if (userId === undefined) return
       insertPhoto(
         setLoading,
-        currentUser?.photos_url,
+        imageUrls,
         filePath,
         communityId,
         "communities",
@@ -96,6 +98,8 @@ const SingleImageSupaCommunity = ({
       const { error } = await supabase
         .from("communities")
         .upsert({ id: userId, community_profile_pic: filePath })
+
+      setImage(img.uri)
       if (error) throw error
     }
   }
@@ -104,11 +108,19 @@ const SingleImageSupaCommunity = ({
     itemUrl: string | null | undefined,
     listIndex: number
   ) => {
-    if (itemUrl === "" || !imageUrls) return
+    if (
+      itemUrl === "" ||
+      !imageUrls ||
+      itemUrl === null ||
+      itemUrl === undefined
+    )
+      return
     console.log(`${itemUrl}`)
     const { data, error } = await supabase.storage
       .from("photos")
       .remove([`${itemUrl}`])
+
+    removeCommunityPhoto(itemUrl, communityId)
 
     if (error) {
       console.log("Error removing image")
@@ -118,6 +130,8 @@ const SingleImageSupaCommunity = ({
     const newFiles = [...imageUrls]
     newFiles.splice(listIndex, 1)
     setImageUrls(newFiles)
+
+    setImage("")
 
     console.log(newFiles)
     console.log("Removed Image")

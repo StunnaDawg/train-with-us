@@ -12,7 +12,8 @@ const addNewEvent = async (
   eventDate: Date,
   price: number,
   event_description: string,
-  photoCover: ImagePicker.ImagePickerAsset
+  photoCover: ImagePicker.ImagePickerAsset,
+  location: string
 ) => {
   try {
     setLoading(true)
@@ -39,6 +40,7 @@ const addNewEvent = async (
         event_cover_photo: filePath,
         price: price,
         event_description: event_description,
+        location: location,
       },
     ])
 

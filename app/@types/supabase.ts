@@ -73,6 +73,7 @@ export type Database = {
       }
       communities: {
         Row: {
+          about: string | null
           channels: string[] | null
           city: string
           community_members: string[] | null
@@ -83,8 +84,10 @@ export type Database = {
           community_title: string | null
           created_at: string
           id: number
+          location: string | null
         }
         Insert: {
+          about?: string | null
           channels?: string[] | null
           city?: string
           community_members?: string[] | null
@@ -95,8 +98,10 @@ export type Database = {
           community_title?: string | null
           created_at?: string
           id?: number
+          location?: string | null
         }
         Update: {
+          about?: string | null
           channels?: string[] | null
           city?: string
           community_members?: string[] | null
@@ -107,6 +112,7 @@ export type Database = {
           community_title?: string | null
           created_at?: string
           id?: number
+          location?: string | null
         }
         Relationships: [
           {
@@ -156,6 +162,7 @@ export type Database = {
       }
       community_channels: {
         Row: {
+          channel_pic: string | null
           channel_title: string | null
           channel_type: string
           community: number
@@ -164,6 +171,7 @@ export type Database = {
           id: string
         }
         Insert: {
+          channel_pic?: string | null
           channel_title?: string | null
           channel_type?: string
           community: number
@@ -172,6 +180,7 @@ export type Database = {
           id?: string
         }
         Update: {
+          channel_pic?: string | null
           channel_title?: string | null
           channel_type?: string
           community?: number
@@ -198,16 +207,19 @@ export type Database = {
         Row: {
           community_id: number
           joined_at: string
+          role: string
           user_id: string
         }
         Insert: {
           community_id: number
           joined_at?: string
+          role?: string
           user_id?: string
         }
         Update: {
           community_id?: number
           joined_at?: string
+          role?: string
           user_id?: string
         }
         Relationships: [
@@ -274,6 +286,7 @@ export type Database = {
           event_photos: string[] | null
           event_title: string | null
           id: number
+          location: string | null
           price: number | null
         }
         Insert: {
@@ -287,6 +300,7 @@ export type Database = {
           event_photos?: string[] | null
           event_title?: string | null
           id?: number
+          location?: string | null
           price?: number | null
         }
         Update: {
@@ -300,6 +314,7 @@ export type Database = {
           event_photos?: string[] | null
           event_title?: string | null
           id?: number
+          location?: string | null
           price?: number | null
         }
         Relationships: [

@@ -1,9 +1,11 @@
-import { View, Text } from "react-native"
+import { View, Text, Pressable } from "react-native"
 import React, { useEffect, useState } from "react"
 import { Communities } from "../../../@types/supabaseTypes"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
 import SinglePic from "../../../components/SinglePic"
+import { useNavigation } from "@react-navigation/native"
+import { NavigationType } from "../../../@types/navigation"
 
 type CommunityBubbleProps = {
   community: number
@@ -16,6 +18,7 @@ const CommunityBubble = ({ community }: CommunityBubbleProps) => {
   )
   const [imageFile, setImageFile] = useState<string | null | undefined>(null)
   const { user } = useAuth()
+  const navigation = useNavigation<NavigationType>()
 
   useEffect(() => {
     if (!user || community === null) return
@@ -33,15 +36,23 @@ const CommunityBubble = ({ community }: CommunityBubbleProps) => {
   }, [currentCommunity])
   return (
     <View className="items-center">
-      <SinglePic
-        size={55}
-        avatarRadius={100}
-        noAvatarRadius={100}
-        item={imageFile}
-      />
-      <View className="m-1">
-        <Text className="text-xs">{currentCommunity?.community_title}</Text>
-      </View>
+      <Pressable
+        onPress={() =>
+          navigation.navigate("CommunityPage", {
+            communityId: community,
+          })
+        }
+      >
+        <SinglePic
+          size={55}
+          avatarRadius={100}
+          noAvatarRadius={100}
+          item={imageFile}
+        />
+        <View className="m-1">
+          <Text className="text-xs">{currentCommunity?.community_title}</Text>
+        </View>
+      </Pressable>
     </View>
   )
 }

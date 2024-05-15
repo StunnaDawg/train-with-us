@@ -6,12 +6,19 @@ import BouncyCheckbox from "react-native-bouncy-checkbox"
 import supabase from "../../../lib/supabase"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { useNavigation } from "@react-navigation/native"
+import NewPhoto from "../../components/NewPhoto"
+import * as ImagePicker from "expo-image-picker"
+import * as FileSystem from "expo-file-system"
+import { decode } from "base64-arraybuffer"
 
 type ChannelTypeOption = "Text" | "Annoucement" | "Forum"
 
 const CreateChannel = () => {
   const { user } = useAuth()
   const [loading, setLoading] = useState<boolean>(false)
+  const [channelPic, setChannelPic] = useState<ImagePicker.ImagePickerAsset>(
+    {} as ImagePicker.ImagePickerAsset
+  )
   const [selectedChannelType, setChannelType] =
     useState<ChannelTypeOption>("Text")
   const [channelName, setChannelName] = useState<string>("")
@@ -28,12 +35,25 @@ const CreateChannel = () => {
     try {
       setLoading(true)
       if (communityId === null) throw new Error("Community ID is null")
+
+      const base64 = await FileSystem.readAsStringAsync(channelPic.uri, {
+        encoding: "base64",
+      })
+      const filePath = `${user?.id}/channels/${new Date().getTime()}.${
+        channelPic.type === "image"
+      }`
+      const contentType = "image/png"
+      await supabase.storage.from("photos").upload(filePath, decode(base64), {
+        contentType: contentType,
+      })
+
       const { error } = await supabase.from("community_channels").insert([
         {
           channel_title: channelName,
           channel_type: selectedChannelType,
           community_owner: user?.id,
           community: communityId,
+          channel_pic: filePath,
         },
       ])
 
@@ -48,7 +68,7 @@ const CreateChannel = () => {
   const channelOptions: ChannelTypeOption[] = ["Text", "Annoucement", "Forum"]
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-between border-b w-full p-3">
+      <View className="flex flex-row justify-between w-full p-3">
         <Text className="text-2xl font-semibold">Create Channel</Text>
 
         <Pressable
@@ -60,6 +80,8 @@ const CreateChannel = () => {
           <Text className="text-lg font-bold underline">Done</Text>
         </Pressable>
       </View>
+
+      <NewPhoto setProfilePic={setChannelPic} />
       <View className="border w-full rounded-none p-3">
         <TextInput
           value={channelName}

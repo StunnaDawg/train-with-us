@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { CommunityChannel } from "../../@types/supabaseTypes"
-import { da } from "date-fns/locale"
 
 const getUserPinnedChannels = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
@@ -10,38 +9,42 @@ const getUserPinnedChannels = async (
 ) => {
   try {
     setLoading(true)
-    const { data, error } = await supabase
+
+    // Fetch user profile to get pinned channels array
+    const { data: profileData, error: profileError } = await supabase
       .from("profiles")
       .select("pinned_channels")
       .eq("id", userId)
+      .single() // Assume there's one profile per user ID
 
-    if (error) {
-      console.error("Error fetching user pinned channels:", error.message)
-      return null
+    if (profileError || !profileData) {
+      console.error(
+        "Error fetching user pinned channels:",
+        profileError?.message
+      )
+      return
     }
 
-    console.log("Pinned channels data", data)
-
-    for (let i = 0; i < data.length; i++) {
-      const { data: channelData, error: channelError } = await supabase
+    if (profileData.pinned_channels && profileData.pinned_channels.length > 0) {
+      // Fetch all channels at once if there are any pinned channels
+      const { data: channelsData, error: channelsError } = await supabase
         .from("community_channels")
         .select("*")
-        .eq("id", data[i].pinned_channels[0])
+        .in("id", profileData.pinned_channels) // Fetch all pinned channels in one go
 
-      if (channelError) {
-        console.error("Error fetching channel data:", channelError.message)
-        return null
+      if (channelsError) {
+        console.error("Error fetching channel data:", channelsError.message)
+        return
       }
 
-      setChannels((prev: CommunityChannel[] | null) => [
-        ...(prev || []),
-        channelData[0],
-      ])
-
-      console.log("Channel data", channelData)
+      // Set the channels fetched from the database
+      setChannels(channelsData)
+    } else {
+      // No pinned channels or empty array
+      setChannels(null)
     }
   } catch (error) {
-    console.log(error)
+    console.error("An error occurred:", error)
   } finally {
     setLoading(false)
   }

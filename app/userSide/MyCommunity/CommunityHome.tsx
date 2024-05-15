@@ -1,8 +1,8 @@
 import { View, Text, SafeAreaView, ScrollView, Pressable } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { FontAwesome6 } from "@expo/vector-icons"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
-import { useNavigation } from "@react-navigation/native"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommunity"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { Communities } from "../../@types/supabaseTypes"
@@ -22,6 +22,20 @@ const CommunityHome = () => {
     if (!user) return
     getSingleCommunity(setLoading, communityId, setCurrentCommunity)
   }, [])
+
+  useFocusEffect(
+    useCallback(() => {
+      const getCommunityUpdates = async () => {
+        getSingleCommunity(setLoading, communityId, setCurrentCommunity)
+      }
+
+      getCommunityUpdates()
+
+      return () => {
+        // Optional cleanup actions
+      }
+    }, [communityId, setCurrentCommunity])
+  )
   return (
     <SafeAreaView className="flex-1">
       <ScrollView>

@@ -1,6 +1,5 @@
-import { View, Text, Pressable } from "react-native"
+import { View, Text, Pressable, ActivityIndicator } from "react-native"
 import React, { useEffect, useState } from "react"
-import SinglePic from "../../../components/SinglePic"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
 import { FileObject } from "@supabase/storage-js"
@@ -9,6 +8,7 @@ import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCom
 import getUserPinnedChannels from "../../../supabaseFunctions/getFuncs/getUserPinnedChannels"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
+import SinglePic from "../../../components/SinglePic"
 
 const CommunitiesRead = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -34,36 +34,40 @@ const CommunitiesRead = () => {
       </View>
 
       {!loading && communityChannels && communityChannels.length > 0 ? (
-        <Pressable
-          onPress={() =>
-            navigation.navigate("ChannelScreen", {
-              channelId: communityChannels[0],
-            })
-          }
-          className="flex flex-row items-center"
-        >
-          {/* <View className="m-2">
-          <SinglePic
-            size={55}
-            avatarRadius={100}
-            noAvatarRadius={100}
-            item={imageFiles?.[0]}
-          />
-        </View> */}
+        communityChannels.map((c) => (
+          <View className="flex-row justify-between items-center">
+            <Pressable
+              key={c.id} // Assuming 'id' is the unique identifier for each channel
+              onPress={() =>
+                navigation.navigate("ChannelScreen", {
+                  channelId: c, // Changed to use the correct channel id
+                })
+              }
+              className="flex flex-row items-center"
+            >
+              <View className="m-2">
+                <SinglePic
+                  size={55}
+                  avatarRadius={100}
+                  noAvatarRadius={100}
+                  item={c.channel_pic} // Assuming this is correctly accessing the picture property
+                />
+              </View>
 
-          <View>
-            <Text className="font-bold mb-1">
-              {communityChannels &&
-              communityChannels[0].channel_title !== null &&
-              communityChannels[0].channel_title !== undefined
-                ? communityChannels[0].channel_title
-                : "error loading channel title"}
-            </Text>
-            <Text className="text-sm">Hey, how are you?</Text>
+              <View>
+                <Text className="font-bold mb-1">
+                  {c.channel_title || "error loading channel title"}{" "}
+                  {c.channel_type === "Announcement"
+                    ? `#${c.channel_type}`
+                    : null}
+                </Text>
+                <Text className="text-sm">Hey, how are you?</Text>
+              </View>
+            </Pressable>
           </View>
-        </Pressable>
+        ))
       ) : (
-        <Text>Loading...</Text>
+        <ActivityIndicator />
       )}
     </View>
   )
