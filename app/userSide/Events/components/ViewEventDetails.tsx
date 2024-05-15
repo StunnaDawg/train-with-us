@@ -6,12 +6,15 @@ import formatTimestamp from "../../../utilFunctions/formatTimeStamp"
 import GenericButton from "../../../components/GenericButton"
 import openInAppleMaps from "../../../utilFunctions/openAppleMaps"
 import openInGoogleMaps from "../../../utilFunctions/openGoogleMaps"
+import AddEventToCalendar from "./AddEventToCalendar"
+import { Events } from "../../../@types/supabaseTypes"
 
 type ViewEventDetailsProps = {
   date: string | null | undefined
+  eventId: number
 }
 
-const ViewEventDetails = ({ date }: ViewEventDetailsProps) => {
+const ViewEventDetails = ({ date, eventId }: ViewEventDetailsProps) => {
   return (
     <View>
       {/* Date and Time */}
@@ -20,6 +23,10 @@ const ViewEventDetails = ({ date }: ViewEventDetailsProps) => {
         <Text className="font-bold text-lg ">
           {date ? formatTimestamp(date) : "No Date"}
         </Text>
+
+        <View className="mt-2">
+          <AddEventToCalendar eventId={eventId} />
+        </View>
       </View>
 
       {/* Location */}

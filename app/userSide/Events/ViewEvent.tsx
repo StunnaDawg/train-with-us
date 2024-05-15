@@ -1,4 +1,10 @@
-import { View, ScrollView, SafeAreaView, RefreshControl } from "react-native"
+import {
+  View,
+  ScrollView,
+  SafeAreaView,
+  RefreshControl,
+  Platform,
+} from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import ViewEventTitle from "./components/ViewEventTitle"
 import ViewEventDetails from "./components/ViewEventDetails"
@@ -10,8 +16,8 @@ import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { Events, Profile } from "../../@types/supabaseTypes"
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native"
 import getSingleEvent from "../../supabaseFunctions/getFuncs/getSingleEvent"
-import { is } from "date-fns/locale"
 import checkIfAttending from "../../supabaseFunctions/checkIfAttending"
+import * as Calendar from "expo-calendar"
 
 const ViewEvent = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -52,6 +58,20 @@ const ViewEvent = () => {
   useEffect(() => {
     console.log("isAttending", isAttending)
   }, [isAttending])
+
+  useEffect(() => {
+    ;(async () => {
+      const { status } = await Calendar.requestCalendarPermissionsAsync()
+      if (status === "granted") {
+        const calendars = await Calendar.getCalendarsAsync(
+          Calendar.EntityTypes.EVENT
+        )
+        console.log("Here are all your calendars:")
+        console.log({ calendars })
+      }
+    })()
+  }, [])
+
   return (
     <View className="flex-1 bg-yellow-300">
       <SafeAreaView className="flex-1">
@@ -71,7 +91,7 @@ const ViewEvent = () => {
           </View>
 
           <View className="mx-5 mt-2">
-            <ViewEventDetails date={event?.date} />
+            <ViewEventDetails date={event?.date} eventId={eventId} />
           </View>
 
           <View>
