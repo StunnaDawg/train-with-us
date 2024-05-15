@@ -49,7 +49,7 @@ const ViewEventTitle = ({
     <View className="flex flex-row items-center justify-center">
       <View className="m-5 items-center">
         <Text className="text-xl font-bold">
-          {currentEvent?.date ? formatBirthdate(currentEvent?.date) : "No Date"}
+          {date ? formatBirthdate(date) : "No Date"}
         </Text>
         <View className="border rounded-full p-1 px-4 bg-white border-white">
           <Text className="text-xl font-semibold">{title}</Text>
