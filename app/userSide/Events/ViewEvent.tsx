@@ -10,12 +10,15 @@ import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { Events, Profile } from "../../@types/supabaseTypes"
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native"
 import getSingleEvent from "../../supabaseFunctions/getFuncs/getSingleEvent"
+import { is } from "date-fns/locale"
+import checkIfAttending from "../../supabaseFunctions/checkIfAttending"
 
 const ViewEvent = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const { user } = useAuth()
   const [userProfile, setUserProfile] = useState<Profile | null>(null)
   const navigation = useNavigation<NavigationType>()
+  const [isAttending, setIsAttending] = useState<boolean>(false)
   const [event, setEvent] = useState<Events | null>(null)
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const route = useRoute<RouteProp<RootStackParamList, "ViewEvent">>()
@@ -40,6 +43,15 @@ const ViewEvent = () => {
     if (eventId === undefined) return
     getSingleEvent(setLoading, eventId, setEvent)
   }, [])
+
+  useEffect(() => {
+    if (!userProfile) return
+    checkIfAttending(eventId, userProfile.id, setIsAttending)
+  }, [userProfile])
+
+  useEffect(() => {
+    console.log("isAttending", isAttending)
+  }, [isAttending])
   return (
     <View className="flex-1 bg-yellow-300">
       <SafeAreaView className="flex-1">
