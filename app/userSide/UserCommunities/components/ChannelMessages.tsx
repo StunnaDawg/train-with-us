@@ -26,6 +26,7 @@ import sendMessage from "../../../supabaseFunctions/addFuncs/sendMessage"
 import supabase from "../../../../lib/supabase"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import getChannelSessionMessages from "../../../supabaseFunctions/getFuncs/getChannelMessages"
+import sendChannelMessage from "../../../supabaseFunctions/addFuncs/sendChannelMessage"
 
 type UserMessage = {
   message: string | null
@@ -103,7 +104,7 @@ const ChannelMessageScreen = () => {
     if (messageToSend.trim().length === 0 || !user?.id) {
       return
     }
-    sendMessage(messageToSend, user?.id, channel.id)
+    sendChannelMessage(messageToSend, user?.id, channel.id)
     setMessageToSend("")
   }
 

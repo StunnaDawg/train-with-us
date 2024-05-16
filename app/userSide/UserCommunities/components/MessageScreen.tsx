@@ -32,8 +32,8 @@ const UserMessage = ({ message }: UserMessage) => {
   return (
     <View className="flex flex-row justify-end mt-2 mx-1">
       <View>
-        <View className="rounded-2xl border bg-blue p-2">
-          <Text className="text-xs">{message}</Text>
+        <View className="rounded-2xl border bg-blue-500 p-2">
+          <Text className="text-lg">{message}</Text>
         </View>
         <View className="flex flex-row justify-end"></View>
       </View>
@@ -43,28 +43,24 @@ const UserMessage = ({ message }: UserMessage) => {
 
 type MatchesMessageProps = {
   message: string | null
-  imageFiles: string[] | null | undefined
+  name: string | null | undefined
 }
 
-const MatchesMessage = ({ message, imageFiles }: MatchesMessageProps) => {
+const MatchesMessage = ({ message, name }: MatchesMessageProps) => {
   const [loading, setLoading] = useState<boolean>(false)
 
   return (
     <View>
-      <View className="mx-3">
-        <Text className="font-bold">
-          {!loading ? "Jordan" : <ActivityIndicator />}
-        </Text>
-      </View>
-      <View className="flex flex-row justify-start flex-wrap mt-2 items-center m-1 my-2">
-        <SinglePic
-          size={55}
-          avatarRadius={100}
-          noAvatarRadius={100}
-          item={imageFiles?.[0]}
-        />
-        <View className="rounded-2xl border mx-1 bg-slate-200 p-2">
-          <Text className="text-xs">{message}</Text>
+      <View className="flex flex-row justify-start items-center m-1">
+        <View>
+          <View>
+            <Text className="text-start font-semibold text-lg">
+              {name ? name : "Name"}
+            </Text>
+          </View>
+          <View className="bg-slate-300 border-2 rounded-2xl p-2 max-w-3/4 shadow">
+            <Text className="text-lg">{message}</Text>
+          </View>
         </View>
       </View>
     </View>
@@ -133,7 +129,7 @@ const MessageScreen = () => {
               size={55}
               avatarRadius={100}
               noAvatarRadius={100}
-              item={imageFiles?.[0]}
+              item={currentUser?.profile_pic}
             />
           </View>
           <Text className="font-bold text-md">{currentUser?.first_name}</Text>
@@ -156,7 +152,7 @@ const MessageScreen = () => {
                 <UserMessage message={item.message} />
               ) : (
                 <MatchesMessage
-                  imageFiles={imageFiles}
+                  name={currentUser?.first_name}
                   message={item.message}
                 />
               )

@@ -22,10 +22,6 @@ const MessageCard = ({ otherUserId }: MessageCardProps) => {
     useCurrentUser(otherUserId, setProfile)
   }, [user])
 
-  useEffect(() => {
-    if (profile?.photos_url === null || undefined) return
-    setImageFiles(profile?.photos_url)
-  }, [profile])
   return (
     <View className="flex flex-row items-center">
       <View className="m-2">
@@ -33,7 +29,7 @@ const MessageCard = ({ otherUserId }: MessageCardProps) => {
           size={55}
           avatarRadius={100}
           noAvatarRadius={100}
-          item={imageFiles?.[0]}
+          item={profile?.profile_pic}
         />
       </View>
 
