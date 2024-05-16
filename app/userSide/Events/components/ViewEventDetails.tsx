@@ -19,8 +19,10 @@ const ViewEventDetails = ({ date, eventId }: ViewEventDetailsProps) => {
     <View>
       {/* Date and Time */}
       <View className="mb-2">
-        <Text className=" font-bold text-lg pb-1">Date and Time:</Text>
-        <Text className="font-bold text-lg ">
+        <Text className=" font-bold text-lg pb-1 text-white">
+          Date and Time:
+        </Text>
+        <Text className="font-bold text-lg text-white ">
           {date ? formatTimestamp(date) : "No Date"}
         </Text>
 
@@ -32,8 +34,8 @@ const ViewEventDetails = ({ date, eventId }: ViewEventDetailsProps) => {
       {/* Location */}
       <View className="mb-1">
         <View>
-          <Text className="pb-1 font-bold text-lg ">Location:</Text>
-          <Text className="font-bold text-lg ">
+          <Text className="pb-1 font-bold text-lg text-white ">Location:</Text>
+          <Text className="font-bold text-lg text-white ">
             580 Wright Ave, Dartmouth NS
           </Text>
         </View>

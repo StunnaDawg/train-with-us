@@ -10,7 +10,7 @@ import { Profile } from "../../@types/supabaseTypes"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import WhiteSkinnyButton from "../../components/WhiteSkinnyButton"
-import { useNavigation } from "@react-navigation/native"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../@types/navigation"
 import MyEventsButton from "../../components/MyEventsButton"
 import PhotoArray from "../Connections/components/PhotoArray"
@@ -49,6 +49,23 @@ const ProfileView = () => {
 
     getPrimaryGymName()
   }, [currentUser])
+
+  useFocusEffect(
+    useCallback(() => {
+      const getUser = async () => {
+        setLoading(true)
+        if (!user) return
+        useCurrentUser(user?.id, setCurrentUser)
+        setLoading(false)
+      }
+
+      getUser()
+
+      return () => {
+        // Optional cleanup actions
+      }
+    }, [user, setCurrentUser])
+  )
 
   return (
     <ScrollView
@@ -94,18 +111,8 @@ const ProfileView = () => {
             <FontAwesome6 name="edit" size={24} color="blue" />
           </View>
         </Pressable>
-        <PhotoArray
-          index1={0}
-          index2={1}
-          index3={2}
-          profileId={currentUser?.id}
-        />
-        <PhotoArray
-          index1={3}
-          index2={4}
-          index3={5}
-          profileId={currentUser?.id}
-        />
+        <PhotoArray index1={0} index2={1} index3={2} profileId={user?.id} />
+        <PhotoArray index1={3} index2={4} index3={5} profileId={user?.id} />
       </View>
     </ScrollView>
   )

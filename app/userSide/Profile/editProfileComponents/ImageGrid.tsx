@@ -29,7 +29,7 @@ const ImageGrid = () => {
       <View className="mx-1">
         <SingleImageSupa
           imageUrl={imageFiles?.[0]}
-          listIndex={2}
+          listIndex={0}
           imageUrls={currentUser?.photos_url}
           setImageUrls={setImageFiles}
         />
@@ -38,7 +38,7 @@ const ImageGrid = () => {
       <View className="mx-1">
         <SingleImageSupa
           imageUrl={imageFiles?.[1]}
-          listIndex={2}
+          listIndex={1}
           imageUrls={currentUser?.photos_url}
           setImageUrls={setImageFiles}
         />
@@ -56,7 +56,7 @@ const ImageGrid = () => {
       <View className="mx-1">
         <SingleImageSupa
           imageUrl={imageFiles?.[3]}
-          listIndex={2}
+          listIndex={3}
           imageUrls={currentUser?.photos_url}
           setImageUrls={setImageFiles}
         />
@@ -65,7 +65,7 @@ const ImageGrid = () => {
       <View className="mx-1">
         <SingleImageSupa
           imageUrl={imageFiles?.[4]}
-          listIndex={2}
+          listIndex={4}
           imageUrls={currentUser?.photos_url}
           setImageUrls={setImageFiles}
         />
@@ -74,7 +74,7 @@ const ImageGrid = () => {
       <View className="mx-1">
         <SingleImageSupa
           imageUrl={imageFiles?.[5]}
-          listIndex={2}
+          listIndex={5}
           imageUrls={currentUser?.photos_url}
           setImageUrls={setImageFiles}
         />

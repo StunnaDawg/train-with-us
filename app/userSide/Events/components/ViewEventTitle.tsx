@@ -47,14 +47,13 @@ const ViewEventTitle = ({
   }, [currentEvent])
   return (
     <View className="flex flex-row items-center justify-center">
-      <View className="m-5 items-center">
-        <Text className="text-xl font-bold">
+      <View className="m-5  items-center">
+        <Text className="text-xl font-bold text-white">
           {date ? formatBirthdate(date) : "No Date"}
         </Text>
         <View className="border rounded-full p-1 px-4 bg-white border-white">
-          <Text className="text-xl font-semibold">{title}</Text>
+          <Text className=" text-xl font-semibold">{title}</Text>
         </View>
-        <Text className="text-xl font-bold">Event Type</Text>
       </View>
 
       <View className="border-white border-4">

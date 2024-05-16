@@ -66,8 +66,7 @@ const SingleImageSupa = ({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       aspect: [9, 16],
       quality: 1,
-      allowsMultipleSelection: true,
-      selectionLimit: 6,
+      allowsEditing: true,
     })
 
     if (!result.canceled) {

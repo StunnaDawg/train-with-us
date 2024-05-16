@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native"
+import { View, Text, Pressable, Alert } from "react-native"
 import React, { useEffect, useState } from "react"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
@@ -21,6 +21,21 @@ const PurchaseFooter = ({
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
+
+  const showAlert = () =>
+    Alert.alert(
+      "Missing Information",
+      "Please enter your First Name.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    )
 
   useEffect(() => {
     if (!user) return
@@ -51,10 +66,13 @@ const PurchaseFooter = ({
             if (
               !user ||
               !currentUser?.first_name ||
-              !currentUser.last_name ||
+              !currentUser?.last_name ||
               ticketNumber === 0
-            )
+            ) {
+              showAlert()
               return
+            }
+
             await addEventUser(
               eventId,
               user?.id,

@@ -10,6 +10,7 @@ import {
   Text,
   Image,
   SafeAreaView,
+  KeyboardAvoidingView,
 } from "react-native"
 import supabase from "../../lib/supabase"
 import { NavigationType } from "../@types/navigation"
@@ -55,7 +56,7 @@ const SignUp = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-yellow-300">
-      <View className="flex flex-row justify-center">
+      <KeyboardAvoidingView className="flex flex-row justify-center">
         <View className="flex-1 mx-10">
           <View className="items-center">
             <Image
@@ -108,7 +109,7 @@ const SignUp = () => {
             <GoogleAuth />
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }

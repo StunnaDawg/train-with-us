@@ -9,6 +9,7 @@ import {
   Pressable,
   Text,
   Image,
+  KeyboardAvoidingView,
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import supabase from "../../lib/supabase"
@@ -50,7 +51,7 @@ const Login = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-yellow-300">
-      <View className="flex flex-row justify-center">
+      <KeyboardAvoidingView className="flex flex-row justify-center">
         <View className="flex-1 mx-10">
           <View className="items-center">
             <Image
@@ -101,7 +102,7 @@ const Login = () => {
             </Pressable>
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }

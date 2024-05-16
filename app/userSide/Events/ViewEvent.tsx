@@ -73,7 +73,7 @@ const ViewEvent = () => {
   }, [])
 
   return (
-    <View className="flex-1 bg-yellow-300">
+    <View className="flex-1" style={{ backgroundColor: "#07182d" }}>
       <SafeAreaView className="flex-1">
         <ScrollView
           className="flex-1"

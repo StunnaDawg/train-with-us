@@ -21,7 +21,7 @@ const AllEvents = ({ refreshing }: RefreshProp) => {
   return (
     <View className="flex flex-col m-5">
       <View className="flex flex-row items-center justify-between">
-        <Text className="text-2xl font-bold m-1 ">All Events</Text>
+        <Text className="text-2xl font-bold m-1 text-white ">All Events</Text>
         <Pressable>
           <Text className="underline">View All</Text>
         </Pressable>

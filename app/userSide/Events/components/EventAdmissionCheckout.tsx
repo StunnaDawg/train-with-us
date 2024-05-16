@@ -1,17 +1,20 @@
 import { View, Text, Pressable } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
+import formatBirthdate from "../../../utilFunctions/calculateDOB"
 
 type EventAdmissionCheckoutProps = {
   firstAmountTickets: number
   tickets: number
   setTickets: Dispatch<SetStateAction<number>>
+  date: string | null
 }
 
 const EventAdmissionCheckout = ({
   tickets,
   setTickets,
   firstAmountTickets,
+  date,
 }: EventAdmissionCheckoutProps) => {
   const [count, setCount] = useState(firstAmountTickets)
 
@@ -29,9 +32,9 @@ const EventAdmissionCheckout = ({
     setTickets(count)
   }, [count])
   return (
-    <View className=" bg-white/50 mx-12 rounded-xl">
+    <View className=" bg-white mx-12 rounded-xl">
       <View className="items-center">
-        <View className="flex flex-row justify-between bg-white border rounded-full px-10 mx-12 py-3 mt-4 items-center ">
+        <View className="flex flex-row justify-between bg-slate-500 border rounded-full px-10 mx-12 py-3 mt-4 items-center ">
           <View>
             <Text className="font-bold">Admission</Text>
           </View>
@@ -67,7 +70,7 @@ const EventAdmissionCheckout = ({
 
         <View>
           <Text className="font-bold text-slate-500/90 text-sm px-12">
-            Sales end May 8th, 2024
+            {date ? `Sales end ${formatBirthdate(date)}` : null}
           </Text>
         </View>
       </View>

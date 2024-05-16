@@ -10,11 +10,11 @@ const AboutViewEvent = ({ description }: AboutViewEventProps) => {
     <View className="flex flex-row m-5">
       <View>
         <View>
-          <Text className="font-bold text-xl">About this Event</Text>
+          <Text className="font-bold text-xl text-white">About this Event</Text>
         </View>
 
         <View className="my-1">
-          <Text className="text-lg">{description}</Text>
+          <Text className="text-lg text-white">{description}</Text>
         </View>
       </View>
     </View>
