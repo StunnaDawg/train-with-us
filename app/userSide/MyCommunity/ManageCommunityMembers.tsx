@@ -4,6 +4,8 @@ import {
   SafeAreaView,
   ScrollView,
   ActivityIndicator,
+  Pressable,
+  Alert,
 } from "react-native"
 import React, { useEffect, useState } from "react"
 import { RootStackParamList } from "../../@types/navigation"
@@ -26,6 +28,50 @@ const ManageCommunityMembers = () => {
   const route = useRoute<RouteProp<RootStackParamList, "MyCommunityMembers">>()
   const communityId = route.params.communityId
 
+  const showAlert = (userId: string) => {
+    Alert.alert(
+      "Choose an Option",
+      "Select an action to perform:",
+      [
+        {
+          text: "Upgrade User to Coach",
+          onPress: () => upgradeUser(userId),
+          style: "default",
+        },
+        {
+          text: "Kick User",
+          onPress: () => kickUser(userId),
+          style: "destructive",
+        },
+      ],
+      { cancelable: true } // This makes it possible to tap outside of the alert and cancel it
+    )
+  }
+
+  const upgradeUser = async (userId: string) => {
+    const { data, error } = await supabase
+      .from("community_members")
+      .update({ role: "Coach" })
+      .eq("user_id", userId)
+    if (error) {
+      console.log("error", error)
+    } else {
+      console.log("data", data)
+    }
+  }
+
+  const kickUser = async (userId: string) => {
+    const { data, error } = await supabase
+      .from("community_members")
+      .delete()
+      .eq("user_id", userId)
+    if (error) {
+      console.log("error", error)
+    } else {
+      console.log("data", data)
+    }
+  }
+
   useEffect(() => {
     getCommunityMembersUUID(setLoading, communityId, setCommunityMemberUUIDs)
   }, [])
@@ -39,10 +85,6 @@ const ManageCommunityMembers = () => {
     }
   }, [commmunityMemberUUIDs])
 
-  useEffect(() => {
-    console.log("communityMembers", communityMembers)
-  }, [communityMembers])
-
   return (
     <SafeAreaView className="flex-1">
       <View className="m-2">
@@ -53,11 +95,13 @@ const ManageCommunityMembers = () => {
               return member.first_name ? (
                 <View className="flex flex-row justify-between items-center">
                   <MemberCard key={member.id} member={member} />
-                  <MaterialCommunityIcons
-                    name="dots-vertical"
-                    size={24}
-                    color="black"
-                  />
+                  <Pressable onPress={() => showAlert(member.id)}>
+                    <MaterialCommunityIcons
+                      name="dots-vertical"
+                      size={24}
+                      color="black"
+                    />
+                  </Pressable>
                 </View>
               ) : null
             })
