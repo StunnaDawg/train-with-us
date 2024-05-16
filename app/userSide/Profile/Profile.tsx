@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, RefreshControl } from "react-native"
+import { View, Text, ScrollView, RefreshControl, Pressable } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import SinglePic from "../../components/SinglePic"
 import UserProfilePic from "./components/UserProfilePic"
@@ -13,12 +13,16 @@ import WhiteSkinnyButton from "../../components/WhiteSkinnyButton"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../@types/navigation"
 import MyEventsButton from "../../components/MyEventsButton"
+import PhotoArray from "../Connections/components/PhotoArray"
+import { FontAwesome6 } from "@expo/vector-icons"
+import returnCommunityName from "../../utilFunctions/returnCommunityName"
 
 const ProfileView = () => {
   const { user } = useAuth()
   const [loading, setLoading] = useState<boolean>(true)
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
+  const [primaryGymName, setPrimaryGymName] = useState<string>("")
   const navigation = useNavigation<NavigationType>()
 
   const onRefresh = useCallback(() => {
@@ -33,6 +37,19 @@ const ProfileView = () => {
     useCurrentUser(user?.id, setCurrentUser)
   }, [])
 
+  useEffect(() => {
+    const getPrimaryGymName = async () => {
+      if (currentUser?.primary_gym === null) {
+        setPrimaryGymName("No Primary Gym")
+        return
+      }
+      const PrimaryGymName = await returnCommunityName(currentUser?.primary_gym)
+      setPrimaryGymName(PrimaryGymName)
+    }
+
+    getPrimaryGymName()
+  }, [currentUser])
+
   return (
     <ScrollView
       refreshControl={
@@ -43,7 +60,7 @@ const ProfileView = () => {
 
       <UserProfilePic profile={currentUser} refresh={refreshing} />
 
-      <UserTopGyms profile={currentUser} borderB={true} mt={true} />
+      <UserTopGyms communityName={primaryGymName} borderB={true} mt={true} />
 
       <View className="flex flex-row justify-center mt-3">
         <WhiteSkinnyButton
@@ -64,7 +81,21 @@ const ProfileView = () => {
 
       <ActivitySection profile={currentUser} />
 
-      <PictureSection profile={currentUser} />
+      <View className="my-2">
+        <Pressable
+          onPress={() => {
+            navigation.navigate("UserEditProfile")
+          }}
+        >
+          <View className="flex flex-row items-center">
+            <Text className="font-bold text-xl mx-2">
+              Change or Add Pictures!
+            </Text>
+            <FontAwesome6 name="edit" size={24} color="blue" />
+          </View>
+        </Pressable>
+        <PhotoArray profileId={currentUser?.id} />
+      </View>
     </ScrollView>
   )
 }

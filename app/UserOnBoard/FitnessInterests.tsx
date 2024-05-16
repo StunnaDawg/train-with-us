@@ -35,7 +35,7 @@ const FitnessInterests = () => {
       const { error } = await supabase
         .from("profiles")
         .update({
-          activities: [selectedActvities],
+          activities: selectedActvities,
         })
         .eq("id", user?.id)
 

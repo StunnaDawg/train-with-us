@@ -12,9 +12,10 @@ import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCom
 
 type CommunityCardProps = {
   community: Communities
+  addPrimary?: boolean
 }
 
-const CommunityCard = ({ community }: CommunityCardProps) => {
+const CommunityCard = ({ community, addPrimary }: CommunityCardProps) => {
   const navigation = useNavigation<NavigationType>()
   const [loading, setLoading] = useState<boolean>(false)
   const [currentCommunity, setCurrentCommunity] = useState<Communities | null>(
@@ -37,9 +38,11 @@ const CommunityCard = ({ community }: CommunityCardProps) => {
   return (
     <Pressable
       onPress={() => {
-        navigation.navigate("ViewCommunitiesScreen", {
-          communityId: community.id,
-        })
+        addPrimary
+          ? null
+          : navigation.navigate("ViewCommunitiesScreen", {
+              communityId: community.id,
+            })
       }}
     >
       <View className="flex flex-row items-center">
@@ -56,7 +59,6 @@ const CommunityCard = ({ community }: CommunityCardProps) => {
           <Text className="font-bold text-2xl">
             {community.community_title}
           </Text>
-          <Text className="text-xs">10km away</Text>
           <View className="border-b p-3" />
         </View>
       </View>

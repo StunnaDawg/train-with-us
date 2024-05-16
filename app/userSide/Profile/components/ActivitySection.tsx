@@ -11,18 +11,13 @@ const ActivitySection = ({ profile }: ActivitySectionProps) => {
   return (
     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
       <View className="flex flex-row mt-3 ml-2 mr-7">
-        <ActivityTags activity="Yoga" />
-        <ActivityTags activity="Hockey" />
-        <ActivityTags activity="CrossFit" />
-        <ActivityTags activity="BodyBuilding" />
-        <ActivityTags activity="Yoga" />
-        <ActivityTags activity="Hockey" />
-        <ActivityTags activity="CrossFit" />
-        <ActivityTags activity="BodyBuilding" />
-        <ActivityTags activity="Yoga" />
-        <ActivityTags activity="Hockey" />
-        <ActivityTags activity="CrossFit" />
-        <ActivityTags activity="BodyBuilding" />
+        {profile?.activities && profile.activities.length > 0 ? (
+          profile.activities.map((tag) => (
+            <ActivityTags key={tag} activity={`${tag}`} />
+          ))
+        ) : (
+          <Text>No Activities!</Text>
+        )}
       </View>
     </ScrollView>
   )

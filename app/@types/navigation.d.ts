@@ -147,6 +147,10 @@ export type RootStackParamList = {
   CommunityPage: {
     communityId: number
   }
+
+  PrimaryGym: {
+    userProfile: Profile | null
+  }
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

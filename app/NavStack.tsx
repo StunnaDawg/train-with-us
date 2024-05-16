@@ -59,6 +59,7 @@ import OtherHobbies from "./userSide/Profile/AddInfoComponents/OtherHobbies"
 import FitnessBucketList from "./userSide/Profile/AddInfoComponents/FitnessBucketList"
 import FitnessRecords from "./userSide/Profile/AddInfoComponents/FitnessRecords"
 import CommunityPage from "./userSide/UserCommunities/CommunityPage"
+import PrimaryGym from "./userSide/Profile/AddInfoComponents/PrimaryGym"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -203,6 +204,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="EditEvent"
                 component={EditEvent}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="PrimaryGym"
+                component={PrimaryGym}
               />
 
               <Stack.Screen

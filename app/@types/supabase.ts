@@ -206,18 +206,21 @@ export type Database = {
       community_members: {
         Row: {
           community_id: number
+          community_owner: string | null
           joined_at: string
           role: string
           user_id: string
         }
         Insert: {
           community_id: number
+          community_owner?: string | null
           joined_at?: string
           role?: string
           user_id?: string
         }
         Update: {
           community_id?: number
+          community_owner?: string | null
           joined_at?: string
           role?: string
           user_id?: string
@@ -431,7 +434,9 @@ export type Database = {
           onboard: boolean
           photos_url: string[] | null
           pinned_channels: string[] | null
+          primary_gym: number | null
           profile_pic: string | null
+          secondary_gym: number | null
           sexuality: string | null
           username: string | null
         }
@@ -459,7 +464,9 @@ export type Database = {
           onboard?: boolean
           photos_url?: string[] | null
           pinned_channels?: string[] | null
+          primary_gym?: number | null
           profile_pic?: string | null
+          secondary_gym?: number | null
           sexuality?: string | null
           username?: string | null
         }
@@ -487,7 +494,9 @@ export type Database = {
           onboard?: boolean
           photos_url?: string[] | null
           pinned_channels?: string[] | null
+          primary_gym?: number | null
           profile_pic?: string | null
+          secondary_gym?: number | null
           sexuality?: string | null
           username?: string | null
         }
@@ -501,6 +510,18 @@ export type Database = {
           {
             foreignKeyName: "public_profiles_community_created_fkey"
             columns: ["community_created"]
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_profiles_primary_gym_fkey"
+            columns: ["primary_gym"]
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_profiles_secondary_gym_fkey"
+            columns: ["secondary_gym"]
             referencedRelation: "communities"
             referencedColumns: ["id"]
           }

@@ -1,7 +1,6 @@
 import { View, Text, Pressable } from "react-native"
 import React, { useEffect, useState } from "react"
 import SinglePic from "../../../components/SinglePic"
-import { FontAwesome6 } from "@expo/vector-icons"
 import { NavigationType } from "../../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
@@ -16,8 +15,6 @@ type UserProfilePicProps = {
 }
 
 const UserProfilePic = ({ refresh, profile }: UserProfilePicProps) => {
-  const navigation = useNavigation<NavigationType>()
-
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const [profilePic, setProfilePic] = useState<string | null>(null)
   const { user } = useAuth()
@@ -54,16 +51,6 @@ const UserProfilePic = ({ refresh, profile }: UserProfilePicProps) => {
         />
         <View className="flex flex-row justify-center mt-4 items-center">
           <Text className="font-bold text-3xl mx-2">{profile?.first_name}</Text>
-          <Pressable
-            onPress={() => {
-              navigation.navigate("UserEditProfile")
-            }}
-          >
-            <View className="flex flex-row items-center">
-              <Text className="font-bold text-xl mx-2">Change</Text>
-              <FontAwesome6 name="edit" size={24} color="blue" />
-            </View>
-          </Pressable>
         </View>
       </View>
     </View>
