@@ -13,6 +13,7 @@ import getCommunityMembersUUID from "../../supabaseFunctions/getFuncs/getCommuni
 import supabase from "../../../lib/supabase"
 import getProfiles from "../../supabaseFunctions/getFuncs/getProfiles"
 import MemberCard from "../Communities/components/MemberCard"
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 const ManageCommunityMembers = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -49,7 +50,16 @@ const ManageCommunityMembers = () => {
         <ScrollView className=" h-full">
           {!loading ? (
             communityMembers?.map((member) => {
-              return <MemberCard key={member.id} member={member} />
+              return member.first_name ? (
+                <View className="flex flex-row justify-between items-center">
+                  <MemberCard key={member.id} member={member} />
+                  <MaterialCommunityIcons
+                    name="dots-vertical"
+                    size={24}
+                    color="black"
+                  />
+                </View>
+              ) : null
             })
           ) : (
             <ActivityIndicator />
