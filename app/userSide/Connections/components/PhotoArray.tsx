@@ -10,9 +10,12 @@ import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 
 type PhotoArrayProps = {
   profileId: string | null | undefined
+  index1: number
+  index2: number
+  index3: number
 }
 
-const PhotoArray = ({ profileId }: PhotoArrayProps) => {
+const PhotoArray = ({ profileId, index1, index2, index3 }: PhotoArrayProps) => {
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const { user } = useAuth()
@@ -35,7 +38,7 @@ const PhotoArray = ({ profileId }: PhotoArrayProps) => {
             size={150}
             avatarRadius={10}
             noAvatarRadius={10}
-            item={imageFiles?.[0]}
+            item={imageFiles?.[index1]}
           />
         </View>
 
@@ -44,7 +47,7 @@ const PhotoArray = ({ profileId }: PhotoArrayProps) => {
             size={150}
             avatarRadius={10}
             noAvatarRadius={10}
-            item={imageFiles?.[1]}
+            item={imageFiles?.[index2]}
           />
         </View>
         <View className="m-1">
@@ -52,15 +55,7 @@ const PhotoArray = ({ profileId }: PhotoArrayProps) => {
             size={150}
             avatarRadius={10}
             noAvatarRadius={10}
-            item={imageFiles?.[1]}
-          />
-        </View>
-        <View className="m-1">
-          <SinglePic
-            size={150}
-            avatarRadius={10}
-            noAvatarRadius={10}
-            item={imageFiles?.[2]}
+            item={imageFiles?.[index3]}
           />
         </View>
       </ScrollView>

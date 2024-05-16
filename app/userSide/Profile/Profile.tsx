@@ -94,7 +94,18 @@ const ProfileView = () => {
             <FontAwesome6 name="edit" size={24} color="blue" />
           </View>
         </Pressable>
-        <PhotoArray profileId={currentUser?.id} />
+        <PhotoArray
+          index1={0}
+          index2={1}
+          index3={2}
+          profileId={currentUser?.id}
+        />
+        <PhotoArray
+          index1={3}
+          index2={4}
+          index3={5}
+          profileId={currentUser?.id}
+        />
       </View>
     </ScrollView>
   )
