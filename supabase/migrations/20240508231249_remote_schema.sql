@@ -112,4 +112,49 @@ alter table "public"."profiles" add column "hobbies" text[];
 alter table "public"."profiles" add column "music_pref" text[];
 
 
+drop policy "Users can insert their own profile." on "public"."profiles";
 
+alter table "public"."community_members" add column "community_owner" uuid;
+
+alter table "public"."profiles" add column "primary_gym" bigint;
+
+alter table "public"."profiles" add column "secondary_gym" bigint;
+
+alter table "public"."profiles" add constraint "public_profiles_primary_gym_fkey" FOREIGN KEY (primary_gym) REFERENCES communities(id) ON UPDATE CASCADE ON DELETE SET NULL not valid;
+
+alter table "public"."profiles" validate constraint "public_profiles_primary_gym_fkey";
+
+alter table "public"."profiles" add constraint "public_profiles_secondary_gym_fkey" FOREIGN KEY (secondary_gym) REFERENCES communities(id) ON UPDATE CASCADE ON DELETE SET NULL not valid;
+
+alter table "public"."profiles" validate constraint "public_profiles_secondary_gym_fkey";
+
+create policy "Enable insert for authenticated users only"
+on "public"."community_channel_messages"
+as permissive
+for insert
+to authenticated
+with check (true);
+
+
+create policy "Kick User"
+on "public"."community_members"
+as permissive
+for delete
+to public
+using (true);
+
+
+create policy "member update"
+on "public"."community_members"
+as permissive
+for update
+to public
+using (true);
+
+
+create policy "Enable insert for authenticated users only"
+on "public"."profiles"
+as permissive
+for insert
+to authenticated
+with check (true);

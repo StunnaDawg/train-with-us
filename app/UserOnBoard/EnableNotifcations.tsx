@@ -1,20 +1,84 @@
-import { View, Text, SafeAreaView } from "react-native"
-import React from "react"
-import NextButton from "../components/NextButton"
+import { View, Text, SafeAreaView, Alert } from "react-native"
+import React, { useEffect, useState } from "react"
 import GenericButton from "../components/GenericButton"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../@types/navigation"
+import * as Device from "expo-device"
+import * as Notifications from "expo-notifications"
+import Constants from "expo-constants"
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+})
 
 const EnableNotifcations = () => {
   const navigation = useNavigation<NavigationType>()
-  const handleEnableNotifcations = () => {
-    navigation.navigate("Location")
-    console.log("Enable Notifcations")
+
+  const [expoPushToken, setExpoPushToken] = useState<string | null>(null)
+  const [notification, setNotification] = useState<boolean>(false)
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
+
+    // Listen for incoming notifications
+    const subscription = Notifications.addNotificationReceivedListener(() => {
+      setNotification(notification)
+    })
+
+    return () => {
+      // Clean up the subscription
+      Notifications.removeNotificationSubscription(subscription)
+    }
+  }, [])
+
+  // Function to request notification permissions and get the push token
+  const registerForPushNotificationsAsync = async () => {
+    if (Device.isDevice) {
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync()
+      let finalStatus = existingStatus
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync()
+        finalStatus = status
+      }
+      if (finalStatus !== "granted") {
+        Alert.alert("Failed to get push token for push notification!")
+        return null
+      }
+      const token = (await Notifications.getExpoPushTokenAsync()).data
+      return token
+    } else {
+      Alert.alert("Must use physical device for Push Notifications")
+      return null
+    }
   }
 
-  const handleDisableNotifcations = () => {
+  // Function to enable notifications
+  const handleEnableNotifications = async () => {
+    const token = await registerForPushNotificationsAsync()
+    if (token) {
+      setExpoPushToken(token)
+      Alert.alert("Notifications enabled")
+    }
     navigation.navigate("Location")
-    console.log("Disable Notifcations")
+  }
+
+  // Function to disable notifications
+  const handleDisableNotifications = () => {
+    Notifications.getPermissionsAsync().then(({ status }) => {
+      if (status === "granted") {
+        Notifications.deleteNotificationChannelAsync(
+          expoPushToken as any
+        ).catch(() => {})
+        setExpoPushToken(null)
+        Alert.alert("Notifications disabled")
+      }
+    })
+    navigation.navigate("Location")
   }
   return (
     <SafeAreaView className="flex-1">
@@ -30,7 +94,7 @@ const EnableNotifcations = () => {
               <GenericButton
                 roundness="rounded-xl"
                 text="Enable Notifications"
-                buttonFunction={handleEnableNotifcations}
+                buttonFunction={() => handleEnableNotifications()}
                 textSize="text-lg"
                 width={200}
                 colourPressed="bg-blue-200"
@@ -43,7 +107,7 @@ const EnableNotifcations = () => {
               <GenericButton
                 roundness="rounded-xl"
                 text="Disable Notifications"
-                buttonFunction={handleDisableNotifcations}
+                buttonFunction={() => handleDisableNotifications()}
                 textSize="text-lg"
                 width={200}
                 colourPressed="bg-gray-200"

@@ -23,7 +23,7 @@ const NavBar = () => {
           Train With Us
         </Text>
         <Pressable onPress={() => handleSignOut()}>
-          <FontAwesome6 name="user-gear" size={20} color="black" />
+          <Text>Log out</Text>
         </Pressable>
       </SafeAreaView>
     </>
