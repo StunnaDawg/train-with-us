@@ -33,6 +33,14 @@ const Events = () => {
     getUser()
   }, [])
 
+  useEffect(() => {
+    const getUser = async () => {
+      if (!user) return
+      await useCurrentUser(user?.id, setUserProfile)
+    }
+    getUser()
+  }, [refreshing])
+
   return (
     <ScrollView
       className="bg-yellow-300/90"
@@ -54,15 +62,15 @@ const Events = () => {
         </Pressable>
       </View> */}
       <View>
-        <JustAdded />
+        <JustAdded refreshing={refreshing} />
       </View>
 
       <View>
-        <Upcoming />
+        <Upcoming refreshing={refreshing} />
       </View>
 
       <View>
-        <AllEvents />
+        <AllEvents refreshing={refreshing} />
       </View>
     </ScrollView>
   )

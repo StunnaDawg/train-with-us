@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native"
+import { View, Text, Pressable, Alert } from "react-native"
 import React, { useEffect, useState } from "react"
 import WhiteSkinnyButton from "../../../components/WhiteSkinnyButton"
 import { Communities, Profile } from "../../../@types/supabaseTypes"
@@ -17,10 +17,24 @@ const ViewCommunityTitle = ({
   community,
   communityId,
 }: ViewCommunityTitleProps) => {
+  const [requestSent, setRequestSent] = useState<boolean>(false)
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null)
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
 
+  const showAlert = () =>
+    Alert.alert(
+      "Request Sent",
+      "The Community Owner will review your request",
+      [{ text: "OK" }]
+    )
+
+  const showErrorAlert = () =>
+    Alert.alert(
+      "User not Authenticated",
+      "Please Check your Connection and try again. Or Check for any missing information.",
+      [{ text: "OK" }]
+    )
   useEffect(() => {
     if (!user) return
     useCurrentUser(user?.id, setCurrentProfile)
@@ -46,12 +60,21 @@ const ViewCommunityTitle = ({
         </Pressable>
         <View>
           <WhiteSkinnyButton
-            text="+ Request to Join"
-            buttonFunction={() => {
+            text={requestSent ? `Request Sent ` : `+ Request to Join`}
+            buttonFunction={async () => {
               console.log("user?.id", user?.id)
-              if (user?.id === undefined || !currentProfile?.first_name) return
+              if (user?.id === undefined || !currentProfile?.first_name) {
+                showErrorAlert()
+                return
+              }
 
-              requestToJoin(communityId, user?.id, currentProfile?.first_name)
+              await requestToJoin(
+                communityId,
+                user?.id,
+                currentProfile?.first_name
+              )
+              showAlert()
+              setRequestSent(true)
             }}
           />
         </View>

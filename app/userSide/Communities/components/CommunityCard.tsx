@@ -46,7 +46,7 @@ const CommunityCard = ({ community }: CommunityCardProps) => {
         <View className="m-2">
           <SinglePic
             size={90}
-            item={imageFiles?.[0]}
+            item={community.community_profile_pic}
             avatarRadius={100}
             noAvatarRadius={100}
           />

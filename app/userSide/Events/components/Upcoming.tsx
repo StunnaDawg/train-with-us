@@ -4,12 +4,20 @@ import EventCard from "./EventCard"
 import { Events } from "../../../@types/supabaseTypes"
 import getUpcomingEvents from "../../../supabaseFunctions/getFuncs/getUpcomingEvents"
 
-const Upcoming = () => {
+type RefreshProp = {
+  refreshing?: boolean
+}
+
+const Upcoming = ({ refreshing }: RefreshProp) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [upcomingEvents, setUpcomingEvents] = useState<Events[] | null>([])
   useEffect(() => {
     getUpcomingEvents(setLoading, setUpcomingEvents, 10)
   }, [])
+
+  useEffect(() => {
+    getUpcomingEvents(setLoading, setUpcomingEvents, 10)
+  }, [refreshing])
   return (
     <View className="flex flex-col m-5">
       <Text className="text-2xl font-bold m-1">Upcoming</Text>

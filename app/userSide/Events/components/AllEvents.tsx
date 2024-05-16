@@ -10,7 +10,9 @@ import EventCard from "./EventCard"
 import { Events } from "../../../@types/supabaseTypes"
 import getAllEvents from "../../../supabaseFunctions/getFuncs/getAllEvents"
 
-const AllEvents = () => {
+type RefreshProp = { refreshing?: boolean }
+
+const AllEvents = ({ refreshing }: RefreshProp) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [allEvents, setAllEvents] = useState<Events[] | null>([])
   useEffect(() => {
