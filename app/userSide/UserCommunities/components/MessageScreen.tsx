@@ -23,6 +23,7 @@ import { useAuth } from "../../../supabaseFunctions/authcontext"
 import sendMessage from "../../../supabaseFunctions/addFuncs/sendMessage"
 import supabase from "../../../../lib/supabase"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
+import sendNotification from "../../../utilFunctions/sendNotification"
 
 type UserMessage = {
   message: string | null
@@ -109,6 +110,12 @@ const MessageScreen = () => {
     }
     sendMessage(messageToSend, user?.id, chatSession.id)
     setMessageToSend("")
+    if (!currentUser?.expo_push_token) return
+    sendNotification(
+      currentUser?.expo_push_token,
+      "Message from " + currentUser?.first_name,
+      messageToSend
+    )
   }
 
   useEffect(() => {

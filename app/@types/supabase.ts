@@ -420,6 +420,7 @@ export type Database = {
           community_preference: string[] | null
           connected_users: string[] | null
           created_at: string | null
+          expo_push_token: string | null
           first_name: string | null
           fitness_goals: string[] | null
           fitness_lvl: string | null
@@ -450,6 +451,7 @@ export type Database = {
           community_preference?: string[] | null
           connected_users?: string[] | null
           created_at?: string | null
+          expo_push_token?: string | null
           first_name?: string | null
           fitness_goals?: string[] | null
           fitness_lvl?: string | null
@@ -480,6 +482,7 @@ export type Database = {
           community_preference?: string[] | null
           connected_users?: string[] | null
           created_at?: string | null
+          expo_push_token?: string | null
           first_name?: string | null
           fitness_goals?: string[] | null
           fitness_lvl?: string | null
@@ -523,6 +526,28 @@ export type Database = {
             foreignKeyName: "public_profiles_secondary_gym_fkey"
             columns: ["secondary_gym"]
             referencedRelation: "communities"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      user_tokens: {
+        Row: {
+          id: string
+          user_token: string
+        }
+        Insert: {
+          id?: string
+          user_token: string
+        }
+        Update: {
+          id?: string
+          user_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_user_tokens_id_fkey"
+            columns: ["id"]
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]

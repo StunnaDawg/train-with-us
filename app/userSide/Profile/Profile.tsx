@@ -16,6 +16,7 @@ import MyEventsButton from "../../components/MyEventsButton"
 import PhotoArray from "../Connections/components/PhotoArray"
 import { FontAwesome6 } from "@expo/vector-icons"
 import returnCommunityName from "../../utilFunctions/returnCommunityName"
+import sendNotification from "../../utilFunctions/sendNotification"
 
 const ProfileView = () => {
   const { user } = useAuth()
@@ -89,6 +90,23 @@ const ProfileView = () => {
               navigation.navigate("AddMoreUserInfo", {
                 userProfile: currentUser,
               })
+            }
+          }}
+        />
+      </View>
+
+      <View className="flex flex-row justify-center mt-3">
+        <WhiteSkinnyButton
+          textSize="text-xl"
+          width={200}
+          text="Test notifications"
+          buttonFunction={() => {
+            if (currentUser && currentUser.expo_push_token) {
+              sendNotification(
+                currentUser.expo_push_token,
+                "Test Notification",
+                "This is a test notification"
+              )
             }
           }}
         />
