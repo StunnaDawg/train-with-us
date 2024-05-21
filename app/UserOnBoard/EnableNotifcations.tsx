@@ -65,8 +65,8 @@ const EnableNotifcations = () => {
     // Adjust this to get the current user ID
     if (user?.id) {
       const { error } = await supabase
-        .from("user_tokens")
-        .upsert({ id: user.id, push_token: token })
+        .from("profiles")
+        .upsert({ id: user.id, expo_push_token: token })
       if (error) {
         console.error("Error saving push token:", error)
         Alert.alert("Error saving push token")

@@ -7,6 +7,8 @@ import { useAuth } from "../../supabaseFunctions/authcontext"
 import { NavigationType } from "../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import * as ImagePicker from "expo-image-picker"
+import { add } from "date-fns"
+import supabase from "../../../lib/supabase"
 
 const CreateCommunity = () => {
   const { user } = useAuth()
@@ -18,15 +20,26 @@ const CreateCommunity = () => {
   const [loading, setLoading] = useState(false)
   const navigation = useNavigation<NavigationType>()
 
-  const createCommunity = () => {
+  const addNewCommunityToUser = async (communityId: string) => {
+    const { error } = await supabase.from("profiles").upsert({
+      id: user?.id,
+      community_created: communityId,
+    })
+
+    if (error) throw error
+  }
+
+  const createCommunity = async () => {
     if (user === null) return
-    addNewCommunity(
+    const id = await addNewCommunity(
       setLoading,
       communityProfilePic,
       communityName,
       user!.id,
       communityStyle
     )
+
+    await addNewCommunityToUser(id)
     navigation.goBack()
   }
 
@@ -68,7 +81,12 @@ const CreateCommunity = () => {
         </View>
       </View>
       <View className="flex flex-row justify-center my-2">
-        <BasicButton text="Create Community" buttonFunction={createCommunity} />
+        <BasicButton
+          text="Create Community"
+          buttonFunction={async () => {
+            await createCommunity()
+          }}
+        />
       </View>
     </SafeAreaView>
   )

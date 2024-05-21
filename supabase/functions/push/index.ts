@@ -7,26 +7,28 @@
 
 console.log("Hello from Functions!")
 
-Deno.serve(async (req, token: string) => {
-  const expoPushToken = token
+Deno.serve(
+  async (req, token: string, titleWords: string, bodyWords: string) => {
+    const expoPushToken = token
 
-  const res = await fetch("https://exp.host/--/api/v2/push/send", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${Deno.env.get("EXPO_PUSH_TOKEN")}`,
-    },
-    body: JSON.stringify({
-      to: expoPushToken,
-      title: "Hello",
-      body: "World",
-    }),
-  }).then((res) => res.json())
+    const res = await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Deno.env.get("EXPO_PUSH_TOKEN")}`,
+      },
+      body: JSON.stringify({
+        to: expoPushToken,
+        title: titleWords,
+        body: bodyWords,
+      }),
+    }).then((res) => res.json())
 
-  return new Response(JSON.stringify(res), {
-    headers: { "Content-Type": "application/json" },
-  })
-})
+    return new Response(JSON.stringify(res), {
+      headers: { "Content-Type": "application/json" },
+    })
+  }
+)
 
 /* To invoke locally:
 

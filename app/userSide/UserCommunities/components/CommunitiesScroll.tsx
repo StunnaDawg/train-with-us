@@ -62,6 +62,8 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
 
         <Pressable
           onPress={() => {
+            console.log("pressed")
+            console.log(currentUser?.community_created)
             if (!currentUser?.community_created) return
             navigation.navigate("MyCommunityHome", {
               communityId: currentUser?.community_created,

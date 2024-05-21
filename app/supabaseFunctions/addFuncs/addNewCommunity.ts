@@ -24,19 +24,23 @@ const addNewCommunity = async (
       contentType: contentType,
     })
 
-    const { error } = await supabase.from("communities").insert([
-      {
-        community_title: communityName,
-        community_owner: communityOwner,
-        created_at: new Date(),
-        community_style: communityStyle,
-        community_photos: [filePath],
-        community_profile_pic: filePath,
-      },
-    ])
+    const { data: community, error } = await supabase
+      .from("communities")
+      .insert([
+        {
+          community_title: communityName,
+          community_owner: communityOwner,
+          created_at: new Date(),
+          community_style: communityStyle,
+          community_photos: [filePath],
+          community_profile_pic: filePath,
+        },
+      ])
+      .select("id")
 
     if (error) throw error
-    console.log("Community added")
+    const communtiyId = community![0].id
+    return communtiyId
   } catch (error) {
     console.log(error)
   } finally {
