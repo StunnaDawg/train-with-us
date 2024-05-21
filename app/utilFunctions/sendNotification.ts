@@ -1,7 +1,7 @@
 import supabase from "../../lib/supabase"
 
 const sendNotification = async (token: string, title: string, body: string) => {
-  const { data, error } = await supabase.functions.invoke("sendNotification", {
+  const { data, error } = await supabase.functions.invoke("push", {
     body: {
       token,
       titleWords: title,

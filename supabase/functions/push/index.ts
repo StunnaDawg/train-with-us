@@ -2,7 +2,7 @@
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
 
-// Setup type definitions for built-in Supabase Runtime APIs
+// Setup type definitions"for built-in Supabase Runtime APIs
 /// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
 
 console.log("Hello from Functions!")
@@ -10,12 +10,18 @@ console.log("Hello from Functions!")
 Deno.serve(async (req) => {
   const { token, titleWords, bodyWords } = await req.json()
   const expoPushToken = token
+  const expoAccessToken = Deno.env.get("EXPO_ACCESS_TOKEN")
+
+  if (!expoAccessToken) {
+    console.error("EXPO_ACCESS_TOKEN is not defined")
+    return new Response("EXPO_ACCESS_TOKEN is not defined", { status: 500 })
+  }
 
   const res = await fetch("https://exp.host/--/api/v2/push/send", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${Deno.env.get("EXPO_PUSH_TOKEN")}`,
+      Authorization: `Bearer ${expoAccessToken} `,
     },
     body: JSON.stringify({
       to: expoPushToken,
