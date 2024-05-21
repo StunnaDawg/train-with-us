@@ -14,9 +14,10 @@
         "simulator": true
       }
     },
-    "production": {}
-  },
-  "submit": {
-    "production": {}
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_SUPAURL": "https://rfkabunqcmmsoqijcrhp.supabase.co"
+      }
+    }
   }
 }

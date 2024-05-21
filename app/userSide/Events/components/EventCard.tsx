@@ -12,6 +12,7 @@ import { NavigationType } from "../../../@types/navigation"
 import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
 import { Communities } from "../../../@types/supabaseTypes"
 import supabase from "../../../../lib/supabase"
+import formatBirthdate from "../../../utilFunctions/calculateDOB"
 
 type EventCardProps = {
   eventId: number
@@ -125,7 +126,7 @@ const EventCard = ({
             {title}
           </Text>
           <Text className="text-sm" style={styles.text}>
-            {date}
+            {formatBirthdate(date)}
           </Text>
         </View>
       </ImageBackground>

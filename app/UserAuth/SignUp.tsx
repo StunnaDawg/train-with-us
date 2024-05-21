@@ -55,7 +55,7 @@ const SignUp = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-yellow-300">
+    <SafeAreaView className="flex-1" style={{ backgroundColor: "#07182d" }}>
       <KeyboardAvoidingView className="flex flex-row justify-center">
         <View className="flex-1 mx-10">
           <View className="items-center">
@@ -63,12 +63,15 @@ const SignUp = () => {
               source={require("./TWU-Logo.png")}
               style={{ width: 300, height: 300 }}
             />
-            <Text className="font-bold text-3xl">Train With Us</Text>
-            <Text className="font-semibold text-xl">Beyond Fitness</Text>
+            <Text className="font-bold text-3xl text-white">Train With Us</Text>
+            <Text className="font-semibold text-xl text-white">
+              Beyond Fitness
+            </Text>
           </View>
           <View className="border-b py-2">
             <TextInput
-              className="w-full text-xl font-bold px-2"
+              placeholderTextColor={"white"}
+              className="w-full text-xl font-bold px-2 text-white"
               onChangeText={(text: string) => setEmail(text)}
               value={email}
               placeholder="email@address.com"
@@ -77,7 +80,8 @@ const SignUp = () => {
           </View>
           <View className="border-b py-2">
             <TextInput
-              className="w-full text-xl font-bold px-2"
+              placeholderTextColor={"white"}
+              className="w-full text-xl font-bold px-2 text-white"
               onChangeText={(text: string) => setPassword(text)}
               value={password}
               secureTextEntry={true}
@@ -95,7 +99,7 @@ const SignUp = () => {
 
           <View className="items-center">
             <Pressable onPress={() => navigation.navigate("Login")}>
-              <Text className="font-bold text-xl">
+              <Text className="font-bold text-white text-xl">
                 Already Have An Account?
               </Text>
             </Pressable>

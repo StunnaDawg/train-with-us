@@ -37,7 +37,7 @@ const MessageCard = ({ otherUserId }: MessageCardProps) => {
         <Text className="font-bold mb-1">
           {!profile ? null : profile.first_name}
         </Text>
-        <Text className="text-sm">Hey, how are you?</Text>
+        {/* <Text className="text-sm">Hey, how are you?</Text> */}
       </View>
     </View>
   )

@@ -6,6 +6,9 @@ import { NavigationType } from "../@types/navigation"
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
 import Constants from "expo-constants"
+import supabase from "../../lib/supabase"
+import { useAuth } from "../supabaseFunctions/authcontext"
+import { id } from "date-fns/locale"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -16,6 +19,7 @@ Notifications.setNotificationHandler({
 })
 
 const EnableNotifcations = () => {
+  const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
 
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null)
@@ -57,11 +61,27 @@ const EnableNotifcations = () => {
     }
   }
 
+  const savePushToken = async (token: string) => {
+    // Adjust this to get the current user ID
+    if (user?.id) {
+      const { error } = await supabase
+        .from("user_tokens")
+        .upsert({ id: user.id, push_token: token })
+      if (error) {
+        console.error("Error saving push token:", error)
+        Alert.alert("Error saving push token")
+      }
+    } else {
+      Alert.alert("User not logged in")
+    }
+  }
+
   // Function to enable notifications
   const handleEnableNotifications = async () => {
     const token = await registerForPushNotificationsAsync()
     if (token) {
       setExpoPushToken(token)
+      savePushToken(token)
       Alert.alert("Notifications enabled")
     }
     navigation.navigate("Location")
@@ -78,6 +98,10 @@ const EnableNotifcations = () => {
         Alert.alert("Notifications disabled")
       }
     })
+    navigation.navigate("Location")
+  }
+
+  const skip = () => {
     navigation.navigate("Location")
   }
   return (
@@ -107,6 +131,20 @@ const EnableNotifcations = () => {
               <GenericButton
                 roundness="rounded-xl"
                 text="Disable Notifications"
+                buttonFunction={() => skip()}
+                textSize="text-lg"
+                width={200}
+                colourPressed="bg-gray-200"
+                colourDefault="bg-white"
+                borderColourPressed="border-gray-200"
+                borderColourDefault="border-black"
+              />
+            </View>
+
+            <View>
+              <GenericButton
+                roundness="rounded-xl"
+                text="Skip"
                 buttonFunction={() => handleDisableNotifications()}
                 textSize="text-lg"
                 width={200}
