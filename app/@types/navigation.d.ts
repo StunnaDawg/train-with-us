@@ -153,6 +153,10 @@ export type RootStackParamList = {
   }
 
   AllEventsPage: undefined
+
+  SearchCommunities: undefined
+
+  SearchUsers: undefined
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

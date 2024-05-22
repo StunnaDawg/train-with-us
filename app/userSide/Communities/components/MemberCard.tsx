@@ -48,7 +48,9 @@ const MemberCard = ({ member }: MemberCardProps) => {
           noAvatarRadius={100}
         />
         <Text className=" mx-4 font-semibold text-black text-xl">
-          {member.first_name}
+          {member.last_name
+            ? [member.first_name, member?.last_name].join(" ")
+            : member.first_name}
           <Text className="text-lg">{role ? ` - ${role}` : ""}</Text>
         </Text>
       </View>

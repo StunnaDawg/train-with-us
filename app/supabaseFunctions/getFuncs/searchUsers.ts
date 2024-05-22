@@ -4,7 +4,7 @@ import { Profile } from "../../@types/supabaseTypes"
 
 const searchUsersFunction = async (
   search: string,
-  setProfiles: Dispatch<SetStateAction<Profile[]>>,
+  setProfiles: Dispatch<SetStateAction<Profile[] | null>>,
   setLoading: Dispatch<SetStateAction<boolean>>
 ) => {
   try {
@@ -12,7 +12,7 @@ const searchUsersFunction = async (
     const { data, error } = await supabase
       .from("profiles")
       .select()
-      .textSearch("firstName_lastName", search)
+      .ilike("first_name || ' ' || last_name", `%${search}%`)
 
     if (error) throw error
 

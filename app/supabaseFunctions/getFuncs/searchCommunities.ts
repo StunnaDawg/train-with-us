@@ -4,7 +4,7 @@ import { Communities } from "../../@types/supabaseTypes"
 
 const searchCommuntiesFunction = async (
   search: string,
-  setCommunities: Dispatch<SetStateAction<Communities[]>>,
+  setCommunities: Dispatch<SetStateAction<Communities[] | null>>,
   setLoading: Dispatch<SetStateAction<boolean>>
 ) => {
   try {
@@ -12,7 +12,7 @@ const searchCommuntiesFunction = async (
     const { data, error } = await supabase
       .from("communities")
       .select()
-      .textSearch("community_title", search)
+      .ilike("community_title", `%${search}%`)
 
     if (error) throw error
 

@@ -61,6 +61,8 @@ import FitnessRecords from "./userSide/Profile/AddInfoComponents/FitnessRecords"
 import CommunityPage from "./userSide/UserCommunities/CommunityPage"
 import PrimaryGym from "./userSide/Profile/AddInfoComponents/PrimaryGym"
 import ViewAllEvents from "./userSide/Events/ViewAllEvents"
+import SearchCommunities from "./userSide/Communities/SearchCommunities"
+import SearchUsers from "./userSide/Connections/SearchUsers"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -221,6 +223,12 @@ const NavStack = () => {
 
               <Stack.Screen
                 options={{ headerShown: false }}
+                name="SearchUsers"
+                component={SearchUsers}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
                 name="FitnessBucketList"
                 component={FitnessBucketList}
               />
@@ -229,6 +237,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="FitnessGoals"
                 component={FitnessGoals}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="SearchCommunities"
+                component={SearchCommunities}
               />
 
               <Stack.Screen

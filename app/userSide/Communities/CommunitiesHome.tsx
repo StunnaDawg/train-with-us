@@ -4,6 +4,7 @@ import {
   ScrollView,
   RefreshControl,
   ActivityIndicator,
+  Pressable,
 } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import { useIsFocused, useNavigation } from "@react-navigation/native"
@@ -12,13 +13,13 @@ import { NavigationType } from "../../@types/navigation"
 import getAllCommunities from "../../supabaseFunctions/getFuncs/getAllCommunities"
 import { Communities } from "../../@types/supabaseTypes"
 import CommunityCard from "./components/CommunityCard"
+import { FontAwesome6 } from "@expo/vector-icons"
 
 const CommunitiesHome = () => {
   const [communities, setCommunities] = useState<Communities[] | null>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const navigation = useNavigation<NavigationType>()
-  const currentUser = supabase.auth.getUser()
   const isFocused = useIsFocused()
 
   const onRefresh = useCallback(() => {
@@ -30,7 +31,7 @@ const CommunitiesHome = () => {
 
   useEffect(() => {
     getAllCommunities(setLoading, setCommunities)
-  }, [])
+  }, [isFocused])
 
   useEffect(() => {
     getAllCommunities(setLoading, setCommunities)
@@ -38,8 +39,18 @@ const CommunitiesHome = () => {
 
   return (
     <>
-      <View className="m-6">
-        <Text className="text-2xl font-bold">Communites</Text>
+      <View className="flex flex-row justify-between m-6 items-center">
+        <View>
+          <Text className="text-2xl font-bold">Communites</Text>
+        </View>
+
+        <Pressable
+          onPress={() => {
+            navigation.navigate("SearchCommunities")
+          }}
+        >
+          <FontAwesome6 name="magnifying-glass" size={24} color="black" />
+        </Pressable>
       </View>
       <ScrollView
         refreshControl={

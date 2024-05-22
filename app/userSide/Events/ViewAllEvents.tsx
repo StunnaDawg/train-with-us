@@ -11,7 +11,6 @@ import { Events } from "../../@types/supabaseTypes"
 import getAllEvents from "../../supabaseFunctions/getFuncs/getAllEvents"
 import { ScrollView } from "react-native-gesture-handler"
 import SearchBar from "./components/SearchBar"
-import { set } from "date-fns"
 import searchEventsFunction from "../../supabaseFunctions/getFuncs/searchEventsFunction"
 
 const ViewAllEvents = () => {
@@ -19,13 +18,19 @@ const ViewAllEvents = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [allEvents, setAllEvents] = useState<Events[] | null>([])
   useEffect(() => {
-    getAllEvents(setLoading, setAllEvents, 10)
+    getAllEvents(setLoading, setAllEvents, 30)
   }, [])
 
   const handleSearch = (text: string) => {
     setSearchText(text)
     searchEventsFunction(text, setAllEvents, setLoading)
   }
+
+  useEffect(() => {
+    if (searchText === "") {
+      getAllEvents(setLoading, setAllEvents, 30)
+    }
+  }, [searchText])
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
       <View>
@@ -62,7 +67,9 @@ const ViewAllEvents = () => {
                 )
               )
             ) : (
-              <Text>No upcoming events</Text>
+              <Text className="text-white">
+                No search results for {searchText}
+              </Text>
             )}
           </View>
         </ScrollView>

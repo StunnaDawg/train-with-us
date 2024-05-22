@@ -1,4 +1,10 @@
-import { RefreshControl, Text } from "react-native"
+import {
+  Pressable,
+  RefreshControl,
+  SafeAreaView,
+  Text,
+  View,
+} from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import ConnectionsCard from "./components/ConnectionsCard"
 import { Profile } from "../../@types/supabaseTypes"
@@ -14,17 +20,16 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated"
-import { Gesture, GestureDetector } from "react-native-gesture-handler"
-import { he } from "date-fns/locale"
+import { NavigationType } from "../../@types/navigation"
+import { useNavigation } from "@react-navigation/native"
+import { FontAwesome6 } from "@expo/vector-icons"
 
 const Connections = () => {
   const { user } = useAuth()
   const [loading, setLoading] = useState<boolean>(false)
   const [newConnection, setNewConnection] = useState<boolean>(false)
   const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
-  const [refreshing, setRefreshing] = useState<boolean>(false)
-  const [lastIndex, setLastIndex] = useState(0)
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const navigation = useNavigation<NavigationType>()
   const cardHeight = 750
   const scrollEnabled = useSharedValue(true)
   const translationY = useSharedValue(0)
@@ -81,29 +86,40 @@ const Connections = () => {
   }, [connectionProfiles])
 
   return (
-    <Animated.ScrollView
-      showsVerticalScrollIndicator={false}
-      onScroll={scrollHandler}
-      scrollEventThrottle={16}
-      snapToInterval={cardHeight} // Optional, native snapping to help with alignment
-      decelerationRate="fast"
-    >
-      {loading ? (
-        <Text>Loading...</Text>
-      ) : (
-        connectionProfiles.map((profile, index) => (
-          <ConnectionsCard
-            key={index}
-            setLoading={setNewConnection}
-            loading={newConnection}
-            profile={profile}
-          />
-        ))
-      )}
-      {connectionProfiles.length === 0 && !loading && (
-        <Text>No Users at the Moment!</Text>
-      )}
-    </Animated.ScrollView>
+    <SafeAreaView>
+      <View className="flex flex-row justify-end mx-2">
+        <Pressable
+          className="flex flex-row items-center"
+          onPress={() => navigation.navigate("SearchUsers")}
+        >
+          <Text className="mx-2 text-xl font-bold">Search Users</Text>
+          <FontAwesome6 name="arrow-right" size={24} color="black" />
+        </Pressable>
+      </View>
+      <Animated.ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
+        snapToInterval={cardHeight} // Optional, native snapping to help with alignment
+        decelerationRate="fast"
+      >
+        {loading ? (
+          <Text>Loading...</Text>
+        ) : (
+          connectionProfiles.map((profile, index) => (
+            <ConnectionsCard
+              key={index}
+              setLoading={setNewConnection}
+              loading={newConnection}
+              profile={profile}
+            />
+          ))
+        )}
+        {connectionProfiles.length === 0 && !loading && (
+          <Text>No Users at the Moment!</Text>
+        )}
+      </Animated.ScrollView>
+    </SafeAreaView>
   )
 }
 
