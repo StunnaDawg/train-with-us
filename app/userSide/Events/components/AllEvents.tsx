@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   Pressable,
+  SafeAreaView,
   ScrollView,
   Text,
   View,
@@ -9,12 +10,16 @@ import React, { useEffect, useState } from "react"
 import EventCard from "./EventCard"
 import { Events } from "../../../@types/supabaseTypes"
 import getAllEvents from "../../../supabaseFunctions/getFuncs/getAllEvents"
+import { NavigationType } from "../../../@types/navigation"
+import { useNavigation } from "@react-navigation/native"
 
 type RefreshProp = { refreshing?: boolean }
 
 const AllEvents = ({ refreshing }: RefreshProp) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [allEvents, setAllEvents] = useState<Events[] | null>([])
+  const navigation = useNavigation<NavigationType>()
+
   useEffect(() => {
     getAllEvents(setLoading, setAllEvents, 10)
   }, [])
@@ -22,11 +27,15 @@ const AllEvents = ({ refreshing }: RefreshProp) => {
     <View className="flex flex-col m-5">
       <View className="flex flex-row items-center justify-between">
         <Text className="text-2xl font-bold m-1 text-white ">All Events</Text>
-        <Pressable>
-          <Text className="underline">View All</Text>
+        <Pressable onPress={() => navigation.navigate("AllEventsPage")}>
+          <Text className="text-white underline">View All</Text>
         </Pressable>
       </View>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+      <ScrollView
+        className="h-96"
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+      >
         {loading ? (
           <ActivityIndicator />
         ) : allEvents && allEvents?.length > 0 ? (

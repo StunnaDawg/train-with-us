@@ -4,15 +4,15 @@ import { Events } from "../../@types/supabaseTypes"
 
 const searchEventsFunction = async (
   search: string,
-  setEvents: Dispatch<SetStateAction<Events[]>>,
+  setEvents: Dispatch<SetStateAction<Events[] | null>>,
   setLoading: Dispatch<SetStateAction<boolean>>
 ) => {
   try {
     setLoading(true)
     const { data, error } = await supabase
       .from("events")
-      .select()
-      .textSearch("event_title", search)
+      .select("*")
+      .ilike("event_title", `%${search}%`)
 
     if (error) throw error
 

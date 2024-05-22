@@ -151,6 +151,8 @@ export type RootStackParamList = {
   PrimaryGym: {
     userProfile: Profile | null
   }
+
+  AllEventsPage: undefined
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>
