@@ -16,6 +16,7 @@ import getCommunityRequests from "../../supabaseFunctions/getFuncs/getCommunityR
 import acceptRequest from "../../supabaseFunctions/addFuncs/acceptRequest"
 import denyRequest from "../../supabaseFunctions/addFuncs/denyRequest"
 import showAlert from "../../utilFunctions/showAlert"
+import { set } from "date-fns"
 
 const CommunityRequestsPage = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -28,8 +29,33 @@ const CommunityRequestsPage = () => {
   const communityId = route.params.communityId
   const navigation = useNavigation<NavigationType>()
 
+  const acceptRequestFunc = async (request: CommunityRequests) => {
+    try {
+      setLoading(true)
+      if (request.user_id && request.requested_community && request.id)
+        acceptRequest(
+          setLoading,
+          request.user_id,
+          request.requested_community,
+          request.id
+        )
+      showAlert({
+        title: "Request Accepted",
+        message: "User has been added to the community",
+      })
+      setTimeout(() => {
+        getCommunityRequests(setLoading, communityId, setCommunityRequests)
+      }, 500)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const onRefresh = useCallback(() => {
     setRefreshing(true)
+    getCommunityRequests(setLoading, communityId, setCommunityRequests)
     setTimeout(() => {
       setRefreshing(false)
     }, 2000)
@@ -52,13 +78,19 @@ const CommunityRequestsPage = () => {
           <ActivityIndicator />
         ) : communityRequests && communityRequests?.length > 0 ? (
           communityRequests?.map((request) => (
-            <View className="flex flex-row justify-between mx-5">
+            <View
+              key={request.id}
+              className="flex flex-row justify-between mx-5"
+            >
               <Pressable
-                onPress={() => {
-                  if (request.user_id)
+                onPress={async () => {
+                  if (request.user_id !== null) {
                     navigation.navigate("ViewRequestProfile", {
                       userId: request.user_id,
                     })
+                  } else {
+                    showAlert({ title: "Error", message: "User not found" })
+                  }
                 }}
                 className="flex flex-row items-center"
                 key={request.user_id}
@@ -70,28 +102,8 @@ const CommunityRequestsPage = () => {
               </Pressable>
               <View className="flex flex-row ">
                 <Pressable
-                  onPress={() => {
-                    if (
-                      request.user_id &&
-                      request.requested_community &&
-                      request.id
-                    )
-                      acceptRequest(
-                        setLoading,
-                        request.user_id,
-                        request.requested_community,
-                        request.id
-                      )
-                    showAlert({
-                      title: "Request Accepted",
-                      message: "User has been added to the community",
-                    })
-
-                    getCommunityRequests(
-                      setLoading,
-                      communityId,
-                      setCommunityRequests
-                    )
+                  onPress={async () => {
+                    await acceptRequestFunc(request)
                   }}
                   className="mx-5"
                 >

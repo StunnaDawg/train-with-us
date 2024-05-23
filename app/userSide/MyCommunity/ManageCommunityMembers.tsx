@@ -16,6 +16,8 @@ import supabase from "../../../lib/supabase"
 import getProfiles from "../../supabaseFunctions/getFuncs/getProfiles"
 import MemberCard from "../Communities/components/MemberCard"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { set } from "date-fns"
+import showAlert from "../../utilFunctions/showAlert"
 
 const ManageCommunityMembers = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -28,11 +30,16 @@ const ManageCommunityMembers = () => {
   const route = useRoute<RouteProp<RootStackParamList, "MyCommunityMembers">>()
   const communityId = route.params.communityId
 
-  const showAlert = (userId: string) => {
+  const showAlertOptions = (userId: string) => {
     Alert.alert(
       "Choose an Option",
       "Select an action to perform:",
       [
+        {
+          text: "cancel",
+
+          style: "cancel",
+        },
         {
           text: "Upgrade User to Coach",
           onPress: () => {
@@ -49,11 +56,15 @@ const ManageCommunityMembers = () => {
           text: "Kick User",
           onPress: () => {
             kickUser(userId),
-              getCommunityMembersUUID(
-                setLoading,
-                communityId,
-                setCommunityMemberUUIDs
-              )
+              setTimeout(() => {
+                setLoading(true),
+                  getCommunityMembersUUID(
+                    setLoading,
+                    communityId,
+                    setCommunityMemberUUIDs
+                  )
+                setLoading(false)
+              }, 500)
           },
           style: "destructive",
         },
@@ -69,9 +80,11 @@ const ManageCommunityMembers = () => {
       .eq("user_id", userId)
     if (error) {
       console.log("error", error)
-    } else {
-      console.log("data", data)
+      showAlert({ title: "Error", message: "Error Updating User Role" })
+      throw error
     }
+    console.log("data", data)
+    showAlert({ title: "Success", message: "User has been Upgraded to Coach" })
   }
 
   const kickUser = async (userId: string) => {
@@ -81,9 +94,11 @@ const ManageCommunityMembers = () => {
       .eq("user_id", userId)
     if (error) {
       console.log("error", error)
-    } else {
-      console.log("data", data)
+      showAlert({ title: "Error", message: "Error Kicking User" })
+      throw error
     }
+    console.log("data", data)
+    showAlert({ title: "User Kicked", message: "User has been kicked" })
   }
 
   useEffect(() => {
@@ -109,7 +124,7 @@ const ManageCommunityMembers = () => {
               return member.first_name ? (
                 <View className="flex flex-row justify-between items-center">
                   <MemberCard key={member.id} member={member} />
-                  <Pressable onPress={() => showAlert(member.id)}>
+                  <Pressable onPress={() => showAlertOptions(member.id)}>
                     <MaterialCommunityIcons
                       name="dots-vertical"
                       size={24}

@@ -103,7 +103,7 @@ export type RootStackParamList = {
   }
 
   ViewRequestProfile: {
-    userId: string
+    userId: string | null
   }
   ChannelScreen: {
     channelId: CommunityChannel
