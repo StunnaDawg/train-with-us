@@ -56,10 +56,6 @@ const CommunityHome = () => {
           </Pressable>
         </View>
 
-        <View className="mx-5">
-          <Text className="font-bold text-lg">15 Members</Text>
-        </View>
-
         <View className="border rounded-xl mx-3 py-2  mt-5">
           <View className="border-b pb-2">
             <Pressable

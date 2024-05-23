@@ -12,6 +12,7 @@ import BasicButton from "../../components/BasicButton"
 import { Communities } from "../../@types/supabaseTypes"
 import updateSingleCommunityTrait from "../../supabaseFunctions/updateFuncs/updateSingleCommunityTrait"
 import CommunityImageGrid from "./ImageGrid"
+import showAlert from "../../utilFunctions/showAlert"
 
 const CommunitySettings = () => {
   const [communityState, setCommunityState] = useState<Communities | null>(
@@ -88,7 +89,10 @@ const CommunitySettings = () => {
           location
         )
       }
-
+      showAlert({
+        title: "Community Updated",
+        message: "Your community has been updated.",
+      })
       navigation.goBack()
     }, 2000)
   }

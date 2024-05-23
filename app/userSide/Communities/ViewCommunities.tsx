@@ -24,7 +24,7 @@ const ViewCommunities = () => {
   }, [])
 
   return (
-    <SafeAreaView className=" flex-1 bg-yellow-300/90">
+    <SafeAreaView className=" flex-1 bg-primary-900 ">
       <ScrollView>
         <View>
           <ViewCommunityTitle community={community} communityId={communityId} />

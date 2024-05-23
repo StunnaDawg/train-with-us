@@ -35,12 +35,26 @@ const ManageCommunityMembers = () => {
       [
         {
           text: "Upgrade User to Coach",
-          onPress: () => upgradeUser(userId),
+          onPress: () => {
+            upgradeUser(userId),
+              getCommunityMembersUUID(
+                setLoading,
+                communityId,
+                setCommunityMemberUUIDs
+              )
+          },
           style: "default",
         },
         {
           text: "Kick User",
-          onPress: () => kickUser(userId),
+          onPress: () => {
+            kickUser(userId),
+              getCommunityMembersUUID(
+                setLoading,
+                communityId,
+                setCommunityMemberUUIDs
+              )
+          },
           style: "destructive",
         },
       ],

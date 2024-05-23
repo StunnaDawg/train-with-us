@@ -43,7 +43,9 @@ const ViewCommunityTitle = ({
   return (
     <View className="mx-12">
       <View className="items-center">
-        <Text className="font-bold text-3xl">{community?.community_title}</Text>
+        <Text className="font-bold text-3xl text-white">
+          {community?.community_title}
+        </Text>
       </View>
 
       <View className="flex flex-row justify-between items-center">
@@ -54,7 +56,7 @@ const ViewCommunityTitle = ({
             })
           }
         >
-          <Text className="font-bold text-xl">
+          <Text className="font-bold text-xl text-white">
             {community?.community_members?.length} Members
           </Text>
         </Pressable>

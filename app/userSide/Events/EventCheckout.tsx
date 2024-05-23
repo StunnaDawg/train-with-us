@@ -37,6 +37,7 @@ const EventCheckout = () => {
               firstAmountTickets={ticketNumber}
               tickets={ticketNumberState}
               setTickets={setTicketNumberState}
+              date={event.date}
             />
           </View>
         </ScrollView>

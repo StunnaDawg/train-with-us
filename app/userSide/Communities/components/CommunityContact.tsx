@@ -19,8 +19,12 @@ const CommunityContact = ({ community }: CommunityContactProps) => {
     <View className="items-center">
       <View>
         {/* Location */}
-        <Text className="font-bold text-xl text-wrap">580 Wright Ave</Text>
-        <Text className="font-bold text-xl text-wrap">Dartmouth, NS</Text>
+        <Text className="font-bold text-xl text-wrap text-white">
+          580 Wright Ave
+        </Text>
+        <Text className="font-bold text-xl text-wrap text-white">
+          Dartmouth, NS
+        </Text>
 
         {Platform.OS === "ios" ? (
           <View>

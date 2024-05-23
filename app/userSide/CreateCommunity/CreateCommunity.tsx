@@ -29,6 +29,20 @@ const CreateCommunity = () => {
     if (error) throw error
   }
 
+  const addOwnerToCommunity = async (communityId: string) => {
+    const { error } = await supabase.from("community_members").insert([
+      {
+        community_id: communityId,
+        user_id: user!.id,
+        role: "owner",
+        joined_at: new Date(),
+        community_owner: user!.id,
+      },
+    ])
+
+    if (error) throw error
+  }
+
   const createCommunity = async () => {
     if (user === null) return
     const id = await addNewCommunity(
@@ -40,6 +54,7 @@ const CreateCommunity = () => {
     )
 
     await addNewCommunityToUser(id)
+    await addOwnerToCommunity(id)
     navigation.goBack()
   }
 
