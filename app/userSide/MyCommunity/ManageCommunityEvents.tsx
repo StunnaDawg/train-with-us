@@ -1,6 +1,10 @@
 import { View, Text, Pressable } from "react-native"
-import React, { useEffect, useState } from "react"
-import { useNavigation, useRoute } from "@react-navigation/native"
+import React, { useCallback, useEffect, useState } from "react"
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native"
 import { RouteProp } from "@react-navigation/native"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import getCommunityEvents from "../../supabaseFunctions/getFuncs/getCommunityEvent"
@@ -15,6 +19,28 @@ const ManageCommunityEvents = () => {
   const route = useRoute<RouteProp<RootStackParamList, "MyCommunityEvents">>()
   const communityId = route.params.communityId
   const navigation = useNavigation<NavigationType>()
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true
+
+      const getEvents = async () => {
+        setLoading(true)
+        await getCommunityEvents(setLoading, communityId, (events) => {
+          if (isActive) {
+            setCommunityEvents(events)
+          }
+        })
+        setLoading(false)
+      }
+
+      getEvents()
+
+      return () => {
+        isActive = false
+      }
+    }, [communityId, setCommunityEvents])
+  )
 
   useEffect(() => {
     getCommunityEvents(setLoading, communityId, setCommunityEvents)

@@ -15,6 +15,7 @@ import { FontAwesome6 } from "@expo/vector-icons"
 import getCommunityRequests from "../../supabaseFunctions/getFuncs/getCommunityRequests"
 import acceptRequest from "../../supabaseFunctions/addFuncs/acceptRequest"
 import denyRequest from "../../supabaseFunctions/addFuncs/denyRequest"
+import showAlert from "../../utilFunctions/showAlert"
 
 const CommunityRequestsPage = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -81,6 +82,16 @@ const CommunityRequestsPage = () => {
                         request.requested_community,
                         request.id
                       )
+                    showAlert({
+                      title: "Request Accepted",
+                      message: "User has been added to the community",
+                    })
+
+                    getCommunityRequests(
+                      setLoading,
+                      communityId,
+                      setCommunityRequests
+                    )
                   }}
                   className="mx-5"
                 >

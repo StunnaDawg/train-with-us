@@ -19,6 +19,9 @@ import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import getSingleEvent from "../../supabaseFunctions/getFuncs/getSingleEvent"
 import EventCoverPhotoEdit from "../../components/EventCoverPhoto"
 import updateSingleEventTrait from "../../supabaseFunctions/updateFuncs/updateSingleEventTrait"
+import supabase from "../../../lib/supabase"
+import showAlert from "../../utilFunctions/showAlert"
+import { FontAwesome6 } from "@expo/vector-icons"
 
 const EditEvent = () => {
   const { user } = useAuth()
@@ -47,6 +50,17 @@ const EditEvent = () => {
     setDate(currentDate)
   }
 
+  const deleteEvent = async () => {
+    const { error } = await supabase.from("events").delete().eq("id", eventId)
+
+    if (error) {
+      showAlert({ title: "Error", message: "Could not delete event" })
+      throw error
+    }
+
+    navigation.goBack()
+  }
+
   useEffect(() => {
     if (user?.id === undefined) return
     useCurrentUser(user?.id, setCurrentUser)
@@ -71,8 +85,15 @@ const EditEvent = () => {
   return (
     <SafeAreaView className="flex-1">
       <ScrollView className=" p-4 bg-white">
-        <View className="flex flex-row items-center mb-8">
+        <View className="flex flex-row justify-between items-center mb-8">
           <Text className="mx-1 text-3xl font-semibold ">Update Event</Text>
+          <Pressable
+            onPress={() => {
+              deleteEvent()
+            }}
+          >
+            <FontAwesome6 name="trash" size={32} color="black" />
+          </Pressable>
         </View>
 
         <View>
