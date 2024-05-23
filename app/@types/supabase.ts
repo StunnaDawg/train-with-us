@@ -39,6 +39,7 @@ export type Database = {
           created_at: string
           id: string
           messages: string[] | null
+          recent_message: string | null
           user1: string | null
           user2: string | null
         }
@@ -46,6 +47,7 @@ export type Database = {
           created_at?: string
           id?: string
           messages?: string[] | null
+          recent_message?: string | null
           user1?: string | null
           user2?: string | null
         }
@@ -53,6 +55,7 @@ export type Database = {
           created_at?: string
           id?: string
           messages?: string[] | null
+          recent_message?: string | null
           user1?: string | null
           user2?: string | null
         }
@@ -440,6 +443,7 @@ export type Database = {
           secondary_gym: number | null
           sexuality: string | null
           username: string | null
+          firstname_lastname: string | null
         }
         Insert: {
           activities?: string[] | null
@@ -557,7 +561,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      firstname_lastname: {
+        Args: {
+          "": unknown
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

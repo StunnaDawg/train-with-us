@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native"
+import { View, Text, Pressable, ScrollView } from "react-native"
 import React, { useEffect, useState } from "react"
 import SinglePic from "../../../components/SinglePic"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
@@ -46,24 +46,29 @@ const Messages = () => {
         <Text className="font-bold text-xl">My Messages</Text>
       </View>
 
-      {chatSessions?.map((session, index) => {
-        const otherUserId =
-          session.user1 === user?.id ? session.user2 : session.user1
-        return (
-          <View key={session.id}>
-            <Pressable
-              onPress={() => {
-                navigation.navigate("MessagingScreen", {
-                  chatSession: session,
-                })
-              }}
-              className="flex flex-row items-center"
-            >
-              <MessageCard otherUserId={otherUserId} />
-            </Pressable>
-          </View>
-        )
-      })}
+      <ScrollView className="h-full">
+        {chatSessions?.map((session, index) => {
+          const otherUserId =
+            session.user1 === user?.id ? session.user2 : session.user1
+          return (
+            <View key={session.id}>
+              <Pressable
+                onPress={() => {
+                  navigation.navigate("MessagingScreen", {
+                    chatSession: session,
+                  })
+                }}
+                className="flex flex-row items-center"
+              >
+                <MessageCard
+                  otherUserId={otherUserId}
+                  recentMessage={session.recent_message}
+                />
+              </Pressable>
+            </View>
+          )
+        })}
+      </ScrollView>
     </View>
   )
 }

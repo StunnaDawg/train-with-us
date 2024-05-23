@@ -40,7 +40,7 @@ const CommunitiesDash = () => {
     setUserMessages(true)
   }
   return (
-    <ScrollView>
+    <View>
       <View>
         <CommunitiesScroll communities={communities} />
         <View className="mt-5">
@@ -51,20 +51,22 @@ const CommunitiesDash = () => {
           />
         </View>
       </View>
-      {loading ? (
-        <View>
-          <Text>Loading...</Text>
-        </View>
-      ) : userMessages ? (
-        <View>
-          <Messages />
-        </View>
-      ) : (
-        <View>
-          <CommunitiesRead />
-        </View>
-      )}
-    </ScrollView>
+      <View>
+        {loading ? (
+          <View>
+            <Text>Loading...</Text>
+          </View>
+        ) : userMessages ? (
+          <View>
+            <Messages />
+          </View>
+        ) : (
+          <ScrollView>
+            <CommunitiesRead />
+          </ScrollView>
+        )}
+      </View>
+    </View>
   )
 }
 

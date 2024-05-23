@@ -24,6 +24,7 @@ import sendMessage from "../../../supabaseFunctions/addFuncs/sendMessage"
 import supabase from "../../../../lib/supabase"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import sendNotification from "../../../utilFunctions/sendNotification"
+import upsertChatSession from "../../../supabaseFunctions/updateFuncs/updateChatSession"
 
 type UserMessage = {
   message: string | null
@@ -73,49 +74,63 @@ const MessageScreen = () => {
   const chatSession = route.params.chatSession
 
   const [serverMessages, setServerMessages] = useState<Messages[] | null>([])
-
   const [messageToSend, setMessageToSend] = useState("")
-
-  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
+  const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const { user } = useAuth()
+
   const otherUserId =
     chatSession.user1 === user?.id ? chatSession.user2 : chatSession.user1
 
   useEffect(() => {
     if (!user || !otherUserId) return
-
     useCurrentUser(otherUserId, setCurrentUser)
-  }, [user])
+  }, [user, otherUserId])
 
   useEffect(() => {
-    if (currentUser?.photos_url === null || undefined) return
-    setImageFiles(currentUser?.photos_url)
+    if (currentUser?.photos_url) {
+      setImageFiles(currentUser?.photos_url)
+    }
   }, [currentUser])
 
-  supabase
-    .channel("messages")
-    .on(
-      "postgres_changes",
-      { event: "INSERT", schema: "public", table: "messages" },
-      (payload) => {
-        getChatSessionMessages(chatSession.id, setServerMessages)
-      }
-    )
-    .subscribe()
+  useEffect(() => {
+    const subscription = supabase
+      .channel("messages")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: `chat_session=eq.${chatSession.id}`,
+        },
+        (payload) => {
+          getChatSessionMessages(chatSession.id, setServerMessages)
+        }
+      )
+      .subscribe()
 
-  const sendMessageAction = () => {
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [chatSession.id])
+
+  const sendMessageAction = async () => {
     if (messageToSend.trim().length === 0 || !user?.id) {
       return
     }
-    sendMessage(messageToSend, user?.id, chatSession.id)
+    await sendMessage(messageToSend, user?.id, chatSession.id)
     setMessageToSend("")
-    if (!currentUser?.expo_push_token) return
-    sendNotification(
-      currentUser?.expo_push_token,
-      "Message from " + currentUser?.first_name,
-      messageToSend
-    )
+    await upsertChatSession(chatSession.id, messageToSend)
+    getChatSessionMessages(chatSession.id, setServerMessages)
+
+    if (currentUser?.expo_push_token) {
+      sendNotification(
+        currentUser?.expo_push_token,
+        `Message from ${currentUser?.first_name}`,
+        messageToSend
+      )
+    }
   }
 
   useEffect(() => {
@@ -153,7 +168,7 @@ const MessageScreen = () => {
             className="m-2"
             data={serverMessages}
             inverted={true}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) =>
               item.sender === user?.id ? (
                 <UserMessage message={item.message} />

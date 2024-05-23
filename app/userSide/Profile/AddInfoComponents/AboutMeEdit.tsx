@@ -45,7 +45,7 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
     getPrimaryGymName()
   }, [currentUserState])
   return (
-    <ScrollView className=" mx-7">
+    <ScrollView className="mx-7">
       <View className="border-b border-black/45 p-2">
         <Pressable className="flex flex-row justify-between items-center">
           <Text className=" font-bold text-xl">

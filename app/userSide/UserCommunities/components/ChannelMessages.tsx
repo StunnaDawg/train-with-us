@@ -80,32 +80,38 @@ const ChannelMessageScreen = () => {
   const [serverMessages, setServerMessages] = useState<
     CommunityChannelMessages[] | null
   >([])
-
   const [messageToSend, setMessageToSend] = useState("")
-
   const { user } = useAuth()
 
-  supabase
-    .channel("community_channel_messages")
-    .on(
-      "postgres_changes",
-      {
-        event: "INSERT",
-        schema: "public",
-        table: "community_channel_messages",
-      },
-      (payload) => {
-        getChannelSessionMessages(channel.id, setServerMessages)
-      }
-    )
-    .subscribe()
+  useEffect(() => {
+    const subscription = supabase
+      .channel("community_channel_messages")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "community_channel_messages",
+          filter: `chat_session=eq.${channel.id}`,
+        },
+        (payload) => {
+          getChannelSessionMessages(channel.id, setServerMessages)
+        }
+      )
+      .subscribe()
 
-  const sendMessageAction = () => {
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [channel.id])
+
+  const sendMessageAction = async () => {
     if (messageToSend.trim().length === 0 || !user?.id) {
       return
     }
-    sendChannelMessage(messageToSend, user?.id, channel.id)
+    await sendChannelMessage(messageToSend, user?.id, channel.id)
     setMessageToSend("")
+    getChannelSessionMessages(channel.id, setServerMessages)
   }
 
   useEffect(() => {

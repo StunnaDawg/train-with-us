@@ -25,14 +25,14 @@ const AddMoreInfo = () => {
 
   return (
     <SafeAreaView className="flex-1">
-      <ScrollView scrollEnabled={false} className="flex-1">
+      <View className="flex-1">
         <View className="flex flex-row justify-center">
           <Text className="text-2xl font-bold m-1">My Profile</Text>
         </View>
 
         <UserProfilePic profile={currentUser} refresh={refreshing} />
 
-        <View className="mt-20">
+        <View className="">
           <Tabs
             changeToAboutMeTab={changeToAboutMeTab}
             changeToInterestTab={changeToInterestTab}
@@ -40,19 +40,19 @@ const AddMoreInfo = () => {
           />
         </View>
         {loading ? (
-          <View>
+          <View className="flex-1 justify-center items-center">
             <Text>Loading...</Text>
           </View>
         ) : aboutMe ? (
-          <View>
+          <View className="flex-1">
             <AboutMeEdit currentUserId={currentUser.id} />
           </View>
         ) : (
-          <View>
+          <View className="flex-1">
             <InterestsEdit currentUserId={currentUser.id} />
           </View>
         )}
-      </ScrollView>
+      </View>
     </SafeAreaView>
   )
 }

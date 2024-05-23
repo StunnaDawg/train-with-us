@@ -7,9 +7,10 @@ import { Profile } from "../../../@types/supabaseTypes"
 
 type MessageCardProps = {
   otherUserId: string | null
+  recentMessage: string | null
 }
 
-const MessageCard = ({ otherUserId }: MessageCardProps) => {
+const MessageCard = ({ otherUserId, recentMessage }: MessageCardProps) => {
   const [profile, setProfile] = useState<Profile | null>({} as Profile)
   const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const { user } = useAuth()
@@ -37,7 +38,9 @@ const MessageCard = ({ otherUserId }: MessageCardProps) => {
         <Text className="font-bold mb-1">
           {!profile ? null : profile.first_name}
         </Text>
-        {/* <Text className="text-sm">Hey, how are you?</Text> */}
+        <Text className="text-sm">
+          {!recentMessage ? "No Messages yet!" : recentMessage}
+        </Text>
       </View>
     </View>
   )
