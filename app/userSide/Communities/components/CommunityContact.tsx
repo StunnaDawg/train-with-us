@@ -17,16 +17,23 @@ const CommunityContact = ({ community }: CommunityContactProps) => {
   }
 
   return (
-    <View className="items-center">
+    <View className="flex flex-row">
+      <View className="flex  flex-row items-center  mx-2 ">
+        <View>
+          <View>
+            {/* Location */}
+            <Text className="font-bold text-3xl text-wrap text-white">
+              {community?.location}
+            </Text>
+          </View>
+          {community?.phone_number ? (
+            <View className="items-center my-2">
+              <PhoneCallButton phoneNumber={`+${community?.phone_number}`} />
+            </View>
+          ) : null}
+        </View>
+      </View>
       <View>
-        {/* Location */}
-        <Text className="font-bold text-xl text-wrap text-white">
-          580 Wright Ave
-        </Text>
-        <Text className="font-bold text-xl text-wrap text-white">
-          Dartmouth, NS
-        </Text>
-
         {Platform.OS === "ios" ? (
           <View>
             <View className="my-2">
@@ -79,12 +86,6 @@ const CommunityContact = ({ community }: CommunityContactProps) => {
           </View>
         )}
       </View>
-
-      {community?.phone_number ? (
-        <View>
-          <PhoneCallButton phoneNumber={`+${community?.phone_number}`} />
-        </View>
-      ) : null}
     </View>
   )
 }

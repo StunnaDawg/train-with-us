@@ -39,13 +39,9 @@ const ViewCommunities = () => {
           {community ? <PhotoArray community={community} /> : null}
         </View>
 
-        <View className="flex flex-row justify-center items-center mt-4">
+        <View className="flex flex-row justify-center items-center">
           <View className="m-4">
             <CommunityContact community={community} />
-          </View>
-
-          <View className="m-4">
-            <CommunityMap />
           </View>
         </View>
 
