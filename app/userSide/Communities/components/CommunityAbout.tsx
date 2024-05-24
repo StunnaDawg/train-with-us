@@ -8,15 +8,15 @@ type CommunityAboutProps = {
 
 const CommunityAbout = ({ community }: CommunityAboutProps) => {
   return (
-    <View className="items-center">
+    <View className="mx-12">
       <View className="">
-        <Text className="text-xl font-bold text-white">
+        <Text className="text-3xl font-bold text-white">
           Welcome to {community?.community_title}
         </Text>
       </View>
 
       <View className="mx-4">
-        <Text className="font-semibold text-lg text-wrap text-white">
+        <Text className="font-semibold text-2xl text-wrap text-white">
           {community?.about}
         </Text>
       </View>
