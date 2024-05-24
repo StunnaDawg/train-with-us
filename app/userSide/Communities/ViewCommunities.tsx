@@ -10,6 +10,7 @@ import { Communities } from "../../@types/supabaseTypes"
 import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommunity"
 import { RootStackParamList } from "../../@types/navigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
+import Header from "../../components/Header"
 
 const ViewCommunities = () => {
   const [loading, setLoading] = useState<boolean>(true)
@@ -26,6 +27,10 @@ const ViewCommunities = () => {
   return (
     <SafeAreaView className=" flex-1 bg-primary-900 ">
       <ScrollView>
+        <View>
+          <Header title="Communities" />
+        </View>
+
         <View>
           <ViewCommunityTitle community={community} communityId={communityId} />
         </View>

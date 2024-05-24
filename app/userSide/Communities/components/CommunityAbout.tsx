@@ -11,7 +11,7 @@ const CommunityAbout = ({ community }: CommunityAboutProps) => {
     <View className="items-center">
       <View className="">
         <Text className="text-xl font-bold text-white">
-          Welcome to Blended Athletics
+          Welcome to {community?.community_title}
         </Text>
       </View>
 

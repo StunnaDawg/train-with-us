@@ -20,6 +20,7 @@ const CommunitySettings = () => {
   )
   const [location, setLocation] = useState("")
   const [communityName, setCommunityName] = useState("")
+  const [communityNumber, setCommunityNumber] = useState("")
   const [communityStyle, setCommunityStyle] = useState("")
   const [communityAbout, setCommunityAbout] = useState("")
   const [loading, setLoading] = useState(false)
@@ -51,6 +52,7 @@ const CommunitySettings = () => {
     setCommunityStyle(communityState.community_style || "")
     setLocation(communityState.location || "")
     setCommunityAbout(communityState.about || "")
+    setCommunityNumber(communityState.phone_number || "")
   }, [communityState])
 
   const updateCommunity = () => {
@@ -87,6 +89,15 @@ const CommunitySettings = () => {
           community.id,
           "location",
           location
+        )
+      }
+
+      if (community.phone_number !== communityNumber) {
+        updateSingleCommunityTrait(
+          setLoading,
+          community.id,
+          "phone_number",
+          communityNumber
         )
       }
       showAlert({
@@ -145,6 +156,15 @@ const CommunitySettings = () => {
                 value={location}
                 onChangeText={setLocation}
                 placeholder="Please input an accurate location"
+              />
+            </View>
+
+            <Text className="font-medium text-lg">Community Phone Number</Text>
+            <View className="border rounded-lg p-2 w-full">
+              <TextInput
+                value={communityNumber}
+                onChangeText={setCommunityNumber}
+                placeholder="Please input an accurate phone number"
               />
             </View>
           </View>

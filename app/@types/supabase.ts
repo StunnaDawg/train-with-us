@@ -40,6 +40,7 @@ export type Database = {
           id: string
           messages: string[] | null
           recent_message: string | null
+          updated_at: string | null
           user1: string | null
           user2: string | null
         }
@@ -48,6 +49,7 @@ export type Database = {
           id?: string
           messages?: string[] | null
           recent_message?: string | null
+          updated_at?: string | null
           user1?: string | null
           user2?: string | null
         }
@@ -56,6 +58,7 @@ export type Database = {
           id?: string
           messages?: string[] | null
           recent_message?: string | null
+          updated_at?: string | null
           user1?: string | null
           user2?: string | null
         }
@@ -88,6 +91,7 @@ export type Database = {
           created_at: string
           id: number
           location: string | null
+          phone_number: string | null
         }
         Insert: {
           about?: string | null
@@ -102,6 +106,7 @@ export type Database = {
           created_at?: string
           id?: number
           location?: string | null
+          phone_number?: string | null
         }
         Update: {
           about?: string | null
@@ -116,6 +121,7 @@ export type Database = {
           created_at?: string
           id?: number
           location?: string | null
+          phone_number?: string | null
         }
         Relationships: [
           {

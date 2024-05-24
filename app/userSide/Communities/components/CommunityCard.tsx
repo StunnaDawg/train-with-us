@@ -56,10 +56,10 @@ const CommunityCard = ({ community, addPrimary }: CommunityCardProps) => {
         </View>
 
         <View className="flex-col flex-1">
-          <Text className="font-bold text-2xl">
+          <Text className=" text-white font-bold text-2xl">
             {community.community_title}
           </Text>
-          <View className="border-b p-3" />
+          <View className="border-b-2 border-b-white p-3" />
         </View>
       </View>
     </Pressable>

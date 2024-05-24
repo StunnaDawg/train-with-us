@@ -5,6 +5,7 @@ import { Communities } from "../../../@types/supabaseTypes"
 import GenericButton from "../../../components/GenericButton"
 import openInGoogleMaps from "../../../utilFunctions/openGoogleMaps"
 import openInAppleMaps from "../../../utilFunctions/openAppleMaps"
+import PhoneCallButton from "../../../components/PhoneNumberButton"
 
 type CommunityContactProps = {
   community: Communities | null
@@ -79,9 +80,11 @@ const CommunityContact = ({ community }: CommunityContactProps) => {
         )}
       </View>
 
-      <View>
-        <WhiteSkinnyButton buttonFunction={callFunc} text="9022225787" />
-      </View>
+      {community?.phone_number ? (
+        <View>
+          <PhoneCallButton phoneNumber={`+${community?.phone_number}`} />
+        </View>
+      ) : null}
     </View>
   )
 }

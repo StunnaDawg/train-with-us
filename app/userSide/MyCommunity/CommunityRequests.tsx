@@ -112,6 +112,17 @@ const CommunityRequestsPage = () => {
                 <Pressable
                   onPress={() => {
                     if (request.id) denyRequest(setLoading, request.id)
+                    showAlert({
+                      title: "Request Denied",
+                      message: "User has been Denied Access",
+                    })
+                    setTimeout(() => {
+                      getCommunityRequests(
+                        setLoading,
+                        communityId,
+                        setCommunityRequests
+                      )
+                    }, 500)
                   }}
                 >
                   <FontAwesome6 name="square-xmark" size={36} color="red" />

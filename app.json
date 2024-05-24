@@ -31,26 +31,35 @@
         {
           "calendarPermission": "The app needs to access your calendar."
         }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "841430162379-qukd112j7piosnltl3bqrptj9l0shckg.apps.googleusercontent.com"
+        }
       ]
     ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.stunnacat.trainwithus",
       "buildNumber": "1",
-      "usesAppleSignIn": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#071C38",
-        "foregroundImage": "./assets/images/adaptive-icon.png"
-      }
-    },
-    "web": {
-      "favicon": "./assets/images/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "a551e684-d06e-4bb1-bd40-d83456f2c2fe"
+      "usesAppleSignIn": true,
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": ["tel", "telprompt"]
+      },
+      "android": {
+        "adaptiveIcon": {
+          "backgroundColor": "#071C38",
+          "foregroundImage": "./assets/images/adaptive-icon.png"
+        }
+      },
+      "web": {
+        "favicon": "./assets/images/favicon.png"
+      },
+      "extra": {
+        "eas": {
+          "projectId": "a551e684-d06e-4bb1-bd40-d83456f2c2fe"
+        }
       }
     }
   }

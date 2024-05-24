@@ -39,40 +39,42 @@ const CommunitiesHome = () => {
 
   return (
     <>
-      <View className="flex flex-row justify-between m-6 items-center">
-        <View>
-          <Text className="text-2xl font-bold">Communites</Text>
-        </View>
+      <View className="flex-1 bg-primary-900">
+        <View className="flex flex-row justify-between m-6 items-center">
+          <View>
+            <Text className="text-3xl text-white font-bold">Communites</Text>
+          </View>
 
-        <Pressable
-          onPress={() => {
-            navigation.navigate("SearchCommunities")
-          }}
+          <Pressable
+            onPress={() => {
+              navigation.navigate("SearchCommunities")
+            }}
+          >
+            <FontAwesome6 name="magnifying-glass" size={24} color="white" />
+          </Pressable>
+        </View>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         >
-          <FontAwesome6 name="magnifying-glass" size={24} color="black" />
-        </Pressable>
+          {!loading ? (
+            communities && communities.length > 0 ? (
+              communities.map((community) => (
+                <View key={community.id} className="m-2">
+                  <CommunityCard community={community} />
+                </View>
+              ))
+            ) : (
+              <>
+                <View className="m-2">
+                  <Text>No Communities near!</Text>
+                </View>
+              </>
+            )
+          ) : null}
+        </ScrollView>
       </View>
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {!loading ? (
-          communities && communities.length > 0 ? (
-            communities.map((community) => (
-              <View key={community.id} className="m-2">
-                <CommunityCard community={community} />
-              </View>
-            ))
-          ) : (
-            <>
-              <View className="m-2">
-                <Text>No Communities near!</Text>
-              </View>
-            </>
-          )
-        ) : null}
-      </ScrollView>
     </>
   )
 }
