@@ -17,6 +17,7 @@ import PhotoArray from "../Connections/components/PhotoArray"
 import { FontAwesome6 } from "@expo/vector-icons"
 import returnCommunityName from "../../utilFunctions/returnCommunityName"
 import sendNotification from "../../utilFunctions/sendNotification"
+import PhotoArrayProfile from "./components/PhotoArrayProfile"
 
 const ProfileView = () => {
   const { user } = useAuth()
@@ -129,8 +130,18 @@ const ProfileView = () => {
             <FontAwesome6 name="edit" size={24} color="blue" />
           </View>
         </Pressable>
-        <PhotoArray index1={0} index2={1} index3={2} profileId={user?.id} />
-        <PhotoArray index1={3} index2={4} index3={5} profileId={user?.id} />
+        <PhotoArrayProfile
+          index1={0}
+          index2={1}
+          index3={2}
+          profileId={user?.id}
+        />
+        <PhotoArrayProfile
+          index1={3}
+          index2={4}
+          index3={5}
+          profileId={user?.id}
+        />
       </View>
     </ScrollView>
   )

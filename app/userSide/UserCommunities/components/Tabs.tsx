@@ -16,12 +16,12 @@ const Tabs = ({
   const [pressedComm, setPressedComm] = useState(false)
 
   const messageTabStyle = `mx-2 p-1 px-4 border rounded-full ${
-    userMessages ? "bg-blue-500 text-white" : "bg-transparent text-black"
-  } ${pressedMsg ? "bg-blue-700" : ""}`
+    userMessages ? "bg-blue-500 text-white" : "bg-white text-black"
+  } ${pressedMsg ? "bg-white" : ""}`
 
   const communityTabStyle = `mx-2 p-1 px-4 border rounded-full ${
-    !userMessages ? "bg-yellow-500 text-white" : "bg-transparent text-black"
-  } ${pressedComm ? "bg-yellow-200" : ""}`
+    !userMessages ? "bg-blue-500 text-white" : "bg-white text-black"
+  } ${pressedComm ? "bg-white" : ""}`
 
   return (
     <View className="flex flex-row justify-center">

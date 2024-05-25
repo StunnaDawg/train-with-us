@@ -5,6 +5,7 @@ import { useEffect } from "react"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import { Profile } from "../../../@types/supabaseTypes"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
+import SinglePicProfileView from "../../../components/SinglePicProfileView"
 
 type PhotoArrayProps = {
   profileId: string | null | undefined
@@ -13,7 +14,12 @@ type PhotoArrayProps = {
   index3: number
 }
 
-const PhotoArray = ({ profileId, index1, index2, index3 }: PhotoArrayProps) => {
+const PhotoArrayProfile = ({
+  profileId,
+  index1,
+  index2,
+  index3,
+}: PhotoArrayProps) => {
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const { user } = useAuth()
@@ -32,7 +38,7 @@ const PhotoArray = ({ profileId, index1, index2, index3 }: PhotoArrayProps) => {
     <View>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         <View className="m-1">
-          <SinglePic
+          <SinglePicProfileView
             size={150}
             avatarRadius={10}
             noAvatarRadius={10}
@@ -41,7 +47,7 @@ const PhotoArray = ({ profileId, index1, index2, index3 }: PhotoArrayProps) => {
         </View>
 
         <View className="m-1">
-          <SinglePic
+          <SinglePicProfileView
             size={150}
             avatarRadius={10}
             noAvatarRadius={10}
@@ -49,7 +55,7 @@ const PhotoArray = ({ profileId, index1, index2, index3 }: PhotoArrayProps) => {
           />
         </View>
         <View className="m-1">
-          <SinglePic
+          <SinglePicProfileView
             size={150}
             avatarRadius={10}
             noAvatarRadius={10}
@@ -61,4 +67,4 @@ const PhotoArray = ({ profileId, index1, index2, index3 }: PhotoArrayProps) => {
   )
 }
 
-export default PhotoArray
+export default PhotoArrayProfile

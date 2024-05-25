@@ -12,7 +12,7 @@ type SinglePicProps = {
   noAvatarRadius: number
 }
 
-export default function SinglePic({
+export default function SinglePicProfileView({
   size = 150,
   item,
   avatarRadius,
@@ -68,9 +68,10 @@ export default function SinglePic({
           source={{ uri: avatarUrl }}
           accessibilityLabel="Avatar"
           style={[avatarSize, styles.avatar, styles.image]}
-          cachePolicy={"memory-disk"}
         />
-      ) : null}
+      ) : (
+        <View style={[avatarSize, styles.avatar, styles.noImage]} />
+      )}
     </View>
   )
 }

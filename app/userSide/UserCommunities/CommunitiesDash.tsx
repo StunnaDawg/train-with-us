@@ -40,7 +40,7 @@ const CommunitiesDash = () => {
     setUserMessages(true)
   }
   return (
-    <View>
+    <View className="bg-primary-900">
       <View>
         <CommunitiesScroll communities={communities} />
         <View className="mt-5">
@@ -61,9 +61,9 @@ const CommunitiesDash = () => {
             <Messages />
           </View>
         ) : (
-          <ScrollView>
+          <View>
             <CommunitiesRead />
-          </ScrollView>
+          </View>
         )}
       </View>
     </View>

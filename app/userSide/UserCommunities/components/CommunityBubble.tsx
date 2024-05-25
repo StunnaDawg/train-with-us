@@ -37,6 +37,7 @@ const CommunityBubble = ({ community }: CommunityBubbleProps) => {
   return (
     <View className="items-center">
       <Pressable
+        className="items-center"
         onPress={() =>
           navigation.navigate("CommunityPage", {
             communityId: community,
@@ -44,14 +45,11 @@ const CommunityBubble = ({ community }: CommunityBubbleProps) => {
         }
       >
         <SinglePic
-          size={55}
+          size={70}
           avatarRadius={100}
           noAvatarRadius={100}
           item={imageFile}
         />
-        <View className="m-1">
-          <Text className="text-xs">{currentCommunity?.community_title}</Text>
-        </View>
       </Pressable>
     </View>
   )

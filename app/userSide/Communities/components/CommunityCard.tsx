@@ -9,6 +9,7 @@ import { FileObject } from "@supabase/storage-js"
 import { Communities, Profile } from "../../../@types/supabaseTypes"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
+import SinglePicCommunity from "../../../components/SinglePicCommunity"
 
 type CommunityCardProps = {
   community: Communities
@@ -47,7 +48,7 @@ const CommunityCard = ({ community, addPrimary }: CommunityCardProps) => {
     >
       <View className="flex flex-row items-center">
         <View className="m-2">
-          <SinglePic
+          <SinglePicCommunity
             size={90}
             item={community.community_profile_pic}
             avatarRadius={100}

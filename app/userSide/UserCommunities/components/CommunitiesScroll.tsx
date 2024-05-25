@@ -10,6 +10,7 @@ import { NavigationType } from "../../../@types/navigation"
 import { Communities, Profile } from "../../../@types/supabaseTypes"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import CommunityBubble from "./CommunityBubble"
+import { FontAwesome6 } from "@expo/vector-icons"
 
 type CommunitiesScrollProps = {
   communities: Communities[] | null
@@ -35,11 +36,27 @@ const styles = StyleSheet.create({
 })
 
 const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
+  const [isPressed, setIsPressed] = useState(false)
   const [files, setFiles] = useState<FileObject[]>([])
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const { user } = useAuth()
   const avatarSize = { height: 55, width: 55 }
   const navigation = useNavigation<NavigationType>()
+
+  const handleOnPressIn = () => {
+    setIsPressed(true)
+  }
+
+  const handleOnPressOut = () => {
+    setIsPressed(false)
+  }
+
+  const goToCommunity = () => {
+    if (!currentUser?.community_created) return
+    navigation.navigate("MyCommunityHome", {
+      communityId: currentUser?.community_created,
+    })
+  }
 
   useEffect(() => {
     if (!user) return
@@ -54,26 +71,24 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
     }
   }
   return (
-    <View className="mt-8 px-5">
+    <View className="px-5">
+      <Pressable
+        className={`flex flex-row justify-between items-center border rounded-xl py-3 mt-4 mb-3 px-6 mx-10 ${
+          isPressed ? "bg-gray-200 " : "bg-white "
+        }`}
+        onPress={() => {
+          goToCommunity()
+        }}
+        onPressIn={handleOnPressIn}
+        onPressOut={handleOnPressOut}
+      >
+        <Text className="font-bold">My Community Settings</Text>
+        <FontAwesome6 name="house-chimney" size={24} color="black" />
+      </Pressable>
       <View className="flex flex-row justify-between px-3 mb-3 items-center">
         <View>
-          <Text className="font-bold text-3xl">My Communities</Text>
+          <Text className="font-bold text-white text-3xl">My Communities</Text>
         </View>
-
-        <Pressable
-          onPress={() => {
-            console.log("pressed")
-            console.log(currentUser?.community_created)
-            if (!currentUser?.community_created) return
-            navigation.navigate("MyCommunityHome", {
-              communityId: currentUser?.community_created,
-            })
-          }}
-          className="px-2"
-        >
-          <Text className="text-blue-600">My Community</Text>
-          <Text className="text-blue-600 text-center">Home</Text>
-        </Pressable>
       </View>
       <ScrollView horizontal={true}>
         <View className="flex flex-row">

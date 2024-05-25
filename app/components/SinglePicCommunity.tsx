@@ -12,7 +12,7 @@ type SinglePicProps = {
   noAvatarRadius: number
 }
 
-export default function SinglePic({
+export default function SinglePicCommunity({
   size = 150,
   item,
   avatarRadius,
@@ -68,9 +68,14 @@ export default function SinglePic({
           source={{ uri: avatarUrl }}
           accessibilityLabel="Avatar"
           style={[avatarSize, styles.avatar, styles.image]}
-          cachePolicy={"memory-disk"}
         />
-      ) : null}
+      ) : (
+        <Image
+          source={require("../../assets/images/TWU-Logo.png")}
+          accessibilityLabel="Avatar"
+          style={[avatarSize, styles.avatar, styles.image]}
+        />
+      )}
     </View>
   )
 }

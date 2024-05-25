@@ -43,7 +43,7 @@ const Messages = () => {
   return (
     <View className="mt-8 mx-8 pb-2">
       <View>
-        <Text className="font-bold text-xl">My Messages</Text>
+        <Text className="font-bold text-xl text-white">My Messages</Text>
       </View>
 
       <ScrollView className="h-full">

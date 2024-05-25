@@ -64,7 +64,7 @@ const ConnectionsCard = ({
 
       <View>
         <View className="ml-7">
-          <Text className="font-medium">My Styles of Fitness:</Text>
+          <Text className="font-medium text-xl">My Styles of Fitness:</Text>
         </View>
         <ActivitySection profile={profile} />
       </View>

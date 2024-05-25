@@ -4,6 +4,7 @@ import SinglePic from "../../../components/SinglePic"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import { Profile } from "../../../@types/supabaseTypes"
+import SinglePicCommunity from "../../../components/SinglePicCommunity"
 
 type MessageCardProps = {
   otherUserId: string | null
@@ -26,7 +27,7 @@ const MessageCard = ({ otherUserId, recentMessage }: MessageCardProps) => {
   return (
     <View className="flex flex-row items-center">
       <View className="m-2">
-        <SinglePic
+        <SinglePicCommunity
           size={55}
           avatarRadius={100}
           noAvatarRadius={100}
@@ -35,10 +36,10 @@ const MessageCard = ({ otherUserId, recentMessage }: MessageCardProps) => {
       </View>
 
       <View>
-        <Text className="font-bold mb-1">
+        <Text className="font-bold text-white text-xl">
           {!profile ? null : profile.first_name}
         </Text>
-        <Text className="text-sm">
+        <Text className="text-white font-semibold text-lg">
           {!recentMessage ? "No Messages yet!" : recentMessage}
         </Text>
       </View>
