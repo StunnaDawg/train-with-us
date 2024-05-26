@@ -38,24 +38,23 @@ const CommunityHome = () => {
   )
   return (
     <SafeAreaView className="flex-1">
+      <View className="flex flex-row justify-between px-5 border-b">
+        <Text className="font-bold text-2xl">
+          {currentCommunity?.community_title}
+        </Text>
+
+        <Pressable
+          onPress={() => {
+            if (!currentCommunity) return
+            navigation.navigate("MyCommunitySettings", {
+              community: currentCommunity,
+            })
+          }}
+        >
+          <FontAwesome6 name="gear" size={24} color="black" />
+        </Pressable>
+      </View>
       <ScrollView>
-        <View className="flex flex-row justify-between mx-5">
-          <Text className="font-bold text-2xl">
-            {currentCommunity?.community_title}
-          </Text>
-
-          <Pressable
-            onPress={() => {
-              if (!currentCommunity) return
-              navigation.navigate("MyCommunitySettings", {
-                community: currentCommunity,
-              })
-            }}
-          >
-            <FontAwesome6 name="gear" size={24} color="black" />
-          </Pressable>
-        </View>
-
         <View className="border rounded-xl mx-3 py-2  mt-5">
           <View className="border-b pb-2">
             <Pressable

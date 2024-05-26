@@ -32,12 +32,11 @@ type UserMessage = {
 
 const UserMessage = ({ message }: UserMessage) => {
   return (
-    <View className="flex flex-row justify-end mt-2 mx-1">
+    <View className="flex flex-row justify-end mt-2 mr-4 ml-36">
       <View>
-        <View className="rounded-2xl border bg-blue-500 p-2">
-          <Text className="text-lg">{message}</Text>
+        <View className="rounded-2xl bg-blue-500/80 p-2">
+          <Text className="font-bold text-sm">{message}</Text>
         </View>
-        <View className="flex flex-row justify-end"></View>
       </View>
     </View>
   )
@@ -49,20 +48,11 @@ type MatchesMessageProps = {
 }
 
 const MatchesMessage = ({ message, name }: MatchesMessageProps) => {
-  const [loading, setLoading] = useState<boolean>(false)
-
   return (
-    <View>
-      <View className="flex flex-row justify-start items-center m-1">
-        <View>
-          <View>
-            <Text className="text-start font-semibold text-lg">
-              {name ? name : "Name"}
-            </Text>
-          </View>
-          <View className="bg-slate-300 border-2 rounded-2xl p-2 max-w-3/4 shadow">
-            <Text className="text-lg">{message}</Text>
-          </View>
+    <View className="flex flex-row justify-start mt-2 ml-4 mr-36">
+      <View>
+        <View className="rounded-2xl bg-slate-400/60 p-2">
+          <Text className=" text-sm text-black font-bold">{message}</Text>
         </View>
       </View>
     </View>
@@ -143,8 +133,8 @@ const MessageScreen = () => {
   }, [serverMessages])
 
   return (
-    <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-center border-b">
+    <SafeAreaView className="flex-1 bg-slate-300/05">
+      <View className="flex flex-row justify-center ">
         <View className="items-center">
           <View className="mb-2">
             <SinglePic
@@ -154,20 +144,27 @@ const MessageScreen = () => {
               item={currentUser?.profile_pic}
             />
           </View>
-          <Text className="font-bold text-md">{currentUser?.first_name}</Text>
+          <Text className="font-bold text-xl mb-1">
+            {currentUser?.first_name}
+          </Text>
         </View>
       </View>
 
       <KeyboardAvoidingView
-        className="flex-1"
+        className="flex-1 border-transparent bg-white rounded-3xl mx-2"
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 0}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <FlatList
-            className="m-2"
-            data={serverMessages}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: "flex-end",
+            }}
             inverted={true}
+            className="mx-1"
+            data={serverMessages}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) =>
               item.sender === user?.id ? (
@@ -181,11 +178,15 @@ const MessageScreen = () => {
             }
           />
         </TouchableWithoutFeedback>
-
-        <View className="flex flex-row mx-1 items-center">
+      </KeyboardAvoidingView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+      >
+        <View className="flex flex-row mx-1 p-2 bg-slate-300/05 items-center">
           <TextInput
             placeholder="Send a Message"
-            className="flex-1 border rounded-xl h-8 w-64 p-2"
+            className="flex-1 border bg-white rounded-full h-8 w-64 p-2"
             value={messageToSend}
             onChangeText={setMessageToSend}
           />
