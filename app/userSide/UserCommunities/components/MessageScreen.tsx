@@ -84,8 +84,9 @@ const MessageScreen = () => {
   }, [currentUser])
 
   useEffect(() => {
-    const subscription = supabase
-      .channel("messages")
+    getChatSessionMessages(chatSession.id, setServerMessages)
+    const channelSubscription = supabase
+      .channel("schema-db-changes")
       .on(
         "postgres_changes",
         {
@@ -95,15 +96,21 @@ const MessageScreen = () => {
           filter: `chat_session=eq.${chatSession.id}`,
         },
         (payload) => {
+          console.log("Message received: ", payload)
           getChatSessionMessages(chatSession.id, setServerMessages)
         }
       )
-      .subscribe()
+      .subscribe((status, error) => {
+        console.log("Subscription status:", status)
+        if (error) {
+          console.error("Subscription error:", error)
+        }
+      })
 
     return () => {
-      subscription.unsubscribe()
+      supabase.removeChannel(channelSubscription)
     }
-  }, [chatSession.id])
+  }, [chatSession])
 
   const sendMessageAction = async () => {
     if (messageToSend.trim().length === 0 || !user?.id) {
@@ -122,16 +129,6 @@ const MessageScreen = () => {
       )
     }
   }
-
-  useEffect(() => {
-    getChatSessionMessages(chatSession.id, setServerMessages)
-  }, [chatSession])
-
-  useEffect(() => {
-    if (!serverMessages) return
-    console.log(serverMessages)
-  }, [serverMessages])
-
   return (
     <SafeAreaView className="flex-1 bg-slate-300/05">
       <View className="flex flex-row justify-center ">

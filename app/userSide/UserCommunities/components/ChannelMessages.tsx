@@ -95,24 +95,30 @@ const ChannelMessageScreen = () => {
   }
 
   useEffect(() => {
+    console.log("Channel id: ", `channel_id=eq.${channel.id}`)
     getChannelSessionMessages(channel.id, setServerMessages)
-
-    supabase
-      .channel("table-db-changes")
+    const channelSubscription = supabase
+      .channel("schema-db-changes")
       .on(
         "postgres_changes",
         {
-          event: "*",
+          event: "INSERT",
           schema: "public",
           table: "community_channel_messages",
           filter: `channel_id=eq.${channel.id}`,
         },
         (payload) => {
-          console.log(payload, "message received")
+          console.log("Message received: ", payload)
           getChannelSessionMessages(channel.id, setServerMessages)
         }
       )
-      .subscribe()
+      .subscribe((status, error) => {
+        console.log("Subscription status:", status, error)
+      })
+
+    return () => {
+      supabase.removeChannel(channelSubscription)
+    }
   }, [channel])
 
   return (
