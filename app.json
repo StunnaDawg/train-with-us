@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#071C38"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "plugins": [
       "expo-apple-authentication",
       [
@@ -45,7 +47,11 @@
       "buildNumber": "1",
       "usesAppleSignIn": true,
       "infoPlist": {
-        "LSApplicationQueriesSchemes": ["tel", "telprompt"]
+        "LSApplicationQueriesSchemes": [
+          "tel",
+          "telprompt"
+        ],
+        "NSContactsUsageDescription": "This app uses your contacts to send email."
       },
       "android": {
         "adaptiveIcon": {
@@ -60,6 +66,11 @@
         "eas": {
           "projectId": "a551e684-d06e-4bb1-bd40-d83456f2c2fe"
         }
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a551e684-d06e-4bb1-bd40-d83456f2c2fe"
       }
     }
   }

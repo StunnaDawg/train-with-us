@@ -425,6 +425,7 @@ export type Database = {
         Row: {
           activities: string[] | null
           actvitiy_time: string | null
+          allowed_create_community: boolean
           birthday: string | null
           bucket_list: string[] | null
           city: string
@@ -457,6 +458,7 @@ export type Database = {
         Insert: {
           activities?: string[] | null
           actvitiy_time?: string | null
+          allowed_create_community?: boolean
           birthday?: string | null
           bucket_list?: string[] | null
           city?: string
@@ -488,6 +490,7 @@ export type Database = {
         Update: {
           activities?: string[] | null
           actvitiy_time?: string | null
+          allowed_create_community?: boolean
           birthday?: string | null
           bucket_list?: string[] | null
           city?: string

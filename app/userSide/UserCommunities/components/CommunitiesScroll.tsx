@@ -11,37 +11,58 @@ import { Communities, Profile } from "../../../@types/supabaseTypes"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import CommunityBubble from "./CommunityBubble"
 import { FontAwesome6 } from "@expo/vector-icons"
+import showAlertFunc from "../../../utilFunctions/showAlertFunc"
+import sendEmail from "../../../utilFunctions/sendEmail"
 
 type CommunitiesScrollProps = {
   communities: Communities[] | null
 }
-
-const styles = StyleSheet.create({
-  avatar: {
-    borderRadius: 100,
-    overflow: "hidden",
-    maxWidth: "100%",
-  },
-  image: {
-    objectFit: "cover",
-    paddingTop: 0,
-  },
-  noImage: {
-    backgroundColor: "#333",
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: "rgb(200, 200, 200)",
-    borderRadius: 100,
-  },
-})
 
 const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
   const [isPressed, setIsPressed] = useState(false)
   const [files, setFiles] = useState<FileObject[]>([])
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const { user } = useAuth()
-  const avatarSize = { height: 55, width: 55 }
   const navigation = useNavigation<NavigationType>()
+
+  const handleCreateCommunityPress = () => {
+    currentUser?.allowed_create_community
+      ? showAlertFunc({
+          title: "Alert Title",
+          message: "Create a Community",
+          buttons: [
+            {
+              text: "OK",
+              onPress: () => navigation.navigate("CreateCommunity"),
+            },
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+          ],
+        })
+      : showAlertFunc({
+          title: "Alert Title",
+          message: "You are not allowed to create a community",
+          buttons: [
+            {
+              text: "Request Access",
+              onPress: () =>
+                sendEmail({
+                  recipients: ["jonsonallen9@gmail.com"],
+                  subject: "Request Access",
+                  body: "I would like to request access to create a community",
+                }),
+            },
+            {
+              text: "OK",
+              onPress: () => console.log("OK Pressed"),
+              style: "cancel",
+            },
+          ],
+        })
+  }
 
   const handleOnPressIn = () => {
     setIsPressed(true)
@@ -92,14 +113,14 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
       </View>
       <ScrollView horizontal={true}>
         <View className="flex flex-row">
-          {!currentUser?.community_created ? (
+          {currentUser?.community_created ? (
             <Pressable
               onPress={() => {
-                navigation.navigate("CreateCommunity")
+                handleCreateCommunityPress()
               }}
               className="m-2"
             >
-              <View style={[avatarSize, styles.avatar, styles.noImage]} />
+              <FontAwesome6 name="circle-plus" size={74} color="white" />
             </Pressable>
           ) : null}
 

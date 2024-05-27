@@ -157,6 +157,8 @@ export type RootStackParamList = {
   SearchCommunities: undefined
 
   SearchUsers: undefined
+
+  RequestAccess: undefined
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>
