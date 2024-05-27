@@ -52,7 +52,7 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
                 sendEmail({
                   recipients: ["jonsonallen9@gmail.com"],
                   subject: "Request Access",
-                  body: "I would like to request access to create a community",
+                  body: `I would like to request access to create a community, my userId is ${user?.id}`,
                 }),
             },
             {
@@ -113,7 +113,7 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
       </View>
       <ScrollView horizontal={true}>
         <View className="flex flex-row">
-          {currentUser?.community_created ? (
+          {!currentUser?.community_created ? (
             <Pressable
               onPress={() => {
                 handleCreateCommunityPress()
