@@ -71,9 +71,9 @@ const CommunitiesRead = () => {
                       ? `#${c.channel_type}`
                       : null}
                   </Text>
-                  <Text className="text-lg font-bold text-white">
-                    Hey, how are you?
-                  </Text>
+                  {/* <Text className="text-lg font-bold text-white">
+                    {c.recent_message || "No Messages yet!"}
+                  </Text> */}
                 </View>
               </Pressable>
             </View>

@@ -181,6 +181,7 @@ export type Database = {
           community_owner: string | null
           created_at: string
           id: string
+          recent_message: string | null
         }
         Insert: {
           channel_pic?: string | null
@@ -190,6 +191,7 @@ export type Database = {
           community_owner?: string | null
           created_at?: string
           id?: string
+          recent_message?: string | null
         }
         Update: {
           channel_pic?: string | null
@@ -199,6 +201,7 @@ export type Database = {
           community_owner?: string | null
           created_at?: string
           id?: string
+          recent_message?: string | null
         }
         Relationships: [
           {

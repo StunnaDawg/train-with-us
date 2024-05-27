@@ -28,6 +28,7 @@ import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import getChannelSessionMessages from "../../../supabaseFunctions/getFuncs/getChannelMessages"
 import sendChannelMessage from "../../../supabaseFunctions/addFuncs/sendChannelMessage"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
+import upsertCommunitySession from "../../../supabaseFunctions/updateFuncs/updateCommunitySession"
 
 type UserMessage = {
   message: string | null
@@ -90,6 +91,7 @@ const ChannelMessageScreen = () => {
       return
     }
     await sendChannelMessage(messageToSend, user?.id, channel.id)
+    await upsertCommunitySession(channel.id, messageToSend)
     setMessageToSend("")
     getChannelSessionMessages(channel.id, setServerMessages)
   }

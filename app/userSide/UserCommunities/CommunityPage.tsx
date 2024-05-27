@@ -45,7 +45,7 @@ const CommunityPage = () => {
       [
         {
           text: "Yes",
-          onPress: onConfirm, // Call the callback when "Yes" is pressed
+          onPress: onConfirm,
         },
         {
           text: "Cancel",
@@ -115,12 +115,14 @@ const CommunityPage = () => {
 
           {!loading && communityChannels && communityChannels.length > 0 ? (
             communityChannels.map((c) => (
-              <View className="flex-row justify-between items-center">
+              <View
+                key={c.id}
+                className="flex-row justify-between items-center"
+              >
                 <Pressable
-                  key={c.id} // Assuming 'id' is the unique identifier for each channel
                   onPress={() =>
                     navigation.navigate("ChannelScreen", {
-                      channelId: c, // Changed to use the correct channel id
+                      channelId: c,
                     })
                   }
                   className="flex flex-row items-center"

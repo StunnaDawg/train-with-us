@@ -11,6 +11,13 @@ type MessageCardProps = {
   recentMessage: string | null
 }
 
+const truncateMessage = (message: string, maxLength: number) => {
+  if (message.length <= maxLength) {
+    return message
+  }
+  return message.substring(0, maxLength) + "..."
+}
+
 const MessageCard = ({ otherUserId, recentMessage }: MessageCardProps) => {
   const [profile, setProfile] = useState<Profile | null>({} as Profile)
   const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
@@ -40,7 +47,9 @@ const MessageCard = ({ otherUserId, recentMessage }: MessageCardProps) => {
           {!profile ? null : profile.first_name}
         </Text>
         <Text className="text-white font-semibold text-lg">
-          {!recentMessage ? "No Messages yet!" : recentMessage}
+          {!recentMessage
+            ? "No Messages yet!"
+            : truncateMessage(recentMessage, 20)}
         </Text>
       </View>
     </View>
