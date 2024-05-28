@@ -16,23 +16,16 @@ const UserAboutSection = ({ profile }: UserAboutSectionProps) => {
         Single, interested in social networking
       </Text> */}
       {/* Birthday */}
-      <Text className="text-lg font-medium">
+      <Text className="text-lg font-semibold">
         DOB: {profile?.birthday ? formatBirthdate(profile?.birthday) : null}
       </Text>
       {/* Gender */}
-      <Text className="text-lg font-medium">Gender - {profile?.gender}</Text>
+      <Text className="text-lg font-semibold">Gender - {profile?.gender}</Text>
       {/* Location */}
-      <Text className="text-lg font-medium">Location: {profile?.city}, NS</Text>
+      <Text className="text-lg font-semibold">
+        Location: {profile?.city}, NS
+      </Text>
       {/* Activity Tags */}
-      <View>
-        {profile?.activities && profile?.activities.length > 0 ? (
-          <View className="flex flex-row flex-wrap">
-            {profile?.activities.map((activity, index) => (
-              <ActivityTags key={index} activity={activity} />
-            ))}
-          </View>
-        ) : null}
-      </View>
     </View>
   )
 }

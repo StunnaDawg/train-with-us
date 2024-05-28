@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native"
 import AppleAuth from "./AppleAuth"
 import GoogleAuth from "./GoogleAuth"
 import * as Updates from "expo-updates"
+import GenericButton from "../components/GenericButton"
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -89,28 +90,28 @@ const SignUp = () => {
               autoCapitalize={"none"}
             />
           </View>
-          <View>
-            <Button
-              title="Sign Up"
-              disabled={loading}
-              onPress={() => signUpWithEmail()}
+          <View className="flex flex-row justify-center m-5">
+            <GenericButton
+              colourPressed="bg-yellow-300"
+              borderColourPressed="border-yellow-300"
+              borderColourDefault="border-black"
+              colourDefault="bg-white"
+              textSize="text-xl"
+              width={250}
+              roundness="round-none"
+              text="Sign Up"
+              buttonFunction={() => signUpWithEmail()}
             />
           </View>
-
-          <View className="items-center">
-            <Pressable onPress={() => navigation.navigate("Login")}>
-              <Text className="font-bold text-white text-xl">
-                Already Have An Account?
-              </Text>
-            </Pressable>
-          </View>
-
           <View>
             <AppleAuth />
           </View>
-
-          <View>
-            <GoogleAuth />
+          <View className="items-center m-5">
+            <Pressable onPress={() => navigation.navigate("Login")}>
+              <Text className="font-bold text-white text-2xl">
+                Already Have An Account?
+              </Text>
+            </Pressable>
           </View>
         </View>
       </KeyboardAvoidingView>

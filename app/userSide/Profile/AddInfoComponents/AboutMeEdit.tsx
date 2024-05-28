@@ -102,7 +102,7 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
 
       <View className="border-b border-black/45 p-2">
         <Pressable className="flex flex-row justify-between items-center">
-          <Text className=" font-bold text-xl">Loaction - N/A</Text>
+          <Text className=" font-bold text-xl">Halifax NS</Text>
           <FontAwesome6 name="edit" size={20} color="blue" />
         </Pressable>
       </View>

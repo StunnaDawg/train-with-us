@@ -10,6 +10,7 @@ import {
   Text,
   Image,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import supabase from "../../lib/supabase"
@@ -18,6 +19,7 @@ import { SafeAreaView } from "react-native-safe-area-context"
 import AppleAuth from "./AppleAuth"
 import GoogleAuth from "./GoogleAuth"
 import * as Updates from "expo-updates"
+import GenericButton from "../components/GenericButton"
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -47,11 +49,16 @@ const Login = () => {
 
     if (error) Alert.alert(error.message)
     setLoading(false)
+    await Updates.reloadAsync()
   }
 
   return (
     <SafeAreaView className="flex-1 " style={{ backgroundColor: "#07182d" }}>
-      <KeyboardAvoidingView className="flex flex-row justify-center">
+      <KeyboardAvoidingView
+        className="flex flex-row justify-center"
+        // behavior={Platform.OS === "ios" ? "padding" : "height"}
+        // keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+      >
         <View className="flex-1 mx-10">
           <View className="items-center">
             <Image
@@ -84,11 +91,17 @@ const Login = () => {
               autoCapitalize={"none"}
             />
           </View>
-          <View>
-            <Button
-              title="Log in"
-              disabled={loading}
-              onPress={() => signInWithEmail()}
+          <View className="flex flex-row justify-center m-5">
+            <GenericButton
+              colourPressed="bg-yellow-300"
+              borderColourPressed="border-yellow-300"
+              borderColourDefault="border-black"
+              colourDefault="bg-white"
+              textSize="text-xl"
+              width={250}
+              roundness="round-none"
+              text="Login"
+              buttonFunction={() => signInWithEmail()}
             />
           </View>
 
@@ -96,13 +109,9 @@ const Login = () => {
             <AppleAuth />
           </View>
 
-          <View>
-            <GoogleAuth />
-          </View>
-
-          <View className="items-center">
+          <View className="items-center m-5">
             <Pressable onPress={() => navigation.navigate("SignUp")}>
-              <Text className="font-bold text-xl text-white">
+              <Text className="font-bold text-2xl text-white">
                 Don't Have an Account?
               </Text>
             </Pressable>
