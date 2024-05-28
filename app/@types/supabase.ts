@@ -80,6 +80,7 @@ export type Database = {
       communities: {
         Row: {
           about: string | null
+          address: string | null
           channels: string[] | null
           city: string
           community_members: string[] | null
@@ -90,11 +91,11 @@ export type Database = {
           community_title: string | null
           created_at: string
           id: number
-          location: string | null
           phone_number: string | null
         }
         Insert: {
           about?: string | null
+          address?: string | null
           channels?: string[] | null
           city?: string
           community_members?: string[] | null
@@ -105,11 +106,11 @@ export type Database = {
           community_title?: string | null
           created_at?: string
           id?: number
-          location?: string | null
           phone_number?: string | null
         }
         Update: {
           about?: string | null
+          address?: string | null
           channels?: string[] | null
           city?: string
           community_members?: string[] | null
@@ -120,7 +121,6 @@ export type Database = {
           community_title?: string | null
           created_at?: string
           id?: number
-          location?: string | null
           phone_number?: string | null
         }
         Relationships: [
@@ -182,6 +182,7 @@ export type Database = {
           created_at: string
           id: string
           recent_message: string | null
+          updated_at: string | null
         }
         Insert: {
           channel_pic?: string | null
@@ -192,6 +193,7 @@ export type Database = {
           created_at?: string
           id?: string
           recent_message?: string | null
+          updated_at?: string | null
         }
         Update: {
           channel_pic?: string | null
@@ -202,6 +204,7 @@ export type Database = {
           created_at?: string
           id?: string
           recent_message?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {

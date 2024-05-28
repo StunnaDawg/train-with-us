@@ -1,9 +1,10 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
+import { Communities } from "../../@types/supabaseTypes"
+import { da } from "date-fns/locale"
 
 const insertPhoto = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
-  currentArray: string[] | null | undefined,
   photoUrl: string,
   userId: string | number,
   tableName: string,
@@ -11,6 +12,16 @@ const insertPhoto = async (
 ) => {
   try {
     setLoading(true)
+
+    const { data, error: currentArrayError } = (await supabase
+      .from(tableName)
+      .select(arrayColumn)
+      .eq("id", userId)
+      .single()) as { data: Communities; error: any }
+
+    if (currentArrayError) throw currentArrayError
+
+    const currentArray = data?.community_photos
 
     const { data: photoPath } = supabase.storage
       .from("photos")

@@ -5,15 +5,11 @@ import React, { useEffect, useState } from "react"
 import * as ImagePicker from "expo-image-picker"
 import { FontAwesome6 } from "@expo/vector-icons"
 import supabase from "../../lib/supabase"
-import { FileObject } from "@supabase/storage-js"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import { decode } from "base64-arraybuffer"
 import insertPhoto from "../supabaseFunctions/updateFuncs/insertPhoto"
 import { Profile } from "../@types/supabaseTypes"
 import useCurrentUser from "../supabaseFunctions/getFuncs/useCurrentUser"
-import { fi } from "date-fns/locale"
-import { set } from "date-fns"
-import removePhoto from "../supabaseFunctions/deleteFuncs/removePhoto"
 import removeCommunityPhoto from "../supabaseFunctions/deleteFuncs/removeCommunityPhoto"
 
 type SingleImageProp = {
@@ -24,6 +20,7 @@ type SingleImageProp = {
     React.SetStateAction<string[] | null | undefined>
   >
   communityId: number
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const SingleImageSupaCommunity = ({
@@ -32,6 +29,7 @@ const SingleImageSupaCommunity = ({
   imageUrls,
   setImageUrls,
   communityId,
+  setRefresh,
 }: SingleImageProp) => {
   const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
@@ -86,21 +84,19 @@ const SingleImageSupaCommunity = ({
         contentType: contentType,
       })
 
-      if (userId === undefined) return
+      if (userId === undefined || !imageUrls) return
       insertPhoto(
         setLoading,
-        imageUrls,
+
         filePath,
         communityId,
         "communities",
         "community_photos"
       )
-      const { error } = await supabase
-        .from("communities")
-        .upsert({ id: userId, community_profile_pic: filePath })
 
       setImage(img.uri)
-      if (error) throw error
+
+      setRefresh(true)
     }
   }
 

@@ -12,18 +12,13 @@ type CommunityContactProps = {
 }
 
 const CommunityContact = ({ community }: CommunityContactProps) => {
-  const callFunc = () => {
-    console.log("Calling")
-  }
-
   return (
     <View className="flex flex-row">
       <View className="flex  flex-row items-center  mx-2 ">
         <View>
           <View>
-            {/* Location */}
             <Text className="font-bold text-3xl text-wrap text-white">
-              {community?.location}
+              {community?.address}
             </Text>
           </View>
           {community?.phone_number ? (

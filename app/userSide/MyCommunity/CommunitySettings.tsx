@@ -50,7 +50,7 @@ const CommunitySettings = () => {
     if (communityState === null) return
     setCommunityName(communityState.community_title || "")
     setCommunityStyle(communityState.community_style || "")
-    setLocation(communityState.location || "")
+    setLocation(communityState.address || "")
     setCommunityAbout(communityState.about || "")
     setCommunityNumber(communityState.phone_number || "")
   }, [communityState])
@@ -83,11 +83,11 @@ const CommunitySettings = () => {
         )
       }
 
-      if (community.location !== location) {
+      if (community.address !== location) {
         updateSingleCommunityTrait(
           setLoading,
           community.id,
-          "location",
+          "address",
           location
         )
       }
@@ -150,7 +150,7 @@ const CommunitySettings = () => {
               />
             </View>
 
-            <Text className="font-medium text-lg">Community Location</Text>
+            <Text className="font-medium text-lg">Community Address</Text>
             <View className="border rounded-lg p-2 w-full">
               <TextInput
                 value={location}
