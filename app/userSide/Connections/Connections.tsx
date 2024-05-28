@@ -92,8 +92,8 @@ const Connections = () => {
           className="flex flex-row items-center"
           onPress={() => navigation.navigate("SearchUsers")}
         >
-          <Text className="mx-2 text-xl font-bold">Search Users</Text>
-          <FontAwesome6 name="arrow-right" size={24} color="black" />
+          <Text className="mx-2 mt-1 text-xl font-bold">Search Users</Text>
+          <FontAwesome6 name="magnifying-glass" size={24} color="black" />
         </Pressable>
       </View>
       <Animated.ScrollView

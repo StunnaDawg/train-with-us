@@ -1,5 +1,5 @@
 import { View, Text } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import SingleEditPic from "../../../components/SingleEditPic"
 import supabase from "../../../../lib/supabase"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
@@ -7,78 +7,53 @@ import { FileObject } from "@supabase/storage-js"
 import SingleImageSupa from "../../../components/SingleImageSupa"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import { Profile } from "../../../@types/supabaseTypes"
+import { useFocusEffect } from "@react-navigation/native"
 
 const ImageGrid = () => {
-  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
+  const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const { user } = useAuth()
 
   useEffect(() => {
     if (!user) return
 
-    useCurrentUser(user?.id, setCurrentUser)
+    useCurrentUser(user.id, setCurrentUser)
   }, [user])
 
   useEffect(() => {
-    if (currentUser?.photos_url === null || undefined) return
-    setImageFiles(currentUser?.photos_url)
+    if (currentUser?.photos_url) {
+      setImageFiles(currentUser.photos_url)
+    }
   }, [currentUser])
+
+  useFocusEffect(
+    useCallback(() => {
+      const getUser = async () => {
+        if (currentUser?.photos_url) {
+          setImageFiles(currentUser.photos_url)
+        }
+      }
+
+      getUser()
+
+      return () => {
+        // Optional cleanup actions
+      }
+    }, [currentUser])
+  )
 
   return (
     <View className="flex flex-row flex-wrap justify-center">
-      <View className="mx-1">
-        <SingleImageSupa
-          imageUrl={imageFiles?.[0]}
-          listIndex={0}
-          imageUrls={currentUser?.photos_url}
-          setImageUrls={setImageFiles}
-        />
-      </View>
-
-      <View className="mx-1">
-        <SingleImageSupa
-          imageUrl={imageFiles?.[1]}
-          listIndex={1}
-          imageUrls={currentUser?.photos_url}
-          setImageUrls={setImageFiles}
-        />
-      </View>
-
-      <View className="mx-1">
-        <SingleImageSupa
-          imageUrl={imageFiles?.[2]}
-          listIndex={2}
-          imageUrls={currentUser?.photos_url}
-          setImageUrls={setImageFiles}
-        />
-      </View>
-
-      <View className="mx-1">
-        <SingleImageSupa
-          imageUrl={imageFiles?.[3]}
-          listIndex={3}
-          imageUrls={currentUser?.photos_url}
-          setImageUrls={setImageFiles}
-        />
-      </View>
-
-      <View className="mx-1">
-        <SingleImageSupa
-          imageUrl={imageFiles?.[4]}
-          listIndex={4}
-          imageUrls={currentUser?.photos_url}
-          setImageUrls={setImageFiles}
-        />
-      </View>
-
-      <View className="mx-1">
-        <SingleImageSupa
-          imageUrl={imageFiles?.[5]}
-          listIndex={5}
-          imageUrls={currentUser?.photos_url}
-          setImageUrls={setImageFiles}
-        />
-      </View>
+      {Array.from({ length: 6 }).map((_, index) => (
+        <View key={index} className="mx-1">
+          <SingleImageSupa
+            imageUrl={imageFiles?.[index]}
+            listIndex={index}
+            imageUrls={currentUser?.photos_url}
+            setImageUrls={setImageFiles}
+          />
+        </View>
+      ))}
     </View>
   )
 }

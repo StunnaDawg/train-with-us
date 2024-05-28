@@ -68,9 +68,8 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
           className="flex flex-row justify-between items-center"
         >
           <Text className=" font-bold text-xl">Primary Community:</Text>
+          <Text className=" font-bold text-xl">{PrimaryGymName}</Text>
           <View className="items-center">
-            <Text className=" font-bold text-xl">{PrimaryGymName}</Text>
-
             <FontAwesome6 name="edit" size={20} color="blue" />
           </View>
         </Pressable>
@@ -102,8 +101,7 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
 
       <View className="border-b border-black/45 p-2">
         <Pressable className="flex flex-row justify-between items-center">
-          <Text className=" font-bold text-xl">Halifax NS</Text>
-          <FontAwesome6 name="edit" size={20} color="blue" />
+          <Text className=" font-bold text-xl">Location - Halifax NS</Text>
         </Pressable>
       </View>
     </ScrollView>

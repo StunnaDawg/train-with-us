@@ -13,6 +13,7 @@ import { Communities } from "../../@types/supabaseTypes"
 import updateSingleCommunityTrait from "../../supabaseFunctions/updateFuncs/updateSingleCommunityTrait"
 import CommunityImageGrid from "./ImageGrid"
 import showAlert from "../../utilFunctions/showAlert"
+import CancelButton from "../../components/CancelButton"
 
 const CommunitySettings = () => {
   const [communityState, setCommunityState] = useState<Communities | null>(
@@ -110,6 +111,10 @@ const CommunitySettings = () => {
 
   return (
     <SafeAreaView className="flex-1">
+      <View className="mx-2">
+        <CancelButton size={32} />
+      </View>
+
       <ScrollView>
         <View>
           <CommunityProfilePicSupa

@@ -25,6 +25,7 @@ import supabase from "../../../../lib/supabase"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import sendNotification from "../../../utilFunctions/sendNotification"
 import upsertChatSession from "../../../supabaseFunctions/updateFuncs/updateChatSession"
+import BackButton from "../../../components/BackButton"
 
 type UserMessage = {
   message: string | null
@@ -131,20 +132,24 @@ const MessageScreen = () => {
   }
   return (
     <SafeAreaView className="flex-1 bg-slate-300/05">
-      <View className="flex flex-row justify-center ">
-        <View className="items-center">
-          <View className="mb-2">
-            <SinglePic
-              size={55}
-              avatarRadius={100}
-              noAvatarRadius={100}
-              item={currentUser?.profile_pic}
-            />
-          </View>
+      <View className="flex flex-row justify-between">
+        <View className="mx-1">
+          <BackButton size={32} />
+        </View>
+        <View className="mb-2">
+          <SinglePic
+            size={55}
+            avatarRadius={100}
+            noAvatarRadius={100}
+            item={currentUser?.profile_pic}
+          />
+
           <Text className="font-bold text-xl mb-1">
             {currentUser?.first_name}
           </Text>
         </View>
+
+        <View />
       </View>
 
       <KeyboardAvoidingView

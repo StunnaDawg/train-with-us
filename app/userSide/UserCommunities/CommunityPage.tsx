@@ -17,6 +17,7 @@ import SinglePic from "../../components/SinglePic"
 import { Entypo } from "@expo/vector-icons"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import supabase from "../../../lib/supabase"
+import BackButton from "../../components/BackButton"
 
 const CommunityPage = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -109,9 +110,13 @@ const CommunityPage = () => {
     <SafeAreaView>
       <ScrollView>
         <View className="m-2">
-          <Text className="font-bold text-xl">
-            {`${community?.community_title}`}'s Community Page
-          </Text>
+          <View className="flex flex-row justify-between">
+            <BackButton size={32} />
+            <Text className="font-bold text-xl">
+              {`${community?.community_title}`}'s Community Page
+            </Text>
+            <View />
+          </View>
 
           {!loading && communityChannels && communityChannels.length > 0 ? (
             communityChannels.map((c) => (
@@ -137,13 +142,12 @@ const CommunityPage = () => {
                   </View>
 
                   <View>
-                    <Text className="font-bold mb-1">
+                    <Text className="text-xl font-bold mb-1">
                       {c.channel_title || "error loading channel title"}{" "}
                       {c.channel_type === "Announcement"
                         ? `#${c.channel_type}`
                         : null}
                     </Text>
-                    <Text className="text-sm">Hey, how are you?</Text>
                   </View>
                 </Pressable>
 

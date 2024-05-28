@@ -130,6 +130,7 @@ const SingleImageSupa = ({
             className="m-1 relative overflow-hidden max-w-full rounded-lg bg-gray-800 border-1 border-solid border-gray-200 border-r-10"
             source={{ uri: image }}
             style={{ width: 150, height: 150 }}
+            cachePolicy="memory-disk"
           />
           {loading ? <ActivityIndicator /> : null}
           <Pressable

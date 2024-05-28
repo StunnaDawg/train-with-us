@@ -79,14 +79,7 @@ const SingleEditPic = ({
       })
 
       if (userId === undefined) return
-      insertPhoto(
-        setLoading,
-        currentUser?.photos_url,
-        filePath,
-        userId,
-        "profiles",
-        "photos_url"
-      )
+      insertPhoto(setLoading, filePath, userId)
     }
   }
 

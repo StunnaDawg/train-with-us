@@ -7,6 +7,7 @@ import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommun
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { Communities } from "../../@types/supabaseTypes"
 import { RouteProp, useRoute } from "@react-navigation/native"
+import BackButton from "../../components/BackButton"
 
 const CommunityHome = () => {
   const { user } = useAuth()
@@ -38,7 +39,11 @@ const CommunityHome = () => {
   )
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-between px-5 border-b">
+      <View className="flex flex-row justify-between px-5 border-b items-center">
+        <View className="mb-1">
+          <BackButton size={32} />
+        </View>
+
         <Text className="font-bold text-2xl">
           {currentCommunity?.community_title}
         </Text>
@@ -68,7 +73,7 @@ const CommunityHome = () => {
             </Pressable>
           </View>
 
-          <View>
+          <View className="border-b pb-2">
             <Pressable
               className="pt-2"
               onPress={() => {
@@ -76,6 +81,21 @@ const CommunityHome = () => {
               }}
             >
               <Text className="mx-2 font-bold text-xl">Create Event</Text>
+            </Pressable>
+          </View>
+
+          <View>
+            <Pressable
+              className="pt-2"
+              onPress={() => {
+                navigation.navigate("ViewCommunitiesScreen", {
+                  communityId: communityId,
+                })
+              }}
+            >
+              <Text className="mx-2 font-bold text-xl">
+                View Community Profile
+              </Text>
             </Pressable>
           </View>
         </View>

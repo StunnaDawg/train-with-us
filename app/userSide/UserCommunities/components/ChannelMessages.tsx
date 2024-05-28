@@ -29,6 +29,7 @@ import getChannelSessionMessages from "../../../supabaseFunctions/getFuncs/getCh
 import sendChannelMessage from "../../../supabaseFunctions/addFuncs/sendChannelMessage"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import upsertCommunitySession from "../../../supabaseFunctions/updateFuncs/updateCommunitySession"
+import BackButton from "../../../components/BackButton"
 
 type UserMessage = {
   message: string | null
@@ -125,6 +126,10 @@ const ChannelMessageScreen = () => {
 
   return (
     <SafeAreaView className="flex-1">
+      <View className="mx-1">
+        <BackButton size={32} />
+      </View>
+
       <View className="flex flex-row justify-center ">
         <View className="items-center">
           <View className="mb-2">

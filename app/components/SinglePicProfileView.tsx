@@ -68,6 +68,7 @@ export default function SinglePicProfileView({
           source={{ uri: avatarUrl }}
           accessibilityLabel="Avatar"
           style={[avatarSize, styles.avatar, styles.image]}
+          cachePolicy="memory-disk"
         />
       ) : (
         <View style={[avatarSize, styles.avatar, styles.noImage]} />

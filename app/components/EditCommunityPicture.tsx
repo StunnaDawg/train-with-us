@@ -37,7 +37,6 @@ const SingleImageSupaCommunity = ({
   const { user } = useAuth()
   const avatarSize = { height: 150, width: 150 }
   const userId = user?.id
-  let profileType: Communities
   const [image, setImage] = useState<string>("")
 
   useEffect(() => {

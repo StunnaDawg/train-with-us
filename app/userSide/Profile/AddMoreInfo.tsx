@@ -7,6 +7,7 @@ import { RootStackParamList } from "../../@types/navigation"
 import Tabs from "./AddInfoComponents/TabsInfo"
 import AboutMeEdit from "./AddInfoComponents/AboutMeEdit"
 import InterestsEdit from "./AddInfoComponents/InterestsEdit"
+import BackButton from "../../components/BackButton"
 
 const AddMoreInfo = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -26,8 +27,13 @@ const AddMoreInfo = () => {
   return (
     <SafeAreaView className="flex-1">
       <View className="flex-1">
-        <View className="flex flex-row justify-center">
+        <View className="flex flex-row justify-between mx-2 items-center">
+          <View>
+            <BackButton size={32} />
+          </View>
           <Text className="text-2xl font-bold m-1">My Profile</Text>
+
+          <View />
         </View>
 
         <UserProfilePic profile={currentUser} refresh={refreshing} />

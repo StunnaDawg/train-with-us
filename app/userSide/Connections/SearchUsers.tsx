@@ -5,6 +5,7 @@ import searchUsersFunction from "../../supabaseFunctions/getFuncs/searchUsers"
 import SearchBar from "../Events/components/SearchBar"
 import { ScrollView } from "react-native"
 import MemberCard from "../Communities/components/MemberCard"
+import BackButton from "../../components/BackButton"
 
 const SearchUsers = () => {
   const [searchText, setSearchText] = useState<string>("")

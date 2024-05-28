@@ -10,14 +10,30 @@ import { RouteProp } from "@react-navigation/native"
 import { RootStackParamList } from "../../@types/navigation"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { Profile } from "../../@types/supabaseTypes"
+import returnCommunityName from "../../utilFunctions/returnCommunityName"
 
 const ViewRequestProfile = () => {
+  const [primaryGymName, setPrimaryGymName] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
   const route = useRoute<RouteProp<RootStackParamList, "ViewRequestProfile">>()
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const userId = route.params.userId
 
   useEffect(() => {
+    const getPrimaryGymName = async () => {
+      if (currentUser?.primary_gym === null) {
+        setPrimaryGymName("No Primary Gym")
+        return
+      }
+      const PrimaryGymName = await returnCommunityName(currentUser?.primary_gym)
+      setPrimaryGymName(PrimaryGymName)
+    }
+
+    getPrimaryGymName()
+  }, [currentUser])
+
+  useEffect(() => {
+    if (!userId) return
     useCurrentUser(userId, setCurrentUser)
   }, [])
   return (
@@ -27,7 +43,12 @@ const ViewRequestProfile = () => {
           <Text className="text-3xl font-bold">{currentUser?.first_name}</Text>
         </View>
         <View>
-          <PhotoArray profileId={currentUser?.id} />
+          <PhotoArray
+            profileId={currentUser?.id}
+            index1={0}
+            index2={1}
+            index3={2}
+          />
         </View>
 
         <View>
@@ -40,7 +61,11 @@ const ViewRequestProfile = () => {
         </View>
 
         <View>
-          <UserTopGyms profile={currentUser} borderB={false} mt={false} />
+          <UserTopGyms
+            communityName={primaryGymName}
+            borderB={false}
+            mt={false}
+          />
         </View>
 
         <View>
@@ -51,7 +76,12 @@ const ViewRequestProfile = () => {
         </View>
 
         <View className="mt-2">
-          <PhotoArray profileId={currentUser?.id} />
+          <PhotoArray
+            profileId={currentUser?.id}
+            index1={3}
+            index2={4}
+            index3={5}
+          />
         </View>
 
         <View>

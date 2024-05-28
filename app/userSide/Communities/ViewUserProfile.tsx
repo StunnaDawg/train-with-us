@@ -33,8 +33,8 @@ const ViewUserProfile = () => {
     <SafeAreaView className="flex-1">
       <ScrollView className="h-full">
         <View className="flex flex-row justify-center mt-8 mb-2">
-          <Text className="text-white text-3xl font-bold">
-            {member.first_name}
+          <Text className=" text-3xl font-bold">
+            {member.first_name} {member?.last_name}
           </Text>
         </View>
         <View>

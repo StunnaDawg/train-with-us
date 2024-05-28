@@ -70,6 +70,7 @@ const CommunityRequestsPage = () => {
       </View>
 
       <ScrollView
+        className="flex-1 "
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
@@ -131,7 +132,11 @@ const CommunityRequestsPage = () => {
             </View>
           ))
         ) : (
-          <Text>No requests</Text>
+          <View className="flex-1 justify-center items-center">
+            <View className="flex flex-row justify-center">
+              <Text className="text-2xl font-bold">No requests yet!</Text>
+            </View>
+          </View>
         )}
       </ScrollView>
     </SafeAreaView>

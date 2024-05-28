@@ -69,12 +69,14 @@ export default function SinglePicCommunity({
           source={{ uri: avatarUrl }}
           accessibilityLabel="Avatar"
           style={[avatarSize, styles.avatar, styles.image]}
+          cachePolicy="memory-disk"
         />
       ) : (
         <Image
           source={require("../../assets/images/TWU-Logo.png")}
           accessibilityLabel="Avatar"
           style={[avatarSize, styles.avatar, styles.image]}
+          cachePolicy="memory-disk"
         />
       )}
     </View>

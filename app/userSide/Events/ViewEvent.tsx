@@ -18,6 +18,7 @@ import { useNavigation, useRoute, RouteProp } from "@react-navigation/native"
 import getSingleEvent from "../../supabaseFunctions/getFuncs/getSingleEvent"
 import checkIfAttending from "../../supabaseFunctions/checkIfAttending"
 import * as Calendar from "expo-calendar"
+import BackButton from "../../components/BackButton"
 
 const ViewEvent = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -82,6 +83,9 @@ const ViewEvent = () => {
           }
         >
           <View>
+            <View className="mx-3">
+              <BackButton size={36} colour="white" />
+            </View>
             <ViewEventTitle
               eventId={event?.id}
               title={event?.event_title}
@@ -104,7 +108,9 @@ const ViewEvent = () => {
               ticketPrice={event?.price ? event.price : 0}
               event={event}
             />
-          ) : null}
+          ) : (
+            <View className="bg-primary-900" />
+          )}
         </View>
       </SafeAreaView>
     </View>
