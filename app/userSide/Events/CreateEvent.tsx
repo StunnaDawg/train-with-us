@@ -6,6 +6,9 @@ import {
   TextInput,
   Platform,
   Pressable,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native"
 import React, { useEffect, useState } from "react"
 import { NavigationType } from "../../@types/navigation"
@@ -49,108 +52,121 @@ const CreateEvent = () => {
   }, [])
   return (
     <SafeAreaView className="flex-1">
-      <ScrollView className=" p-4 bg-white">
-        <View className="flex flex-row items-center mb-8">
-          <Text className="mx-1 text-3xl font-semibold ">Create Event</Text>
-        </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView className=" p-4 bg-white">
+            <View className="flex flex-row items-center mb-8">
+              <Text className="mx-1 text-3xl font-semibold ">Create Event</Text>
+            </View>
 
-        <View>
-          <NewPhoto setProfilePic={setEventPicture} />
-        </View>
+            <View>
+              <NewPhoto setProfilePic={setEventPicture} />
+            </View>
 
-        <View className="mb-4">
-          <Text className="mb-2 text-lg font-semibold text-gray">Title</Text>
-          <TextInput
-            value={eventTitle}
-            onChangeText={setEventTitle}
-            placeholder="Add a Title"
-            className="border  p-2 rounded-lg"
-          />
-        </View>
+            <View className="mb-4">
+              <Text className="mb-2 text-lg font-semibold text-gray">
+                Title
+              </Text>
+              <TextInput
+                value={eventTitle}
+                onChangeText={setEventTitle}
+                placeholder="Add a Title"
+                className="border  p-2 rounded-lg"
+              />
+            </View>
 
-        <View className="mb-4">
-          <Text className="mb-2 text-lg font-semibold text-gray">
-            Description
-          </Text>
-          <TextInput
-            value={description}
-            onChangeText={setDescription}
-            placeholder="Event Description"
-            className="border p-2 rounded-lg"
-            multiline={true}
-          />
-        </View>
+            <View className="mb-4">
+              <Text className="mb-2 text-lg font-semibold text-gray">
+                Description
+              </Text>
+              <TextInput
+                value={description}
+                onChangeText={setDescription}
+                placeholder="Event Description"
+                className="border p-2 rounded-lg"
+                multiline={true}
+              />
+            </View>
 
-        <View className="mb-4">
-          <Text className="mb-2 text-lg font-semibold text-gray">Date</Text>
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={date}
-            mode="date"
-            is24Hour={true}
-            display="default"
-            onChange={onChangeDate}
-            className="mb-4"
-          />
-        </View>
+            <View className="mb-4">
+              <Text className="mb-2 text-lg font-semibold text-gray">Date</Text>
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={date}
+                mode="date"
+                is24Hour={true}
+                display="default"
+                onChange={onChangeDate}
+                className="mb-4"
+              />
+            </View>
 
-        <View className="mb-4">
-          <Text className="mb-2 text-lg font-semibold text-gray">Time</Text>
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={date}
-            mode="time"
-            is24Hour={true}
-            display="default"
-            onChange={onChangeDate}
-          />
-        </View>
+            <View className="mb-4">
+              <Text className="mb-2 text-lg font-semibold text-gray">Time</Text>
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={date}
+                mode="time"
+                is24Hour={true}
+                display="default"
+                onChange={onChangeDate}
+              />
+            </View>
 
-        <View className="mb-4">
-          <Text className="mb-2 text-lg font-semibold text-gray">Price</Text>
-          <TextInput
-            value={price}
-            onChangeText={setPrice}
-            placeholder="Set a Price"
-            className="border  p-2 rounded-lg"
-            keyboardType="numeric"
-          />
-        </View>
+            <View className="mb-4">
+              <Text className="mb-2 text-lg font-semibold text-gray">
+                Price
+              </Text>
+              <TextInput
+                value={price}
+                onChangeText={setPrice}
+                placeholder="Set a Price"
+                className="border  p-2 rounded-lg"
+                keyboardType="numeric"
+              />
+            </View>
 
-        <View className="mb-4">
-          <Text className="mb-2 text-lg font-semibold text-gray">Location</Text>
-          <TextInput
-            value={location}
-            onChangeText={setLocation}
-            placeholder="Set a valid location"
-            className="border  p-2 rounded-lg"
-            keyboardType="numeric"
-          />
-        </View>
+            <View className="mb-4">
+              <Text className="mb-2 text-lg font-semibold text-gray">
+                Location
+              </Text>
+              <TextInput
+                value={location}
+                onChangeText={setLocation}
+                placeholder="Set a valid location"
+                className="border  p-2 rounded-lg"
+              />
+            </View>
 
-        <Pressable
-          onPress={async () => {
-            setTimeout(() => {
-              if (!currentUser?.id && !currentUser?.community_created) return
-              addNewEvent(
-                setLoading,
-                currentUser?.id,
-                eventTitle,
-                currentUser?.community_created,
-                date,
-                Number(price),
-                description,
-                eventPicture,
-                location
-              )
-              navigation.goBack()
-            }, 2000)
-          }}
-          className=" bg-black p-4 rounded-lg items-center mb-20"
-        >
-          <Text className="text-white text-xl font-bold">Create Event</Text>
-        </Pressable>
-      </ScrollView>
+            <Pressable
+              onPress={async () => {
+                setTimeout(() => {
+                  if (!currentUser?.id && !currentUser?.community_created)
+                    return
+                  addNewEvent(
+                    setLoading,
+                    currentUser?.id,
+                    eventTitle,
+                    currentUser?.community_created,
+                    date,
+                    Number(price),
+                    description,
+                    eventPicture,
+                    location
+                  )
+                  navigation.goBack()
+                }, 2000)
+              }}
+              className=" bg-black p-4 rounded-lg items-center mb-20"
+            >
+              <Text className="text-white text-xl font-bold">Create Event</Text>
+            </Pressable>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }

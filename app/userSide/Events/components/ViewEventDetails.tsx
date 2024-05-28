@@ -12,9 +12,14 @@ import { Events } from "../../../@types/supabaseTypes"
 type ViewEventDetailsProps = {
   date: string | null | undefined
   eventId: number
+  location: string | null | undefined
 }
 
-const ViewEventDetails = ({ date, eventId }: ViewEventDetailsProps) => {
+const ViewEventDetails = ({
+  date,
+  eventId,
+  location,
+}: ViewEventDetailsProps) => {
   return (
     <View>
       {/* Date and Time */}
@@ -32,12 +37,13 @@ const ViewEventDetails = ({ date, eventId }: ViewEventDetailsProps) => {
       </View>
 
       {/* Location */}
-      <View className="mb-1">
+      <View className=" flex flex-row justify-between mb-1">
         <View>
           <Text className="pb-1 font-bold text-lg text-white ">Location:</Text>
           <Text className="font-bold text-lg text-white ">
-            580 Wright Ave, Dartmouth NS
+            {location ? location : "No Street Address"}
           </Text>
+          <Text className="font-bold text-lg text-white ">Halifax, NS</Text>
         </View>
 
         {Platform.OS === "ios" ? (
@@ -50,7 +56,7 @@ const ViewEventDetails = ({ date, eventId }: ViewEventDetailsProps) => {
                 }
                 roundness="rounded-xl"
                 textSize="text-sm"
-                width={200}
+                width={130}
                 colourPressed="bg-slate-200"
                 colourDefault="bg-white"
                 borderColourPressed="border-gray-200"
@@ -66,7 +72,7 @@ const ViewEventDetails = ({ date, eventId }: ViewEventDetailsProps) => {
                 }
                 roundness="rounded-xl"
                 textSize="text-sm"
-                width={200}
+                width={130}
                 colourPressed="bg-slate-200"
                 colourDefault="bg-white"
                 borderColourPressed="border-gray-200"
@@ -83,7 +89,7 @@ const ViewEventDetails = ({ date, eventId }: ViewEventDetailsProps) => {
               }
               roundness="rounded-xl"
               textSize="text-sm"
-              width={200}
+              width={130}
               colourPressed="bg-slate-200"
               colourDefault="bg-white"
               borderColourPressed="border-gray-200"

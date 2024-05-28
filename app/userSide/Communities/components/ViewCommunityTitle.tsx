@@ -57,7 +57,7 @@ const ViewCommunityTitle = ({
   return (
     <View>
       <View className="ml-12">
-        <Text className="font-bold text-4xl text-white">
+        <Text className="font-bold text-3xl text-white">
           {community?.community_title}
         </Text>
         <Pressable
@@ -68,7 +68,7 @@ const ViewCommunityTitle = ({
             })
           }
         >
-          <Text className="mr-1 font-bold text-2xl text-white">
+          <Text className="mr-1 font-bold text-xl text-white">
             {community?.community_members?.length} Members
           </Text>
           <FontAwesome6 name="people-group" size={24} color="white" />
@@ -79,7 +79,7 @@ const ViewCommunityTitle = ({
             text={requestSent ? `Request Sent ` : `+ Request to Join`}
             buttonFunction={() => requestFunc()}
             roundness="rounded-full"
-            textSize="text-xl"
+            textSize="text-sm"
             width={200}
             colourPressed="bg-slate-200"
             colourDefault="bg-white"

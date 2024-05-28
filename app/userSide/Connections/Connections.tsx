@@ -30,7 +30,7 @@ const Connections = () => {
   const [newConnection, setNewConnection] = useState<boolean>(false)
   const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
   const navigation = useNavigation<NavigationType>()
-  const cardHeight = 750
+  const cardHeight = 1000
   const scrollEnabled = useSharedValue(true)
   const translationY = useSharedValue(0)
   const startY = useSharedValue(0)

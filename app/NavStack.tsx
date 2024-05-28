@@ -423,6 +423,12 @@ const NavStack = () => {
                 name="QuestionThree"
                 component={Question3}
               />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="Notifications"
+                component={EnableNotifcations}
+              />
             </Stack.Group>
           ) : (
             <Stack.Group>

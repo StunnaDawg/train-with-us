@@ -14,6 +14,8 @@ type ViewEventTitleProps = {
   date: string | null | undefined
   eventId: number | null | undefined
   eventPhoto: string | null | undefined
+  eventCommunityTitle: string | null | undefined
+  eventStyle: string | null | undefined
 }
 
 const ViewEventTitle = ({
@@ -21,39 +23,38 @@ const ViewEventTitle = ({
   date,
   eventId,
   eventPhoto,
+  eventCommunityTitle,
+  eventStyle,
 }: ViewEventTitleProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [currentEvent, setCurrentEvent] = useState<Events | null>({} as Events)
-  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
-  const [coverImage, setCoverImage] = useState<string>("")
   const { user } = useAuth()
 
   useEffect(() => {
+    setLoading(true)
     if (!user && eventId) return
 
     getSingleEvent(setLoading, eventId, setCurrentEvent)
+    setLoading(false)
   }, [user])
 
-  useEffect(() => {
-    setLoading(true)
-    if (
-      currentEvent?.event_cover_photo === null ||
-      currentEvent?.event_cover_photo === undefined
-    )
-      return
-    console.log("getting currentEvent", currentEvent)
-    setCoverImage(currentEvent.event_cover_photo)
-    setLoading(false)
-  }, [currentEvent])
   return (
     <View className="flex flex-row items-center justify-center">
       <View className="m-5  items-center">
         <Text className="text-xl font-bold text-white">
+          {title ? title : "No Title"}
+        </Text>
+        <Text className="text-xl font-bold text-white">
           {date ? formatBirthdate(date) : "No Date"}
         </Text>
-        <View className="border rounded-full p-1 px-4 bg-white border-white">
-          <Text className=" text-xl font-semibold">{title}</Text>
+        <View className="border rounded-full mt-1 p-1 px-4 bg-white border-white">
+          <Text className=" text-xl font-semibold">
+            {eventCommunityTitle ? eventCommunityTitle : "No Title"}
+          </Text>
         </View>
+        <Text className="font-bold text-white mt-2">
+          {eventStyle ? eventStyle : null}
+        </Text>
       </View>
 
       <View className="border-white border-4">

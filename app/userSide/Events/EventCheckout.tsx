@@ -27,7 +27,12 @@ const EventCheckout = () => {
       <SafeAreaView className="flex-1">
         <ScrollView>
           <View className="mt-20">
-            <EventCheckoutTitle />
+            <EventCheckoutTitle
+              title={event.event_title}
+              eventCommunityTitle={event.community_host_name}
+              eventStyle={event.event_style}
+              date={event.date}
+            />
           </View>
           <View className="mt-10">
             <PromoCode />

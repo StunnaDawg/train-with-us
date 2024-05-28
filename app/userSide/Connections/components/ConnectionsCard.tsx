@@ -36,9 +36,9 @@ const ConnectionsCard = ({
     getPrimaryGymName()
   }, [profile])
   return (
-    <View style={{ height: 750 }}>
+    <View style={{ height: 1000 }}>
       <View className="flex flex-row justify-center mt-1 mb-2">
-        <Text className="text-3xl font-bold">
+        <Text className="text-2xl font-bold">
           {profile?.first_name} {profile?.last_name}
         </Text>
       </View>
@@ -64,9 +64,9 @@ const ConnectionsCard = ({
       </View>
 
       {profile?.activities?.length && profile?.activities?.length > 0 && (
-        <View>
+        <View className="flex flex-row items-center">
           <View className="ml-7">
-            <Text className="font-medium text-xl">My Styles of Fitness:</Text>
+            <Text className="font-medium text-lg">My Styles of Fitness:</Text>
           </View>
           <ActivitySection profile={profile} />
         </View>

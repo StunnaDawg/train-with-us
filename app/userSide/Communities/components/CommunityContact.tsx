@@ -17,7 +17,7 @@ const CommunityContact = ({ community }: CommunityContactProps) => {
       <View className="flex  flex-row items-center  mx-2 ">
         <View>
           <View>
-            <Text className="font-bold text-3xl text-wrap text-white">
+            <Text className="font-bold text-2xl text-wrap text-white">
               {community?.address}
             </Text>
           </View>

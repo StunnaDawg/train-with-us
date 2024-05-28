@@ -19,6 +19,13 @@ const addNewEvent = async (
     setLoading(true)
     if (communityId === null) throw new Error("Community ID is null")
 
+    const { data: community, error: communityError } = await supabase
+      .from("communities")
+      .select("community_title")
+      .eq("id", communityId)
+
+    if (communityError) throw communityError
+
     const base64 = await FileSystem.readAsStringAsync(photoCover.uri, {
       encoding: "base64",
     })
@@ -41,6 +48,7 @@ const addNewEvent = async (
         price: price,
         event_description: event_description,
         location: location,
+        community_host_name: community![0].community_title,
       },
     ])
 

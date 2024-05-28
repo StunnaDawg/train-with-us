@@ -90,12 +90,18 @@ const ViewEvent = () => {
               eventId={event?.id}
               title={event?.event_title}
               date={event?.date}
+              eventCommunityTitle={event?.community_host_name}
               eventPhoto={event?.event_cover_photo}
+              eventStyle={event?.event_style}
             />
           </View>
 
           <View className="mx-5 mt-2">
-            <ViewEventDetails date={event?.date} eventId={eventId} />
+            <ViewEventDetails
+              date={event?.date}
+              eventId={eventId}
+              location={event?.location}
+            />
           </View>
 
           <View>

@@ -47,16 +47,16 @@ const MessageButton = ({
 
   return (
     <>
-      <View className="flex flex-row justify-center m-3">
+      <View className="flex flex-row justify-center m-1">
         {!coach ? (
           <View className="flex flex-row">
             <Pressable
               onPress={() => {
                 handlePresentModalPress()
               }}
-              className="border-2 rounded-full p-3 mx-1"
+              className="border-2 rounded-full p-2 mx-1"
             >
-              <Text className="text-2xl font-bold">Say Hi</Text>
+              <Text className="text-xl font-bold">Say Hi</Text>
             </Pressable>
           </View>
         ) : (
