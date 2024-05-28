@@ -1,24 +1,24 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
-import { Communities } from "../../@types/supabaseTypes"
+import { Communities, Profile } from "../../@types/supabaseTypes"
 
-const insertCommunityPhoto = async (
+const insertProfilePhoto = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   photoUrl: string,
   userId: string | number
 ) => {
   try {
     setLoading(true)
-
+    console.log("photoUrl", photoUrl, userId)
     const { data, error: currentArrayError } = (await supabase
-      .from("communities")
-      .select("community_photos")
+      .from("profiles")
+      .select("photos_url")
       .eq("id", userId)
-      .single()) as { data: Communities; error: any }
+      .single()) as { data: Profile; error: any }
 
     if (currentArrayError) throw currentArrayError
 
-    const currentArray = data.community_photos
+    const currentArray = data.photos_url
 
     const { data: photoPath } = supabase.storage
       .from("photos")
@@ -31,8 +31,8 @@ const insertCommunityPhoto = async (
     console.log("id in insert", userId)
 
     const { error } = await supabase
-      .from("communities")
-      .upsert({ id: userId, ["community_photos"]: newArray })
+      .from("profiles")
+      .upsert({ id: userId, ["photos_url"]: newArray })
 
     if (error) throw error
 
@@ -44,4 +44,4 @@ const insertCommunityPhoto = async (
   }
 }
 
-export default insertCommunityPhoto
+export default insertProfilePhoto

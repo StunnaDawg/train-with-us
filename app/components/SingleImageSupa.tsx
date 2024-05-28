@@ -13,6 +13,7 @@ import { Profile } from "../@types/supabaseTypes"
 import useCurrentUser from "../supabaseFunctions/getFuncs/useCurrentUser"
 import { set } from "date-fns"
 import removePhoto from "../supabaseFunctions/deleteFuncs/removePhoto"
+import insertProfilePhoto from "../supabaseFunctions/updateFuncs/insertProfilePhotos"
 
 type SingleImageProp = {
   imageUrl: string | null | undefined
@@ -34,7 +35,7 @@ const SingleImageSupa = ({
   const { user } = useAuth()
   const avatarSize = { height: 150, width: 150 }
   const userId = user?.id
-
+  let profileType: Profile
   const [image, setImage] = useState<string>("")
 
   useEffect(() => {
@@ -83,14 +84,7 @@ const SingleImageSupa = ({
       })
 
       if (userId === undefined) return
-      insertPhoto(
-        setLoading,
-        currentUser?.photos_url,
-        filePath,
-        userId,
-        "profiles",
-        "photos_url"
-      )
+      insertProfilePhoto(setLoading, filePath, userId)
       setImage(img.uri)
     }
   }

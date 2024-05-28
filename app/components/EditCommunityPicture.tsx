@@ -8,9 +8,10 @@ import supabase from "../../lib/supabase"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import { decode } from "base64-arraybuffer"
 import insertPhoto from "../supabaseFunctions/updateFuncs/insertPhoto"
-import { Profile } from "../@types/supabaseTypes"
+import { Communities, Profile } from "../@types/supabaseTypes"
 import useCurrentUser from "../supabaseFunctions/getFuncs/useCurrentUser"
 import removeCommunityPhoto from "../supabaseFunctions/deleteFuncs/removeCommunityPhoto"
+import insertCommunityPhoto from "../supabaseFunctions/updateFuncs/insertPhoto"
 
 type SingleImageProp = {
   imageUrl: string | null | undefined
@@ -36,7 +37,7 @@ const SingleImageSupaCommunity = ({
   const { user } = useAuth()
   const avatarSize = { height: 150, width: 150 }
   const userId = user?.id
-
+  let profileType: Communities
   const [image, setImage] = useState<string>("")
 
   useEffect(() => {
@@ -85,14 +86,8 @@ const SingleImageSupaCommunity = ({
       })
 
       if (userId === undefined || !imageUrls) return
-      insertPhoto(
-        setLoading,
 
-        filePath,
-        communityId,
-        "communities",
-        "community_photos"
-      )
+      insertCommunityPhoto(setLoading, filePath, communityId)
 
       setImage(img.uri)
 
