@@ -87,6 +87,8 @@ const Question3 = () => {
             >
               <Text className="text-lg font-semibold">{gender}</Text>
               <BouncyCheckbox
+                fillColor="blue"
+                unFillColor="#FFFFFF"
                 isChecked={selectedGender === gender}
                 onPress={() => handleSelectGender(gender)}
               />

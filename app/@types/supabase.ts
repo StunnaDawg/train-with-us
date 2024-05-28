@@ -433,7 +433,7 @@ export type Database = {
           actvitiy_time: string | null
           allowed_create_community: boolean
           birthday: string | null
-          bucket_list: string[] | null
+          bucket_list: string | null
           city: string
           community_created: number | null
           community_preference: string[] | null
@@ -445,12 +445,12 @@ export type Database = {
           fitness_lvl: string | null
           fitness_records: string[] | null
           gender: string | null
-          hobbies: string[] | null
+          hobbies: string | null
           id: string
           ignored_users: string[] | null
           intentions: string | null
           last_name: string | null
-          music_pref: string[] | null
+          music_pref: string | null
           onboard: boolean
           photos_url: string[] | null
           pinned_channels: string[] | null
@@ -466,7 +466,7 @@ export type Database = {
           actvitiy_time?: string | null
           allowed_create_community?: boolean
           birthday?: string | null
-          bucket_list?: string[] | null
+          bucket_list?: string | null
           city?: string
           community_created?: number | null
           community_preference?: string[] | null
@@ -478,12 +478,12 @@ export type Database = {
           fitness_lvl?: string | null
           fitness_records?: string[] | null
           gender?: string | null
-          hobbies?: string[] | null
+          hobbies?: string | null
           id: string
           ignored_users?: string[] | null
           intentions?: string | null
           last_name?: string | null
-          music_pref?: string[] | null
+          music_pref?: string | null
           onboard?: boolean
           photos_url?: string[] | null
           pinned_channels?: string[] | null
@@ -498,7 +498,7 @@ export type Database = {
           actvitiy_time?: string | null
           allowed_create_community?: boolean
           birthday?: string | null
-          bucket_list?: string[] | null
+          bucket_list?: string | null
           city?: string
           community_created?: number | null
           community_preference?: string[] | null
@@ -510,12 +510,12 @@ export type Database = {
           fitness_lvl?: string | null
           fitness_records?: string[] | null
           gender?: string | null
-          hobbies?: string[] | null
+          hobbies?: string | null
           id?: string
           ignored_users?: string[] | null
           intentions?: string | null
           last_name?: string | null
-          music_pref?: string[] | null
+          music_pref?: string | null
           onboard?: boolean
           photos_url?: string[] | null
           pinned_channels?: string[] | null

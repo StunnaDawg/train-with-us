@@ -6,7 +6,6 @@ import UserAboutSection from "../../Profile/components/UserAboutSection"
 import UserTopGyms from "../../Profile/components/UserTopGyms"
 import MessageButton from "./MessageButton"
 import { Profile } from "../../../@types/supabaseTypes"
-import Animated from "react-native-reanimated"
 import returnCommunityName from "../../../utilFunctions/returnCommunityName"
 
 // Shares components with profile page
@@ -39,7 +38,9 @@ const ConnectionsCard = ({
   return (
     <View style={{ height: 750 }}>
       <View className="flex flex-row justify-center mt-1 mb-2">
-        <Text className="text-3xl font-bold">{profile?.first_name}</Text>
+        <Text className="text-3xl font-bold">
+          {profile?.first_name} {profile?.last_name}
+        </Text>
       </View>
       <View>
         <PhotoArray index1={0} index2={1} index3={2} profileId={profile?.id} />
@@ -62,14 +63,16 @@ const ConnectionsCard = ({
         />
       </View>
 
-      <View>
-        <View className="ml-7">
-          <Text className="font-medium text-xl">My Styles of Fitness:</Text>
+      {profile?.activities?.length && profile?.activities?.length > 0 && (
+        <View>
+          <View className="ml-7">
+            <Text className="font-medium text-xl">My Styles of Fitness:</Text>
+          </View>
+          <ActivitySection profile={profile} />
         </View>
-        <ActivitySection profile={profile} />
-      </View>
+      )}
 
-      <View className="mt-2">
+      <View className="mt-1">
         <PhotoArray index1={3} index2={4} index3={5} profileId={profile?.id} />
       </View>
 

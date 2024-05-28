@@ -7,6 +7,7 @@ import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
 import NextButton from "../../../components/NextButton"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
+import EnhancedTextInput from "../../../components/TextInput"
 
 type MusicOptions =
   | "Pop"
@@ -50,22 +51,20 @@ const MusicPref = () => {
 
   const navigation = useNavigation<NavigationType>()
 
-  const [selectedMusic, setSelectedMusic] = useState<MusicOptions[] | string[]>(
-    []
-  )
+  const [musicPref, setMusicPref] = useState<string>("")
   const { user } = useAuth()
 
-  const handleSelectMusic = (Music: MusicOptions) => {
-    if (!selectedMusic.includes(Music)) {
-      setSelectedMusic([...selectedMusic, Music])
-    }
-  }
+  // const handleSelectMusic = (Music: MusicOptions) => {
+  //   if (!selectedMusic.includes(Music)) {
+  //     setSelectedMusic([...selectedMusic, Music])
+  //   }
+  // }
 
   const handleUserUpdate = async () => {
     try {
       const { error } = await supabase
         .from("profiles")
-        .update({ music_pref: selectedMusic })
+        .update({ music_pref: musicPref })
         .eq("id", user?.id)
 
       if (error) throw error
@@ -77,11 +76,11 @@ const MusicPref = () => {
     }
   }
 
-  useEffect(() => {
-    if (userProfile?.music_pref) {
-      setSelectedMusic(userProfile.music_pref)
-    }
-  }, [userProfile])
+  // useEffect(() => {
+  //   if (userProfile?.music_pref) {
+  //     setSelectedMusic(userProfile.music_pref)
+  //   }
+  // }, [userProfile])
 
   const MusicOptions: MusicOptions[] = [
     "Pop",
@@ -126,22 +125,17 @@ const MusicPref = () => {
           <View className="items-start w-full">
             <View className="my-5">
               <Text className="font-bold text-2xl">
-                What are your fitness interests
+                Music Preferences While Working Out?
               </Text>
             </View>
 
-            {MusicOptions.map((Music, index) => (
-              <View
-                key={index}
-                className="w-full border-b flex flex-row justify-between items-center p-2"
-              >
-                <Text className="text-lg font-semibold">{Music}</Text>
-                <BouncyCheckbox
-                  isChecked={selectedMusic.includes(Music)}
-                  onPress={() => handleSelectMusic(Music)}
-                />
-              </View>
-            ))}
+            <View className="flex flex-row justify-center">
+              <EnhancedTextInput
+                text={musicPref}
+                setText={setMusicPref}
+                placeholder="Anything with Latino flare!"
+              />
+            </View>
           </View>
           <View className="mt-4 flex flex-row justify-end">
             <NextButton onPress={() => handleUserUpdate()} />

@@ -71,6 +71,8 @@ const CommunityPreference = () => {
             >
               <Text className="text-lg font-semibold">{community}</Text>
               <BouncyCheckbox
+                fillColor="blue"
+                unFillColor="#FFFFFF"
                 isChecked={selectedCommunities === community}
                 onPress={() => handleSelectCommunities(community)}
               />

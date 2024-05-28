@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native"
+import { View, Text, ScrollView, TextInput } from "react-native"
 import React, { useEffect, useState } from "react"
 import { NavigationType, RootStackParamList } from "../../../@types/navigation"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
@@ -7,6 +7,7 @@ import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
 import NextButton from "../../../components/NextButton"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
+import EnhancedTextInput from "../../../components/TextInput"
 
 type HobbiesOptions =
   | "Gardening"
@@ -36,29 +37,30 @@ const Hobbies = () => {
 
   const navigation = useNavigation<NavigationType>()
 
-  const [selectedHobbies, setSelectedHobbies] = useState<
-    HobbiesOptions[] | string[]
-  >([])
+  const [hobby, setHobby] = useState<string>("")
+
+  // const [selectedHobbies, setSelectedHobbies] = useState<
+  //   HobbiesOptions[] | string[]
+  // >([])
   const { user } = useAuth()
 
-  const handleHobbies = (item: HobbiesOptions) => {
-    if (selectedHobbies.includes(item)) {
-      // Remove the item if it is already selected
-      setSelectedHobbies(selectedHobbies.filter((m) => m !== item))
-    } else {
-      // Add the item only if there are less than 5 items already selected
-      if (selectedHobbies.length < 5) {
-        setSelectedHobbies([...selectedHobbies, item])
-      }
-    }
-  }
+  // const handleHobbies = (item: HobbiesOptions) => {
+  //   if (selectedHobbies.includes(item)) {
+  //     // Remove the item if it is already selected
+  //     setSelectedHobbies(selectedHobbies.filter((m) => m !== item))
+  //   } else {
+  //     // Add the item only if there are less than 5 items already selected
+  //     if (selectedHobbies.length < 5) {
+  //       setSelectedHobbies([...selectedHobbies, item])
+  //     }
+  //   }
+  // }
 
   const handleUserUpdate = async () => {
     try {
       const { error } = await supabase
         .from("profiles")
-        .update({ hobbies: selectedHobbies })
-        .eq("id", user?.id)
+        .upsert({ id: user?.id, hobbies: hobby })
 
       if (error) throw error
 
@@ -69,11 +71,11 @@ const Hobbies = () => {
     }
   }
 
-  useEffect(() => {
-    if (userProfile?.hobbies) {
-      setSelectedHobbies(userProfile.hobbies)
-    }
-  }, [userProfile])
+  // useEffect(() => {
+  //   if (userProfile?.hobbies) {
+  //     setSelectedHobbies(userProfile.hobbies)
+  //   }
+  // }, [userProfile])
 
   const HobbiesOptionsArray: HobbiesOptions[] = [
     "Gardening",
@@ -109,7 +111,15 @@ const Hobbies = () => {
               </Text>
             </View>
 
-            {HobbiesOptionsArray.map((Hobbies, index) => (
+            <View className="flex flex-row justify-center">
+              <EnhancedTextInput
+                text={hobby}
+                setText={setHobby}
+                placeholder="I enjoy taking long walks on the beach"
+              />
+            </View>
+
+            {/* {HobbiesOptionsArray.map((Hobbies, index) => (
               <View
                 key={index}
                 className="w-full border-b flex flex-row justify-between items-center p-2"
@@ -120,7 +130,7 @@ const Hobbies = () => {
                   onPress={() => handleHobbies(Hobbies)}
                 />
               </View>
-            ))}
+            ))} */}
           </View>
           <View className="mt-4 flex flex-row justify-end">
             <NextButton onPress={() => handleUserUpdate()} />

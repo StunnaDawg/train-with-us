@@ -66,6 +66,8 @@ const ActivityTimePreference = () => {
             >
               <Text className="text-lg font-semibold">{Time}</Text>
               <BouncyCheckbox
+                fillColor="blue"
+                unFillColor="#FFFFFF"
                 isChecked={selectedTime === Time}
                 onPress={() => handleSelectTime(Time)}
               />
