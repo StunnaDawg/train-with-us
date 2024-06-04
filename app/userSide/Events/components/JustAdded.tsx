@@ -11,9 +11,6 @@ type RefreshProp = {
 const JustAdded = ({ refreshing }: RefreshProp) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [justAddedEvents, setJustAddedEvents] = useState<Events[] | null>([])
-  useEffect(() => {
-    getNewEvents(setLoading, setJustAddedEvents, 10)
-  }, [])
 
   useEffect(() => {
     getNewEvents(setLoading, setJustAddedEvents, 10)

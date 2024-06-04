@@ -1,8 +1,6 @@
 import { View, Text, ScrollView, Pressable } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
-import getUserId from "../../supabaseFunctions/getFuncs/getUserId"
-import { Database } from "../../@types/supabase"
 import JustAdded from "./components/JustAdded"
 import Upcoming from "./components/Upcoming"
 import AllEvents from "./components/AllEvents"
@@ -13,10 +11,7 @@ import { NavigationType } from "../../@types/navigation"
 import { RefreshControl } from "react-native-gesture-handler"
 
 const Events = () => {
-  const { user } = useAuth()
   const [refreshing, setRefreshing] = useState<boolean>(false)
-  const [userProfile, setUserProfile] = useState<Profile | null>(null)
-  const navigation = useNavigation<NavigationType>()
 
   const onRefresh = useCallback(() => {
     setRefreshing(true)
@@ -24,22 +19,6 @@ const Events = () => {
       setRefreshing(false)
     }, 2000)
   }, [])
-
-  useEffect(() => {
-    const getUser = async () => {
-      if (!user) return
-      await useCurrentUser(user?.id, setUserProfile)
-    }
-    getUser()
-  }, [])
-
-  useEffect(() => {
-    const getUser = async () => {
-      if (!user) return
-      await useCurrentUser(user?.id, setUserProfile)
-    }
-    getUser()
-  }, [refreshing])
 
   return (
     <ScrollView

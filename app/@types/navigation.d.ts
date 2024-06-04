@@ -159,6 +159,14 @@ export type RootStackParamList = {
   SearchUsers: undefined
 
   RequestAccess: undefined
+
+  ManageChannels: {
+    communityId: number
+  }
+
+  EditChannel: {
+    channelId: string
+  }
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

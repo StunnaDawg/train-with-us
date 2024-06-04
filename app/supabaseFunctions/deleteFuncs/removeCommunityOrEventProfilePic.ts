@@ -6,10 +6,9 @@ const removeCommunityOrEventProfilePic = async (
   row: string
 ) => {
   try {
-    // Update the profile to remove the profile picture
     const { error: updateError } = await supabase
       .from(table)
-      .update({ [row]: null }) // Set to null or an empty string, depending on your schema requirements
+      .update({ [row]: null })
       .eq("id", id)
 
     if (updateError) throw updateError

@@ -17,13 +17,11 @@ import getUserId from "./supabaseFunctions/getFuncs/getUserId"
 import { Database } from "./@types/supabase"
 import CommunitiesHome from "./userSide/Communities/CommunitiesHome"
 import CommunitiesDash from "./userSide/UserCommunities/CommunitiesDash"
-import Profile from "./userSide/Profile/Profile"
 import Connections from "./userSide/Connections/Connections"
 import MessageScreen from "./userSide/UserCommunities/components/MessageScreen"
 import ViewEvent from "./userSide/Events/ViewEvent"
 import EventCheckout from "./userSide/Events/EventCheckout"
 import ViewCommunities from "./userSide/Communities/ViewCommunities"
-import { set } from "date-fns"
 import Sexuality from "./UserOnBoard/Sexuality"
 import FitnessInterests from "./UserOnBoard/FitnessInterests"
 import CommunityPreference from "./UserOnBoard/CommunitiesPref"
@@ -37,7 +35,6 @@ import ProfileView from "./userSide/Profile/Profile"
 import CommunityHome from "./userSide/MyCommunity/CommunityHome"
 import CommunitySettings from "./userSide/MyCommunity/CommunitySettings"
 import CreateChannel from "./userSide/MyCommunity/CreateChannel"
-import CommunityRequests from "./userSide/MyCommunity/CommunityRequests"
 import ManageCommunityMembers from "./userSide/MyCommunity/ManageCommunityMembers"
 import CommunityRequestsPage from "./userSide/MyCommunity/CommunityRequests"
 import ViewRequestProfile from "./userSide/MyCommunity/ViewRequestProfile"
@@ -63,45 +60,11 @@ import PrimaryGym from "./userSide/Profile/AddInfoComponents/PrimaryGym"
 import ViewAllEvents from "./userSide/Events/ViewAllEvents"
 import SearchCommunities from "./userSide/Communities/SearchCommunities"
 import SearchUsers from "./userSide/Connections/SearchUsers"
+import ManageChannels from "./userSide/MyCommunity/ManageChannels"
+import EditChannel from "./userSide/MyCommunity/EditChannel"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
-
-// const GymFooter = () => {
-//   return (
-//     <Tab.Navigator
-//       screenOptions={{
-//         headerShown: false,
-//       }}
-//     >
-//       <Tab.Screen name="GymDashboard" component={GymChat} />
-//       <Tab.Screen name="GymEvents" component={EventsTab} />
-//       <Tab.Screen name="Profile" component={GymProfile} />
-//       <Tab.Screen name="Requests" component={GymRequests} />
-//     </Tab.Navigator>
-//   )
-// }
-
-// const GymScreens = () => {
-//   return (
-//     <>
-//       <Stack.Navigator screenOptions={{ headerShown: false }}>
-//         <Stack.Screen name="GymFooter" component={GymFooter} />
-//         <Stack.Screen name="CreateEvent" component={CreateEvent} />
-//         <Stack.Screen name="EditEvent" component={EditEvent} />
-//         <Stack.Screen name="GymEditProfile" component={EditGymProfileHome} />
-//         <Stack.Screen name="UserSettings" component={UserSettings} />
-//         <Stack.Screen name="CreateNewChannel" component={CreateNewChannel} />
-//         <Stack.Screen name="GymQuestionTwo" component={GymQuestionTwo} />
-//         <Stack.Screen name="GymModerateMembers" component={ModerateUsers} />
-//         <Stack.Screen
-//           name="GymInitalAddPhoto"
-//           component={GymInitialAddPhotos}
-//         />
-//       </Stack.Navigator>
-//     </>
-//   )
-// }
 
 const UserFooter = () => {
   return (
@@ -201,6 +164,18 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="MyCommunityHome"
                 component={CommunityHome}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="EditChannel"
+                component={EditChannel}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ManageChannels"
+                component={ManageChannels}
               />
 
               <Stack.Screen

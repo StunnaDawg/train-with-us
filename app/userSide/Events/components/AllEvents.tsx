@@ -22,7 +22,7 @@ const AllEvents = ({ refreshing }: RefreshProp) => {
 
   useEffect(() => {
     getAllEvents(setLoading, setAllEvents, 10)
-  }, [])
+  }, [refreshing])
   return (
     <View className="flex flex-col m-5">
       <View className="flex flex-row items-center justify-between">
@@ -31,11 +31,7 @@ const AllEvents = ({ refreshing }: RefreshProp) => {
           <Text className="text-white underline">View All</Text>
         </Pressable>
       </View>
-      <ScrollView
-        className="h-96"
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-      >
+      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         {loading ? (
           <ActivityIndicator />
         ) : allEvents && allEvents?.length > 0 ? (

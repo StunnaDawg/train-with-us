@@ -1,14 +1,6 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  RefreshControl,
-  ActivityIndicator,
-  Pressable,
-} from "react-native"
+import { View, Text, ScrollView, RefreshControl, Pressable } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
-import { useIsFocused, useNavigation } from "@react-navigation/native"
-import supabase from "../../../lib/supabase"
+import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../@types/navigation"
 import getAllCommunities from "../../supabaseFunctions/getFuncs/getAllCommunities"
 import { Communities } from "../../@types/supabaseTypes"
@@ -20,18 +12,13 @@ const CommunitiesHome = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const navigation = useNavigation<NavigationType>()
-  const isFocused = useIsFocused()
 
   const onRefresh = useCallback(() => {
     setRefreshing(true)
     setTimeout(() => {
       setRefreshing(false)
     }, 2000)
-  }, [])
-
-  useEffect(() => {
-    getAllCommunities(setLoading, setCommunities)
-  }, [isFocused])
+  }, [refreshing])
 
   useEffect(() => {
     getAllCommunities(setLoading, setCommunities)
