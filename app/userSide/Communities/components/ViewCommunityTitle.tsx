@@ -24,12 +24,8 @@ const ViewCommunityTitle = ({
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
 
-  const showAlert = () =>
-    Alert.alert(
-      "Request Sent",
-      "The Community Owner will review your request",
-      [{ text: "OK" }]
-    )
+  const showAlert = (title: string, message: string) =>
+    Alert.alert(title, message, [{ text: "OK" }])
 
   const showErrorAlert = () =>
     Alert.alert(
@@ -45,8 +41,13 @@ const ViewCommunityTitle = ({
       return
     }
 
-    await requestToJoin(communityId, user?.id, currentProfile?.first_name)
-    showAlert()
+    await requestToJoin(
+      communityId,
+      user?.id,
+      currentProfile?.first_name,
+      showAlert
+    )
+
     setRequestSent(true)
   }
   useEffect(() => {
