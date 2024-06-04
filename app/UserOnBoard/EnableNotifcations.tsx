@@ -39,7 +39,6 @@ const EnableNotifcations = () => {
     }
   }, [])
 
-  // Function to request notification permissions and get the push token
   const registerForPushNotificationsAsync = async () => {
     if (Device.isDevice) {
       const { status: existingStatus } =

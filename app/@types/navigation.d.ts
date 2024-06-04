@@ -167,6 +167,8 @@ export type RootStackParamList = {
   EditChannel: {
     channelId: string
   }
+
+  UserSettings: undefined
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

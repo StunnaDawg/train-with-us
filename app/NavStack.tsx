@@ -62,6 +62,7 @@ import SearchCommunities from "./userSide/Communities/SearchCommunities"
 import SearchUsers from "./userSide/Connections/SearchUsers"
 import ManageChannels from "./userSide/MyCommunity/ManageChannels"
 import EditChannel from "./userSide/MyCommunity/EditChannel"
+import Settings from "./userSide/Settings"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -164,6 +165,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="MyCommunityHome"
                 component={CommunityHome}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="UserSettings"
+                component={Settings}
               />
 
               <Stack.Screen
