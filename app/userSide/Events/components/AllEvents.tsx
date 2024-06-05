@@ -12,6 +12,7 @@ import { Events } from "../../../@types/supabaseTypes"
 import getAllEvents from "../../../supabaseFunctions/getFuncs/getAllEvents"
 import { NavigationType } from "../../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
+import { FontAwesome6 } from "@expo/vector-icons"
 
 type RefreshProp = { refreshing?: boolean }
 
@@ -24,39 +25,15 @@ const AllEvents = ({ refreshing }: RefreshProp) => {
     getAllEvents(setLoading, setAllEvents, 10)
   }, [refreshing])
   return (
-    <View className="flex flex-col m-5">
+    <View className="flex flex-col m-5 border-b">
       <View className="flex flex-row items-center justify-between">
-        <Text className="text-2xl font-bold m-1 text-white ">All Events</Text>
+        <Text className="text-2xl font-bold m-1 text-white ">
+          See All Events
+        </Text>
         <Pressable onPress={() => navigation.navigate("AllEventsPage")}>
-          <Text className="text-white underline">View All</Text>
+          <FontAwesome6 name="arrow-right" size={24} color="white" />
         </Pressable>
       </View>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-        {loading ? (
-          <ActivityIndicator />
-        ) : allEvents && allEvents?.length > 0 ? (
-          allEvents?.map(
-            (event) => (
-              console.log(
-                "event cover photo allEvents",
-                event.event_cover_photo
-              ),
-              (
-                <EventCard
-                  eventId={event.id}
-                  title={event.event_title}
-                  date={event.date}
-                  communityId={event.community_host}
-                  eventCoverPhoto={event.event_cover_photo}
-                  key={event.id}
-                />
-              )
-            )
-          )
-        ) : (
-          <Text>No upcoming events</Text>
-        )}
-      </ScrollView>
     </View>
   )
 }
