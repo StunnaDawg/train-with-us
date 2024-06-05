@@ -2,20 +2,22 @@ import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { Events } from "../../@types/supabaseTypes"
 
-const getUpcomingEvents = async (
+const getTmrwEvents = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   setEvents: Dispatch<SetStateAction<Events[] | null>>,
-  limit: number
+  limit: number,
+  tmrwDate: string,
+  dayAfterTmrw: string
 ) => {
   try {
     setLoading(true)
-    const currentDate = new Date().toISOString()
+
     const { data: events, error } = await supabase
       .from("events")
       .select()
-      .gte("date", currentDate)
+      .gte("date", tmrwDate)
+      .lt("date", dayAfterTmrw)
       .limit(limit)
-      .order("date", { ascending: true })
 
     if (error) throw error
 
@@ -30,4 +32,4 @@ const getUpcomingEvents = async (
   }
 }
 
-export default getUpcomingEvents
+export default getTmrwEvents
