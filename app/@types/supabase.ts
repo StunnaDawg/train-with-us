@@ -91,6 +91,7 @@ export type Database = {
           community_title: string | null
           created_at: string
           id: number
+          member_count: number
           phone_number: string | null
         }
         Insert: {
@@ -106,6 +107,7 @@ export type Database = {
           community_title?: string | null
           created_at?: string
           id?: number
+          member_count?: number
           phone_number?: string | null
         }
         Update: {
@@ -121,6 +123,7 @@ export type Database = {
           community_title?: string | null
           created_at?: string
           id?: number
+          member_count?: number
           phone_number?: string | null
         }
         Relationships: [

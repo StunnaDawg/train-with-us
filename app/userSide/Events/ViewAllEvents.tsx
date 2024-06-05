@@ -51,7 +51,7 @@ const ViewAllEvents = () => {
         />
       </View>
 
-      <View className="flex flex-row justify-center flex-wrap">
+      <View className="flex flex-row justify-center flex-wrap my-1">
         <View className="mx-1 my-1">
           <GenericButton
             text="Show All"

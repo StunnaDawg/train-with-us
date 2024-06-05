@@ -1,15 +1,9 @@
 import { View, Text, Pressable } from "react-native"
-import React, { useEffect, useState } from "react"
 import { NavigationType } from "../../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
-import SinglePic from "../../../components/SinglePic"
-import { useAuth } from "../../../supabaseFunctions/authcontext"
-import supabase from "../../../../lib/supabase"
-import { FileObject } from "@supabase/storage-js"
-import { Communities, Profile } from "../../../@types/supabaseTypes"
-import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
-import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
+import { Communities } from "../../../@types/supabaseTypes"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
+import { FontAwesome6 } from "@expo/vector-icons"
 
 type CommunityCardProps = {
   community: Communities
@@ -18,23 +12,6 @@ type CommunityCardProps = {
 
 const CommunityCard = ({ community, addPrimary }: CommunityCardProps) => {
   const navigation = useNavigation<NavigationType>()
-  const [loading, setLoading] = useState<boolean>(false)
-  const [currentCommunity, setCurrentCommunity] = useState<Communities | null>(
-    {} as Communities
-  )
-  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
-  const { user } = useAuth()
-
-  useEffect(() => {
-    if (!user) return
-
-    getSingleCommunity(setLoading, community.id, setCurrentCommunity)
-  }, [user])
-
-  useEffect(() => {
-    if (currentCommunity?.community_photos === null || undefined) return
-    setImageFiles(currentCommunity?.community_photos)
-  }, [currentCommunity])
 
   return (
     <Pressable
@@ -60,6 +37,14 @@ const CommunityCard = ({ community, addPrimary }: CommunityCardProps) => {
           <Text className=" text-white font-bold text-2xl">
             {community.community_title}
           </Text>
+          <View className="flex flex-row items-center">
+            <Text className=" text-white font-bold text-xl">
+              {community.member_count} Members
+            </Text>
+            <View className="mx-1">
+              <FontAwesome6 name="people-group" size={24} color="white" />
+            </View>
+          </View>
           <View className="border-b-2 border-b-white p-3" />
         </View>
       </View>
