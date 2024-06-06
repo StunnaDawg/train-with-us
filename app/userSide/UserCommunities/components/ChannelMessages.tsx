@@ -85,17 +85,34 @@ const ChannelMessageScreen = () => {
     CommunityChannelMessages[] | null
   >([])
   const [messageToSend, setMessageToSend] = useState("")
+  const [loading, setLoading] = useState<boolean>(false)
+  const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const { user } = useAuth()
 
   const sendMessageAction = async () => {
-    if (messageToSend.trim().length === 0 || !user?.id) {
+    if (
+      messageToSend.trim().length === 0 ||
+      !user?.id ||
+      currentUser?.first_name === null ||
+      currentUser?.first_name === undefined
+    ) {
       return
     }
-    await sendChannelMessage(messageToSend, user?.id, channel.id)
+    await sendChannelMessage(
+      messageToSend,
+      user?.id,
+      channel.id,
+      currentUser?.first_name
+    )
     await upsertCommunitySession(channel.id, messageToSend)
     setMessageToSend("")
     getChannelSessionMessages(channel.id, setServerMessages)
   }
+
+  useEffect(() => {
+    if (!user) return
+    useCurrentUser(user?.id, setCurrentUser)
+  }, [user])
 
   useEffect(() => {
     console.log("Channel id: ", `channel_id=eq.${channel.id}`)

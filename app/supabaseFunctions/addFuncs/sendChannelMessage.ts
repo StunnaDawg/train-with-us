@@ -3,7 +3,8 @@ import supabase from "../../../lib/supabase"
 const sendChannelMessage = async (
   message: string,
   userId: string,
-  channelId: string
+  channelId: string,
+  name: string
 ) => {
   try {
     console.log("sending message", message, userId)
@@ -13,6 +14,7 @@ const sendChannelMessage = async (
         sent_at: new Date(),
         sender_id: userId,
         channel_id: channelId,
+        sender_name: name,
       },
     ])
 

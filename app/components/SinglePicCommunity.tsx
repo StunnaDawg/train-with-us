@@ -19,12 +19,10 @@ export default function SinglePicCommunity({
   avatarRadius,
   noAvatarRadius,
 }: SinglePicProps) {
-  const { user } = useAuth()
   const [avatarUrl, setAvatarUrl] = useState<string>("")
   const avatarSize = { height: size, width: size }
 
   useEffect(() => {
-    console.log("item", item)
     readImage()
   }, [item])
 

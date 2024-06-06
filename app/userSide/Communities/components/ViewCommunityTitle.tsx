@@ -80,7 +80,7 @@ const ViewCommunityTitle = ({
             text={requestSent ? `Request Sent ` : `+ Request to Join`}
             buttonFunction={() => requestFunc()}
             roundness="rounded-full"
-            textSize="text-sm"
+            textSize="text-lg"
             width={200}
             colourPressed="bg-slate-200"
             colourDefault="bg-white"
