@@ -113,7 +113,7 @@ const ProfileView = () => {
         />
       </View>
 
-      <View className="flex flex-row justify-center mt-3">
+      {/* <View className="flex flex-row justify-center mt-3">
         <WhiteSkinnyButton
           textSize="text-xl"
           width={200}
@@ -122,7 +122,7 @@ const ProfileView = () => {
             navigation.navigate("Notifications")
           }}
         />
-      </View>
+      </View> */}
 
       <UserAboutSection profile={currentUser} />
 

@@ -63,6 +63,9 @@ import SearchUsers from "./userSide/Connections/SearchUsers"
 import ManageChannels from "./userSide/MyCommunity/ManageChannels"
 import EditChannel from "./userSide/MyCommunity/EditChannel"
 import Settings from "./userSide/Settings"
+import TitleScreen from "./UserAuth/TitleScreen"
+import LoginWithEmail from "./UserAuth/LoginWithEmail"
+import SignUpWithEmail from "./UserAuth/SignUpWithEmail"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -399,7 +402,7 @@ const NavStack = () => {
                 name="ActivityTimePreference"
                 component={ActivityTimePreference}
               />
-              {/* Question 3 is gender */}
+
               <Stack.Screen
                 options={{ headerShown: false }}
                 name="QuestionThree"
@@ -462,8 +465,23 @@ const NavStack = () => {
         <>
           <Stack.Screen
             options={{ headerShown: false }}
+            name="TitleScreen"
+            component={TitleScreen}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
             name="Login"
             component={Login}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="LoginWithEmail"
+            component={LoginWithEmail}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="SignUpWithEmail"
+            component={SignUpWithEmail}
           />
           <Stack.Screen
             options={{ headerShown: false }}

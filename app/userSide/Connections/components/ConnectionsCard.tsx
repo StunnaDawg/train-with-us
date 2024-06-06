@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native"
+import { View, Text } from "react-native"
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import PhotoArray from "./PhotoArray"
 import ActivitySection from "../../Profile/components/ActivitySection"
@@ -7,6 +7,7 @@ import UserTopGyms from "../../Profile/components/UserTopGyms"
 import MessageButton from "./MessageButton"
 import { Profile } from "../../../@types/supabaseTypes"
 import returnCommunityName from "../../../utilFunctions/returnCommunityName"
+import GenericButton from "../../../components/GenericButton"
 
 // Shares components with profile page
 
@@ -53,6 +54,20 @@ const ConnectionsCard = ({
           profileId={profile?.id}
           coach={false}
         />
+
+        <View className="flex flex-row justify-center">
+          <GenericButton
+            colourDefault="bg-transparent"
+            borderColourDefault="black"
+            text="View Full Profile"
+            roundness="rounded-full"
+            colourPressed="bg-blue-500"
+            borderColourPressed="bg-blue-800"
+            buttonFunction={() => {
+              console.log("View Full Profile")
+            }}
+          />
+        </View>
       </View>
 
       <View>

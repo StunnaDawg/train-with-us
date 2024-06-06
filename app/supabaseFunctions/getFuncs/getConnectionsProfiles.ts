@@ -10,8 +10,6 @@ function shuffleArray(array: any[]) {
   while (currentIndex !== 0) {
     randomIndex = Math.floor(Math.random() * currentIndex)
     currentIndex--
-
-    //Swapppp
     ;[array[currentIndex], array[randomIndex]] = [
       array[randomIndex],
       array[currentIndex],
@@ -30,26 +28,31 @@ const getConnectionProfiles = async (
     setLoading(true)
     const connections = await getConnectedIgnoredProfiles(userId)
 
-    let query = supabase.from("profiles").select("*").not("id", "eq", userId)
+    const { data: profiles, error: rpcError } = await supabase.rpc(
+      "get_profiles_with_min_urls",
+      {
+        user_id: userId,
+      }
+    )
+
+    if (rpcError) {
+      setProfiles([])
+      throw rpcError
+    }
+
+    let filteredProfiles = profiles.filter(
+      (profile: Profile) => profile.id !== userId
+    )
 
     if (connections) {
       const { connected_users } = connections
-      const excludeIds = [...new Set([...(connected_users || [])])]
-      console.log("Exclude IDs", excludeIds)
-
-      if (excludeIds.length > 0) {
-        const tupleIds = `(${excludeIds.join(", ")})`
-        query = query.not("id", "in", tupleIds)
-      }
+      const excludeIds = new Set([...(connected_users || [])])
+      filteredProfiles = filteredProfiles.filter(
+        (profile: Profile) => !excludeIds.has(profile.id)
+      )
     }
 
-    const { data: profiles, error } = await query
-
-    if (error) {
-      setProfiles([])
-      throw error
-    }
-    const shuffledProfiles = shuffleArray(profiles || [])
+    const shuffledProfiles = shuffleArray(filteredProfiles || [])
     setProfiles(shuffledProfiles)
   } catch (error) {
     console.error("Error in getting profiles:", error)

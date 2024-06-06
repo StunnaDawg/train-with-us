@@ -10,7 +10,7 @@ const AppleAuth = () => {
         <AppleAuthentication.AppleAuthenticationButton
           buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
           buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-          cornerRadius={5}
+          cornerRadius={10}
           className="w-54 h-16"
           onPress={async () => {
             try {

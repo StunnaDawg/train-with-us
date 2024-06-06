@@ -1,18 +1,12 @@
-import { View, Text, Button, Pressable, ActivityIndicator } from "react-native"
+import { View, Pressable, ActivityIndicator } from "react-native"
 import { Image } from "expo-image"
 import * as FileSystem from "expo-file-system"
 import React, { useEffect, useState } from "react"
 import * as ImagePicker from "expo-image-picker"
 import { FontAwesome6 } from "@expo/vector-icons"
 import supabase from "../../lib/supabase"
-import { FileObject } from "@supabase/storage-js"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import { decode } from "base64-arraybuffer"
-import insertPhoto from "../supabaseFunctions/updateFuncs/insertPhoto"
-import { Profile } from "../@types/supabaseTypes"
-import useCurrentUser from "../supabaseFunctions/getFuncs/useCurrentUser"
-import removePhoto from "../supabaseFunctions/deleteFuncs/removePhoto"
-import removeUpdateProfilePic from "../supabaseFunctions/deleteFuncs/removeProfilePic"
 import removeProfilePic from "../supabaseFunctions/deleteFuncs/removeProfilePic"
 import updateProfilePic from "../supabaseFunctions/imageFuncs/addProiflePic"
 
@@ -28,7 +22,6 @@ const ProfilePicSupa = ({
   setImageUrl,
 }: SingleImageProp) => {
   const [loading, setLoading] = useState(false)
-  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
   const avatarSize = { height: 150, width: 150 }
   const userId = user?.id
@@ -38,11 +31,6 @@ const ProfilePicSupa = ({
   useEffect(() => {
     readImage()
   }, [imageUrl])
-
-  useEffect(() => {
-    if (userId === undefined) return
-    useCurrentUser(userId, setCurrentUser)
-  }, [])
 
   const readImage = () => {
     if (imageUrl === "") return

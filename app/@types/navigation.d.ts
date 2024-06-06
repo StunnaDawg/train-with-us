@@ -14,6 +14,9 @@ export type RootStackParamList = {
   CommunitiesScreens: { screen: string; params?: { screen: string } }
   SignUp: undefined
   Login: undefined
+  LoginWithEmail: undefined
+  SignUpWithEmail: undefined
+  TitleScreen: undefined
   CreateCommunities: undefined
   UserDashboard: undefined
   Meet: undefined

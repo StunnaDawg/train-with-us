@@ -9,7 +9,6 @@ import { useAuth } from "../supabaseFunctions/authcontext"
 import { decode } from "base64-arraybuffer"
 import { Profile } from "../@types/supabaseTypes"
 import useCurrentUser from "../supabaseFunctions/getFuncs/useCurrentUser"
-import removeProfilePic from "../supabaseFunctions/deleteFuncs/removeProfilePic"
 import updateProfilePic from "../supabaseFunctions/imageFuncs/addProiflePic"
 
 import updateCommunityOrEventProfilePic from "../supabaseFunctions/imageFuncs/addComunityOrEventProfilePic"
