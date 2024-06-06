@@ -30,6 +30,7 @@ const JustAdded = ({ refreshing }: RefreshProp) => {
               title={event.event_title}
               date={event.date}
               eventCoverPhoto={event.event_cover_photo}
+              eventPrice={event.price}
             />
           ))
         ) : (

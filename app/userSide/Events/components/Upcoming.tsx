@@ -30,6 +30,7 @@ const Upcoming = ({ refreshing }: RefreshProp) => {
               communityId={event.community_host}
               eventCoverPhoto={event.event_cover_photo}
               key={event.id}
+              eventPrice={event.price}
             />
           ))
         ) : (

@@ -20,6 +20,7 @@ type EventCardProps = {
   date: string | null
   communityId: number | null
   eventCoverPhoto: string | null
+  eventPrice: number | null
 }
 
 const EventCard = ({
@@ -28,6 +29,7 @@ const EventCard = ({
   communityId,
   eventId,
   eventCoverPhoto,
+  eventPrice,
 }: EventCardProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [community, setCommunity] = useState<Communities | null>(
@@ -77,6 +79,7 @@ const EventCard = ({
       resizeMode: "cover",
     },
     textContainer: {
+      borderRadius: 10,
       marginHorizontal: 10,
       marginBottom: 10,
     },
@@ -93,7 +96,12 @@ const EventCard = ({
     price: {
       fontWeight: "bold",
       fontSize: 16,
-      color: "white",
+      color: "black",
+      backgroundColor: "white",
+      width: 50,
+      textAlign: "center",
+      borderRadius: 100,
+      marginTop: 5,
     },
   })
 
@@ -114,7 +122,9 @@ const EventCard = ({
         imageStyle={styles.image}
       >
         <View style={styles.textContainer}>
-          <Text style={styles.price}>$9</Text>
+          <Text className="" style={styles.price}>
+            {eventPrice ? eventPrice.toString() : "Free"}
+          </Text>
         </View>
         <View
           style={[
