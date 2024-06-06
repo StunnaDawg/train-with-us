@@ -1,9 +1,8 @@
 import { Image } from "expo-image"
 import { useState, useEffect } from "react"
-import { StyleSheet, View } from "react-native"
-import { FileObject } from "@supabase/storage-js"
+import { StyleSheet, View, ActivityIndicator } from "react-native"
 import supabase from "../../lib/supabase"
-import { useAuth } from "../supabaseFunctions/authcontext"
+import { StatusBar } from "expo-status-bar"
 
 type SinglePicProps = {
   size: number
@@ -18,18 +17,17 @@ export default function SinglePic({
   avatarRadius,
   noAvatarRadius,
 }: SinglePicProps) {
-  const { user } = useAuth()
   const [avatarUrl, setAvatarUrl] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>()
   const avatarSize = { height: size, width: size }
 
   useEffect(() => {
-    console.log("item", item)
     readImage()
   }, [item])
 
   const readImage = () => {
     if (item === undefined) return
-    console.log("reading ya mom", `${item}`)
+    setLoading(true)
     supabase.storage
       .from("photos")
       .download(`${item}`)
@@ -38,7 +36,12 @@ export default function SinglePic({
         fr.readAsDataURL(data!)
         fr.onload = () => {
           setAvatarUrl(fr.result as string)
+          setLoading(false)
         }
+      })
+      .catch((error) => {
+        console.error("Error downloading image:", error)
+        setLoading(false)
       })
   }
 
@@ -59,11 +62,22 @@ export default function SinglePic({
       borderColor: "rgb(200, 200, 200)",
       borderRadius: noAvatarRadius,
     },
+    loader: {
+      position: "absolute",
+      left: "50%",
+      top: "50%",
+      transform: [{ translateX: -15 }, { translateY: -15 }],
+    },
   })
-
+  {
+    /* <ActivityIndicator size="large" color="black" style={styles.loader} /> */
+  }
   return (
-    <View>
-      {avatarUrl !== "" ? (
+    <View style={avatarSize}>
+      {loading && (
+        <ActivityIndicator size="large" color="black" style={styles.loader} />
+      )}
+      {!loading && avatarUrl !== "" ? (
         <Image
           source={{ uri: avatarUrl }}
           accessibilityLabel="Avatar"

@@ -4,6 +4,7 @@ import { StyleSheet, View } from "react-native"
 import { FileObject } from "@supabase/storage-js"
 import supabase from "../../lib/supabase"
 import { useAuth } from "../supabaseFunctions/authcontext"
+import { StatusBar } from "expo-status-bar"
 
 type SinglePicProps = {
   size: number
@@ -71,7 +72,9 @@ export default function SinglePicProfileView({
           cachePolicy="memory-disk"
         />
       ) : (
-        <View style={[avatarSize, styles.avatar, styles.noImage]} />
+        <View style={styles.avatar}>
+          <StatusBar style="light" />
+        </View>
       )}
     </View>
   )
