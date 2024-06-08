@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView } from "react-native"
-import React, { useEffect } from "react"
-import { CommonActions, useNavigation } from "@react-navigation/native"
+import React from "react"
+import { useNavigation } from "@react-navigation/native"
 import WhiteSkinnyButton from "../../components/WhiteSkinnyButton"
 import { NavigationType, TabNavigationType } from "../../@types/navigation"
 

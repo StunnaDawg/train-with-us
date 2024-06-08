@@ -32,9 +32,7 @@ const EventCard = ({
   eventPrice,
 }: EventCardProps) => {
   const [loading, setLoading] = useState<boolean>(false)
-  const [community, setCommunity] = useState<Communities | null>(
-    {} as Communities
-  )
+
   const [coverPhotoState, setCoverPhotoState] = useState<string | null>(null)
   const navigation = useNavigation<NavigationType>()
 
@@ -104,12 +102,6 @@ const EventCard = ({
       marginTop: 5,
     },
   })
-
-  useEffect(() => {
-    if (communityId !== null) {
-      getSingleCommunity(setLoading, communityId, setCommunity)
-    }
-  }, [communityId])
 
   return !loading ? (
     <Pressable

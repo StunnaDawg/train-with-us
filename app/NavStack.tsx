@@ -66,6 +66,7 @@ import Settings from "./userSide/Settings"
 import TitleScreen from "./UserAuth/TitleScreen"
 import LoginWithEmail from "./UserAuth/LoginWithEmail"
 import SignUpWithEmail from "./UserAuth/SignUpWithEmail"
+import ViewFullUserProfile from "./userSide/Connections/ViewFullUserProfile"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -168,6 +169,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="MyCommunityHome"
                 component={CommunityHome}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ViewFullUserProfile"
+                component={ViewFullUserProfile}
               />
 
               <Stack.Screen

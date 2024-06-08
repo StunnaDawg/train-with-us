@@ -17,13 +17,8 @@ import { FontAwesome6 } from "@expo/vector-icons"
 type RefreshProp = { refreshing?: boolean }
 
 const AllEvents = ({ refreshing }: RefreshProp) => {
-  const [loading, setLoading] = useState<boolean>(false)
-  const [allEvents, setAllEvents] = useState<Events[] | null>([])
   const navigation = useNavigation<NavigationType>()
 
-  useEffect(() => {
-    getAllEvents(setLoading, setAllEvents, 10)
-  }, [refreshing])
   return (
     <View className="flex flex-col m-5 border-b">
       <View className="flex flex-row items-center justify-between">

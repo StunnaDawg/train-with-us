@@ -24,7 +24,6 @@ const ViewEvent = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const { user } = useAuth()
   const [userProfile, setUserProfile] = useState<Profile | null>(null)
-  const navigation = useNavigation<NavigationType>()
   const [isAttending, setIsAttending] = useState<boolean>(false)
   const [event, setEvent] = useState<Events | null>(null)
   const [refreshing, setRefreshing] = useState<boolean>(false)

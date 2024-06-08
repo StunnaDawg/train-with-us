@@ -8,6 +8,8 @@ import MessageButton from "./MessageButton"
 import { Profile } from "../../../@types/supabaseTypes"
 import returnCommunityName from "../../../utilFunctions/returnCommunityName"
 import GenericButton from "../../../components/GenericButton"
+import { useNavigation } from "@react-navigation/native"
+import { NavigationType } from "../../../@types/navigation"
 
 // Shares components with profile page
 
@@ -23,6 +25,7 @@ const ConnectionsCard = ({
   setLoading,
 }: ConnectionsCardProps) => {
   const [primaryGymName, setPrimaryGymName] = useState<string>("")
+  const navigation = useNavigation<NavigationType>()
 
   useEffect(() => {
     const getPrimaryGymName = async () => {
@@ -64,7 +67,10 @@ const ConnectionsCard = ({
             colourPressed="bg-blue-500"
             borderColourPressed="bg-blue-800"
             buttonFunction={() => {
-              console.log("View Full Profile")
+              if (profile)
+                navigation.navigate("ViewFullUserProfile", {
+                  user: profile,
+                })
             }}
           />
         </View>

@@ -52,13 +52,11 @@ const Checkout = ({ ticketPrice, event }: CheckoutProps) => {
         </View>
         <Pressable
           onPress={() => {
-            console.log("trying")
-            console.log(event)
             if (!event) return
             navigation.navigate("EventCheckout", {
               event: event,
               ticketNumber: count,
-              ticketPrice: 9,
+              ticketPrice: ticketPrice,
             })
             console.log("Checkout")
           }}

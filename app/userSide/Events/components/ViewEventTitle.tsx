@@ -26,18 +26,6 @@ const ViewEventTitle = ({
   eventCommunityTitle,
   eventStyle,
 }: ViewEventTitleProps) => {
-  const [loading, setLoading] = useState<boolean>(false)
-  const [currentEvent, setCurrentEvent] = useState<Events | null>({} as Events)
-  const { user } = useAuth()
-
-  useEffect(() => {
-    setLoading(true)
-    if (!user && eventId) return
-
-    getSingleEvent(setLoading, eventId, setCurrentEvent)
-    setLoading(false)
-  }, [user])
-
   return (
     <View className="flex flex-row items-center justify-center">
       <View className="m-5  items-center">

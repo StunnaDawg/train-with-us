@@ -1,13 +1,10 @@
-import { View, Text, Pressable, Platform } from "react-native"
+import { View, Text, Platform } from "react-native"
 import React from "react"
-import ShowMap from "./ShowMap"
-import formatBirthdate from "../../../utilFunctions/calculateDOB"
 import formatTimestamp from "../../../utilFunctions/formatTimeStamp"
 import GenericButton from "../../../components/GenericButton"
 import openInAppleMaps from "../../../utilFunctions/openAppleMaps"
 import openInGoogleMaps from "../../../utilFunctions/openGoogleMaps"
 import AddEventToCalendar from "./AddEventToCalendar"
-import { Events } from "../../../@types/supabaseTypes"
 
 type ViewEventDetailsProps = {
   date: string | null | undefined
