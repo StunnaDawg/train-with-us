@@ -13,6 +13,8 @@ const getCommunityEvents = async (
       .from("events")
       .select()
       .eq("community_host", communityId)
+      .limit(10)
+      .order("date", { ascending: true })
 
     if (error) throw error
 

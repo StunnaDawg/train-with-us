@@ -125,7 +125,7 @@ const ViewAllEvents = () => {
 
       <View className="flex-1">
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View className="flex flex-row justify-center flex-wrap">
+          <View className="flex flex-row flex-wrap justify-center">
             {loading ? (
               <ActivityIndicator />
             ) : allEvents && allEvents?.length > 0 ? (

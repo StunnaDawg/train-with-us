@@ -64,8 +64,8 @@ const EventCard = ({
   }
   const styles = StyleSheet.create({
     container: {
-      width: 200,
-      height: 200,
+      width: 175,
+      height: 175,
       borderRadius: 10,
       overflow: "hidden",
       borderWidth: 8,
@@ -73,7 +73,7 @@ const EventCard = ({
       backgroundColor: "black",
     },
     image: {
-      height: 200,
+      height: 175,
       resizeMode: "cover",
     },
     textContainer: {

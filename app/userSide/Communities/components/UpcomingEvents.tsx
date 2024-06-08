@@ -2,7 +2,7 @@ import { ActivityIndicator, ScrollView, Text, View } from "react-native"
 import React, { useEffect, useState } from "react"
 import EventCard from "../../Events/components/EventCard"
 import { Communities, Events } from "../../../@types/supabaseTypes"
-import getUpcomingEvents from "../../../supabaseFunctions/getFuncs/getUpcomingEvents"
+import getCommunityEvents from "../../../supabaseFunctions/getFuncs/getCommunityEvent"
 
 type UpcomingCommunityEventsProps = {
   community: Communities | null
@@ -15,8 +15,12 @@ const UpcomingCommunityEvents = ({
   const [upcomingEvents, setUpcomingEvents] = useState<Events[] | null>([])
   // Make sure to change the function name from getUpcomingEvents to getUpcomingCommunityEvents
   useEffect(() => {
-    getUpcomingEvents(setLoading, setUpcomingEvents, 10)
-  }, [])
+    if (community?.id) {
+      getCommunityEvents(setLoading, community?.id, setUpcomingEvents)
+    } else {
+      console.log("No community id")
+    }
+  }, [community])
   return (
     <View className="flex flex-col m-5">
       <Text className="text-2xl font-bold m-4 text-white">Upcoming Events</Text>
@@ -32,6 +36,7 @@ const UpcomingCommunityEvents = ({
               title={event.event_title}
               date={event.date}
               key={event.id}
+              eventPrice={event.price}
             />
           ))
         ) : (
