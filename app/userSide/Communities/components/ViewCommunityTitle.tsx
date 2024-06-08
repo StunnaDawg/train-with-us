@@ -45,6 +45,7 @@ const ViewCommunityTitle = ({
       communityId,
       user?.id,
       currentProfile?.first_name,
+      currentProfile?.expo_push_token,
       showAlert
     )
 

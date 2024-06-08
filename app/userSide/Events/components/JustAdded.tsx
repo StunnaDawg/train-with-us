@@ -34,7 +34,7 @@ const JustAdded = ({ refreshing }: RefreshProp) => {
             />
           ))
         ) : (
-          <Text>No upcoming events</Text>
+          <Text className="text-white font-bold">No upcoming events</Text>
         )}
       </ScrollView>
     </View>

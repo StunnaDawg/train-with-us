@@ -13,7 +13,6 @@ const UpcomingCommunityEvents = ({
 }: UpcomingCommunityEventsProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [upcomingEvents, setUpcomingEvents] = useState<Events[] | null>([])
-  // Make sure to change the function name from getUpcomingEvents to getUpcomingCommunityEvents
   useEffect(() => {
     if (community?.id) {
       getCommunityEvents(setLoading, community?.id, setUpcomingEvents)
@@ -40,7 +39,7 @@ const UpcomingCommunityEvents = ({
             />
           ))
         ) : (
-          <Text>No upcoming events</Text>
+          <Text className="font-bold text-white">No upcoming events</Text>
         )}
       </ScrollView>
     </View>

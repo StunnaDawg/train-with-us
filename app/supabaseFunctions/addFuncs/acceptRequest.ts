@@ -4,6 +4,7 @@ import supabase from "../../../lib/supabase"
 const acceptRequest = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   userId: string,
+  expoPushToken: string | null,
   communityId: number,
   requestId: string
 ) => {
@@ -18,7 +19,13 @@ const acceptRequest = async (
 
     const { error: insertError } = await supabase
       .from("community_members")
-      .insert([{ user_id: userId, community_id: communityId }])
+      .insert([
+        {
+          user_id: userId,
+          community_id: communityId,
+          expo_push_token: expoPushToken,
+        },
+      ])
 
     if (insertError) throw insertError
 

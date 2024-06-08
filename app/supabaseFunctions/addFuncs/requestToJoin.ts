@@ -4,6 +4,7 @@ const requestToJoin = async (
   community_id: number,
   userId: string,
   first_name: string,
+  expo_push_token: string | null,
   showAlert: (title: string, message: string) => void
 ) => {
   const { data: existingRequests, error: selectError } = await supabase
@@ -31,6 +32,7 @@ const requestToJoin = async (
         requested_community: community_id,
         user_id: userId,
         first_name: first_name,
+        expo_push_token: expo_push_token,
       },
     ])
 

@@ -175,6 +175,10 @@ export type RootStackParamList = {
   }
 
   UserSettings: undefined
+
+  AnnouncementChannel: {
+    channelId: CommunityChannel
+  }
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

@@ -70,7 +70,7 @@ const SignUpWithEmail = () => {
             borderColourDefault="border-black"
             colourDefault="bg-white"
             textSize="text-2xl"
-            width={400}
+            width={300}
             roundness="rounded-xl"
             text="Sign Up with Email"
             buttonFunction={() => signUpWithEmail()}

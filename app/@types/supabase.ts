@@ -228,6 +228,7 @@ export type Database = {
         Row: {
           community_id: number
           community_owner: string | null
+          expo_push_token: string | null
           joined_at: string
           role: string
           user_id: string
@@ -235,6 +236,7 @@ export type Database = {
         Insert: {
           community_id: number
           community_owner?: string | null
+          expo_push_token?: string | null
           joined_at?: string
           role?: string
           user_id?: string
@@ -242,6 +244,7 @@ export type Database = {
         Update: {
           community_id?: number
           community_owner?: string | null
+          expo_push_token?: string | null
           joined_at?: string
           role?: string
           user_id?: string
@@ -264,6 +267,7 @@ export type Database = {
       community_requests: {
         Row: {
           created_at: string
+          expo_push_token: string | null
           first_name: string | null
           id: string
           requested_community: number | null
@@ -271,6 +275,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          expo_push_token?: string | null
           first_name?: string | null
           id?: string
           requested_community?: number | null
@@ -278,6 +283,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          expo_push_token?: string | null
           first_name?: string | null
           id?: string
           requested_community?: number | null
@@ -590,6 +596,43 @@ export type Database = {
           "": unknown
         }
         Returns: string
+      }
+      get_profiles_with_min_urls: {
+        Args: {
+          user_id: string
+        }
+        Returns: {
+          activities: string[] | null
+          actvitiy_time: string | null
+          allowed_create_community: boolean
+          birthday: string | null
+          bucket_list: string | null
+          city: string
+          community_created: number | null
+          community_preference: string[] | null
+          connected_users: string[] | null
+          created_at: string | null
+          expo_push_token: string | null
+          first_name: string | null
+          fitness_goals: string[] | null
+          fitness_lvl: string | null
+          fitness_records: string[] | null
+          gender: string | null
+          hobbies: string | null
+          id: string
+          ignored_users: string[] | null
+          intentions: string | null
+          last_name: string | null
+          music_pref: string | null
+          onboard: boolean
+          photos_url: string[] | null
+          pinned_channels: string[] | null
+          primary_gym: number | null
+          profile_pic: string | null
+          secondary_gym: number | null
+          sexuality: string | null
+          username: string | null
+        }[]
       }
     }
     Enums: {

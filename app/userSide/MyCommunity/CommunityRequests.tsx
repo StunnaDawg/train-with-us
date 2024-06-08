@@ -36,6 +36,7 @@ const CommunityRequestsPage = () => {
         acceptRequest(
           setLoading,
           request.user_id,
+          request.expo_push_token,
           request.requested_community,
           request.id
         )

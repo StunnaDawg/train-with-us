@@ -32,10 +32,11 @@ const EventTypes = ({ refreshing, type }: RefreshProp) => {
               title={event.event_title}
               date={event.date}
               eventCoverPhoto={event.event_cover_photo}
+              eventPrice={event.price}
             />
           ))
         ) : (
-          <Text>No upcoming events</Text>
+          <Text className="font-bold text-white">No upcoming events</Text>
         )}
       </ScrollView>
     </View>

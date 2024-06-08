@@ -65,7 +65,7 @@ const LoginWithEmail = () => {
             borderColourDefault="border-black"
             colourDefault="bg-white"
             textSize="text-2xl"
-            width={400}
+            width={300}
             roundness="rounded-xl"
             text="Sign in with Email"
             buttonFunction={() => signInWithEmail()}

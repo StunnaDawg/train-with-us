@@ -67,6 +67,7 @@ import TitleScreen from "./UserAuth/TitleScreen"
 import LoginWithEmail from "./UserAuth/LoginWithEmail"
 import SignUpWithEmail from "./UserAuth/SignUpWithEmail"
 import ViewFullUserProfile from "./userSide/Connections/ViewFullUserProfile"
+import AnnoucementsScreen from "./userSide/UserCommunities/components/AnnoucmentChannel"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -187,6 +188,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="EditChannel"
                 component={EditChannel}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="AnnouncementChannel"
+                component={AnnoucementsScreen}
               />
 
               <Stack.Screen

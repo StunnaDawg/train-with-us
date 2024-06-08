@@ -39,11 +39,11 @@ const SignUp = () => {
 
   return (
     <SafeAreaView className="flex-1 " style={{ backgroundColor: "#07182d" }}>
-      <KeyboardAvoidingView className="flex-1 justify-center items-center">
-        <View className="w-11/12 max-w-md">
+      <View className="flex-1 justify-center items-center">
+        <View>
           <AuthLoginImage />
 
-          <View className="mt-1">
+          <View className="mt-1 mx-2">
             <TermsOfService />
           </View>
 
@@ -54,14 +54,14 @@ const SignUp = () => {
               borderColourDefault="border-black"
               colourDefault="bg-white"
               textSize="text-2xl"
-              width={400}
+              width={300}
               roundness="rounded-xl"
               text="Sign Up with Email"
               buttonFunction={() => navigation.navigate("SignUpWithEmail")}
             />
           </View>
 
-          <View>
+          <View className="flex flex-row justify-center">
             <AppleAuth />
           </View>
 
@@ -73,7 +73,7 @@ const SignUp = () => {
             </Pressable>
           </View>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   )
 }

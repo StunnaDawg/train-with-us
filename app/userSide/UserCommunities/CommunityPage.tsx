@@ -118,47 +118,95 @@ const CommunityPage = () => {
             <View />
           </View>
 
-          {!loading && communityChannels && communityChannels.length > 0 ? (
-            communityChannels.map((c) => (
-              <View
-                key={c.id}
-                className="flex-row justify-between items-center"
-              >
-                <Pressable
-                  onPress={() =>
-                    navigation.navigate("ChannelScreen", {
-                      channelId: c,
-                    })
-                  }
-                  className="flex flex-row items-center"
-                >
-                  <View className="m-2">
-                    <SinglePic
-                      size={55}
-                      avatarRadius={100}
-                      noAvatarRadius={100}
-                      item={c.channel_pic} // Assuming this is correctly accessing the picture property
-                    />
-                  </View>
+          <View className="m-2">
+            <Text className="text-lg underline">Information Channels</Text>
+            {!loading && communityChannels && communityChannels.length > 0 ? (
+              communityChannels.map((c) => {
+                if (c.channel_type !== "Annoucement") return null
+                return (
+                  <View
+                    key={c.id}
+                    className="flex-row justify-between items-center"
+                  >
+                    <Pressable
+                      onPress={() =>
+                        navigation.navigate("AnnouncementChannel", {
+                          channelId: c,
+                        })
+                      }
+                      className="flex flex-row items-center"
+                    >
+                      <View className="m-2">
+                        <SinglePic
+                          size={55}
+                          avatarRadius={100}
+                          noAvatarRadius={100}
+                          item={c.channel_pic} // Assuming this is correctly accessing the picture property
+                        />
+                      </View>
 
-                  <View>
-                    <Text className="text-xl font-bold mb-1">
-                      {c.channel_title || "error loading channel title"}{" "}
-                      {c.channel_type === "Announcement"
-                        ? `#${c.channel_type}`
-                        : null}
-                    </Text>
-                  </View>
-                </Pressable>
+                      <View>
+                        <Text className="text-xl font-bold mb-1">
+                          {c.channel_title || "error loading channel title"}
+                        </Text>
+                      </View>
+                    </Pressable>
 
-                <Pressable onPress={() => pinChannel(c.id)}>
-                  <Entypo name="pin" size={24} color="black" />
-                </Pressable>
-              </View>
-            ))
-          ) : (
-            <ActivityIndicator /> // Changed to handle the loading state
-          )}
+                    <Pressable onPress={() => pinChannel(c.id)}>
+                      <Entypo name="pin" size={24} color="black" />
+                    </Pressable>
+                  </View>
+                )
+              })
+            ) : (
+              <ActivityIndicator />
+            )}
+          </View>
+
+          <View className="m-2">
+            <Text className="text-lg underline">Text Channels</Text>
+            {!loading && communityChannels && communityChannels.length > 0 ? (
+              communityChannels.map((c) => {
+                if (c.channel_type !== "Text") return null
+                return (
+                  <View
+                    key={c.id}
+                    className="flex-row justify-between items-center"
+                  >
+                    <Pressable
+                      onPress={() =>
+                        navigation.navigate("ChannelScreen", {
+                          channelId: c,
+                        })
+                      }
+                      className="flex flex-row items-center"
+                    >
+                      <View className="m-2">
+                        <SinglePic
+                          size={55}
+                          avatarRadius={100}
+                          noAvatarRadius={100}
+                          item={c.channel_pic} // Assuming this is correctly accessing the picture property
+                        />
+                      </View>
+
+                      <View>
+                        <Text className="text-xl font-bold mb-1">
+                          {c.channel_title || "error loading channel title"}
+                        </Text>
+                      </View>
+                    </Pressable>
+
+                    <Pressable onPress={() => pinChannel(c.id)}>
+                      <Entypo name="pin" size={24} color="black" />
+                    </Pressable>
+                  </View>
+                )
+              })
+            ) : (
+              <ActivityIndicator />
+            )}
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

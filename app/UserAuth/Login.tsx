@@ -35,11 +35,11 @@ const Login = () => {
 
   return (
     <SafeAreaView className="flex-1 " style={{ backgroundColor: "#07182d" }}>
-      <KeyboardAvoidingView className="flex-1 justify-center items-center">
-        <View className="w-11/12 max-w-md">
+      <View className="flex-1 justify-center items-center">
+        <View>
           <AuthLoginImage />
 
-          <View className="mt-1">
+          <View className="mt-1 mx-2">
             <TermsOfService />
           </View>
 
@@ -50,14 +50,14 @@ const Login = () => {
               borderColourDefault="border-black"
               colourDefault="bg-white"
               textSize="text-2xl"
-              width={400}
+              width={300}
               roundness="rounded-xl"
               text="Sign in with Email"
               buttonFunction={() => navigation.navigate("LoginWithEmail")}
             />
           </View>
 
-          <View>
+          <View className="flex flex-row justify-center">
             <AppleAuth />
           </View>
 
@@ -69,24 +69,9 @@ const Login = () => {
             </Pressable>
           </View>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 40,
-    padding: 12,
-  },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
-  },
-  mt20: {
-    marginTop: 20,
-  },
-})
 
 export default Login
