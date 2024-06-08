@@ -38,7 +38,6 @@ const Settings = () => {
   const [isEnabled, setIsEnabled] = useState(false)
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null)
-  const [notification, setNotification] = useState<boolean>(false)
 
   const registerForPushNotificationsAsync = async () => {
     if (Device.isDevice) {

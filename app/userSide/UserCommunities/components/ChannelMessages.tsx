@@ -85,7 +85,6 @@ const ChannelMessageScreen = () => {
     CommunityChannelMessages[] | null
   >([])
   const [messageToSend, setMessageToSend] = useState("")
-  const [loading, setLoading] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const { user } = useAuth()
 
@@ -102,7 +101,9 @@ const ChannelMessageScreen = () => {
       messageToSend,
       user?.id,
       channel.id,
-      currentUser?.first_name
+      currentUser?.first_name,
+      channel.community,
+      channel.channel_title
     )
     await upsertCommunitySession(channel.id, messageToSend)
     setMessageToSend("")

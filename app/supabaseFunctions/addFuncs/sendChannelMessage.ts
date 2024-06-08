@@ -1,12 +1,17 @@
 import supabase from "../../../lib/supabase"
+import sendChannelNotification from "../../utilFunctions/sendChannelNotifcation"
 
 const sendChannelMessage = async (
   message: string,
   userId: string,
   channelId: string,
-  name: string
+  name: string,
+  communityId: number,
+  title: string | null
 ) => {
   try {
+    const notificationTtle =
+      `New Message in ${title}` || "New Message in Channel"
     console.log("sending message", message, userId)
     const { error } = await supabase.from("community_channel_messages").insert([
       {
@@ -22,6 +27,8 @@ const sendChannelMessage = async (
       console.log("message error", error)
       throw error
     }
+
+    sendChannelNotification(communityId, notificationTtle, message)
   } catch (error) {
     console.log(error)
   }
