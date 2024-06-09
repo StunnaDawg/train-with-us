@@ -18,12 +18,17 @@ const SearchUsers = () => {
   }
   return (
     <SafeAreaView className="flex-1">
-      <View>
-        <SearchBar
-          value={searchText}
-          onChange={(text) => handleSearch(text)}
-          placeholder="Search for Users"
-        />
+      <View className="flex flex-row items-center ">
+        <View className="mx-1">
+          <BackButton size={28} />
+        </View>
+        <View className="flex-grow">
+          <SearchBar
+            value={searchText}
+            onChange={(text) => handleSearch(text)}
+            placeholder="Search for Users"
+          />
+        </View>
       </View>
 
       <ScrollView className=" h-full">

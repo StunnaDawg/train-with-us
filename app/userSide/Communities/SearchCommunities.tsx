@@ -5,6 +5,7 @@ import { Communities } from "../../@types/supabaseTypes"
 import CommunityCard from "./components/CommunityCard"
 import searchCommuntiesFunction from "../../supabaseFunctions/getFuncs/searchCommunities"
 import SearchBar from "../Events/components/SearchBar"
+import BackButton from "../../components/BackButton"
 
 const SearchCommunities = () => {
   const [searchText, setSearchText] = useState<string>("")
@@ -17,12 +18,17 @@ const SearchCommunities = () => {
   }
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
-      <View>
-        <SearchBar
-          value={searchText}
-          onChange={(text) => handleSearch(text)}
-          placeholder="Search for events"
-        />
+      <View className="flex flex-row items-center ">
+        <View className="mx-1">
+          <BackButton colour="white" size={28} />
+        </View>
+        <View className="flex-grow">
+          <SearchBar
+            value={searchText}
+            onChange={(text) => handleSearch(text)}
+            placeholder="Search for events"
+          />
+        </View>
       </View>
       <ScrollView>
         {!loading ? (

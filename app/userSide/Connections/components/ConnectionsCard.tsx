@@ -42,7 +42,7 @@ const ConnectionsCard = ({
   return (
     <View style={{ height: 1000 }}>
       <View className="flex flex-row justify-center mt-1 mb-2">
-        <Text className="text-2xl font-bold">
+        <Text className="text-xl font-bold">
           {profile?.first_name} {profile?.last_name}
         </Text>
       </View>

@@ -10,6 +10,7 @@ import GenericButton from "../../components/GenericButton"
 import getUpcomingEvents from "../../supabaseFunctions/getFuncs/getUpcomingEvents"
 import getNewEvents from "../../supabaseFunctions/getFuncs/getNewEvents"
 import getTmrwEvents from "../../supabaseFunctions/getFuncs/getTmrwEvents"
+import BackButton from "../../components/BackButton"
 
 const ViewAllEvents = () => {
   const [searchText, setSearchText] = useState<string>("")
@@ -43,12 +44,17 @@ const ViewAllEvents = () => {
   }, [searchText])
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
-      <View>
-        <SearchBar
-          value={searchText}
-          onChange={(text) => handleSearch(text)}
-          placeholder="Search for events"
-        />
+      <View className="flex flex-row items-center ">
+        <View className="mx-1">
+          <BackButton colour="white" size={28} />
+        </View>
+        <View className="flex-grow">
+          <SearchBar
+            value={searchText}
+            onChange={(text) => handleSearch(text)}
+            placeholder="Search for events"
+          />
+        </View>
       </View>
 
       <View className="flex flex-row justify-center flex-wrap my-1">
