@@ -119,9 +119,7 @@ const CommunitiesRead = () => {
   return (
     <View className="mt-8 mx-8 pb-2 h-full">
       <View>
-        <Text className="font-bold text-2xl text-white">
-          My Pinned Channels
-        </Text>
+        <Text className="font-bold text-lg text-white">My Pinned Channels</Text>
       </View>
 
       <ScrollView className="h-full">
@@ -139,7 +137,7 @@ const CommunitiesRead = () => {
               >
                 <View className="m-2">
                   <SinglePicCommunity
-                    size={55}
+                    size={50}
                     avatarRadius={100}
                     noAvatarRadius={100}
                     item={c.channel_pic} // Assuming this is correctly accessing the picture property
@@ -147,22 +145,22 @@ const CommunitiesRead = () => {
                 </View>
 
                 <View>
-                  <Text className="font-bold mb-1 text-xl text-white">
+                  <Text className="font-bold mb-1 text-sm text-white">
                     {c.channel_title || "error loading channel title"}{" "}
                     {c.channel_type === "Announcement"
                       ? `#${c.channel_type}`
                       : null}
                   </Text>
-                  {/* <Text className="text-lg font-bold text-white">
+                  <Text className="text-xs font-bold text-white">
                     {c.recent_message || "No Messages yet!"}
-                  </Text> */}
+                  </Text>
                 </View>
               </Pressable>
 
               <Pressable onPress={() => removePinChannel(c.id)}>
                 <MaterialCommunityIcons
                   name="dots-vertical"
-                  size={24}
+                  size={20}
                   color="white"
                 />
               </Pressable>

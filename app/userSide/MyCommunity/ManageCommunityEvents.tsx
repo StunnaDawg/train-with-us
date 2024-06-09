@@ -14,6 +14,7 @@ import formatBirthdate from "../../utilFunctions/calculateDOB"
 import { FontAwesome6 } from "@expo/vector-icons"
 import supabase from "../../../lib/supabase"
 import showAlert from "../../utilFunctions/showAlert"
+import BackButton from "../../components/BackButton"
 
 const ManageCommunityEvents = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -84,18 +85,24 @@ const ManageCommunityEvents = () => {
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-center">
-        <Text className="font-bold text-3xl">My Events</Text>
+      <View className="flex flex-row justify-between">
+        <View className="mx-2">
+          <BackButton size={24} />
+        </View>
+        <View>
+          <Text className="font-bold text-lg">My Events</Text>
+        </View>
+        <View />
       </View>
 
       <View className="m-5 mx-7">
         <View>
-          <Text className="font-bold text-2xl">My Upcoming Events:</Text>
+          <Text className="font-bold text-lg">My Upcoming Events:</Text>
         </View>
         {communityEvents?.map((event) => (
           <View className="flex flex-row justify-between my-3" key={event.id}>
             <View className="flex flex-row">
-              <Text className="font-medium text-xl">
+              <Text className="font-medium text-lg">
                 {formatBirthdate(event.date)} - {event.event_title}
               </Text>
             </View>
@@ -109,7 +116,7 @@ const ManageCommunityEvents = () => {
                   })
                 }
               >
-                <FontAwesome6 name="edit" size={24} color="black" />
+                <FontAwesome6 name="edit" size={20} color="black" />
               </Pressable>
 
               <Pressable
@@ -119,7 +126,7 @@ const ManageCommunityEvents = () => {
                   })
                 }}
               >
-                <FontAwesome6 name="trash" size={24} color="black" />
+                <FontAwesome6 name="trash" size={20} color="black" />
               </Pressable>
             </View>
           </View>

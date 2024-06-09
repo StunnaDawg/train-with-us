@@ -45,7 +45,7 @@ const CommunityBubble = ({ community }: CommunityBubbleProps) => {
         }
       >
         <SinglePic
-          size={70}
+          size={65}
           avatarRadius={100}
           noAvatarRadius={100}
           item={imageFile}

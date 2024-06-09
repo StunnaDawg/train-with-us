@@ -20,7 +20,6 @@ const truncateMessage = (message: string, maxLength: number) => {
 
 const MessageCard = ({ otherUserId, recentMessage }: MessageCardProps) => {
   const [profile, setProfile] = useState<Profile | null>({} as Profile)
-  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const { user } = useAuth()
 
   useEffect(() => {
@@ -33,9 +32,9 @@ const MessageCard = ({ otherUserId, recentMessage }: MessageCardProps) => {
 
   return (
     <View className="flex flex-row items-center">
-      <View className="m-2">
+      <View className="m-1">
         <SinglePicCommunity
-          size={55}
+          size={50}
           avatarRadius={100}
           noAvatarRadius={100}
           item={profile?.profile_pic}
@@ -43,10 +42,10 @@ const MessageCard = ({ otherUserId, recentMessage }: MessageCardProps) => {
       </View>
 
       <View>
-        <Text className="font-bold text-white text-xl">
+        <Text className="font-bold text-white text-sm">
           {!profile ? null : profile.first_name}
         </Text>
-        <Text className="text-white font-semibold text-lg">
+        <Text className="text-white font-semibold text-xs">
           {!recentMessage
             ? "No Messages yet!"
             : truncateMessage(recentMessage, 20)}

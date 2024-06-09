@@ -15,10 +15,10 @@ const NavBar = () => {
           <Pressable onPress={() => navigationTab.navigate("Events")}>
             <Image
               source={require("../assets/images/TWU-Logo.png")}
-              style={{ width: 75, height: 75 }}
+              style={{ width: 50, height: 50 }}
             />
           </Pressable>
-          <Text className="font-bold text-2xl">Train With Us</Text>
+          <Text className="font-bold text-lg">Train With Us</Text>
         </View>
         <View className="mx-2">
           <Pressable onPress={() => navigation.navigate("UserSettings")}>

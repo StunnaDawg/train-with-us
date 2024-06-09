@@ -39,12 +39,12 @@ const CommunityHome = () => {
   )
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-between px-5 border-b items-center">
+      <View className="flex flex-row justify-between px-5 pb-2 border-b items-center">
         <View className="mb-1">
-          <BackButton size={32} />
+          <BackButton size={24} />
         </View>
 
-        <Text className="font-bold text-2xl">
+        <Text className="font-bold text-lg">
           {currentCommunity?.community_title}
         </Text>
 
@@ -60,7 +60,7 @@ const CommunityHome = () => {
         </Pressable>
       </View>
       <ScrollView>
-        <View className="border rounded-xl mx-3 py-2  mt-5">
+        <View className="border rounded-xl mx-3 py-3  mt-5">
           <View className="border-b pb-2">
             <Pressable
               onPress={() => {
@@ -69,18 +69,18 @@ const CommunityHome = () => {
                 })
               }}
             >
-              <Text className="mx-2 font-bold text-xl">Create Channel</Text>
+              <Text className="mx-2 font-bold text-sm">Create Channel</Text>
             </Pressable>
           </View>
 
-          <View className="border-b pb-2">
+          <View className="border-b pb-2 ">
             <Pressable
               className="pt-2"
               onPress={() => {
                 navigation.navigate("CreateEvent")
               }}
             >
-              <Text className="mx-2 font-bold text-xl">Create Event</Text>
+              <Text className="mx-2 font-bold text-sm">Create Event</Text>
             </Pressable>
           </View>
 
@@ -93,14 +93,14 @@ const CommunityHome = () => {
                 })
               }}
             >
-              <Text className="mx-2 font-bold text-xl">
+              <Text className="mx-2 font-bold text-sm">
                 View Community Profile
               </Text>
             </Pressable>
           </View>
         </View>
 
-        <View className="border rounded-xl mx-3 py-2  mt-5">
+        <View className="border rounded-xl mx-3 py-3  mt-5">
           <View className="border-b pb-2">
             <Pressable
               onPress={() => {
@@ -109,7 +109,7 @@ const CommunityHome = () => {
                 })
               }}
             >
-              <Text className="mx-2 font-bold text-xl">View Requests</Text>
+              <Text className="mx-2 font-bold text-sm">View Requests</Text>
             </Pressable>
           </View>
 
@@ -122,7 +122,7 @@ const CommunityHome = () => {
                 })
               }}
             >
-              <Text className="mx-2 font-bold text-xl">Manage Members</Text>
+              <Text className="mx-2 font-bold text-sm">Manage Members</Text>
             </Pressable>
           </View>
 
@@ -135,7 +135,7 @@ const CommunityHome = () => {
                 })
               }}
             >
-              <Text className="mx-2 font-bold text-xl">Manage Events</Text>
+              <Text className="mx-2 font-bold text-sm">Manage Events</Text>
             </Pressable>
           </View>
           <View>
@@ -147,7 +147,7 @@ const CommunityHome = () => {
                 })
               }}
             >
-              <Text className="mx-2 font-bold text-xl">Manage Channels</Text>
+              <Text className="mx-2 font-bold text-sm">Manage Channels</Text>
             </Pressable>
           </View>
         </View>

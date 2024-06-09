@@ -141,7 +141,7 @@ const CommunitySettings = () => {
 
             <View className="flex flex-row mx-5">
               <View className="w-full">
-                <Text className="font-medium text-lg">Community Name</Text>
+                <Text className="font-bold text-sm">Community Name</Text>
                 <View className="border rounded-lg p-2 w-full">
                   <TextInput
                     value={communityName} // Binds the TextInput value to the state
@@ -149,9 +149,7 @@ const CommunitySettings = () => {
                   />
                 </View>
 
-                <Text className="font-medium text-lg">
-                  Community Description
-                </Text>
+                <Text className="font-bold text-sm">Community Description</Text>
                 <View className="border rounded-lg p-2 w-full">
                   <TextInput
                     value={communityAbout}
@@ -163,7 +161,7 @@ const CommunitySettings = () => {
                   />
                 </View>
 
-                <Text className="font-medium text-lg">Community Style</Text>
+                <Text className="font-bold text-sm">Community Style</Text>
                 <View className="border rounded-lg p-2 w-full">
                   <TextInput
                     value={communityStyle} // Binds the TextInput value to the state
@@ -171,7 +169,7 @@ const CommunitySettings = () => {
                   />
                 </View>
 
-                <Text className="font-medium text-lg">Community Address</Text>
+                <Text className="font-bold text-sm">Community Address</Text>
                 <View className="border rounded-lg p-2 w-full">
                   <TextInput
                     value={location}
@@ -180,7 +178,7 @@ const CommunitySettings = () => {
                   />
                 </View>
 
-                <Text className="font-medium text-lg">
+                <Text className="font-bold text-sm">
                   Community Phone Number
                 </Text>
                 <View className="border rounded-lg p-2 w-full">

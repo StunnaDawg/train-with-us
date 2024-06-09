@@ -1,3 +1,4 @@
+import { id } from "date-fns/locale"
 import supabase from "../../../lib/supabase"
 import sendChannelNotification from "../../utilFunctions/sendChannelNotifcation"
 
@@ -27,6 +28,20 @@ const sendChannelMessage = async (
       console.log("message error", error)
       throw error
     }
+
+    // const { error: insertError } = await supabase
+    //   .from("community_channel")
+    //   .upsert([
+    //     {
+    //       id: channelId,
+    //       recent_message: message,
+    //     },
+    //   ])
+
+    // if (insertError) {
+    //   console.log("message error", error)
+    //   throw error
+    // }
 
     sendChannelNotification(communityId, notificationTtle, message)
   } catch (error) {

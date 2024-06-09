@@ -20,7 +20,6 @@ type CommunitiesScrollProps = {
 
 const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
   const [isPressed, setIsPressed] = useState(false)
-  const [files, setFiles] = useState<FileObject[]>([])
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
@@ -82,15 +81,8 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
   useEffect(() => {
     if (!user) return
     useCurrentUser(user.id, setCurrentUser)
-    loadImages()
   }, [user])
 
-  const loadImages = async () => {
-    const { data } = await supabase.storage.from("photos").list(user!.id)
-    if (data) {
-      setFiles(data)
-    }
-  }
   return (
     <View className="px-5">
       <Pressable
@@ -104,11 +96,11 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
         onPressOut={handleOnPressOut}
       >
         <Text className="font-bold">My Community Settings</Text>
-        <FontAwesome6 name="house-chimney" size={24} color="black" />
+        <FontAwesome6 name="house-chimney" size={20} color="black" />
       </Pressable>
       <View className="flex flex-row justify-between px-3 mb-3 items-center">
         <View>
-          <Text className="font-bold text-white text-3xl">My Communities</Text>
+          <Text className="font-bold text-white text-lg">My Communities</Text>
         </View>
       </View>
       <ScrollView horizontal={true}>
@@ -116,7 +108,7 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
           {!currentUser?.community_created ? (
             <Pressable
               onPress={() => {
-                handleCreateCommunityPress()
+                navigation.navigate("CreateCommunity")
               }}
               className="m-2"
             >

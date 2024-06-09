@@ -10,6 +10,7 @@ import NewPhoto from "../../components/NewPhoto"
 import * as ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system"
 import { decode } from "base64-arraybuffer"
+import BackButton from "../../components/BackButton"
 
 type ChannelTypeOption = "Text" | "Annoucement" | "Forum"
 
@@ -69,7 +70,10 @@ const CreateChannel = () => {
   return (
     <SafeAreaView className="flex-1">
       <View className="flex flex-row justify-between w-full p-3">
-        <Text className="text-2xl font-semibold">Create Channel</Text>
+        <View className="flex flex-row items-center">
+          <BackButton />
+          <Text className="text-lg font-semibold mx-3">Create Channel</Text>
+        </View>
 
         <Pressable
           onPress={async () => {
@@ -91,12 +95,13 @@ const CreateChannel = () => {
       </View>
 
       <View className="w-full rounded-none p-3 mt-5">
-        <Text className="text-lg font-bold">Channel Type</Text>
+        <Text className="text-sm font-bold">Channel Type</Text>
 
         {channelOptions.map((type, index) => (
           <View key={index} className="flex flex-row justify-between m-2">
-            <Text className="text-lg font-bold">#{type}</Text>
+            <Text className="text-sm font-bold">#{type}</Text>
             <BouncyCheckbox
+              size={20}
               isChecked={selectedChannelType === type}
               onPress={() => handleSelectType(type)}
             />

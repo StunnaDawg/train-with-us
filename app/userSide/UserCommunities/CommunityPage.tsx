@@ -112,14 +112,14 @@ const CommunityPage = () => {
         <View className="m-2">
           <View className="flex flex-row justify-between">
             <BackButton size={32} />
-            <Text className="font-bold text-xl">
+            <Text className="font-bold text-lg">
               {`${community?.community_title}`}'s Community Page
             </Text>
             <View />
           </View>
 
           <View className="m-2">
-            <Text className="text-lg underline">Information Channels</Text>
+            <Text className="text-sm underline">Information Channels</Text>
             {!loading && communityChannels && communityChannels.length > 0 ? (
               communityChannels.map((c) => {
                 if (c.channel_type !== "Annoucement") return null
@@ -138,7 +138,7 @@ const CommunityPage = () => {
                     >
                       <View className="m-2">
                         <SinglePic
-                          size={55}
+                          size={50}
                           avatarRadius={100}
                           noAvatarRadius={100}
                           item={c.channel_pic} // Assuming this is correctly accessing the picture property
@@ -146,14 +146,14 @@ const CommunityPage = () => {
                       </View>
 
                       <View>
-                        <Text className="text-xl font-bold mb-1">
+                        <Text className="text-sm font-bold mb-1">
                           {c.channel_title || "error loading channel title"}
                         </Text>
                       </View>
                     </Pressable>
 
                     <Pressable onPress={() => pinChannel(c.id)}>
-                      <Entypo name="pin" size={24} color="black" />
+                      <Entypo name="pin" size={16} color="black" />
                     </Pressable>
                   </View>
                 )
@@ -164,7 +164,7 @@ const CommunityPage = () => {
           </View>
 
           <View className="m-2">
-            <Text className="text-lg underline">Text Channels</Text>
+            <Text className="text-sm underline">Text Channels</Text>
             {!loading && communityChannels && communityChannels.length > 0 ? (
               communityChannels.map((c) => {
                 if (c.channel_type !== "Text") return null
@@ -183,7 +183,7 @@ const CommunityPage = () => {
                     >
                       <View className="m-2">
                         <SinglePic
-                          size={55}
+                          size={50}
                           avatarRadius={100}
                           noAvatarRadius={100}
                           item={c.channel_pic} // Assuming this is correctly accessing the picture property
@@ -191,14 +191,14 @@ const CommunityPage = () => {
                       </View>
 
                       <View>
-                        <Text className="text-xl font-bold mb-1">
+                        <Text className="text-sm font-bold mb-1">
                           {c.channel_title || "error loading channel title"}
                         </Text>
                       </View>
                     </Pressable>
 
                     <Pressable onPress={() => pinChannel(c.id)}>
-                      <Entypo name="pin" size={24} color="black" />
+                      <Entypo name="pin" size={16} color="black" />
                     </Pressable>
                   </View>
                 )

@@ -92,9 +92,9 @@ const ManageChannels = () => {
   }
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-between">
+      <View className="flex flex-row justify-between mx-1">
         <BackButton size={32} />
-        <Text className="text-2xl font-bold">My Channels</Text>
+        <Text className="text-lg font-bold">My Channels</Text>
         <View />
       </View>
 
@@ -117,7 +117,7 @@ const ManageChannels = () => {
                   </View>
 
                   <View>
-                    <Text className="text-xl font-bold mb-1">
+                    <Text className="text-md font-bold mb-1">
                       {c.channel_title || "error loading channel title"}{" "}
                       {c.channel_type === "Announcement"
                         ? `#${c.channel_type}`
@@ -134,7 +134,7 @@ const ManageChannels = () => {
                       })
                     }
                   >
-                    <FontAwesome6 name="edit" size={24} color="black" />
+                    <FontAwesome6 name="edit" size={20} color="black" />
                   </Pressable>
 
                   <Pressable
@@ -144,7 +144,7 @@ const ManageChannels = () => {
                       })
                     }}
                   >
-                    <FontAwesome6 name="trash" size={24} color="black" />
+                    <FontAwesome6 name="trash" size={20} color="black" />
                   </Pressable>
                 </View>
               </View>

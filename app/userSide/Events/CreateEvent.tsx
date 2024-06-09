@@ -29,6 +29,7 @@ const CreateEvent = () => {
   const [location, setLocation] = useState<string>("")
   const [description, setDescription] = useState<string>("")
   const [eventTitle, setEventTitle] = useState<string>("")
+  const [eventStyle, setEventStyle] = useState<string>("")
   const [date, setDate] = useState<Date>(new Date())
   const [price, setPrice] = useState<string>("")
   const [eventPicture, setEventPicture] =
@@ -58,8 +59,8 @@ const CreateEvent = () => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView className=" p-4 bg-white">
-            <View className="flex flex-row items-center mb-8">
-              <Text className="mx-1 text-3xl font-semibold ">Create Event</Text>
+            <View className="flex flex-row justify-center items-center mb-8">
+              <Text className="mx-1 text-lg font-semibold ">Create Event</Text>
             </View>
 
             <View>
@@ -67,7 +68,7 @@ const CreateEvent = () => {
             </View>
 
             <View className="mb-4">
-              <Text className="mb-2 text-lg font-semibold text-gray">
+              <Text className="mb-2 text-sm font-semibold text-gray">
                 Title
               </Text>
               <TextInput
@@ -79,7 +80,7 @@ const CreateEvent = () => {
             </View>
 
             <View className="mb-4">
-              <Text className="mb-2 text-lg font-semibold text-gray">
+              <Text className="mb-2 text-sm font-semibold text-gray">
                 Description
               </Text>
               <TextInput
@@ -92,7 +93,7 @@ const CreateEvent = () => {
             </View>
 
             <View className="mb-4">
-              <Text className="mb-2 text-lg font-semibold text-gray">Date</Text>
+              <Text className="mb-2 text-sm font-semibold text-gray">Date</Text>
               <DateTimePicker
                 testID="dateTimePicker"
                 value={date}
@@ -105,7 +106,7 @@ const CreateEvent = () => {
             </View>
 
             <View className="mb-4">
-              <Text className="mb-2 text-lg font-semibold text-gray">Time</Text>
+              <Text className="mb-2 text-sm font-semibold text-gray">Time</Text>
               <DateTimePicker
                 testID="dateTimePicker"
                 value={date}
@@ -117,7 +118,7 @@ const CreateEvent = () => {
             </View>
 
             <View className="mb-4">
-              <Text className="mb-2 text-lg font-semibold text-gray">
+              <Text className="mb-2 text-sm font-semibold text-gray">
                 Price
               </Text>
               <TextInput
@@ -130,13 +131,25 @@ const CreateEvent = () => {
             </View>
 
             <View className="mb-4">
-              <Text className="mb-2 text-lg font-semibold text-gray">
+              <Text className="mb-2 text-sm font-semibold text-gray">
                 Location
               </Text>
               <TextInput
                 value={location}
                 onChangeText={setLocation}
                 placeholder="Set a valid location"
+                className="border  p-2 rounded-lg"
+              />
+            </View>
+
+            <View className="mb-4">
+              <Text className="mb-2 text-sm font-semibold text-gray">
+                Event Style
+              </Text>
+              <TextInput
+                value={eventStyle}
+                onChangeText={setEventStyle}
+                placeholder="What's the event style? eg: Hyrox, Crossfit, etc."
                 className="border  p-2 rounded-lg"
               />
             </View>
@@ -155,14 +168,15 @@ const CreateEvent = () => {
                     Number(price),
                     description,
                     eventPicture,
-                    location
+                    location,
+                    eventStyle
                   )
                   navigation.goBack()
                 }, 2000)
               }}
               className=" bg-black p-4 rounded-lg items-center mb-20"
             >
-              <Text className="text-white text-xl font-bold">Create Event</Text>
+              <Text className="text-white text-lg font-bold">Create Event</Text>
             </Pressable>
           </ScrollView>
         </TouchableWithoutFeedback>

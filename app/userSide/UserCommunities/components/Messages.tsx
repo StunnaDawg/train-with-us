@@ -1,49 +1,31 @@
 import { View, Text, Pressable, ScrollView } from "react-native"
 import React, { useEffect, useState } from "react"
-import SinglePic from "../../../components/SinglePic"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
-import supabase from "../../../../lib/supabase"
-import { FileObject } from "@supabase/storage-js"
 import getAllUserChatSessions from "../../../supabaseFunctions/getFuncs/getAllUserChatSessions"
 import { ChatSession, Profile } from "../../../@types/supabaseTypes"
-import getSingleProfile from "../../../supabaseFunctions/getFuncs/getSingleProfile"
 import { NavigationType } from "../../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
-import { set } from "date-fns"
 import MessageCard from "./MessageCard"
 
 const Messages = () => {
-  const [files, setFiles] = useState<FileObject[]>([])
   const [chatSessions, setChatSessions] = useState<ChatSession[] | null>([])
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
 
   useEffect(() => {
     if (!user) return
-
-    loadImages()
-  }, [user])
-
-  useEffect(() => {
-    if (!user) return
     getAllUserChatSessions(user!.id, setChatSessions)
-  }, [])
+  }, [user])
 
   useEffect(() => {
     if (!chatSessions) return
     console.log("chat sessions obtaiend", chatSessions)
   }, [chatSessions])
 
-  const loadImages = async () => {
-    const { data } = await supabase.storage.from("photos").list(user!.id)
-    if (data) {
-      setFiles(data)
-    }
-  }
   return (
     <View className="mt-8 mx-8 pb-2">
       <View>
-        <Text className="font-bold text-2xl text-white">My Messages</Text>
+        <Text className="font-bold text-lg text-white">My Messages</Text>
       </View>
 
       <ScrollView className="h-full">

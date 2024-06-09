@@ -15,8 +15,6 @@ import {
 import SinglePic from "../../../components/SinglePic"
 import { RootStackParamList } from "../../../@types/navigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
-import { get } from "mongoose"
-import getAllUserChatSessions from "../../../supabaseFunctions/getFuncs/getAllUserChatSessions"
 import { Messages, Profile } from "../../../@types/supabaseTypes"
 import getChatSessionMessages from "../../../supabaseFunctions/getFuncs/getChatSessionMessages"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
@@ -36,7 +34,7 @@ const UserMessage = ({ message }: UserMessage) => {
     <View className="flex flex-row justify-end mt-2 mr-4 ml-36">
       <View>
         <View className="rounded-2xl bg-blue-500/80 p-2">
-          <Text className="font-bold text-sm">{message}</Text>
+          <Text className="font-bold text-xs">{message}</Text>
         </View>
       </View>
     </View>
@@ -53,7 +51,7 @@ const MatchesMessage = ({ message, name }: MatchesMessageProps) => {
     <View className="flex flex-row justify-start mt-2 ml-4 mr-36">
       <View>
         <View className="rounded-2xl bg-slate-400/60 p-2">
-          <Text className=" text-sm text-black font-bold">{message}</Text>
+          <Text className=" text-xs text-black font-bold">{message}</Text>
         </View>
       </View>
     </View>
@@ -67,7 +65,6 @@ const MessageScreen = () => {
   const [serverMessages, setServerMessages] = useState<Messages[] | null>([])
   const [messageToSend, setMessageToSend] = useState("")
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
-  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const { user } = useAuth()
 
   const otherUserId =
@@ -77,12 +74,6 @@ const MessageScreen = () => {
     if (!user || !otherUserId) return
     useCurrentUser(otherUserId, setCurrentUser)
   }, [user, otherUserId])
-
-  useEffect(() => {
-    if (currentUser?.photos_url) {
-      setImageFiles(currentUser?.photos_url)
-    }
-  }, [currentUser])
 
   useEffect(() => {
     getChatSessionMessages(chatSession.id, setServerMessages)
@@ -144,7 +135,7 @@ const MessageScreen = () => {
             item={currentUser?.profile_pic}
           />
 
-          <Text className="font-bold text-xl mb-1">
+          <Text className="font-bold text-lg mb-1">
             {currentUser?.first_name}
           </Text>
         </View>
@@ -193,7 +184,7 @@ const MessageScreen = () => {
             onChangeText={setMessageToSend}
           />
           <Pressable className="mx-2" onPress={() => sendMessageAction()}>
-            <Text className="text-xl font-bold">Send</Text>
+            <Text className="text-lg font-bold">Send</Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>
