@@ -1,8 +1,6 @@
-import { View, Text, ScrollView } from "react-native"
+import { View, Text } from "react-native"
 import React from "react"
 import { Profile } from "../../../@types/supabaseTypes"
-import formatBirthdate from "../../../utilFunctions/calculateDOB"
-import ActivityTags from "../../../components/AcvitivityTags"
 
 type UserAboutSectionProps = {
   profile: Profile | null
@@ -10,19 +8,13 @@ type UserAboutSectionProps = {
 
 const UserAboutSection = ({ profile }: UserAboutSectionProps) => {
   return (
-    <View className="mt-4 ml-7 mr-7 ">
-      {/* About */}
-      {/* <Text className="text-lg font-medium">
-        Single, interested in social networking
-      </Text> */}
-      {/* Birthday */}
-      <Text className="text-lg font-semibold">
-        DOB: {profile?.birthday ? formatBirthdate(profile?.birthday) : null}
-      </Text>
-      {/* Gender */}
-      <Text className="text-lg font-semibold">Gender - {profile?.gender}</Text>
+    <View>
+      <View className="flex flex-row justify-center my-1">
+        <Text className="text-sm font-bold">{profile?.about}</Text>
+      </View>
+      <Text className="text-sm font-bold">Gender - {profile?.gender}</Text>
       {/* Location */}
-      <Text className="text-lg font-semibold">
+      <Text className="text-sm font-semibold">
         Location: {profile?.city}, NS
       </Text>
       {/* Activity Tags */}

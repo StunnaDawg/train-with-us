@@ -76,7 +76,8 @@ const ConnectionsCard = ({
         </View>
       </View>
 
-      <View>
+      <View className="mt-1 mx-2">
+        <UserAboutSection profile={profile} />
         <UserTopGyms
           communityName={primaryGymName}
           borderB={false}
@@ -84,22 +85,15 @@ const ConnectionsCard = ({
         />
       </View>
 
-      {profile?.activities?.length && profile?.activities?.length > 0 && (
-        <View className="flex flex-row items-center">
-          <View className="ml-7">
-            <Text className="font-medium text-lg">My Styles of Fitness:</Text>
-          </View>
-          <ActivitySection profile={profile} />
-        </View>
-      )}
-
       <View className="mt-1">
         <PhotoArray index1={3} index2={4} index3={5} profileId={profile?.id} />
       </View>
 
-      <View>
-        <UserAboutSection profile={profile} />
-      </View>
+      {profile?.activities?.length && profile?.activities?.length > 0 && (
+        <View className="flex flex-row items-center">
+          <ActivitySection profile={profile} />
+        </View>
+      )}
     </View>
   )
 }

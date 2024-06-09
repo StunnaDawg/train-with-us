@@ -23,7 +23,7 @@ const ProfilePicSupa = ({
 }: SingleImageProp) => {
   const [loading, setLoading] = useState(false)
   const { user } = useAuth()
-  const avatarSize = { height: 150, width: 150 }
+  const avatarSize = { height: 120, width: 120 }
   const userId = user?.id
 
   const [image, setImage] = useState<string>("")

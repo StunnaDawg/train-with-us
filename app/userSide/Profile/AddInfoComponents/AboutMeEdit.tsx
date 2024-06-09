@@ -47,8 +47,24 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
   return (
     <ScrollView className="mx-7">
       <View className="border-b border-black/45 p-2">
+        <Pressable
+          onPress={() => {
+            if (currentUserState) {
+              navigation.navigate("EditBio", {
+                userProfile: currentUserState,
+              })
+            }
+          }}
+          className="flex flex-row justify-between items-center"
+        >
+          <Text className=" font-bold text-sm">Bio</Text>
+          <FontAwesome6 name="edit" size={20} color="blue" />
+        </Pressable>
+      </View>
+
+      <View className="border-b border-black/45 p-2">
         <Pressable className="flex flex-row justify-between items-center">
-          <Text className=" font-bold text-xl">
+          <Text className=" font-bold text-sm">
             {!loading && currentUserState
               ? formatBirthdate(currentUserState.birthday)
               : "Add Birthday"}
@@ -67,8 +83,11 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
           }
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-xl">Primary Community:</Text>
-          <Text className=" font-bold text-xl">{PrimaryGymName}</Text>
+          <Text className=" font-bold text-sm">Primary Community:</Text>
+          <Text className=" font-bold text-sm">{PrimaryGymName}</Text>
+          <View />
+          <View />
+          <View />
           <View className="items-center">
             <FontAwesome6 name="edit" size={20} color="blue" />
           </View>
@@ -80,7 +99,7 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
           onPress={() => navigation.navigate("QuestionThree")}
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-xl">
+          <Text className=" font-bold text-sm">
             Gender - {currentUserState?.gender || "Add Gender"}
           </Text>
           <FontAwesome6 name="edit" size={20} color="blue" />
@@ -92,7 +111,7 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
           onPress={() => navigation.navigate("Sexuality")}
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-xl">
+          <Text className=" font-bold text-sm">
             Sexuality - {currentUserState?.sexuality || "Add Sexuality"}
           </Text>
           <FontAwesome6 name="edit" size={20} color="blue" />
@@ -101,7 +120,7 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
 
       <View className="border-b border-black/45 p-2">
         <Pressable className="flex flex-row justify-between items-center">
-          <Text className=" font-bold text-xl">Location - Halifax NS</Text>
+          <Text className=" font-bold text-sm">Location - Halifax NS</Text>
         </Pressable>
       </View>
     </ScrollView>

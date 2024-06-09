@@ -17,7 +17,7 @@ const Upcoming = ({ refreshing }: RefreshProp) => {
   }, [refreshing])
   return (
     <View className="flex flex-col m-5">
-      <Text className="text-2xl font-bold text-white m-1">Upcoming</Text>
+      <Text className="text-lg font-bold text-white m-1">Upcoming</Text>
       <ScrollView horizontal={true}>
         {loading ? (
           <ActivityIndicator />

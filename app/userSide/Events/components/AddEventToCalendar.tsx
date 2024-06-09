@@ -54,11 +54,12 @@ const AddEventToCalendar = ({ eventId }: EventProps) => {
     <View>
       <GenericButton
         text="Add Event to Calendar"
-        textSize="text-sm"
+        textSize="text-xs"
         buttonFunction={() => addEvent()}
-        width={200}
+        width={100}
+        textCenter={true}
         colourPressed="bg-blue-200"
-        colourDefault="bg-blue-500"
+        colourDefault="bg-white"
         borderColourPressed="border-gray-200"
         borderColourDefault="border-black"
         roundness="rounded-xl"

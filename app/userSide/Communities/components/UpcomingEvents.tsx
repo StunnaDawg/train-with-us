@@ -22,7 +22,7 @@ const UpcomingCommunityEvents = ({
   }, [community])
   return (
     <View className="flex flex-col m-5">
-      <Text className="text-2xl font-bold m-4 text-white">Upcoming Events</Text>
+      <Text className="text-xl font-bold m-4 text-white">Upcoming Events</Text>
       <ScrollView horizontal={true}>
         {loading ? (
           <ActivityIndicator />

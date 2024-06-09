@@ -64,12 +64,6 @@ const EventAdmissionCheckout = ({
       <View className="mt-3 mb-2">
         <View>
           <Text className="font-bold text-slate-500/90 text-sm px-12">
-            Total: ${10}+ Tax
-          </Text>
-        </View>
-
-        <View>
-          <Text className="font-bold text-slate-500/90 text-sm px-12">
             {date ? `Sales end ${formatBirthdate(date)}` : null}
           </Text>
         </View>

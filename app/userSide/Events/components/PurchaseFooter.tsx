@@ -24,8 +24,8 @@ const PurchaseFooter = ({
 
   const showAlert = () =>
     Alert.alert(
-      "Missing Information",
-      "Please enter your First Name.",
+      "No Ticket!",
+      "Please add a ticket to purchase",
       [
         {
           text: "Cancel",

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react"
+import React, { Dispatch, SetStateAction } from "react"
 import { TextInput, View, Text } from "react-native"
 
 type EnhancedTextInputProps = {
@@ -18,12 +18,12 @@ const EnhancedTextInput = ({
         multiline={true}
         className="border rounded-xl p-3 h-32 text-base text-gray-700"
         placeholder={placeholder}
-        maxLength={200}
+        maxLength={100}
         value={text}
         onChangeText={setText}
       />
       <Text className="text-right mt-1 text-sm text-gray-500">
-        {text ? text.length : "0"}/200
+        {text ? text.length : "0"}/100
       </Text>
     </View>
   )

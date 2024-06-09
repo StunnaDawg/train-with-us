@@ -107,8 +107,8 @@ const CommunityPage = () => {
   }
 
   return (
-    <SafeAreaView>
-      <ScrollView>
+    <SafeAreaView className="flex-1">
+      <ScrollView className="flex-1">
         <View className="m-2">
           <View className="flex flex-row justify-between">
             <BackButton size={32} />

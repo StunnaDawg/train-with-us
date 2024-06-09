@@ -36,6 +36,7 @@ const EventCheckoutTitle = ({
           {eventStyle ? eventStyle : null}
         </Text>
         <Text className="font-bold text-lg text-white">
+          Community Host:{" "}
           {eventCommunityTitle
             ? eventCommunityTitle
             : "Error Loading Community Name"}

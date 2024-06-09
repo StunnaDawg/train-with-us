@@ -11,6 +11,8 @@ type GenericButtonProps = {
   borderColourPressed: string
   borderColourDefault: string
   roundness: string
+  fontbold?: string | null
+  textCenter?: boolean | null
 }
 
 const GenericButton = ({
@@ -23,6 +25,8 @@ const GenericButton = ({
   borderColourPressed,
   borderColourDefault,
   roundness,
+  fontbold,
+  textCenter,
 }: GenericButtonProps) => {
   const [isPressed, setIsPressed] = useState(false)
 
@@ -40,13 +44,19 @@ const GenericButton = ({
       onPress={() => buttonFunction()}
       onPressIn={handleOnPressIn}
       onPressOut={handleOnPressOut}
-      className={` ${roundness} border p-2 items-center font-bold ${
+      className={` ${roundness} border p-2 items-center ${
         isPressed
           ? `${colourPressed} ${borderColourPressed}`
           : `${colourDefault} ${borderColourDefault}`
       }`}
     >
-      <Text className={`font-bold ${textSize} `}>{text}</Text>
+      <Text
+        className={` ${textCenter ? "text-center" : null} ${
+          fontbold ? fontbold : "font-bold"
+        } ${textSize} `}
+      >
+        {text}
+      </Text>
     </Pressable>
   )
 }

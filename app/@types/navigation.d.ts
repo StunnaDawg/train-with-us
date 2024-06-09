@@ -179,6 +179,10 @@ export type RootStackParamList = {
   AnnouncementChannel: {
     channelId: CommunityChannel
   }
+
+  EditBio: {
+    userProfile: Profile
+  }
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

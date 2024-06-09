@@ -31,14 +31,14 @@ const AddMoreInfo = () => {
           <View>
             <BackButton size={32} />
           </View>
-          <Text className="text-2xl font-bold m-1">My Profile</Text>
+          <Text className="text-lg font-bold m-1">My Profile</Text>
 
           <View />
         </View>
 
         <UserProfilePic profile={currentUser} refresh={refreshing} />
 
-        <View className="">
+        <View>
           <Tabs
             changeToAboutMeTab={changeToAboutMeTab}
             changeToInterestTab={changeToInterestTab}

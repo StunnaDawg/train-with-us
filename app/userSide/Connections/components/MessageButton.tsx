@@ -8,12 +8,10 @@ import React, {
   useState,
 } from "react"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
-import insertIgnoreUser from "../../../supabaseFunctions/updateFuncs/addIgnoreUser"
 import { BottomSheetModal, useBottomSheetModal } from "@gorhom/bottom-sheet"
 import sendNewMessage from "../../../supabaseFunctions/addFuncs/sendNewMessage"
 
 import { ChatSession } from "../../../@types/supabaseTypes"
-import { set } from "date-fns"
 
 type MessageButtonProps = {
   coach: boolean
@@ -29,9 +27,6 @@ const MessageButton = ({
   loading,
 }: MessageButtonProps) => {
   const [message, setMessageToSend] = useState<string>("")
-  const [chatSessionId, setChatSessionId] = useState<ChatSession>(
-    {} as ChatSession
-  )
   const { user } = useAuth()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const { dismiss } = useBottomSheetModal()
@@ -54,9 +49,9 @@ const MessageButton = ({
               onPress={() => {
                 handlePresentModalPress()
               }}
-              className="border-2 rounded-full p-2 mx-1"
+              className="border-2 rounded-full px-5 py-1 mx-1"
             >
-              <Text className="text-xl font-bold">Say Hi</Text>
+              <Text className="text-lg font-bold">Say Hi</Text>
             </Pressable>
           </View>
         ) : (
@@ -89,7 +84,6 @@ const MessageButton = ({
               if (!profileId || !user) return
               console.log("profileId", profileId)
 
-              console.log("chatSessionId", chatSessionId)
               await sendNewMessage(message, user?.id, profileId)
               setLoading(false)
               dismiss()

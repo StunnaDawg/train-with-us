@@ -1,12 +1,6 @@
 import { View, Text } from "react-native"
 import React, { useEffect, useState } from "react"
 import SinglePic from "../../../components/SinglePic"
-import { useAuth } from "../../../supabaseFunctions/authcontext"
-import supabase from "../../../../lib/supabase"
-import { FileObject } from "@supabase/storage-js"
-import { Events } from "../../../@types/supabaseTypes"
-import getSingleEvent from "../../../supabaseFunctions/getFuncs/getSingleEvent"
-import { set } from "date-fns"
 import formatBirthdate from "../../../utilFunctions/calculateDOB"
 
 type ViewEventTitleProps = {
@@ -29,14 +23,14 @@ const ViewEventTitle = ({
   return (
     <View className="flex flex-row items-center justify-center">
       <View className="m-5  items-center">
-        <Text className="text-xl font-bold text-white">
+        <Text className="text-lg font-bold text-white">
           {title ? title : "No Title"}
         </Text>
-        <Text className="text-xl font-bold text-white">
+        <Text className="text-lg font-bold text-white">
           {date ? formatBirthdate(date) : "No Date"}
         </Text>
         <View className="border rounded-full mt-1 p-1 px-4 bg-white border-white">
-          <Text className=" text-xl font-semibold">
+          <Text className="text-sm font-semibold">
             {eventCommunityTitle ? eventCommunityTitle : "No Title"}
           </Text>
         </View>
@@ -45,9 +39,9 @@ const ViewEventTitle = ({
         </Text>
       </View>
 
-      <View className="border-white border-4">
+      <View className="border-white rounded-lg border-4">
         <SinglePic
-          size={150}
+          size={125}
           avatarRadius={0}
           noAvatarRadius={0}
           item={eventPhoto}

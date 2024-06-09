@@ -17,7 +17,7 @@ const JustAdded = ({ refreshing }: RefreshProp) => {
   }, [refreshing])
   return (
     <View className="flex flex-col m-5">
-      <Text className="text-2xl text-white font-bold m-1">Just Added</Text>
+      <Text className="text-lg text-white font-bold m-1">Just Added</Text>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         {loading ? (
           <ActivityIndicator />
@@ -34,7 +34,9 @@ const JustAdded = ({ refreshing }: RefreshProp) => {
             />
           ))
         ) : (
-          <Text className="text-white font-bold">No upcoming events</Text>
+          <Text className="text-white font-bold">
+            No recently added events!
+          </Text>
         )}
       </ScrollView>
     </View>

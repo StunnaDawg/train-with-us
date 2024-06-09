@@ -441,6 +441,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          about: string | null
           activities: string[] | null
           actvitiy_time: string | null
           allowed_create_community: boolean
@@ -474,6 +475,7 @@ export type Database = {
           firstname_lastname: string | null
         }
         Insert: {
+          about?: string | null
           activities?: string[] | null
           actvitiy_time?: string | null
           allowed_create_community?: boolean
@@ -506,6 +508,7 @@ export type Database = {
           username?: string | null
         }
         Update: {
+          about?: string | null
           activities?: string[] | null
           actvitiy_time?: string | null
           allowed_create_community?: boolean
@@ -602,6 +605,7 @@ export type Database = {
           user_id: string
         }
         Returns: {
+          about: string | null
           activities: string[] | null
           actvitiy_time: string | null
           allowed_create_community: boolean

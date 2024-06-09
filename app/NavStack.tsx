@@ -68,6 +68,8 @@ import LoginWithEmail from "./UserAuth/LoginWithEmail"
 import SignUpWithEmail from "./UserAuth/SignUpWithEmail"
 import ViewFullUserProfile from "./userSide/Connections/ViewFullUserProfile"
 import AnnoucementsScreen from "./userSide/UserCommunities/components/AnnoucmentChannel"
+import AboutMeEdit from "./userSide/Profile/AddInfoComponents/AboutMeEdit"
+import AddBio from "./userSide/Profile/AddInfoComponents/AddBio"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -170,6 +172,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="MyCommunityHome"
                 component={CommunityHome}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="EditBio"
+                component={AddBio}
               />
 
               <Stack.Screen

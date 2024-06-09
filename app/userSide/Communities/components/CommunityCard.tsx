@@ -26,7 +26,7 @@ const CommunityCard = ({ community, addPrimary }: CommunityCardProps) => {
       <View className="flex flex-row items-center">
         <View className="m-2">
           <SinglePicCommunity
-            size={90}
+            size={75}
             item={community.community_profile_pic}
             avatarRadius={100}
             noAvatarRadius={100}
@@ -34,15 +34,15 @@ const CommunityCard = ({ community, addPrimary }: CommunityCardProps) => {
         </View>
 
         <View className="flex-col flex-1">
-          <Text className=" text-white font-bold text-2xl">
+          <Text className=" text-white font-bold text-lg">
             {community.community_title}
           </Text>
           <View className="flex flex-row items-center">
-            <Text className=" text-white font-bold text-xl">
+            <Text className=" text-white font-bold text-sm">
               {community.member_count} Members
             </Text>
             <View className="mx-1">
-              <FontAwesome6 name="people-group" size={24} color="white" />
+              <FontAwesome6 name="people-group" size={16} color="white" />
             </View>
           </View>
           <View className="border-b-2 border-b-white p-3" />

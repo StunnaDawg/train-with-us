@@ -39,7 +39,7 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
           }}
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-xl">
+          <Text className=" font-bold text-sm">
             Preferred Activity Time -{" "}
             {currentUserState?.actvitiy_time || "Add Time"}
           </Text>
@@ -59,7 +59,7 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
           }}
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-xl">
+          <Text className=" font-bold text-sm">
             Fitness Interests - Not yet Rendered
           </Text>
           <FontAwesome6 name="edit" size={20} color="blue" />
@@ -77,7 +77,7 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
           }}
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-xl">Fitness Goals -</Text>
+          <Text className=" font-bold text-sm">Fitness Goals -</Text>
           <FontAwesome6 name="edit" size={20} color="blue" />
         </Pressable>
       </View> */}
@@ -93,7 +93,7 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
           }}
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-xl">Fitness Bucket List</Text>
+          <Text className=" font-bold text-sm">Fitness Bucket List</Text>
           <FontAwesome6 name="edit" size={20} color="blue" />
         </Pressable>
       </View>
@@ -109,7 +109,7 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
           }}
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-xl">Fitness Experience Level</Text>
+          <Text className=" font-bold text-sm">Fitness Experience Level</Text>
           <FontAwesome6 name="edit" size={20} color="blue" />
         </Pressable>
       </View>
@@ -125,7 +125,7 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
           }}
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-xl">Fitness Records</Text>
+          <Text className=" font-bold text-sm">Fitness Records</Text>
           <FontAwesome6 name="edit" size={20} color="blue" />
         </Pressable>
       </View> */}
@@ -141,7 +141,7 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
           }}
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-xl">Hobbies</Text>
+          <Text className=" font-bold text-sm">Hobbies</Text>
           <FontAwesome6 name="edit" size={20} color="blue" />
         </Pressable>
       </View>
@@ -157,7 +157,7 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
           }}
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-xl">Music Preference</Text>
+          <Text className=" font-bold text-sm">Music Preference</Text>
           <FontAwesome6 name="edit" size={20} color="blue" />
         </Pressable>
       </View>

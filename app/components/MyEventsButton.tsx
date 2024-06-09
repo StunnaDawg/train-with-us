@@ -18,7 +18,7 @@ const MyEventsButton = () => {
   }
   return (
     <Pressable
-      className={`flex flex-row justify-between items-center border rounded-xl py-3 mt-4 px-6 mx-10 ${
+      className={`flex flex-row justify-between items-center border rounded-xl py-2 mt-4 px-3 mx-10 ${
         isPressed ? "bg-gray-200 " : "bg-white "
       }`}
       onPress={() => {
@@ -27,8 +27,8 @@ const MyEventsButton = () => {
       onPressIn={handleOnPressIn}
       onPressOut={handleOnPressOut}
     >
-      <Text className="font-bold text-xl">My Events</Text>
-      <FontAwesome6 name="calendar-days" size={24} color="black" />
+      <Text className="font-bold text-lg">My Events</Text>
+      <FontAwesome6 name="calendar-days" size={20} color="black" />
     </Pressable>
   )
 }

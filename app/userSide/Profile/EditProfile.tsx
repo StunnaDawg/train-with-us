@@ -8,17 +8,19 @@ const EditProfile = () => {
   const { user } = useAuth()
   return (
     <SafeAreaView className="flex-1">
-      <View>
-        <ProfilePicture />
-      </View>
-      <View className="m-5">
-        <Text className="text-3xl font-bold text-center mt-4">
-          Pick your Profile Photos
-        </Text>
-      </View>
-      <View>
-        <ImageGrid />
-      </View>
+      <ScrollView className="flex-1">
+        <View>
+          <ProfilePicture />
+        </View>
+        <View className="m-5">
+          <Text className="text-lg font-bold text-center mt-4">
+            Pick your Profile Photos
+          </Text>
+        </View>
+        <View>
+          <ImageGrid />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }

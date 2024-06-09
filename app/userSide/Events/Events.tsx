@@ -51,7 +51,7 @@ const Events = () => {
       </View> */}
 
       <View>
-        <AllEvents refreshing={refreshing} />
+        <AllEvents />
       </View>
 
       <View>

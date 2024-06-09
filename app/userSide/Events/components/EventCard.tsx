@@ -76,11 +76,7 @@ const EventCard = ({
       height: 175,
       resizeMode: "cover",
     },
-    textContainer: {
-      borderRadius: 10,
-      marginHorizontal: 10,
-      marginBottom: 10,
-    },
+
     text: {
       backgroundColor: "white",
       fontWeight: "bold",
@@ -88,12 +84,12 @@ const EventCard = ({
     },
     subText: {
       fontWeight: "bold",
-      fontSize: 18,
+
       color: "white",
     },
     price: {
       fontWeight: "bold",
-      fontSize: 16,
+      fontSize: 12,
       color: "black",
       backgroundColor: "white",
       width: 50,
@@ -113,21 +109,16 @@ const EventCard = ({
         style={styles.container}
         imageStyle={styles.image}
       >
-        <View style={styles.textContainer}>
+        <View className="m-1">
           <Text className="" style={styles.price}>
             {eventPrice ? eventPrice.toString() : "Free"}
           </Text>
         </View>
-        <View
-          style={[
-            styles.textContainer,
-            { flex: 1, justifyContent: "flex-end" },
-          ]}
-        >
-          <Text className="text-xl" style={styles.text}>
+        <View style={[{ flex: 1, justifyContent: "flex-end" }]}>
+          <Text className="text-sm" style={styles.text}>
             {title}
           </Text>
-          <Text className="text-sm" style={styles.text}>
+          <Text className="text-xs" style={styles.text}>
             {formatBirthdate(date)}
           </Text>
         </View>

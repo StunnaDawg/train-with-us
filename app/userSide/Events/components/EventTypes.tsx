@@ -19,7 +19,7 @@ const EventTypes = ({ refreshing, type }: RefreshProp) => {
 
   return (
     <View className="flex flex-col m-5">
-      <Text className="text-2xl text-white font-bold m-1">{type}</Text>
+      <Text className="text-lg text-white font-bold m-1">{type}</Text>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         {loading ? (
           <ActivityIndicator />

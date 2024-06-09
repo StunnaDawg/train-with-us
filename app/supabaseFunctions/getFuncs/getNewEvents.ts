@@ -9,9 +9,14 @@ const getNewEvents = async (
 ) => {
   try {
     setLoading(true)
+    const currentDate = new Date()
+    currentDate.setDate(currentDate.getDate() - 5)
+    const isoDate = currentDate.toISOString()
+
     const { data: events, error } = await supabase
       .from("events")
       .select()
+      .gte("created_at", isoDate)
       .order("created_at", { ascending: false })
       .limit(limit)
 

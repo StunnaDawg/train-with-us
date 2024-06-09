@@ -39,7 +39,7 @@ const PhotoArrayProfile = ({
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         <View className="m-1">
           <SinglePicProfileView
-            size={150}
+            size={115}
             avatarRadius={10}
             noAvatarRadius={10}
             item={imageFiles?.[index1]}
@@ -48,7 +48,7 @@ const PhotoArrayProfile = ({
 
         <View className="m-1">
           <SinglePicProfileView
-            size={150}
+            size={115}
             avatarRadius={10}
             noAvatarRadius={10}
             item={imageFiles?.[index2]}
@@ -56,7 +56,7 @@ const PhotoArrayProfile = ({
         </View>
         <View className="m-1">
           <SinglePicProfileView
-            size={150}
+            size={115}
             avatarRadius={10}
             noAvatarRadius={10}
             item={imageFiles?.[index3]}

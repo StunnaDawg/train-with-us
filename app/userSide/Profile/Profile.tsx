@@ -18,6 +18,7 @@ import { FontAwesome6 } from "@expo/vector-icons"
 import returnCommunityName from "../../utilFunctions/returnCommunityName"
 import sendNotification from "../../utilFunctions/sendNotification"
 import PhotoArrayProfile from "./components/PhotoArrayProfile"
+import GenericButton from "../../components/GenericButton"
 
 const ProfileView = () => {
   const { user } = useAuth()
@@ -79,66 +80,73 @@ const ProfileView = () => {
 
       <UserProfilePic profile={currentUser} refresh={refreshing} />
 
-      <UserTopGyms communityName={primaryGymName} borderB={true} mt={true} />
-
-      <View className="flex flex-row justify-center mt-3">
-        <WhiteSkinnyButton
-          textSize="text-xl"
-          width={150}
-          text="Add More Info"
-          buttonFunction={() => {
-            if (currentUser) {
-              navigation.navigate("AddMoreUserInfo", {
-                userProfile: currentUser,
-              })
-            }
-          }}
-        />
+      <View className="mx-3">
+        <UserTopGyms communityName={primaryGymName} borderB={true} mt={true} />
       </View>
 
-      <View className="flex flex-row justify-center mt-3">
-        <WhiteSkinnyButton
-          textSize="text-xl"
-          width={200}
-          text="Test notifications"
-          buttonFunction={() => {
-            if (currentUser && currentUser.expo_push_token) {
-              sendNotification(
-                currentUser.expo_push_token,
-                "Test Notification",
-                "This is a test notification"
-              )
-            }
-          }}
-        />
+      <View className="flex flex-row justify-center mt-3 items-center">
+        <View className="mx-1">
+          <GenericButton
+            textSize="text-xs"
+            width={100}
+            roundness="rounded-xl"
+            textCenter={true}
+            colourPressed="bg-slate-200"
+            colourDefault="bg-white"
+            borderColourPressed="border-gray-200"
+            borderColourDefault="border-black"
+            text="Add More Info"
+            buttonFunction={() => {
+              if (currentUser) {
+                navigation.navigate("AddMoreUserInfo", {
+                  userProfile: currentUser,
+                })
+              }
+            }}
+          />
+        </View>
+
+        <View className="mx-1">
+          <GenericButton
+            roundness="rounded-xl"
+            textSize="text-xs"
+            width={100}
+            textCenter={true}
+            colourPressed="bg-slate-200"
+            colourDefault="bg-white"
+            borderColourPressed="border-gray-200"
+            borderColourDefault="border-black"
+            text="Test notifications"
+            buttonFunction={() => {
+              if (currentUser && currentUser.expo_push_token) {
+                sendNotification(
+                  currentUser.expo_push_token,
+                  "Test Notification",
+                  "This is a test notification"
+                )
+              }
+            }}
+          />
+        </View>
       </View>
 
-      {/* <View className="flex flex-row justify-center mt-3">
-        <WhiteSkinnyButton
-          textSize="text-xl"
-          width={200}
-          text="Notifcation Settings"
-          buttonFunction={() => {
-            navigation.navigate("Notifications")
-          }}
-        />
-      </View> */}
-
-      <UserAboutSection profile={currentUser} />
+      <View className="mx-3">
+        <UserAboutSection profile={currentUser} />
+      </View>
 
       <ActivitySection profile={currentUser} />
 
-      <View className="my-2">
+      <View className="my-3">
         <Pressable
           onPress={() => {
             navigation.navigate("UserEditProfile")
           }}
         >
           <View className="flex flex-row items-center">
-            <Text className="font-bold text-xl mx-2">
+            <Text className="font-bold text-md mx-2">
               Change or Add Pictures!
             </Text>
-            <FontAwesome6 name="edit" size={24} color="blue" />
+            <FontAwesome6 name="edit" size={20} color="blue" />
           </View>
         </Pressable>
         <PhotoArrayProfile

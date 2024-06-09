@@ -1,6 +1,5 @@
 import { View, Text, Pressable, Alert } from "react-native"
 import React, { useEffect, useState } from "react"
-import WhiteSkinnyButton from "../../../components/WhiteSkinnyButton"
 import { Communities, Profile } from "../../../@types/supabaseTypes"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
@@ -58,36 +57,39 @@ const ViewCommunityTitle = ({
 
   return (
     <View>
-      <View className="ml-12">
-        <Text className="font-bold text-3xl text-white">
+      <View className="mx-2">
+        <Text className="font-bold text-xl text-white">
           {community?.community_title}
         </Text>
-        <Pressable
-          className="flex flex-row items-center"
-          onPress={() =>
-            navigation.navigate("ViewCommunitiesMembersScreen", {
-              communityId: communityId,
-            })
-          }
-        >
-          <Text className="mr-1 font-bold text-xl text-white">
-            {community?.community_members?.length} Members
-          </Text>
-          <FontAwesome6 name="people-group" size={24} color="white" />
-        </Pressable>
 
-        <View>
-          <GenericButton
-            text={requestSent ? `Request Sent ` : `+ Request to Join`}
-            buttonFunction={() => requestFunc()}
-            roundness="rounded-full"
-            textSize="text-lg"
-            width={200}
-            colourPressed="bg-slate-200"
-            colourDefault="bg-white"
-            borderColourPressed="border-gray-200"
-            borderColourDefault="border-black"
-          />
+        <View className="flex flex-row justify-between">
+          <Pressable
+            className="flex flex-row items-center"
+            onPress={() =>
+              navigation.navigate("ViewCommunitiesMembersScreen", {
+                communityId: communityId,
+              })
+            }
+          >
+            <Text className="mr-1 font-bold text-lg text-white">
+              {community?.member_count} Members
+            </Text>
+            <FontAwesome6 name="people-group" size={24} color="white" />
+          </Pressable>
+          <View>
+            <GenericButton
+              text={requestSent ? `Request Sent ` : `+ Request to Join`}
+              buttonFunction={() => requestFunc()}
+              roundness="rounded-lg"
+              textSize="text-xs"
+              width={150}
+              colourPressed="bg-slate-200"
+              colourDefault="bg-white"
+              borderColourPressed="border-gray-200"
+              borderColourDefault="border-black"
+              fontbold={"font-bold"}
+            />
+          </View>
         </View>
       </View>
     </View>

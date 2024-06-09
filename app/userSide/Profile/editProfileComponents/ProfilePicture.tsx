@@ -5,6 +5,7 @@ import ProfilePicSupa from "../../../components/EditProfilePicture"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import { Profile } from "../../../@types/supabaseTypes"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
+import BackButton from "../../../components/BackButton"
 
 const ProfilePicture = () => {
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
@@ -28,8 +29,12 @@ const ProfilePicture = () => {
 
   return (
     <View>
-      <View className="items-center">
-        <Text className="font-bold text-3xl">Edit Profile Picture</Text>
+      <View className="items-center flex flex-row justify-between">
+        <View className="mx-2">
+          <BackButton size={28} />
+        </View>
+        <Text className="font-bold text-lg">Edit Profile Picture</Text>
+        <View />
       </View>
 
       <View>

@@ -41,16 +41,16 @@ const UserProfilePic = ({ refresh, profile }: UserProfilePicProps) => {
     setProfilePic(currentUser?.profile_pic)
   }, [currentUser])
   return (
-    <View className="flex flex-row flex-1 justify-center mt-12">
+    <View className="flex flex-row justify-center mt-12">
       <View>
         <SinglePic
-          size={230}
+          size={150}
           item={profilePic}
           avatarRadius={230}
           noAvatarRadius={230}
         />
         <View className="flex flex-row justify-center mt-4 items-center">
-          <Text className="font-bold text-3xl mx-2">{profile?.first_name}</Text>
+          <Text className="font-bold text-xl mx-2">{profile?.first_name}</Text>
         </View>
       </View>
     </View>

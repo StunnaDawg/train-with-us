@@ -20,7 +20,7 @@ const Header = ({ title }: HeaderProps) => {
         />
       </Pressable>
       <View className="mx-2">
-        <Text className="text-white text-3xl font-bold">{title}</Text>
+        <Text className="text-white text-2xl font-bold">{title}</Text>
       </View>
     </View>
   )

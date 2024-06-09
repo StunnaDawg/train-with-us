@@ -29,7 +29,7 @@ const CommunitiesHome = () => {
       <View className="flex-1 bg-primary-900">
         <View className="flex flex-row justify-between m-6 items-center">
           <View>
-            <Text className="text-3xl text-white font-bold">Communites</Text>
+            <Text className="text-xl text-white font-bold">Communites</Text>
           </View>
 
           <Pressable
@@ -37,7 +37,7 @@ const CommunitiesHome = () => {
               navigation.navigate("SearchCommunities")
             }}
           >
-            <FontAwesome6 name="magnifying-glass" size={24} color="white" />
+            <FontAwesome6 name="magnifying-glass" size={20} color="white" />
           </Pressable>
         </View>
         <ScrollView
