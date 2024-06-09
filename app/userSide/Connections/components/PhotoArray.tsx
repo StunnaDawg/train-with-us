@@ -56,7 +56,7 @@ const PhotoArray = ({ profileId, index1, index2, index3 }: PhotoArrayProps) => {
         {imageFiles?.length && imageFiles[index1] !== null ? (
           <View className="m-1">
             <SinglePic
-              size={120}
+              size={150}
               avatarRadius={10}
               noAvatarRadius={10}
               item={imageFiles[index1]}
@@ -74,7 +74,7 @@ const PhotoArray = ({ profileId, index1, index2, index3 }: PhotoArrayProps) => {
 
         <View className="m-1">
           <SinglePic
-            size={120}
+            size={150}
             avatarRadius={10}
             noAvatarRadius={10}
             item={imageFiles?.[index2]}
@@ -82,7 +82,7 @@ const PhotoArray = ({ profileId, index1, index2, index3 }: PhotoArrayProps) => {
         </View>
         <View className="m-1">
           <SinglePic
-            size={120}
+            size={150}
             avatarRadius={10}
             noAvatarRadius={10}
             item={imageFiles?.[index3]}

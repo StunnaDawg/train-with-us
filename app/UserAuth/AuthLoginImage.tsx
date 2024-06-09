@@ -7,12 +7,12 @@ const AuthLoginImage = () => {
     <View className="items-center">
       <Image
         source={require("./TWU-Logo.png")}
-        style={{ width: 250, height: 250 }}
+        style={{ width: 200, height: 200 }}
       />
-      <Text className=" font-extrabold text-4xl text-yellow-300">
+      <Text className=" font-extrabold text-xl text-yellow-300">
         Train With Us
       </Text>
-      <Text className="font-extrabold text-2xl text-white">Beyond Fitness</Text>
+      <Text className="font-extrabold text-lg text-white">Beyond Fitness</Text>
     </View>
   )
 }

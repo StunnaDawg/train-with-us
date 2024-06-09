@@ -29,7 +29,7 @@ const LoginWithEmail = () => {
   return (
     <SafeAreaView className="flex-1 " style={{ backgroundColor: "#07182d" }}>
       <View className="mx-2">
-        <BackButton colour="white" size={50} />
+        <BackButton colour="white" size={32} />
       </View>
       <KeyboardAvoidingView
         className="flex-1 justify-center "
@@ -39,7 +39,7 @@ const LoginWithEmail = () => {
         <View className="border-b py-2 mx-2">
           <TextInput
             placeholderTextColor={"white"}
-            className="w-full text-xl font-bold px-2 text-white"
+            className="w-full text-lg font-bold px-2 text-white"
             onChangeText={(text: string) => setEmail(text)}
             value={email}
             placeholder="email@address.com"
@@ -49,7 +49,7 @@ const LoginWithEmail = () => {
         <View className="border-b py-2 mx-2">
           <TextInput
             placeholderTextColor={"white"}
-            className="w-full text-xl font-bold px-2 text-white"
+            className="w-full text-lg font-bold px-2 text-white"
             onChangeText={(text: string) => setPassword(text)}
             value={password}
             secureTextEntry={true}
@@ -64,8 +64,8 @@ const LoginWithEmail = () => {
             borderColourPressed="border-yellow-300"
             borderColourDefault="border-black"
             colourDefault="bg-white"
-            textSize="text-2xl"
-            width={300}
+            textSize="text-lg"
+            width={200}
             roundness="rounded-xl"
             text="Sign in with Email"
             buttonFunction={() => signInWithEmail()}

@@ -58,7 +58,7 @@ const ConnectionsCard = ({
           coach={false}
         />
 
-        <View className="flex flex-row justify-center">
+        {/* <View className="flex flex-row justify-center">
           <GenericButton
             colourDefault="bg-transparent"
             borderColourDefault="black"
@@ -74,8 +74,8 @@ const ConnectionsCard = ({
             }}
           />
         </View>
+       */}
       </View>
-
       <View className="mt-1 mx-2">
         <UserAboutSection profile={profile} />
         <UserTopGyms

@@ -74,7 +74,7 @@ const Question2 = () => {
         <View>
           <View className="items-start w-full">
             <View className="my-5">
-              <Text className="font-bold text-2xl">
+              <Text className="font-bold text-lg">
                 What's your date of birth?
               </Text>
             </View>

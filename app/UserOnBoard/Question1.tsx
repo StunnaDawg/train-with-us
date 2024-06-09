@@ -60,13 +60,13 @@ const Question1 = () => {
       <View className="flex justify-center mx-12">
         <View className="items-start w-full">
           <View className="my-5">
-            <Text className="font-bold text-2xl">What's Your Name?</Text>
+            <Text className="font-bold text-lg">What's Your Name?</Text>
           </View>
 
           <View className="w-full">
             <View className="border-b py-2">
               <TextInput
-                className="w-full text-xl font-bold px-2"
+                className="w-full text-lg font-bold px-2"
                 placeholder="First Name (Required)"
                 onChangeText={(text) => setFirstName(text)}
                 value={first_name}
@@ -75,7 +75,7 @@ const Question1 = () => {
 
             <View className="border-b py-2">
               <TextInput
-                className="w-full text-xl font-bold px-2"
+                className="w-full text-lg font-bold px-2"
                 placeholder="Last Name"
                 onChangeText={(text) => setLastName(text)}
                 value={last_name}

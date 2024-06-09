@@ -40,7 +40,7 @@ const UserMessage = ({ message }: UserMessage) => {
     <View className="flex flex-row justify-end mt-2 mr-4 mb-1 ml-36">
       <View>
         <View className="rounded-2xl bg-blue-500/80 p-2">
-          <Text className="font-bold text-sm">{message}</Text>
+          <Text className="font-bold text-xs">{message}</Text>
         </View>
       </View>
     </View>
@@ -65,11 +65,11 @@ const OthersMessage = ({ message, name, id }: OthersMessageProps) => {
       }}
       className="mt-2 mb-1"
     >
-      <Text className="font-bold mb-1">{name}</Text>
+      <Text className="font-bold text-xs mb-1">{name}</Text>
       <View className="flex flex-row justify-start ml-2 mr-36">
         <View>
           <View className="rounded-2xl bg-slate-400/60 p-2">
-            <Text className="font-bold text-sm">{message}</Text>
+            <Text className="font-bold text-xs">{message}</Text>
           </View>
         </View>
       </View>
@@ -152,13 +152,13 @@ const ChannelMessageScreen = () => {
         <View className="items-center">
           <View className="mb-2">
             <SinglePicCommunity
-              size={55}
+              size={50}
               avatarRadius={100}
               noAvatarRadius={100}
               item={channel.channel_pic}
             />
           </View>
-          <Text className="font-bold text-xl mb-1">
+          <Text className="font-bold text-lg mb-1">
             {channel.channel_title}
           </Text>
         </View>

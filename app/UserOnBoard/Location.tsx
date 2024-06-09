@@ -23,11 +23,11 @@ const Location = () => {
           <View className="flex flex-row justify-center">
             <View>
               <View>
-                <Text className="text-3xl font-bold">
+                <Text className="text-lg font-bold">
                   What is your Location?
                 </Text>
                 <Text className="text-sm text-center">
-                  You can change this later
+                  You can change this later...
                 </Text>
               </View>
 

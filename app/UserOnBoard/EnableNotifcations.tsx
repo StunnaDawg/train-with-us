@@ -5,10 +5,8 @@ import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../@types/navigation"
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
-import Constants from "expo-constants"
 import supabase from "../../lib/supabase"
 import { useAuth } from "../supabaseFunctions/authcontext"
-import { id } from "date-fns/locale"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -104,55 +102,52 @@ const EnableNotifcations = () => {
     navigation.navigate("Location")
   }
   return (
-    <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-center">
-        <View className="items-center">
-          <View className="m-2">
-            <Text className="text-2xl font-bold text-center">
-              Enable notifications to stay up to date with your community
-            </Text>
+    <SafeAreaView className="flex-1 justify-center items-center">
+      <View className="flex flex-col justify-center items-center">
+        <View className="m-2">
+          <Text className="text-lg font-bold text-center">
+            Enable notifications to stay up to date with your community
+          </Text>
+        </View>
+        <View>
+          <View className="mb-3">
+            <GenericButton
+              roundness="rounded-xl"
+              text="Enable Notifications"
+              buttonFunction={() => handleEnableNotifications()}
+              textSize="text-sm"
+              width={200}
+              colourPressed="bg-blue-200"
+              colourDefault="bg-blue-500"
+              borderColourPressed="border-gray-200"
+              borderColourDefault="border-black"
+            />
+          </View>
+          <View className="mb-3">
+            <GenericButton
+              roundness="rounded-xl"
+              text="Disable Notifications"
+              buttonFunction={() => skip()}
+              textSize="text-sm"
+              width={200}
+              colourPressed="bg-gray-200"
+              colourDefault="bg-white"
+              borderColourPressed="border-gray-200"
+              borderColourDefault="border-black"
+            />
           </View>
           <View>
-            <View className="mb-3">
-              <GenericButton
-                roundness="rounded-xl"
-                text="Enable Notifications"
-                buttonFunction={() => handleEnableNotifications()}
-                textSize="text-lg"
-                width={200}
-                colourPressed="bg-blue-200"
-                colourDefault="bg-blue-500"
-                borderColourPressed="border-gray-200"
-                borderColourDefault="border-black"
-              />
-            </View>
-            <View>
-              <GenericButton
-                roundness="rounded-xl"
-                text="Disable Notifications"
-                buttonFunction={() => skip()}
-                textSize="text-lg"
-                width={200}
-                colourPressed="bg-gray-200"
-                colourDefault="bg-white"
-                borderColourPressed="border-gray-200"
-                borderColourDefault="border-black"
-              />
-            </View>
-
-            <View>
-              <GenericButton
-                roundness="rounded-xl"
-                text="Skip"
-                buttonFunction={() => handleDisableNotifications()}
-                textSize="text-lg"
-                width={200}
-                colourPressed="bg-gray-200"
-                colourDefault="bg-white"
-                borderColourPressed="border-gray-200"
-                borderColourDefault="border-black"
-              />
-            </View>
+            <GenericButton
+              roundness="rounded-xl"
+              text="Skip"
+              buttonFunction={() => handleDisableNotifications()}
+              textSize="text-sm"
+              width={200}
+              colourPressed="bg-gray-200"
+              colourDefault="bg-white"
+              borderColourPressed="border-gray-200"
+              borderColourDefault="border-black"
+            />
           </View>
         </View>
       </View>

@@ -53,8 +53,8 @@ const SignUp = () => {
               borderColourPressed="border-yellow-300"
               borderColourDefault="border-black"
               colourDefault="bg-white"
-              textSize="text-2xl"
-              width={300}
+              textSize="text-lg"
+              width={200}
               roundness="rounded-xl"
               text="Sign Up with Email"
               buttonFunction={() => navigation.navigate("SignUpWithEmail")}
@@ -67,7 +67,7 @@ const SignUp = () => {
 
           <View className="items-center m-5">
             <Pressable onPress={() => navigation.navigate("Login")}>
-              <Text className="font-bold text-2xl text-white">
+              <Text className="font-bold text-sm text-white">
                 Already have an Account?
               </Text>
             </Pressable>

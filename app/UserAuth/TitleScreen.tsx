@@ -36,9 +36,9 @@ const TitleScreen = () => {
             borderColourPressed="black"
             borderColourDefault="black"
             roundness="rounded-2xl"
-            textSize="text-2xl"
+            textSize="text-lg"
             text="Create an Account"
-            width={300}
+            width={200}
             buttonFunction={() => {
               navigation.navigate("SignUp")
             }}
@@ -50,7 +50,7 @@ const TitleScreen = () => {
               navigation.navigate("Login")
             }}
           >
-            <Text className="text-white text-2xl font-extrabold">Sign in</Text>
+            <Text className="text-white text-lg font-extrabold">Sign in</Text>
           </Pressable>
         </View>
       </View>
