@@ -9,14 +9,12 @@ import {
 import React, { useCallback, useEffect, useState } from "react"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
-import { FileObject } from "@supabase/storage-js"
-import { Communities, CommunityChannel } from "../../../@types/supabaseTypes"
+import { CommunityChannel } from "../../../@types/supabaseTypes"
 import getUserPinnedChannels from "../../../supabaseFunctions/getFuncs/getUserPinnedChannels"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import showAlert from "../../../utilFunctions/showAlert"
 
 const CommunitiesRead = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -127,12 +125,18 @@ const CommunitiesRead = () => {
           communityChannels.map((c) => (
             <View key={c.id} className="flex-row justify-between items-center">
               <Pressable
-                key={c.id} // Assuming 'id' is the unique identifier for each channel
-                onPress={() =>
-                  navigation.navigate("ChannelScreen", {
-                    channelId: c, // Changed to use the correct channel id
-                  })
-                }
+                key={c.id}
+                onPress={() => {
+                  if (c.channel_type === "Annoucement") {
+                    navigation.navigate("AnnouncementChannel", {
+                      channelId: c,
+                    })
+                  } else {
+                    navigation.navigate("ChannelScreen", {
+                      channelId: c,
+                    })
+                  }
+                }}
                 className="flex flex-row items-center"
               >
                 <View className="m-2">
@@ -146,10 +150,7 @@ const CommunitiesRead = () => {
 
                 <View>
                   <Text className="font-bold mb-1 text-sm text-white">
-                    {c.channel_title || "error loading channel title"}{" "}
-                    {c.channel_type === "Announcement"
-                      ? `#${c.channel_type}`
-                      : null}
+                    {c.channel_title || "error loading channel title"}
                   </Text>
                   <Text className="text-xs font-bold text-white">
                     {c.recent_message || "No Messages yet!"}

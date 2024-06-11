@@ -54,3 +54,34 @@ to public
 using ((EXISTS ( SELECT 1
    FROM community_members cm
   WHERE ((cm.user_id = auth.uid()) AND (cm.community_id = community_channels.community)))));
+
+  alter table "public"."communities" add column "member_count" numeric not null default '1'::numeric;
+
+alter table "public"."community_members" add column "expo_push_token" text;
+
+alter table "public"."community_requests" add column "expo_push_token" text;
+
+alter table "public"."profiles" add column "about" text;
+
+set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION public.get_profiles_with_min_urls(user_id uuid)
+ RETURNS SETOF profiles
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+  RETURN QUERY
+  SELECT *
+  FROM profiles
+  WHERE id != user_id
+    AND array_length(photos_url, 1) >= 2;
+END;
+$function$
+;
+
+create policy "Enable delete for users based on user_id"
+on "public"."community_channels"
+as permissive
+for delete
+to public
+using ((( SELECT auth.uid() AS uid) = community_owner));
