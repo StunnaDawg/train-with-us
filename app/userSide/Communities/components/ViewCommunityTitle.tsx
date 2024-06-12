@@ -8,6 +8,8 @@ import { useAuth } from "../../../supabaseFunctions/authcontext"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import GenericButton from "../../../components/GenericButton"
 import { FontAwesome6 } from "@expo/vector-icons"
+import { Image } from "expo-image"
+import supabase from "../../../../lib/supabase"
 
 type ViewCommunityTitleProps = {
   community: Communities | null
@@ -18,77 +20,67 @@ const ViewCommunityTitle = ({
   community,
   communityId,
 }: ViewCommunityTitleProps) => {
-  const [requestSent, setRequestSent] = useState<boolean>(false)
-  const [currentProfile, setCurrentProfile] = useState<Profile | null>(null)
-  const { user } = useAuth()
+  const [image, setImage] = useState<string>("")
+
   const navigation = useNavigation<NavigationType>()
 
-  const showAlert = (title: string, message: string) =>
-    Alert.alert(title, message, [{ text: "OK" }])
-
-  const showErrorAlert = () =>
-    Alert.alert(
-      "User not Authenticated",
-      "Please Check your Connection and try again. Or Check for any missing information.",
-      [{ text: "OK" }]
-    )
-
-  const requestFunc = async () => {
-    console.log("user?.id", user?.id)
-    if (user?.id === undefined || !currentProfile?.first_name) {
-      showErrorAlert()
-      return
-    }
-
-    await requestToJoin(
-      communityId,
-      user?.id,
-      currentProfile?.first_name,
-      currentProfile?.expo_push_token,
-      showAlert
-    )
-
-    setRequestSent(true)
+  const readImage = () => {
+    if (community?.community_profile_pic === "") return
+    console.log("reading", `${community?.community_profile_pic}`)
+    supabase.storage
+      .from("photos")
+      .download(`${community?.community_profile_pic}`)
+      .then(({ data }) => {
+        const fr = new FileReader()
+        fr.readAsDataURL(data!)
+        fr.onload = () => {
+          setImage(fr.result as string)
+        }
+      })
   }
+
   useEffect(() => {
-    if (!user) return
-    useCurrentUser(user?.id, setCurrentProfile)
-  }, [])
+    if (community?.community_profile_pic === undefined) return
+    readImage()
+  }, [community?.community_profile_pic])
 
   return (
     <View>
-      <View className="mx-2">
-        <Text className="font-bold text-xl text-white">
-          {community?.community_title}
-        </Text>
-
-        <View className="flex flex-row justify-between">
-          <Pressable
-            className="flex flex-row items-center"
-            onPress={() =>
-              navigation.navigate("ViewCommunitiesMembersScreen", {
-                communityId: communityId,
-              })
-            }
-          >
-            <Text className="mr-1 font-bold text-lg text-white">
-              {community?.member_count} Members
-            </Text>
-            <FontAwesome6 name="people-group" size={24} color="white" />
-          </Pressable>
-          <View>
-            <GenericButton
-              text={requestSent ? `Request Sent ` : `+ Request to Join`}
-              buttonFunction={() => requestFunc()}
-              roundness="rounded-lg"
-              textSize="text-xs"
-              width={150}
-              colourPressed="bg-slate-200"
-              colourDefault="bg-white"
-              borderColourPressed="border-gray-200"
-              borderColourDefault="border-black"
-              fontbold={"font-bold"}
-            />
+      <View className="flex flex-row justify-between items-center">
+        <View>
+          <View className="flex flex-row mx-2 items-center">
+            <View className="m-4">
+              <Pressable onPress={() => navigation.goBack()}>
+                <Image
+                  className="m-1 relative overflow-hidden max-w-full rounded-full bg-gray-800 border-1 border-solid border-gray-200 border-r-10"
+                  source={
+                    image
+                      ? image
+                      : require("../../../../assets/images/TWU-Logo.png")
+                  }
+                  style={{ width: 55, height: 55 }}
+                />
+              </Pressable>
+            </View>
+            <View className="items-center">
+              <Text className="text-white text-xl font-bold">
+                {community?.community_title
+                  ? community.community_title
+                  : "Community"}
+              </Text>
+              <Pressable
+                className="flex flex-row items-center"
+                onPress={() =>
+                  navigation.navigate("ViewCommunitiesMembersScreen", {
+                    communityId: communityId,
+                  })
+                }
+              >
+                <Text className="mr-1 font-bold text-xs text-slate-500">
+                  {community?.member_count} Members
+                </Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </View>

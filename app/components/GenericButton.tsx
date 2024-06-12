@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native"
+import { Text, Pressable } from "react-native"
 import React, { useState } from "react"
 
 type GenericButtonProps = {
@@ -13,6 +13,7 @@ type GenericButtonProps = {
   roundness: string
   fontbold?: string | null
   textCenter?: boolean | null
+  height?: string
 }
 
 const GenericButton = ({
@@ -27,6 +28,7 @@ const GenericButton = ({
   roundness,
   fontbold,
   textCenter,
+  height,
 }: GenericButtonProps) => {
   const [isPressed, setIsPressed] = useState(false)
 
@@ -44,7 +46,9 @@ const GenericButton = ({
       onPress={() => buttonFunction()}
       onPressIn={handleOnPressIn}
       onPressOut={handleOnPressOut}
-      className={` ${roundness} border p-2 items-center ${
+      className={` ${roundness} border ${
+        height ? height : null
+      }  items-center ${
         isPressed
           ? `${colourPressed} ${borderColourPressed}`
           : `${colourDefault} ${borderColourDefault}`

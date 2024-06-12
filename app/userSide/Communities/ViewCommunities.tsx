@@ -2,7 +2,6 @@ import { View, SafeAreaView, ScrollView } from "react-native"
 import React, { useEffect, useState } from "react"
 import ViewCommunityTitle from "./components/ViewCommunityTitle"
 import CommunityContact from "./components/CommunityContact"
-import CommunityMap from "./components/CommunityMap"
 import PhotoArray from "./components/PhotosArray"
 import CommunityAbout from "./components/CommunityAbout"
 import UpcomingCommunityEvents from "./components/UpcomingEvents"
@@ -10,7 +9,7 @@ import { Communities } from "../../@types/supabaseTypes"
 import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommunity"
 import { RootStackParamList } from "../../@types/navigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
-import Header from "../../components/Header"
+import JoinFooter from "./components/JoinFooter"
 
 const ViewCommunities = () => {
   const [loading, setLoading] = useState<boolean>(true)
@@ -22,15 +21,11 @@ const ViewCommunities = () => {
 
   useEffect(() => {
     getSingleCommunity(setLoading, communityId, setCommunities)
-  }, [])
+  }, [communityId])
 
   return (
     <SafeAreaView className=" flex-1 bg-primary-900 ">
       <ScrollView>
-        <View>
-          <Header title="Communities" />
-        </View>
-
         <View>
           <ViewCommunityTitle community={community} communityId={communityId} />
         </View>
@@ -53,6 +48,8 @@ const ViewCommunities = () => {
           <UpcomingCommunityEvents community={community} />
         </View>
       </ScrollView>
+
+      <JoinFooter communityId={communityId} />
     </SafeAreaView>
   )
 }
