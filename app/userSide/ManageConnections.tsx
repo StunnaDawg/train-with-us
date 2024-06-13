@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView } from "react-native"
+import { View, Text, SafeAreaView, Pressable } from "react-native"
 import React, { useEffect, useState } from "react"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import getUsersConnections from "../supabaseFunctions/getFuncs/getUsersConnections"
@@ -6,6 +6,9 @@ import { Profile } from "../@types/supabaseTypes"
 import SearchBar from "./Events/components/SearchBar"
 import BackButton from "../components/BackButton"
 import MemberCard from "./Communities/components/MemberCard"
+import { FontAwesome6 } from "@expo/vector-icons"
+import showAlertFunc from "../utilFunctions/showAlertFunc"
+import removeConnectedUser from "../supabaseFunctions/updateFuncs/removeConnectedUser"
 
 const ManageConnections = () => {
   const [userSearch, setUserSearch] = useState<string>("")
@@ -59,7 +62,40 @@ const ManageConnections = () => {
           <Text>Loading...</Text>
         ) : filteredProfiles && filteredProfiles.length > 0 ? (
           filteredProfiles.map((profile) => (
-            <MemberCard key={profile.id} member={profile} />
+            <View className="flex flex-row justify-between items-center">
+              <MemberCard key={profile.id} member={profile} />
+              <Pressable
+                className="mx-2"
+                onPress={() => {
+                  showAlertFunc({
+                    title: "Confirm Delete",
+                    message: `Are you sure you want to remove ${profile.first_name} from your connections?`,
+                    buttons: [
+                      {
+                        text: "Cancel",
+                        style: "cancel",
+                      },
+                      {
+                        text: "Delete",
+                        onPress: () => {
+                          if (!user || !profiles) return
+                          removeConnectedUser(
+                            user.id,
+                            profile.id,
+                            profiles,
+                            setProfiles,
+                            setLoading
+                          )
+                        },
+                        style: "destructive",
+                      },
+                    ],
+                  })
+                }}
+              >
+                <FontAwesome6 name="trash" size={16} color="black" />
+              </Pressable>
+            </View>
           ))
         ) : (
           <Text>No connections found</Text>
