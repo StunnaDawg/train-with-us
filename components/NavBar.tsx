@@ -20,7 +20,13 @@ const NavBar = () => {
           </Pressable>
           <Text className="font-bold text-lg">Train With Us</Text>
         </View>
-        <View className="mx-2">
+        <View className="flex flex-row mx-2">
+          <Pressable
+            className="mx-2"
+            onPress={() => navigation.navigate("ManageConnections")}
+          >
+            <FontAwesome6 name="users" size={24} color="black" />
+          </Pressable>
           <Pressable onPress={() => navigation.navigate("UserSettings")}>
             <FontAwesome6 name="gear" size={24} color="black" />
           </Pressable>

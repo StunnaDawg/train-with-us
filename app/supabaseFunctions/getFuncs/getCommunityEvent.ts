@@ -9,12 +9,14 @@ const getCommunityEvents = async (
 ) => {
   try {
     setLoading(true)
+    const currentDate = new Date().toISOString()
     const { data: events, error } = await supabase
       .from("events")
       .select()
       .eq("community_host", communityId)
+      .gte("date", currentDate)
       .limit(10)
-      .order("date", { ascending: true })
+      .order("date", { ascending: false })
 
     if (error) throw error
 

@@ -1,6 +1,6 @@
 import React from "react"
 import { Pressable, Text, Alert, Linking, Platform } from "react-native"
-import WhiteSkinnyButton from "./WhiteSkinnyButton"
+import { FontAwesome6 } from "@expo/vector-icons"
 import GenericButton from "./GenericButton"
 
 type PhoneCallButtonProps = {
@@ -31,17 +31,9 @@ const PhoneCallButton = ({ phoneNumber }: PhoneCallButtonProps) => {
   }
 
   return (
-    <GenericButton
-      text={phoneNumber}
-      buttonFunction={handlePress}
-      roundness="rounded-xl"
-      textSize="text-xs"
-      width={110}
-      colourPressed="bg-slate-200"
-      colourDefault="bg-white"
-      borderColourPressed="border-gray-200"
-      borderColourDefault="border-black"
-    />
+    <Pressable onPress={handlePress} className="bg-white rounded-xl p-1">
+      <FontAwesome6 name="phone" size={22} color="black" />
+    </Pressable>
   )
 }
 

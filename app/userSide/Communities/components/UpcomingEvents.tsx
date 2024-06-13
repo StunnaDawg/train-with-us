@@ -6,10 +6,12 @@ import getCommunityEvents from "../../../supabaseFunctions/getFuncs/getCommunity
 
 type UpcomingCommunityEventsProps = {
   community: Communities | null
+  textColour?: string
 }
 
 const UpcomingCommunityEvents = ({
   community,
+  textColour,
 }: UpcomingCommunityEventsProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [upcomingEvents, setUpcomingEvents] = useState<Events[] | null>([])
@@ -22,7 +24,13 @@ const UpcomingCommunityEvents = ({
   }, [community])
   return (
     <View className="flex flex-col m-5">
-      <Text className="text-xl font-bold m-4 text-white">Upcoming Events</Text>
+      <Text
+        className={`text-xl font-bold m-4 ${
+          textColour ? textColour : "text-white"
+        }`}
+      >
+        Upcoming Events
+      </Text>
       <ScrollView horizontal={true}>
         {loading ? (
           <ActivityIndicator />

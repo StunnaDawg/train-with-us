@@ -183,6 +183,8 @@ export type RootStackParamList = {
   EditBio: {
     userProfile: Profile
   }
+
+  ManageConnections: undefined
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

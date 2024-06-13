@@ -30,14 +30,8 @@ const ViewCommunities = () => {
           <ViewCommunityTitle community={community} communityId={communityId} />
         </View>
 
-        <View className="mt-2">
+        <View className="my-2">
           {community ? <PhotoArray community={community} /> : null}
-        </View>
-
-        <View className="flex flex-row justify-center items-center">
-          <View className="m-4">
-            <CommunityContact community={community} />
-          </View>
         </View>
 
         <View>

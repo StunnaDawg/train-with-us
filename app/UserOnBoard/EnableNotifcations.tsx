@@ -26,13 +26,11 @@ const EnableNotifcations = () => {
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
 
-    // Listen for incoming notifications
     const subscription = Notifications.addNotificationReceivedListener(() => {
       setNotification(notification)
     })
 
     return () => {
-      // Clean up the subscription
       Notifications.removeNotificationSubscription(subscription)
     }
   }, [])

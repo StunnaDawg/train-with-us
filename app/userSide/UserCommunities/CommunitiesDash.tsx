@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import CommunitiesScroll from "./components/CommunitiesScroll"
 import Tabs from "./components/Tabs"
 import Unread from "./components/Unread"
@@ -9,6 +9,7 @@ import { useAuth } from "../../supabaseFunctions/authcontext"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { Communities, Profile } from "../../@types/supabaseTypes"
 import getAllUsersCommunities from "../../supabaseFunctions/getFuncs/getUsersCommunities"
+import { useFocusEffect } from "@react-navigation/native"
 
 const CommunitiesDash = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -28,9 +29,22 @@ const CommunitiesDash = () => {
     getAllUsersCommunities(user?.id, setLoading, setCommunities)
   }, [currentUser])
 
-  useEffect(() => {
-    console.log("communities fetched", communities)
-  }, [communities])
+  useFocusEffect(
+    useCallback(() => {
+      const getUserCommutiy = async () => {
+        setLoading(true)
+        if (!user) return
+        getAllUsersCommunities(user?.id, setLoading, setCommunities)
+        setLoading(false)
+      }
+
+      getUserCommutiy()
+
+      return () => {
+        // Optional cleanup actions
+      }
+    }, [user, setCurrentUser])
+  )
 
   const changeToCommunity = () => {
     setUserMessages(false)

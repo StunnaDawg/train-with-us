@@ -70,6 +70,7 @@ import ViewFullUserProfile from "./userSide/Connections/ViewFullUserProfile"
 import AnnoucementsScreen from "./userSide/UserCommunities/components/AnnoucmentChannel"
 import AboutMeEdit from "./userSide/Profile/AddInfoComponents/AboutMeEdit"
 import AddBio from "./userSide/Profile/AddInfoComponents/AddBio"
+import ManageConnections from "./userSide/ManageConnections"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -190,6 +191,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="UserSettings"
                 component={Settings}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ManageConnections"
+                component={ManageConnections}
               />
 
               <Stack.Screen

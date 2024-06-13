@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommunity"
@@ -18,6 +18,9 @@ import { Entypo } from "@expo/vector-icons"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import supabase from "../../../lib/supabase"
 import BackButton from "../../components/BackButton"
+import CommunityBottomModal from "./CommunityBottomModal"
+import { BottomSheetModal, useBottomSheetModal } from "@gorhom/bottom-sheet"
+import { FontAwesome6 } from "@expo/vector-icons"
 
 const CommunityPage = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -29,6 +32,8 @@ const CommunityPage = () => {
   const communityId = route.params.communityId
   const navigation = useNavigation<NavigationType>()
   const { user } = useAuth()
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null)
+  const { dismiss } = useBottomSheetModal()
 
   useEffect(() => {
     getSingleCommunity(setLoading, communityId, setCommunity)
@@ -38,6 +43,15 @@ const CommunityPage = () => {
     if (!community) return
     getCommunityChannels(communityId, setLoading, setCommunityChannels)
   }, [community])
+
+  const snapPoints = useMemo(() => ["1%", "90%"], [])
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present()
+  }, [])
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index)
+  }, [])
 
   const showAlert = (onConfirm: () => void) =>
     Alert.alert(
@@ -110,11 +124,17 @@ const CommunityPage = () => {
     <SafeAreaView className="flex-1">
       <ScrollView className="flex-1">
         <View className="m-2">
-          <View className="flex flex-row justify-between">
-            <BackButton size={32} />
-            <Text className="font-bold text-lg">
-              {`${community?.community_title}`}'s Community Page
-            </Text>
+          <View className="flex flex-row justify-between mb-1">
+            <BackButton size={22} />
+            <Pressable
+              className="flex flex-row items-center"
+              onPress={() => handlePresentModalPress()}
+            >
+              <Text className="font-bold text-sm mx-1">
+                {`${community?.community_title}`}'s Community Page
+              </Text>
+              <FontAwesome6 name="chevron-right" size={16} color="black" />
+            </Pressable>
             <View />
           </View>
 
@@ -209,6 +229,16 @@ const CommunityPage = () => {
           </View>
         </View>
       </ScrollView>
+
+      <BottomSheetModal
+        enablePanDownToClose={true}
+        ref={bottomSheetModalRef}
+        index={1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+      >
+        <CommunityBottomModal community={community} />
+      </BottomSheetModal>
     </SafeAreaView>
   )
 }

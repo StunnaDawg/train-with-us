@@ -2,8 +2,8 @@ import { View, Text, Platform } from "react-native"
 import React from "react"
 import formatTimestamp from "../../../utilFunctions/formatTimeStamp"
 import GenericButton from "../../../components/GenericButton"
-import openInAppleMaps from "../../../utilFunctions/openAppleMaps"
-import openInGoogleMaps from "../../../utilFunctions/openGoogleMaps"
+import openInAppleMaps from "../../../utilFunctions/openGoogleMaps"
+import openInGoogleMaps from "../../../utilFunctions/openMaps"
 import AddEventToCalendar from "./AddEventToCalendar"
 
 type ViewEventDetailsProps = {
