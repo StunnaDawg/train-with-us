@@ -35,10 +35,11 @@ const TitleScreen = () => {
             colourPressed="bg-slate-400"
             borderColourPressed="black"
             borderColourDefault="black"
-            roundness="rounded-2xl"
+            roundness="rounded-xl"
             textSize="text-lg"
+            textCenter={true}
             text="Create an Account"
-            width={200}
+            width={250}
             buttonFunction={() => {
               navigation.navigate("SignUp")
             }}

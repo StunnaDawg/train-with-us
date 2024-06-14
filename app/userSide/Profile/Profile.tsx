@@ -108,7 +108,7 @@ const ProfileView = () => {
 
         <View className="mx-1">
           <GenericButton
-            roundness="rounded-xl"
+            roundness="rounded-lg"
             textSize="text-xs"
             width={100}
             textCenter={true}

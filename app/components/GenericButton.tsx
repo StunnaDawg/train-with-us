@@ -13,7 +13,7 @@ type GenericButtonProps = {
   roundness: string
   fontbold?: string | null
   textCenter?: boolean | null
-  height?: string
+  height?: string | null
 }
 
 const GenericButton = ({
@@ -46,16 +46,14 @@ const GenericButton = ({
       onPress={() => buttonFunction()}
       onPressIn={handleOnPressIn}
       onPressOut={handleOnPressOut}
-      className={` ${roundness} border ${
-        height ? height : null
-      }  items-center ${
+      className={` ${roundness} border p-1 items-center ${
         isPressed
           ? `${colourPressed} ${borderColourPressed}`
           : `${colourDefault} ${borderColourDefault}`
       }`}
     >
       <Text
-        className={` ${textCenter ? "text-center" : null} ${
+        className={` ${textCenter ? "text-center" : "text-center"} ${
           fontbold ? fontbold : "font-bold"
         } ${textSize} `}
       >

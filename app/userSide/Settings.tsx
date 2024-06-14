@@ -5,6 +5,8 @@ import {
   Pressable,
   Switch,
   Alert,
+  Linking,
+  Platform,
 } from "react-native"
 import React, { useEffect, useState } from "react"
 import { FontAwesome6 } from "@expo/vector-icons"
@@ -21,23 +23,8 @@ Notifications.setNotificationHandler({
   }),
 })
 
-//   registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
-
-//     // Listen for incoming notifications
-//     const subscription = Notifications.addNotificationReceivedListener(() => {
-//       setNotification(notification)
-//     })
-
-//     return () => {
-//       // Clean up the subscription
-//       Notifications.removeNotificationSubscription(subscription)
-//     }
-
 const Settings = () => {
   const { user } = useAuth()
-  const [isEnabled, setIsEnabled] = useState(false)
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
-  const [expoPushToken, setExpoPushToken] = useState<string | null>(null)
 
   const registerForPushNotificationsAsync = async () => {
     if (Device.isDevice) {
@@ -61,7 +48,6 @@ const Settings = () => {
   }
 
   const savePushToken = async (token: string) => {
-    // Adjust this to get the current user ID
     if (user?.id) {
       const { error } = await supabase
         .from("profiles")
@@ -70,53 +56,28 @@ const Settings = () => {
         console.error("Error saving push token:", error)
         Alert.alert("Error saving push token")
       }
+
+      console.log("Push token saved")
     } else {
       Alert.alert("User not logged in")
     }
   }
 
-  // Function to enable notifications
   const handleEnableNotifications = async () => {
+    const { status } = await Notifications.getPermissionsAsync()
+    if (status !== "granted") {
+      Alert.alert(
+        "Enable Notifications",
+        "To receive notifications, enable them in settings."
+      )
+      return
+    }
     const token = await registerForPushNotificationsAsync()
     if (token) {
-      setExpoPushToken(token)
       savePushToken(token)
       Alert.alert("Notifications enabled")
     }
   }
-
-  // Function to disable notifications
-  const handleDisableNotifications = () => {
-    Notifications.getPermissionsAsync().then(({ status }) => {
-      if (status === "granted") {
-        Notifications.deleteNotificationChannelAsync(
-          expoPushToken as any
-        ).catch(() => {})
-        setExpoPushToken(null)
-        Alert.alert("Notifications disabled")
-      }
-    })
-  }
-
-  const checkNotificationStatus = async () => {
-    const { status } = await Notifications.getPermissionsAsync()
-    if (status === "granted") {
-      setIsEnabled(true)
-    } else {
-      setIsEnabled(false)
-    }
-  }
-  useEffect(() => {
-    checkNotificationStatus()
-  }, [])
-
-  useEffect(() => {
-    if (isEnabled) {
-      handleEnableNotifications()
-    } else {
-      handleDisableNotifications()
-    }
-  }, [isEnabled])
 
   const handleSignOut = () => {
     try {
@@ -141,9 +102,13 @@ const Settings = () => {
             <FontAwesome6 name="door-open" size={24} color="black" />
           </Pressable>
 
-          <Pressable className="flex flex-row items-center">
-            <Text className="text-xl font-semibold mx-1">Notifications</Text>
-            <Switch onValueChange={toggleSwitch} value={isEnabled} />
+          <Pressable
+            onPress={() => handleEnableNotifications()}
+            className="flex flex-row items-center rounded-xl bg-black p-2"
+          >
+            <Text className="text-xl text-white font-semibold mx-1">
+              Reset Push Notifications
+            </Text>
           </Pressable>
         </View>
       </View>

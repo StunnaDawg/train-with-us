@@ -51,7 +51,6 @@ const EnableNotifcations = () => {
       console.error("Error saving push token:", error)
       Alert.alert("Error saving push token")
     } else {
-      Alert.alert("Notifications enabled")
       navigation.navigate("Location")
     }
   }
@@ -59,7 +58,17 @@ const EnableNotifcations = () => {
   const handleEnableNotifications = async () => {
     const token = await registerForPushNotificationsAsync()
     if (token) {
-      await savePushToken(token)
+      await savePushToken(token) // Ensure token is saved before navigating or showing alerts
+      Alert.alert(
+        "Notifications enabled",
+        "You will now receive updates directly."
+      )
+      navigation.navigate("Location")
+    } else {
+      Alert.alert(
+        "Notification Permission",
+        "Unable to enable notifications without permission. Check your settings."
+      )
     }
   }
 
