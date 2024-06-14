@@ -202,8 +202,10 @@ const AnnoucementsScreen = () => {
           >
             <View className="flex flex-row mx-1 p-2 bg-slate-300/05 items-center">
               <TextInput
+                lineBreakStrategyIOS="hangul-word"
+                multiline={true}
                 placeholder="Send a Message"
-                className="flex-1 border bg-white rounded-full h-8 w-64 p-2"
+                className="flex-1 border bg-white rounded-xl w-64 p-2 max-h-64"
                 value={messageToSend}
                 onChangeText={setMessageToSend}
               />
