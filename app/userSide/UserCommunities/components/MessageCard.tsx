@@ -51,6 +51,10 @@ const MessageCard = ({ otherUserId, recentMessage }: MessageCardProps) => {
             : truncateMessage(recentMessage, 20)}
         </Text>
       </View>
+
+      <View>
+        <Text>{}</Text>
+      </View>
     </View>
   )
 }

@@ -72,11 +72,11 @@ const CommunitiesDash = () => {
           </View>
         ) : userMessages ? (
           <View>
-            <Messages />
+            <Messages user={currentUser} />
           </View>
         ) : (
           <View>
-            <CommunitiesRead />
+            <CommunitiesRead user={currentUser} />
           </View>
         )}
       </View>

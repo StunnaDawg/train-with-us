@@ -20,80 +20,47 @@ const EnableNotifcations = () => {
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
 
-  const [expoPushToken, setExpoPushToken] = useState<string | null>(null)
-  const [notification, setNotification] = useState<boolean>(false)
-
-  useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
-
-    const subscription = Notifications.addNotificationReceivedListener(() => {
-      setNotification(notification)
-    })
-
-    return () => {
-      Notifications.removeNotificationSubscription(subscription)
-    }
-  }, [])
-
   const registerForPushNotificationsAsync = async () => {
-    if (Device.isDevice) {
-      const { status: existingStatus } =
-        await Notifications.getPermissionsAsync()
-      let finalStatus = existingStatus
-      if (existingStatus !== "granted") {
-        const { status } = await Notifications.requestPermissionsAsync()
-        finalStatus = status
-      }
-      if (finalStatus !== "granted") {
-        Alert.alert("Failed to get push token for push notification!")
-        return null
-      }
-      const token = (await Notifications.getExpoPushTokenAsync()).data
-      return token
-    } else {
+    if (!Device.isDevice) {
       Alert.alert("Must use physical device for Push Notifications")
       return null
     }
+    const { status: existingStatus } = await Notifications.getPermissionsAsync()
+    let finalStatus = existingStatus
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync()
+      finalStatus = status
+    }
+    if (finalStatus !== "granted") {
+      Alert.alert("Failed to get push token for push notification!")
+      return null
+    }
+    return (await Notifications.getExpoPushTokenAsync()).data
   }
 
   const savePushToken = async (token: string) => {
-    // Adjust this to get the current user ID
-    if (user?.id) {
-      const { error } = await supabase
-        .from("profiles")
-        .upsert({ id: user.id, expo_push_token: token })
-      if (error) {
-        console.error("Error saving push token:", error)
-        Alert.alert("Error saving push token")
-      }
-    } else {
+    if (!user?.id) {
       Alert.alert("User not logged in")
+      return
+    }
+    const { error } = await supabase
+      .from("profiles")
+      .upsert({ id: user.id, expo_push_token: token })
+
+    if (error) {
+      console.error("Error saving push token:", error)
+      Alert.alert("Error saving push token")
+    } else {
+      Alert.alert("Notifications enabled")
+      navigation.navigate("Location")
     }
   }
 
-  // Function to enable notifications
   const handleEnableNotifications = async () => {
     const token = await registerForPushNotificationsAsync()
     if (token) {
-      setExpoPushToken(token)
-      savePushToken(token)
-      Alert.alert("Notifications enabled")
+      await savePushToken(token)
     }
-    navigation.navigate("Location")
-  }
-
-  // Function to disable notifications
-  const handleDisableNotifications = () => {
-    Notifications.getPermissionsAsync().then(({ status }) => {
-      if (status === "granted") {
-        Notifications.deleteNotificationChannelAsync(
-          expoPushToken as any
-        ).catch(() => {})
-        setExpoPushToken(null)
-        Alert.alert("Notifications disabled")
-      }
-    })
-    navigation.navigate("Location")
   }
 
   const skip = () => {
@@ -124,21 +91,8 @@ const EnableNotifcations = () => {
           <View className="mb-3">
             <GenericButton
               roundness="rounded-xl"
-              text="Disable Notifications"
-              buttonFunction={() => skip()}
-              textSize="text-sm"
-              width={200}
-              colourPressed="bg-gray-200"
-              colourDefault="bg-white"
-              borderColourPressed="border-gray-200"
-              borderColourDefault="border-black"
-            />
-          </View>
-          <View>
-            <GenericButton
-              roundness="rounded-xl"
               text="Skip"
-              buttonFunction={() => handleDisableNotifications()}
+              buttonFunction={() => skip()}
               textSize="text-sm"
               width={200}
               colourPressed="bg-gray-200"

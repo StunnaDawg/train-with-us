@@ -7,23 +7,25 @@ import {
   Alert,
 } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
-import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
-import { CommunityChannel } from "../../../@types/supabaseTypes"
+import { CommunityChannel, Profile } from "../../../@types/supabaseTypes"
 import getUserPinnedChannels from "../../../supabaseFunctions/getFuncs/getUserPinnedChannels"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
-const CommunitiesRead = () => {
+type CommunitiesReadProps = {
+  user: Profile | null
+}
+
+const CommunitiesRead = ({ user }: CommunitiesReadProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const navigation = useNavigation<NavigationType>()
 
   const [communityChannels, setCommunityChannels] = useState<
     CommunityChannel[] | null
   >([])
-  const { user } = useAuth()
 
   const showAlert = (onConfirm: () => void) =>
     Alert.alert(

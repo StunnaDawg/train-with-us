@@ -7,20 +7,16 @@ import { NavigationType } from "../../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import MessageCard from "./MessageCard"
 
-const Messages = () => {
+type MessagesProps = { user: Profile | null }
+
+const Messages = ({ user }: MessagesProps) => {
   const [chatSessions, setChatSessions] = useState<ChatSession[] | null>([])
-  const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
 
   useEffect(() => {
     if (!user) return
     getAllUserChatSessions(user!.id, setChatSessions)
   }, [user])
-
-  useEffect(() => {
-    if (!chatSessions) return
-    console.log("chat sessions obtaiend", chatSessions)
-  }, [chatSessions])
 
   return (
     <View className="mt-8 mx-8 pb-2">

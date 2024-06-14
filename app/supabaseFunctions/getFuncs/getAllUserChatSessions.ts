@@ -11,6 +11,7 @@ const getAllUserChatSessions = async (
       .from("chat_sessions")
       .select("*")
       .or(`user1.eq.${userId},user2.eq.${userId}`)
+      .order("updated_at", { ascending: false })
 
     if (error) throw error
     if (!chatSessions || chatSessions.length === 0) {
