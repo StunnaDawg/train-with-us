@@ -1,10 +1,11 @@
-import { View, Text, Platform } from "react-native"
+import { View, Text, Platform, Pressable } from "react-native"
 import React from "react"
 import formatTimestamp from "../../../utilFunctions/formatTimeStamp"
 import GenericButton from "../../../components/GenericButton"
-import openInAppleMaps from "../../../utilFunctions/openGoogleMaps"
-import openInGoogleMaps from "../../../utilFunctions/openMaps"
 import AddEventToCalendar from "./AddEventToCalendar"
+import { FontAwesome5 } from "@expo/vector-icons"
+import openInMaps from "../../../utilFunctions/openMaps"
+import openInGoogleMaps from "../../../utilFunctions/openGoogleMaps"
 
 type ViewEventDetailsProps = {
   date: string | null | undefined
@@ -19,7 +20,7 @@ const ViewEventDetails = ({
 }: ViewEventDetailsProps) => {
   return (
     <View>
-      <View className="flex flex-row  justify-between">
+      <View className="flex flex-row  justify-between items-center">
         <View>
           <Text className=" font-bold text-lg pb-1 text-white">
             Date and Time:
@@ -36,69 +37,39 @@ const ViewEventDetails = ({
 
       {/* Location */}
       <View className=" mb-1 mt-2">
-        <View className="flex flex-row justify-center items-center">
-          <Text className="pb-1 font-bold text-md text-white ">Location:</Text>
-          <View className="mx-2 items-center">
+        <Text className="pb-1 font-bold text-lg text-white ">Location:</Text>
+        <View className="flex flex-row justify-between items-center">
+          <View className=" items-center">
             <Text className="font-bold text-sm text-white ">
+              {/* {String.fromCodePoint("&#128205")}{" "} */}
               {location ? location : "No Street Address"}
             </Text>
           </View>
-        </View>
 
-        <View className="flex flex-row justify-center">
           {Platform.OS === "ios" ? (
             <>
-              <View className="my-2 mx-1">
-                <GenericButton
-                  text="Open in Apple Maps"
-                  buttonFunction={() =>
-                    openInAppleMaps("580 Wright Ave, Dartmouth NS")
+              <Pressable
+                className="bg-white rounded-xl p-1"
+                onPress={() => {
+                  if (location) {
+                    openInMaps(location)
                   }
-                  roundness="rounded-xl"
-                  textSize="text-xs"
-                  width={100}
-                  textCenter={true}
-                  colourPressed="bg-slate-200"
-                  colourDefault="bg-white"
-                  borderColourPressed="border-gray-200"
-                  borderColourDefault="border-black"
-                />
-              </View>
-
-              <View className="my-2">
-                <GenericButton
-                  text="Open in Google Maps"
-                  buttonFunction={() =>
-                    openInGoogleMaps("580 Wright Ave, Dartmouth NS")
-                  }
-                  roundness="rounded-xl"
-                  textSize="text-xs"
-                  width={100}
-                  textCenter={true}
-                  colourPressed="bg-slate-200"
-                  colourDefault="bg-white"
-                  borderColourPressed="border-gray-200"
-                  borderColourDefault="border-black"
-                />
-              </View>
+                }}
+              >
+                <FontAwesome5 name="directions" size={22} color="black" />
+              </Pressable>
             </>
           ) : (
-            <View className="my-2 mx-1">
-              <GenericButton
-                text="Open in Google Maps"
-                buttonFunction={() =>
-                  openInGoogleMaps("580 Wright Ave, Dartmouth NS")
+            <Pressable
+              className="bg-white rounded-xl p-1"
+              onPress={() => {
+                if (location) {
+                  openInGoogleMaps(location)
                 }
-                roundness="rounded-xl"
-                textSize="text-xs"
-                width={100}
-                textCenter={true}
-                colourPressed="bg-slate-200"
-                colourDefault="bg-white"
-                borderColourPressed="border-gray-200"
-                borderColourDefault="border-black"
-              />
-            </View>
+              }}
+            >
+              <FontAwesome5 name="directions" size={22} color="black" />
+            </Pressable>
           )}
         </View>
       </View>

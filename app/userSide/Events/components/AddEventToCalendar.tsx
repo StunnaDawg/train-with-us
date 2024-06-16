@@ -1,11 +1,9 @@
-import { View, Text, Alert } from "react-native"
+import { View, Text, Alert, Pressable } from "react-native"
 import React, { useEffect, useState } from "react"
 import * as Calendar from "expo-calendar"
 import { Events } from "../../../@types/supabaseTypes"
-import GenericButton from "../../../components/GenericButton"
 import getSingleEvent from "../../../supabaseFunctions/getFuncs/getSingleEvent"
-import formatTimestamp from "../../../utilFunctions/formatTimeStamp"
-import { da } from "date-fns/locale"
+import { FontAwesome6 } from "@expo/vector-icons"
 
 type EventProps = {
   eventId: number
@@ -51,20 +49,9 @@ const AddEventToCalendar = ({ eventId }: EventProps) => {
     getSingleEvent(setLoading, eventId, setEventState)
   }, [eventId])
   return (
-    <View>
-      <GenericButton
-        text="Add Event to Calendar"
-        textSize="text-xs"
-        buttonFunction={() => addEvent()}
-        width={100}
-        textCenter={true}
-        colourPressed="bg-blue-200"
-        colourDefault="bg-white"
-        borderColourPressed="border-gray-200"
-        borderColourDefault="border-black"
-        roundness="rounded-xl"
-      />
-    </View>
+    <Pressable className="bg-white rounded-xl p-1" onPress={() => addEvent()}>
+      <FontAwesome6 name="calendar-plus" size={22} color="black" />
+    </Pressable>
   )
 }
 
