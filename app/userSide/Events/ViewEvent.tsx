@@ -86,6 +86,7 @@ const ViewEvent = () => {
               <BackButton size={36} colour="white" />
             </View>
             <ViewEventTitle
+              userId={user?.id}
               eventId={event?.id}
               title={event?.event_title}
               date={event?.date}

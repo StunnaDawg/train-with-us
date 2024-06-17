@@ -402,6 +402,8 @@ export type Database = {
       messages: {
         Row: {
           chat_session: string
+          community_or_event_link: boolean
+          eventId: number | null
           id: string
           message: string | null
           read: boolean
@@ -410,6 +412,8 @@ export type Database = {
         }
         Insert: {
           chat_session: string
+          community_or_event_link?: boolean
+          eventId?: number | null
           id?: string
           message?: string | null
           read?: boolean
@@ -418,6 +422,8 @@ export type Database = {
         }
         Update: {
           chat_session?: string
+          community_or_event_link?: boolean
+          eventId?: number | null
           id?: string
           message?: string | null
           read?: boolean
@@ -435,6 +441,12 @@ export type Database = {
             foreignKeyName: "messages_sender_fkey"
             columns: ["sender"]
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_messages_eventId_fkey"
+            columns: ["eventId"]
+            referencedRelation: "events"
             referencedColumns: ["id"]
           }
         ]
