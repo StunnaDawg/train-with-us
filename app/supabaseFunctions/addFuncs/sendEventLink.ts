@@ -1,4 +1,5 @@
 import supabase from "../../../lib/supabase"
+import upsertChatSession from "../updateFuncs/updateChatSession"
 
 const sendEventLink = async (
   userId: string,
@@ -21,6 +22,8 @@ const sendEventLink = async (
       console.log("message error", error)
       throw error
     }
+
+    await upsertChatSession(chatSessionId, "Check out this Event!")
   } catch (error) {
     console.log(error)
   }

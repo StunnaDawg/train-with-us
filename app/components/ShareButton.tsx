@@ -17,7 +17,7 @@ const ShareButton = ({ eventId, userId }: shareButtonProps) => {
     ChatSession[] | null
   >([])
 
-  const [requestSent, setRequestSent] = useState<boolean>(false)
+  const [eventSent, setEventSent] = useState<boolean>(false)
   const [isPressed, setIsPressed] = useState(false)
   const [sessionsToSend, setSessionsToSend] = useState<string[]>([])
 
@@ -43,6 +43,12 @@ const ShareButton = ({ eventId, userId }: shareButtonProps) => {
     sessions.forEach((sessionId) => {
       sendEventTo(sessionId)
     })
+
+    setEventSent(true)
+
+    setTimeout(() => {
+      setEventSent(false)
+    }, 2000)
   }
 
   const sendEventTo = (sessionId: string) => {
@@ -111,7 +117,7 @@ const ShareButton = ({ eventId, userId }: shareButtonProps) => {
             onPressOut={handleOnPressOut}
           >
             <Text className="font-bold text-center text-xl">{`${
-              requestSent ? "Request Sent" : "Send"
+              eventSent ? "Event Sent" : "Send"
             }`}</Text>
           </Pressable>
         </View>

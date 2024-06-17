@@ -1,13 +1,7 @@
 import { View, Text, ScrollView, Pressable } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
-import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import JustAdded from "./components/JustAdded"
-import Upcoming from "./components/Upcoming"
 import AllEvents from "./components/AllEvents"
-import { Profile } from "../../@types/supabaseTypes"
-import { useAuth } from "../../supabaseFunctions/authcontext"
-import { useNavigation } from "@react-navigation/native"
-import { NavigationType } from "../../@types/navigation"
 import { RefreshControl } from "react-native-gesture-handler"
 import EventTypes from "./components/EventTypes"
 

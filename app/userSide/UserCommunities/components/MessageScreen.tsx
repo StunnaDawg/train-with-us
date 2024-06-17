@@ -15,7 +15,7 @@ import {
 import SinglePic from "../../../components/SinglePic"
 import { RootStackParamList } from "../../../@types/navigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
-import { Messages, Profile } from "../../../@types/supabaseTypes"
+import { Events, Messages, Profile } from "../../../@types/supabaseTypes"
 import getChatSessionMessages from "../../../supabaseFunctions/getFuncs/getChatSessionMessages"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import sendMessage from "../../../supabaseFunctions/addFuncs/sendMessage"
@@ -24,19 +24,49 @@ import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import sendNotification from "../../../utilFunctions/sendNotification"
 import upsertChatSession from "../../../supabaseFunctions/updateFuncs/updateChatSession"
 import BackButton from "../../../components/BackButton"
+import { get } from "mongoose"
+import getSingleEvent from "../../../supabaseFunctions/getFuncs/getSingleEvent"
+import EventCard from "../../Events/components/EventCard"
 
 type UserMessage = {
   message: string | null
+  isLink: boolean
+  eventId: number | null
 }
 
-const UserMessage = ({ message }: UserMessage) => {
+const UserMessage = ({ message, isLink, eventId }: UserMessage) => {
+  const [event, setEvent] = useState<Events | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (!eventId || isLink === false) return
+    getSingleEvent(setLoading, eventId, setEvent)
+  }, [eventId])
   return (
     <View className="flex flex-row justify-end mt-2 mr-4 ml-36">
-      <View>
-        <View className="rounded-2xl bg-blue-500/80 p-2">
-          <Text className="font-bold text-xs">{message}</Text>
+      {isLink && event ? (
+        <View>
+          <View className="rounded-2xl bg-blue-500/80 p-2 mb-1">
+            <Text className="font-bold text-xs">{message}</Text>
+          </View>
+          <View className="bg-black rounded-xl py-1">
+            <EventCard
+              title={event?.event_title}
+              eventCoverPhoto={event.event_cover_photo}
+              eventId={event.id}
+              eventPrice={event.price}
+              date={event.date}
+              communityId={event.community_host}
+            />
+          </View>
         </View>
-      </View>
+      ) : (
+        <View>
+          <View className="rounded-2xl bg-blue-500/80 p-2">
+            <Text className="font-bold text-xs">{message}</Text>
+          </View>
+        </View>
+      )}
     </View>
   )
 }
@@ -44,14 +74,39 @@ const UserMessage = ({ message }: UserMessage) => {
 type MatchesMessageProps = {
   message: string | null
   name: string | null | undefined
+  isLink: boolean
+  eventId: number | null
 }
 
-const MatchesMessage = ({ message, name }: MatchesMessageProps) => {
+const MatchesMessage = ({
+  message,
+  name,
+  isLink,
+  eventId,
+}: MatchesMessageProps) => {
+  const [event, setEvent] = useState<Events | null>({} as Events)
+  const [loading, setLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (!eventId || isLink === false) return
+    getSingleEvent(setLoading, eventId, setEvent)
+  }, [eventId])
   return (
     <View className="flex flex-row justify-start mt-2 ml-4 mr-36">
       <View>
         <View className="rounded-2xl bg-slate-400/60 p-2">
-          <Text className=" text-xs text-black font-bold">{message}</Text>
+          {isLink && event ? (
+            <EventCard
+              title={event?.event_title}
+              eventCoverPhoto={event.event_cover_photo}
+              eventId={event.id}
+              eventPrice={event.price}
+              date={event.date}
+              communityId={event.community_host}
+            />
+          ) : (
+            <Text className=" text-xs text-black font-bold">{message}</Text>
+          )}
         </View>
       </View>
     </View>
@@ -161,11 +216,17 @@ const MessageScreen = () => {
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) =>
               item.sender === user?.id ? (
-                <UserMessage message={item.message} />
+                <UserMessage
+                  message={item.message}
+                  isLink={item.community_or_event_link}
+                  eventId={item.eventId}
+                />
               ) : (
                 <MatchesMessage
                   name={currentUser?.first_name}
                   message={item.message}
+                  isLink={item.community_or_event_link}
+                  eventId={item.eventId}
                 />
               )
             }
