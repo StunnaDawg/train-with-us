@@ -85,3 +85,27 @@ as permissive
 for delete
 to public
 using ((( SELECT auth.uid() AS uid) = community_owner));
+alter table "public"."messages" add column "community_or_event_link" boolean not null default false;
+
+alter table "public"."messages" add column "eventId" bigint;
+
+alter table "public"."profiles" add column "new_update_modal" boolean not null default false;
+
+alter table "public"."messages" add constraint "public_messages_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES events(id) ON DELETE CASCADE not valid;
+
+alter table "public"."messages" validate constraint "public_messages_eventId_fkey";
+
+create policy "Enable leave for users based on user_id"
+on "public"."community_members"
+as permissive
+for delete
+to public
+using ((( SELECT auth.uid() AS uid) = user_id));
+
+
+create policy "Enable delete for users based on user_id"
+on "public"."events_users"
+as permissive
+for delete
+to public
+using ((( SELECT auth.uid() AS uid) = user_id));

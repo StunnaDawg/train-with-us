@@ -14,6 +14,7 @@ import supabase from "../../lib/supabase"
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
 import { useAuth } from "../supabaseFunctions/authcontext"
+import BackButton from "../components/BackButton"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -88,8 +89,12 @@ const Settings = () => {
   }
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-center">
+      <View className="flex flex-row justify-between">
+        <View className="ml-1">
+          <BackButton size={26} colour="black" />
+        </View>
         <Text className="text-2xl font-bold">Settings</Text>
+        <View />
       </View>
 
       <View className="flex-1 justify-center items-center">
