@@ -476,6 +476,7 @@ export type Database = {
           intentions: string | null
           last_name: string | null
           music_pref: string | null
+          new_update_modal: boolean
           onboard: boolean
           photos_url: string[] | null
           pinned_channels: string[] | null
@@ -510,6 +511,7 @@ export type Database = {
           intentions?: string | null
           last_name?: string | null
           music_pref?: string | null
+          new_update_modal?: boolean
           onboard?: boolean
           photos_url?: string[] | null
           pinned_channels?: string[] | null
@@ -543,6 +545,7 @@ export type Database = {
           intentions?: string | null
           last_name?: string | null
           music_pref?: string | null
+          new_update_modal?: boolean
           onboard?: boolean
           photos_url?: string[] | null
           pinned_channels?: string[] | null
@@ -640,6 +643,7 @@ export type Database = {
           intentions: string | null
           last_name: string | null
           music_pref: string | null
+          new_update_modal: boolean
           onboard: boolean
           photos_url: string[] | null
           pinned_channels: string[] | null

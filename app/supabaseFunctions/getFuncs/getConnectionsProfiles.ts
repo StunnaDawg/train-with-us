@@ -85,6 +85,7 @@ const getConnectionProfiles = async (
       sexuality: null,
       username: null,
       firstname_lastname: null,
+      new_update_modal: false,
     }
     const shuffledProfiles = shuffleArray(filteredProfiles || [])
     setProfiles(shuffledProfiles)

@@ -4,9 +4,28 @@ import { FontAwesome6 } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType, TabNavigationType } from "../app/@types/navigation"
 import { Image } from "expo-image"
+import UpdateModal from "../app/userSide/UpdateModal"
+import { useAuth } from "../app/supabaseFunctions/authcontext"
+import { useEffect, useState } from "react"
+import useCurrentUser from "../app/supabaseFunctions/getFuncs/useCurrentUser"
+import { Profile } from "../app/@types/supabaseTypes"
 const NavBar = () => {
+  const [show, setShow] = useState<boolean>(false)
+  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const navigationTab = useNavigation<TabNavigationType>()
   const navigation = useNavigation<NavigationType>()
+  const { user } = useAuth()
+
+  useEffect(() => {
+    if (!user) return
+    useCurrentUser(user?.id, setCurrentUser)
+  }, [user])
+
+  useEffect(() => {
+    if (currentUser?.new_update_modal === false) {
+      setShow(true)
+    }
+  }, [currentUser])
 
   return (
     <>
@@ -32,6 +51,8 @@ const NavBar = () => {
           </Pressable>
         </View>
       </SafeAreaView>
+
+      <UpdateModal show={show} userId={currentUser?.id} />
     </>
   )
 }
