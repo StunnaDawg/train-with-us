@@ -106,7 +106,7 @@ const ShareButton = ({ eventId, userId }: shareButtonProps) => {
         </ScrollView>
         <View className="flex flex-row justify-center items-center">
           <Pressable
-            style={{ width: "80%", height: "70%" }}
+            style={{ width: "80%", height: "60%" }}
             className={`mb-3 ${
               isPressed
                 ? `bg-slate-400 border-2 border-solid border-slate-400`

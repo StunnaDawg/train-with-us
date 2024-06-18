@@ -82,7 +82,13 @@ const UpdateModal = ({ userId, show }: UpdateModalProps) => {
           <Text className="font-medium">
             - Allow User to delete Chat Sessions{" "}
           </Text>
+
           <Text className="font-medium">- Leave Event</Text>
+          <View className="flex flex-row items-center flex-wrap">
+            <Text className="font-medium">- Manage Connections with the</Text>
+            <FontAwesome6 name="users" size={24} color="black" />
+            <Text className="font-medium">icon</Text>
+          </View>
         </View>
         <View className="flex flex-row justify-center m-2">
           <Text className="font-semibold">Style Changes / Bug Fixes</Text>

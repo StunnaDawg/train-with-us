@@ -1,10 +1,10 @@
 import { View, Text, Pressable, ScrollView } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import getAllUserChatSessions from "../../../supabaseFunctions/getFuncs/getAllUserChatSessions"
 import { ChatSession, Profile } from "../../../@types/supabaseTypes"
 import { NavigationType } from "../../../@types/navigation"
-import { useNavigation } from "@react-navigation/native"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import MessageCard from "./MessageCard"
 
 type MessagesProps = { user: Profile | null }
@@ -13,10 +13,20 @@ const Messages = ({ user }: MessagesProps) => {
   const [chatSessions, setChatSessions] = useState<ChatSession[] | null>([])
   const navigation = useNavigation<NavigationType>()
 
-  useEffect(() => {
-    if (!user) return
-    getAllUserChatSessions(user!.id, setChatSessions)
-  }, [user])
+  useFocusEffect(
+    useCallback(() => {
+      const getUserCommutiy = async () => {
+        if (!user) return
+        getAllUserChatSessions(user!.id, setChatSessions)
+      }
+
+      getUserCommutiy()
+
+      return () => {
+        // Optional cleanup actions
+      }
+    }, [user, setChatSessions])
+  )
 
   return (
     <View className="mt-8 mx-8 pb-2">
