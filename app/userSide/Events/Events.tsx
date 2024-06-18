@@ -4,6 +4,8 @@ import JustAdded from "./components/JustAdded"
 import AllEvents from "./components/AllEvents"
 import { RefreshControl } from "react-native-gesture-handler"
 import EventTypes from "./components/EventTypes"
+import UpdateModal from "../UpdateModal"
+import Upcoming from "./components/Upcoming"
 
 const Events = () => {
   const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -16,54 +18,45 @@ const Events = () => {
   }, [])
 
   return (
-    <ScrollView
-      className=" bg-primary-900"
-      style={{ backgroundColor: "#07182d" }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {/* <View className="flex flex-row justify-end m-3">
-        <Pressable
-          onPress={() => {
-            if (!userProfile?.community_created) {
-              navigation.navigate("CreateCommunity")
-            } else {
-              navigation.navigate("CreateEvent")
-            }
-          }}
-        >
-          <Text className="font-bold text-xl">Create Event +</Text>
-        </Pressable>
-      </View> */}
-      <View>
-        <JustAdded refreshing={refreshing} />
-      </View>
+    <>
+      <ScrollView
+        className=" bg-primary-900"
+        style={{ backgroundColor: "#07182d" }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {/* <View>
+          <JustAdded refreshing={refreshing} />
+        </View> */}
 
-      {/* <View>
-        <Upcoming refreshing={refreshing} />
-      </View> */}
+        <View>
+          <Upcoming refreshing={refreshing} />
+        </View>
 
-      <View>
-        <AllEvents />
-      </View>
+        <View>
+          <AllEvents />
+        </View>
 
-      <View>
-        <EventTypes refreshing={refreshing} type="CrossFit" />
-      </View>
+        <View>
+          <EventTypes refreshing={refreshing} type="CrossFit" />
+        </View>
 
-      <View>
-        <EventTypes refreshing={refreshing} type="Yoga" />
-      </View>
+        <View>
+          <EventTypes refreshing={refreshing} type="Yoga" />
+        </View>
 
-      <View>
-        <EventTypes refreshing={refreshing} type="Hyrox" />
-      </View>
+        <View>
+          <EventTypes refreshing={refreshing} type="Hyrox" />
+        </View>
 
-      <View>
-        <EventTypes refreshing={refreshing} type="In-House-Competition" />
-      </View>
-    </ScrollView>
+        <View>
+          <EventTypes refreshing={refreshing} type="In-House-Competition" />
+        </View>
+      </ScrollView>
+
+      {/* <UpdateModal /> */}
+    </>
   )
 }
 

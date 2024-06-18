@@ -52,8 +52,43 @@ const getConnectionProfiles = async (
       )
     }
 
+    const fakeProfile: Profile = {
+      id: "fake",
+      first_name: "fake",
+      last_name: "fake",
+      profile_pic: "fake",
+      about: "fake",
+      activities: ["fake"],
+      hobbies: "Yersinia pestis",
+      actvitiy_time: null,
+      allowed_create_community: false,
+      birthday: null,
+      bucket_list: null,
+      city: "Halifax",
+      community_created: null,
+      community_preference: null,
+      connected_users: null,
+      created_at: null,
+      expo_push_token: null,
+      fitness_goals: null,
+      fitness_lvl: null,
+      fitness_records: null,
+      gender: null,
+      ignored_users: null,
+      intentions: null,
+      music_pref: null,
+      onboard: false,
+      photos_url: null,
+      pinned_channels: null,
+      primary_gym: null,
+      secondary_gym: null,
+      sexuality: null,
+      username: null,
+      firstname_lastname: null,
+    }
     const shuffledProfiles = shuffleArray(filteredProfiles || [])
     setProfiles(shuffledProfiles)
+    setProfiles((prev) => [...prev, fakeProfile])
   } catch (error) {
     console.error("Error in getting profiles:", error)
   } finally {

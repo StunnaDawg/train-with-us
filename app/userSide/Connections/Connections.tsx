@@ -1,24 +1,13 @@
-import {
-  Pressable,
-  RefreshControl,
-  SafeAreaView,
-  Text,
-  View,
-} from "react-native"
-import React, { useCallback, useEffect, useState } from "react"
+import { Pressable, SafeAreaView, Text, View } from "react-native"
+import React, { useEffect, useState } from "react"
 import ConnectionsCard from "./components/ConnectionsCard"
 import { Profile } from "../../@types/supabaseTypes"
 import getConnectionProfiles from "../../supabaseFunctions/getFuncs/getConnectionsProfiles"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import Animated, {
-  ReduceMotion,
-  runOnJS,
-  useAnimatedProps,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming,
 } from "react-native-reanimated"
 import { NavigationType } from "../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
@@ -29,11 +18,14 @@ const Connections = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [newConnection, setNewConnection] = useState<boolean>(false)
   const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
+  const [scrollEnabledState, setScrollEnabled] = useState(true)
   const navigation = useNavigation<NavigationType>()
-  const cardHeight = 1000
-  const scrollEnabled = useSharedValue(true)
+  const cardHeight = 600
+  const scrollEnabled = useSharedValue(scrollEnabledState)
   const translationY = useSharedValue(0)
   const startY = useSharedValue(0)
+
+  const fillerHeight = connectionProfiles.length % cardHeight
 
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: (event) => {
@@ -50,7 +42,13 @@ const Connections = () => {
         distance < 500
           ? Math.floor(offsetY / cardHeight)
           : Math.ceil(offsetY / cardHeight)
-      const targetOffset = targetIndex * cardHeight
+      let targetOffset = targetIndex * cardHeight
+
+      // Ensure targetOffset does not exceed the scrollable content height
+      const maxOffset = connectionProfiles.length * cardHeight - cardHeight // Assumes each card takes up exactly 'cardHeight' space
+      if (targetOffset > maxOffset) {
+        targetOffset = maxOffset
+      }
 
       translationY.value = withSpring(targetOffset, { damping: 20 })
     },
@@ -77,11 +75,6 @@ const Connections = () => {
   }, [newConnection])
 
   useEffect(() => {
-    if (connectionProfiles)
-      console.log("gottenn profiles", [...connectionProfiles])
-  }, [connectionProfiles])
-
-  useEffect(() => {
     scrollEnabled.value = true // Re-enable scrolling when the data changes (new fetch etc.)
   }, [connectionProfiles])
 
@@ -99,24 +92,25 @@ const Connections = () => {
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
         onScroll={scrollHandler}
+        scrollEnabled={scrollEnabledState}
         scrollEventThrottle={16}
         snapToInterval={cardHeight} // Optional, native snapping to help with alignment
         decelerationRate="fast"
+        snapToAlignment="start"
       >
         {loading ? (
           <Text>Loading...</Text>
         ) : (
           connectionProfiles.map((profile, index) => (
             <ConnectionsCard
-              key={index}
+              key={profile.id}
               setLoading={setNewConnection}
               loading={newConnection}
               profile={profile}
+              isLast={profile.id === "fake"}
+              setScroll={setScrollEnabled}
             />
           ))
-        )}
-        {connectionProfiles.length === 0 && !loading && (
-          <Text>No Users at the Moment!</Text>
         )}
       </Animated.ScrollView>
     </SafeAreaView>

@@ -7,25 +7,23 @@ import UserTopGyms from "../../Profile/components/UserTopGyms"
 import MessageButton from "./MessageButton"
 import { Profile } from "../../../@types/supabaseTypes"
 import returnCommunityName from "../../../utilFunctions/returnCommunityName"
-import GenericButton from "../../../components/GenericButton"
-import { useNavigation } from "@react-navigation/native"
-import { NavigationType } from "../../../@types/navigation"
-
-// Shares components with profile page
 
 type ConnectionsCardProps = {
-  profile: Profile | null
+  profile?: Profile | null
   loading: boolean
   setLoading: Dispatch<SetStateAction<boolean>>
+  isLast: boolean
+  setScroll: Dispatch<SetStateAction<boolean>>
 }
 
 const ConnectionsCard = ({
   profile,
   loading,
   setLoading,
+  isLast,
+  setScroll,
 }: ConnectionsCardProps) => {
   const [primaryGymName, setPrimaryGymName] = useState<string>("")
-  const navigation = useNavigation<NavigationType>()
 
   useEffect(() => {
     const getPrimaryGymName = async () => {
@@ -39,60 +37,66 @@ const ConnectionsCard = ({
 
     getPrimaryGymName()
   }, [profile])
+
   return (
-    <View style={{ height: 1000 }}>
-      <View className="flex flex-row justify-center mt-1 mb-2">
-        <Text className="text-xl font-bold">
-          {profile?.first_name} {profile?.last_name}
-        </Text>
-      </View>
-      <View>
-        <PhotoArray index1={0} index2={1} index3={2} profileId={profile?.id} />
-      </View>
+    <View style={{ height: 600 }}>
+      {!isLast && profile ? (
+        <>
+          <View className="flex flex-row justify-center mt-1 mb-2">
+            <Text className="text-xl font-bold">
+              {profile?.first_name} {profile?.last_name}
+            </Text>
+          </View>
+          <View>
+            <PhotoArray
+              index1={0}
+              index2={1}
+              index3={2}
+              profileId={profile?.id}
+            />
+          </View>
 
-      <View>
-        <MessageButton
-          setLoading={setLoading}
-          loading={loading}
-          profileId={profile?.id}
-          coach={false}
-        />
+          <View>
+            <MessageButton
+              setLoading={setLoading}
+              loading={loading}
+              profileId={profile?.id}
+              coach={false}
+            />
+          </View>
+          <View className="mt-1 mx-2">
+            <UserAboutSection profile={profile} />
+            <UserTopGyms
+              communityName={primaryGymName}
+              borderB={false}
+              mt={false}
+            />
+          </View>
 
-        {/* <View className="flex flex-row justify-center">
-          <GenericButton
-            colourDefault="bg-transparent"
-            borderColourDefault="black"
-            text="View Full Profile"
-            roundness="rounded-full"
-            colourPressed="bg-blue-500"
-            borderColourPressed="bg-blue-800"
-            buttonFunction={() => {
-              if (profile)
-                navigation.navigate("ViewFullUserProfile", {
-                  user: profile,
-                })
-            }}
-          />
-        </View>
-       */}
-      </View>
-      <View className="mt-1 mx-2">
-        <UserAboutSection profile={profile} />
-        <UserTopGyms
-          communityName={primaryGymName}
-          borderB={false}
-          mt={false}
-        />
-      </View>
+          <View className="mt-1">
+            <PhotoArray
+              index1={3}
+              index2={4}
+              index3={5}
+              profileId={profile?.id}
+            />
+          </View>
 
-      <View className="mt-1">
-        <PhotoArray index1={3} index2={4} index3={5} profileId={profile?.id} />
-      </View>
-
-      {profile?.activities?.length && profile?.activities?.length > 0 && (
-        <View className="flex flex-row items-center">
-          <ActivitySection profile={profile} />
-        </View>
+          {profile?.activities?.length && profile?.activities?.length > 0 && (
+            <View className="flex flex-row items-center">
+              <ActivitySection profile={profile} />
+            </View>
+          )}
+        </>
+      ) : (
+        <>
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <Text className="font-bold text-lg">No New Users left!</Text>
+            <Text className="font-semibold text-sm">Come back later</Text>
+          </View>
+        </>
       )}
     </View>
   )
