@@ -92,6 +92,11 @@ const UpdateModal = ({ userId, show }: UpdateModalProps) => {
               <FontAwesome6 name="users" size={16} color="black" />
               <Text className="font-medium"> icon in the navbar</Text>
             </View>
+
+            <Text className="font-medium">
+              - Community settings for all users, Only able to view upcoming
+              events, leave community, call, and open maps right now
+            </Text>
           </View>
           <View className="flex flex-row justify-center m-2">
             <Text className="font-semibold underline">

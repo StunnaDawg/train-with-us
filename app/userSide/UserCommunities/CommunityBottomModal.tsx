@@ -42,7 +42,7 @@ const CommunityBottomModal = ({ community }: CommunityBottomModalProps) => {
   }, [community?.community_profile_pic])
 
   return (
-    <ScrollView>
+    <ScrollView className="bg-primary-900">
       <View>
         <View className="flex flex-row justify-between items-center">
           <View className="flex flex-row items-center">
@@ -60,7 +60,7 @@ const CommunityBottomModal = ({ community }: CommunityBottomModalProps) => {
               </Pressable>
             </View>
             <View className="items-center">
-              <Text className="text-xl font-bold">
+              <Text className="text-xl text-white font-bold">
                 {community?.community_title
                   ? community.community_title
                   : "Community"}
@@ -74,7 +74,7 @@ const CommunityBottomModal = ({ community }: CommunityBottomModalProps) => {
                   })
                 }}
               >
-                <Text className="mr-1 font-bold text-xs ">
+                <Text className="mr-1 text-white font-bold text-xs ">
                   {community?.member_count} Members
                 </Text>
               </Pressable>
@@ -86,8 +86,8 @@ const CommunityBottomModal = ({ community }: CommunityBottomModalProps) => {
         </View>
       </View>
 
-      <View className="border rounded-xl mx-3 py-3  mt-1">
-        <View className="border-b pb-2">
+      <View className="border border-white rounded-xl mx-3 py-3  mt-1">
+        <View className="border-b border-white pb-2">
           <Pressable
             onPress={async () => {
               if (community && user?.id)
@@ -95,14 +95,16 @@ const CommunityBottomModal = ({ community }: CommunityBottomModalProps) => {
               navigation.goBack()
             }}
           >
-            <Text className="mx-2 font-bold text-sm">Leave Community</Text>
+            <Text className="text-white mx-2 font-bold text-sm">
+              Leave Community
+            </Text>
           </Pressable>
         </View>
 
         <View>
           <Pressable className="pt-2" onPress={() => {}}>
-            <Text className="mx-2 font-bold text-sm">
-              View All Community Events
+            <Text className="mx-2 text-white font-bold text-sm">
+              View All Community Events - Coming Soon
             </Text>
           </Pressable>
         </View>
@@ -110,7 +112,7 @@ const CommunityBottomModal = ({ community }: CommunityBottomModalProps) => {
 
       <View>
         <UpcomingCommunityEvents
-          textColour="text-black"
+          textColour="text-white"
           community={community}
         />
       </View>
