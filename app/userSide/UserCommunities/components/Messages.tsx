@@ -6,12 +6,42 @@ import { ChatSession, Profile } from "../../../@types/supabaseTypes"
 import { NavigationType } from "../../../@types/navigation"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import MessageCard from "./MessageCard"
+import supabase from "../../../../lib/supabase"
 
 type MessagesProps = { user: Profile | null }
 
 const Messages = ({ user }: MessagesProps) => {
   const [chatSessions, setChatSessions] = useState<ChatSession[] | null>([])
   const navigation = useNavigation<NavigationType>()
+
+  // useEffect(() => {
+  //   getAllUserChatSessions(user!.id, setChatSessions)
+  //   const channelSubscription = supabase
+  //     .channel("schema-db-changes")
+  //     .on(
+  //       "postgres_changes",
+  //       {
+  //         event: "INSERT",
+  //         schema: "public",
+  //         table: "chat_sessions",
+  //         filter: `user1=eq.${user?.id} or user2=eq.${user?.id}`,
+  //       },
+  //       (payload) => {
+  //         console.log("Message received: ", payload)
+  //         getAllUserChatSessions(user!.id, setChatSessions)
+  //       }
+  //     )
+  //     .subscribe((status, error) => {
+  //       console.log("Subscription status:", status)
+  //       if (error) {
+  //         console.error("Subscription error:", error)
+  //       }
+  //     })
+
+  //   return () => {
+  //     supabase.removeChannel(channelSubscription)
+  //   }
+  // }, [chatSessions, user])
 
   useFocusEffect(
     useCallback(() => {

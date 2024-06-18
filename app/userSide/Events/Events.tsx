@@ -38,21 +38,21 @@ const Events = () => {
           <AllEvents />
         </View>
 
-        <View>
+        {/* <View>
           <EventTypes refreshing={refreshing} type="CrossFit" />
         </View>
 
         <View>
           <EventTypes refreshing={refreshing} type="Yoga" />
-        </View>
+        </View> */}
 
         <View>
           <EventTypes refreshing={refreshing} type="Hyrox" />
         </View>
 
-        <View>
+        {/* <View>
           <EventTypes refreshing={refreshing} type="In-House-Competition" />
-        </View>
+        </View> */}
       </ScrollView>
 
       {/* <UpdateModal /> */}
