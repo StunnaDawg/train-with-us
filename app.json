@@ -1,7 +1,7 @@
 {
   "name": "train-with-us",
   "slug": "train-with-us",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "orientation": "portrait",
   "icon": "./assets/images/icon.png",
   "userInterfaceStyle": "light",

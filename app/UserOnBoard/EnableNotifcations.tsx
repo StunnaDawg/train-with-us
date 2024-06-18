@@ -7,6 +7,7 @@ import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
 import supabase from "../../lib/supabase"
 import { useAuth } from "../supabaseFunctions/authcontext"
+import Constants from "expo-constants"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -19,6 +20,11 @@ Notifications.setNotificationHandler({
 const EnableNotifcations = () => {
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
+
+  function handleRegistrationError(errorMessage: string) {
+    alert(errorMessage)
+    throw new Error(errorMessage)
+  }
 
   const registerForPushNotificationsAsync = async () => {
     if (!Device.isDevice) {
@@ -35,7 +41,24 @@ const EnableNotifcations = () => {
       Alert.alert("Failed to get push token for push notification!")
       return null
     }
-    return (await Notifications.getExpoPushTokenAsync()).data
+
+    const projectId =
+      Constants?.expoConfig?.extra?.eas?.projectId ??
+      Constants?.easConfig?.projectId
+    if (!projectId) {
+      handleRegistrationError("Project ID not found")
+    }
+    try {
+      const pushTokenString = (
+        await Notifications.getExpoPushTokenAsync({
+          projectId,
+        })
+      ).data
+      console.log(pushTokenString)
+      return pushTokenString
+    } catch (e: unknown) {
+      handleRegistrationError(`${e}`)
+    }
   }
 
   const savePushToken = async (token: string) => {

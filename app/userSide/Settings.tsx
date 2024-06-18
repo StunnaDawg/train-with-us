@@ -1,20 +1,11 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  Pressable,
-  Switch,
-  Alert,
-  Linking,
-  Platform,
-} from "react-native"
-import React, { useEffect, useState } from "react"
+import { View, Text, SafeAreaView, Pressable, Alert } from "react-native"
 import { FontAwesome6 } from "@expo/vector-icons"
 import supabase from "../../lib/supabase"
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import BackButton from "../components/BackButton"
+import Constants from "expo-constants"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -27,24 +18,43 @@ Notifications.setNotificationHandler({
 const Settings = () => {
   const { user } = useAuth()
 
+  function handleRegistrationError(errorMessage: string) {
+    alert(errorMessage)
+    throw new Error(errorMessage)
+  }
+
   const registerForPushNotificationsAsync = async () => {
-    if (Device.isDevice) {
-      const { status: existingStatus } =
-        await Notifications.getPermissionsAsync()
-      let finalStatus = existingStatus
-      if (existingStatus !== "granted") {
-        const { status } = await Notifications.requestPermissionsAsync()
-        finalStatus = status
-      }
-      if (finalStatus !== "granted") {
-        Alert.alert("Failed to get push token for push notification!")
-        return null
-      }
-      const token = (await Notifications.getExpoPushTokenAsync()).data
-      return token
-    } else {
+    if (!Device.isDevice) {
       Alert.alert("Must use physical device for Push Notifications")
       return null
+    }
+    const { status: existingStatus } = await Notifications.getPermissionsAsync()
+    let finalStatus = existingStatus
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync()
+      finalStatus = status
+    }
+    if (finalStatus !== "granted") {
+      Alert.alert("Failed to get push token for push notification!")
+      return null
+    }
+
+    const projectId =
+      Constants?.expoConfig?.extra?.eas?.projectId ??
+      Constants?.easConfig?.projectId
+    if (!projectId) {
+      handleRegistrationError("Project ID not found")
+    }
+    try {
+      const pushTokenString = (
+        await Notifications.getExpoPushTokenAsync({
+          projectId,
+        })
+      ).data
+      console.log(pushTokenString)
+      return pushTokenString
+    } catch (e: unknown) {
+      handleRegistrationError(`${e}`)
     }
   }
 
@@ -65,14 +75,6 @@ const Settings = () => {
   }
 
   const handleEnableNotifications = async () => {
-    const { status } = await Notifications.getPermissionsAsync()
-    if (status !== "granted") {
-      Alert.alert(
-        "Enable Notifications",
-        "To receive notifications, enable them in settings."
-      )
-      return
-    }
     const token = await registerForPushNotificationsAsync()
     if (token) {
       savePushToken(token)
