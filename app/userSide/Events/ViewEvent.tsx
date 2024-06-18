@@ -19,6 +19,7 @@ import getSingleEvent from "../../supabaseFunctions/getFuncs/getSingleEvent"
 import checkIfAttending from "../../supabaseFunctions/checkIfAttending"
 import * as Calendar from "expo-calendar"
 import BackButton from "../../components/BackButton"
+import LeaveEvent from "./components/LeaveEvent"
 
 const ViewEvent = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -108,16 +109,17 @@ const ViewEvent = () => {
             <AboutViewEvent description={event?.event_description} />
           </View>
         </ScrollView>
-        <View className="absolute inset-x-0 bottom-0 pb-12 bg-white/75">
-          {!isAttending ? (
+
+        {!isAttending ? (
+          <View className="absolute inset-x-0 bottom-0 pb-12 bg-white/75">
             <Checkout
               ticketPrice={event?.price ? event.price : 0}
               event={event}
             />
-          ) : (
-            <View className="bg-primary-900" />
-          )}
-        </View>
+          </View>
+        ) : (
+          <LeaveEvent eventId={eventId} userId={user?.id} />
+        )}
       </SafeAreaView>
     </View>
   )
