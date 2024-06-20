@@ -1,4 +1,4 @@
-import { Text, SafeAreaView, Pressable, View } from "react-native"
+import { Text, SafeAreaView, Pressable, View, Platform } from "react-native"
 import supabase from "../lib/supabase"
 import { FontAwesome6 } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
@@ -29,7 +29,10 @@ const NavBar = () => {
 
   return (
     <>
-      <SafeAreaView className="flex flex-row justify-between items-center">
+      <SafeAreaView
+        style={{ paddingTop: Platform.OS == "android" ? 20 : 0 }}
+        className="flex flex-row justify-between items-center"
+      >
         <View className="flex flex-row items-center">
           <Pressable onPress={() => navigationTab.navigate("Events")}>
             <Image

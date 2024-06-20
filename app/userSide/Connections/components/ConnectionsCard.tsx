@@ -1,4 +1,4 @@
-import { View, Text } from "react-native"
+import { View, Text, Platform, Dimensions } from "react-native"
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import PhotoArray from "./PhotoArray"
 import ActivitySection from "../../Profile/components/ActivitySection"
@@ -24,6 +24,8 @@ const ConnectionsCard = ({
   setScroll,
 }: ConnectionsCardProps) => {
   const [primaryGymName, setPrimaryGymName] = useState<string>("")
+  const screenHeight = Dimensions.get("window").height
+  const cardHeight = Platform.OS == "android" ? screenHeight * 0.75 : 600
 
   useEffect(() => {
     const getPrimaryGymName = async () => {
@@ -39,7 +41,7 @@ const ConnectionsCard = ({
   }, [profile])
 
   return (
-    <View style={{ height: 600 }}>
+    <View style={{ height: cardHeight }}>
       {!isLast && profile ? (
         <>
           <View className="flex flex-row justify-center mt-1 mb-2">
