@@ -2,6 +2,7 @@ import React from "react"
 import { Platform, View } from "react-native"
 import * as AppleAuthentication from "expo-apple-authentication"
 import supabase from "../../lib/supabase"
+import * as Updates from "expo-updates"
 
 const AppleAuth = () => {
   if (Platform.OS === "ios") {
@@ -32,7 +33,7 @@ const AppleAuth = () => {
                 console.log(JSON.stringify({ error, user }, null, 2))
 
                 if (!error) {
-                  //user is signed in
+                  await Updates.reloadAsync()
                 }
               } else {
                 throw new Error("Apple Sign-In failed")

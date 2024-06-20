@@ -37,6 +37,7 @@
     }
   },
   "android": {
+    "package": "com.stunnacat.trainwithus",
     "adaptiveIcon": {
       "backgroundColor": "#071C38",
       "foregroundImage": "./assets/images/adaptive-icon.png"
@@ -48,6 +49,19 @@
   "extra": {
     "eas": {
       "projectId": "a551e684-d06e-4bb1-bd40-d83456f2c2fe"
+    }
+  },
+  "expo": {
+    "android": {
+      "package": "com.stunnacat.trainwithus"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a551e684-d06e-4bb1-bd40-d83456f2c2fe"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.stunnacat.trainwithus"
     }
   }
 }
