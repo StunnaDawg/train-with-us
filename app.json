@@ -24,6 +24,12 @@
       {
         "calendarPermission": "The app needs to access your calendar."
       }
+    ],
+    [
+      "expo-notifications",
+      {
+        "defaultChannel": "default"
+      }
     ]
   ],
   "ios": {
@@ -41,7 +47,21 @@
     "adaptiveIcon": {
       "backgroundColor": "#071C38",
       "foregroundImage": "./assets/images/adaptive-icon.png"
-    }
+    },
+    "intentFilters": [
+      {
+        "action": "VIEW",
+        "autoVerify": true,
+        "data": [
+          {
+            "scheme": "https",
+            "host": "*.myapp.io",
+            "pathPrefix": "/notifications"
+          }
+        ],
+        "category": ["BROWSABLE", "DEFAULT"]
+      }
+    ]
   },
   "web": {
     "favicon": "./assets/images/favicon.png"
@@ -53,6 +73,7 @@
   },
   "expo": {
     "android": {
+      "permissions": ["READ_CALENDAR", "WRITE_CALENDAR"],
       "package": "com.stunnacat.trainwithus"
     },
     "extra": {
@@ -61,7 +82,8 @@
       }
     },
     "ios": {
-      "bundleIdentifier": "com.stunnacat.trainwithus"
+      "bundleIdentifier": "com.stunnacat.trainwithus",
+      "associatedDomains": ["applinks:trainwithus.app"]
     }
   }
 }

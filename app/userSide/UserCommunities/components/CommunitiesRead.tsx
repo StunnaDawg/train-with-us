@@ -169,8 +169,16 @@ const CommunitiesRead = ({ user }: CommunitiesReadProps) => {
               </Pressable>
             </View>
           ))
-        ) : (
+        ) : communityChannels?.length && communityChannels.length > 0 ? (
           <ActivityIndicator />
+        ) : (
+          <View className="flex-1 flex justify-center items-center">
+            <View className="flex flex-row justify-center items-center">
+              <Text className="text-white font-bold text-center p-2">
+                Head to a Community to pin your favourite channels!
+              </Text>
+            </View>
+          </View>
         )}
       </ScrollView>
     </View>

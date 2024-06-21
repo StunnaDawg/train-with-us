@@ -4,13 +4,61 @@ import { AuthProvider } from "./supabaseFunctions/authcontext"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 import * as SplashScreen from "expo-splash-screen"
+import React, { useEffect } from "react"
+import { Linking } from "react-native"
+import * as Notifications from "expo-notifications"
+import { useNavigation } from "@react-navigation/native"
+import { NavigationType } from "./@types/navigation"
 
 SplashScreen.preventAutoHideAsync()
 
 export default function App() {
   return (
     <AuthProvider>
-      <NavigationContainer>
+      <NavigationContainer
+        linking={{
+          prefixes: ["https://myapp.io"],
+          config: {
+            screens: {
+              MessageScreen: "notifications/message/:id",
+            },
+          },
+          async getInitialURL() {
+            const url = await Linking.getInitialURL()
+
+            if (url != null) {
+              return url
+            }
+
+            const response =
+              await Notifications.getLastNotificationResponseAsync()
+
+            return response?.notification.request.content.data.url
+          },
+          subscribe(listener) {
+            const onReceiveURL = ({ url }: { url: string }) => listener(url)
+
+            const eventListenerSubscription = Linking.addEventListener(
+              "url",
+              onReceiveURL
+            )
+
+            const subscription =
+              Notifications.addNotificationResponseReceivedListener(
+                (response) => {
+                  const url = response.notification.request.content.data.url
+
+                  listener(url)
+                }
+              )
+
+            return () => {
+              eventListenerSubscription.remove()
+              subscription.remove()
+            }
+          },
+        }}
+      >
         <GestureHandlerRootView style={{ flex: 1 }}>
           <BottomSheetModalProvider>
             <NavStack />

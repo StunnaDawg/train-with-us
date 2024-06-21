@@ -172,7 +172,8 @@ const MessageScreen = () => {
       sendNotification(
         currentUser?.expo_push_token,
         `Message from ${currentUser?.first_name}`,
-        messageToSend
+        messageToSend,
+        chatSession.id
       )
     }
   }

@@ -17,7 +17,6 @@ import { Events, Profile } from "../../@types/supabaseTypes"
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native"
 import getSingleEvent from "../../supabaseFunctions/getFuncs/getSingleEvent"
 import checkIfAttending from "../../supabaseFunctions/checkIfAttending"
-import * as Calendar from "expo-calendar"
 import BackButton from "../../components/BackButton"
 import LeaveEvent from "./components/LeaveEvent"
 
@@ -59,19 +58,6 @@ const ViewEvent = () => {
   useEffect(() => {
     console.log("isAttending", isAttending)
   }, [isAttending])
-
-  useEffect(() => {
-    ;(async () => {
-      const { status } = await Calendar.requestCalendarPermissionsAsync()
-      if (status === "granted") {
-        const calendars = await Calendar.getCalendarsAsync(
-          Calendar.EntityTypes.EVENT
-        )
-        console.log("Here are all your calendars:")
-        console.log({ calendars })
-      }
-    })()
-  }, [])
 
   return (
     <View className="flex-1" style={{ backgroundColor: "#07182d" }}>

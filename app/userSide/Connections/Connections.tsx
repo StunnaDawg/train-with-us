@@ -1,4 +1,11 @@
-import { Pressable, SafeAreaView, Text, View } from "react-native"
+import {
+  Dimensions,
+  Platform,
+  Pressable,
+  SafeAreaView,
+  Text,
+  View,
+} from "react-native"
 import React, { useEffect, useState } from "react"
 import ConnectionsCard from "./components/ConnectionsCard"
 import { Profile } from "../../@types/supabaseTypes"
@@ -20,12 +27,11 @@ const Connections = () => {
   const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
   const [scrollEnabledState, setScrollEnabled] = useState(true)
   const navigation = useNavigation<NavigationType>()
-  const cardHeight = 600
+  const screenHeight = Dimensions.get("window").height
+  const cardHeight = Platform.OS == "android" ? screenHeight * 0.75 : 600
   const scrollEnabled = useSharedValue(scrollEnabledState)
   const translationY = useSharedValue(0)
   const startY = useSharedValue(0)
-
-  const fillerHeight = connectionProfiles.length % cardHeight
 
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: (event) => {

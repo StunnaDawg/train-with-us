@@ -12,28 +12,53 @@ type EventProps = {
 const AddEventToCalendar = ({ eventId }: EventProps) => {
   const [eventState, setEventState] = useState<Events | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
+
   const addEvent = async () => {
-    if (!eventState) {
-      Alert.alert("Error", "Event details are not available.")
-      return
-    }
-
-    if (!eventState.date) {
-      Alert.alert("Error", "Event date is not available.")
-      return
-    }
-    const startDatezz = new Date(eventState.date)
-
-    const endDatezzz = new Date(eventState.date)
-
-    console.log("startDatezz", startDatezz)
-
+    ;(async () => {
+      const { status } = await Calendar.requestCalendarPermissionsAsync()
+      if (status === "granted") {
+        const calendars = await Calendar.getCalendarsAsync(
+          Calendar.EntityTypes.EVENT
+        )
+        console.log("Here are all your calendars:")
+        console.log({ calendars })
+      }
+    })()
     try {
-      const defaultCalendar = await Calendar.getDefaultCalendarAsync()
-      await Calendar.createEventAsync(defaultCalendar.id, {
+      // Fetch all calendars
+      const calendars = await Calendar.getCalendarsAsync(
+        Calendar.EntityTypes.EVENT
+      )
+      console.log("Available calendars:", calendars)
+
+      // Filter for writable calendars, prioritize primary, else take the first writable one
+      const writableCalendars = calendars.filter(
+        (c) => c.allowsModifications === true
+      )
+      const selectedCalendar =
+        writableCalendars.find((c) => c.isPrimary) || writableCalendars[0]
+
+      if (!selectedCalendar) {
+        Alert.alert(
+          "No Accessible Calendars",
+          "No writable calendars are available."
+        )
+        return
+      }
+
+      if (!eventState || !eventState.date) {
+        Alert.alert("Error", "Event details or date is not available.")
+        return
+      }
+
+      const startDate = new Date(eventState.date)
+      const endDate = new Date(eventState.date) // Adjust if end date is different
+
+      // Create event in the selected calendar
+      await Calendar.createEventAsync(selectedCalendar.id, {
         title: eventState.event_title || "No Title",
-        startDate: startDatezz,
-        endDate: endDatezzz,
+        startDate,
+        endDate,
         location: eventState.location || "No location specified",
         notes: eventState.event_description || "",
       })
@@ -48,6 +73,7 @@ const AddEventToCalendar = ({ eventId }: EventProps) => {
     if (eventId === undefined) return
     getSingleEvent(setLoading, eventId, setEventState)
   }, [eventId])
+
   return (
     <Pressable className="bg-white rounded-xl p-1" onPress={() => addEvent()}>
       <FontAwesome6 name="calendar-plus" size={22} color="black" />

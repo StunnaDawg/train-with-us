@@ -1,13 +1,19 @@
 import { FunctionsHttpError } from "@supabase/supabase-js"
 import supabase from "../../lib/supabase"
 
-const sendNotification = async (token: string, title: string, body: string) => {
+const sendNotification = async (
+  token: string,
+  title: string,
+  body: string,
+  chatSessionId: string
+) => {
   console.log("Sending notification to", token)
   const { data, error } = await supabase.functions.invoke("push", {
     body: {
       token,
       titleWords: title,
       bodyWords: body,
+      data: { chatSessionId },
     },
   })
 

@@ -41,7 +41,7 @@ const ConnectionsCard = ({
   }, [profile])
 
   return (
-    <View style={{ height: cardHeight }}>
+    <View className="flex-1" style={{ height: cardHeight }}>
       {!isLast && profile ? (
         <>
           <View className="flex flex-row justify-center mt-1 mb-2">
