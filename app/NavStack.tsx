@@ -142,7 +142,19 @@ const NavStack = () => {
           })
         } else if (data.channel) {
           navigation.navigate("ChannelScreen", { channelId: data.channel })
+        } else if (data.type === "community_request_sent") {
+          navigation.navigate("MyCommunityRequests", {
+            communityId: data.communityId,
+            communityTitle: data.communityTitle,
+          })
+        } else if (data.type === "request_accepted") {
+          navigation.navigate("CommunityPage", {
+            communityId: data.communityId,
+          })
         }
+        // } else if (data.type === "event_joined") {
+        //   navigation.navigate("ViewEvent", { eventId: data.eventId })
+        // }
       }
     )
 

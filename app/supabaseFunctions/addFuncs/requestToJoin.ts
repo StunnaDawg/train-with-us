@@ -6,7 +6,8 @@ const sendNotification = async (
   token: string,
   title: string,
   body: string,
-  communityId: number
+  communityId: number,
+  communityTitle: string
 ) => {
   console.log("Sending notification to", token)
   const { data, error } = await supabase.functions.invoke("push", {
@@ -14,7 +15,7 @@ const sendNotification = async (
       token,
       titleWords: title,
       bodyWords: body,
-      data: { communityId },
+      data: { communityId, communityTitle, type: "community_request_sent" },
     },
   })
 
@@ -28,6 +29,7 @@ const sendNotification = async (
 
 const requestToJoin = async (
   community_id: number,
+  community_title: string,
   userId: string,
   first_name: string,
   expo_push_token: string | null,
@@ -71,7 +73,8 @@ const requestToJoin = async (
       expo_push_token,
       "Request to Join",
       first_name + " has requested to join your community.",
-      community_id
+      community_id,
+      community_title
     )
 }
 

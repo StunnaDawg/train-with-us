@@ -8,13 +8,18 @@ import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 
 type ViewCommunityTitleProps = {
   communityId: number
+  communityTitle: string | undefined | null
 }
 
-const JoinFooter = ({ communityId }: ViewCommunityTitleProps) => {
+const JoinFooter = ({
+  communityId,
+  communityTitle,
+}: ViewCommunityTitleProps) => {
   const [requestSent, setRequestSent] = useState<boolean>(false)
   const [isPressed, setIsPressed] = useState(false)
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null)
   const { user } = useAuth()
+  const title = `${communityTitle || ""}`
 
   const handleOnPressIn = () => {
     setIsPressed(true)
@@ -42,6 +47,7 @@ const JoinFooter = ({ communityId }: ViewCommunityTitleProps) => {
 
     await requestToJoin(
       communityId,
+      title,
       user?.id,
       currentProfile?.first_name,
       currentProfile?.expo_push_token,

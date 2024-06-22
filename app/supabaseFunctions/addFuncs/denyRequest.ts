@@ -9,6 +9,7 @@ const sendNotification = async (token: string, title: string, body: string) => {
       token,
       titleWords: title,
       bodyWords: body,
+      data: { type: "request_denied" },
     },
   })
 

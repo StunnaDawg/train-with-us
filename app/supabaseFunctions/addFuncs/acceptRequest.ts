@@ -14,7 +14,7 @@ const sendNotification = async (
       token,
       titleWords: title,
       bodyWords: body,
-      data: { communityId },
+      data: { communityId, type: "request_accepted" },
     },
   })
 

@@ -8,6 +8,7 @@ import { Profile } from "../../../@types/supabaseTypes"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 
 type PurchaseFooterProps = {
+  eventHost: string
   total: number
   ticketNumber: number
   eventId: number
@@ -17,8 +18,10 @@ const PurchaseFooter = ({
   total,
   eventId,
   ticketNumber,
+  eventHost,
 }: PurchaseFooterProps) => {
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
+  const [eventHost, setEventHost] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
 
@@ -41,6 +44,11 @@ const PurchaseFooter = ({
     if (!user) return
     useCurrentUser(user?.id, setCurrentUser)
   }, [user])
+
+  useEffect(() => {
+    if (!eventHost) return
+    useCurrentUser(eventHost, setEventHost)
+  }, [eventHost])
   return (
     <View className="flex flex-row justify-center items-center">
       <View>

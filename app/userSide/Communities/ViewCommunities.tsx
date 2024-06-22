@@ -43,7 +43,10 @@ const ViewCommunities = () => {
         </View>
       </ScrollView>
 
-      <JoinFooter communityId={communityId} />
+      <JoinFooter
+        communityId={communityId}
+        communityTitle={community?.community_title}
+      />
     </SafeAreaView>
   )
 }

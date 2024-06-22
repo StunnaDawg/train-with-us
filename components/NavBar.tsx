@@ -9,7 +9,6 @@ import { useAuth } from "../app/supabaseFunctions/authcontext"
 import { useEffect, useState } from "react"
 import useCurrentUser from "../app/supabaseFunctions/getFuncs/useCurrentUser"
 import { Profile } from "../app/@types/supabaseTypes"
-import * as Notifications from "expo-notifications"
 
 const NavBar = () => {
   const [show, setShow] = useState<boolean>(false)
@@ -17,18 +16,6 @@ const NavBar = () => {
   const navigationTab = useNavigation<TabNavigationType>()
   const navigation = useNavigation<NavigationType>()
   const { user } = useAuth()
-
-  useEffect(() => {
-    const subscription = Notifications.addNotificationResponseReceivedListener(
-      (response) => {
-        const chatSessionId =
-          response.notification.request.content.data.chatSession
-        navigation.navigate("MessagingScreen", { chatSession: chatSessionId })
-      }
-    )
-
-    return () => subscription.remove()
-  }, [])
 
   useEffect(() => {
     if (!user) return

@@ -48,6 +48,7 @@ const EventCheckout = () => {
         </ScrollView>
         <View className="absolute inset-x-0 bottom-0 pb-12 bg-white/75">
           <PurchaseFooter
+            eventHost={event.event_host}
             ticketNumber={ticketNumberState}
             eventId={event.id}
             total={totalAmount}
