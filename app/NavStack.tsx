@@ -76,6 +76,7 @@ import AddBio from "./userSide/Profile/AddInfoComponents/AddBio"
 import ManageConnections from "./userSide/ManageConnections"
 import * as Notifications from "expo-notifications"
 import { useNavigation } from "@react-navigation/native"
+import Messages from "./userSide/UserCommunities/components/Messages"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -256,6 +257,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="EditEvent"
                 component={EditEvent}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="DirectMessageTab"
+                component={Messages}
               />
 
               <Stack.Screen

@@ -14,7 +14,8 @@ const addNewEvent = async (
   event_description: string,
   photoCover: ImagePicker.ImagePickerAsset,
   location: string,
-  eventStyle: string
+  eventStyle: string,
+  eventLimit: number | null
 ) => {
   try {
     setLoading(true)
@@ -51,6 +52,7 @@ const addNewEvent = async (
         location: location,
         community_host_name: community![0].community_title,
         event_style: eventStyle,
+        event_limit: eventLimit,
       },
     ])
 

@@ -46,6 +46,12 @@ const NavBar = () => {
         <View className="flex flex-row mx-2">
           <Pressable
             className="mx-2"
+            onPress={() => navigation.navigate("DirectMessageTab")}
+          >
+            <FontAwesome6 name="message" size={24} color="black" />
+          </Pressable>
+          <Pressable
+            className="mx-2"
             onPress={() => navigation.navigate("ManageConnections")}
           >
             <FontAwesome6 name="users" size={24} color="black" />

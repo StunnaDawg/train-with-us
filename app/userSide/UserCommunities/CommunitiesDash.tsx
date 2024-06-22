@@ -1,9 +1,6 @@
 import { View, Text, ScrollView } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import CommunitiesScroll from "./components/CommunitiesScroll"
-import Tabs from "./components/Tabs"
-import Unread from "./components/Unread"
-import Messages from "./components/Messages"
 import CommunitiesRead from "./components/CommunitiesRead"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
@@ -13,7 +10,6 @@ import { useFocusEffect } from "@react-navigation/native"
 
 const CommunitiesDash = () => {
   const [loading, setLoading] = useState<boolean>(false)
-  const [userMessages, setUserMessages] = useState<boolean>(true)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const [communities, setCommunities] = useState<Communities[] | null>([])
   const { user } = useAuth()
@@ -40,39 +36,18 @@ const CommunitiesDash = () => {
 
       getUserCommutiy()
 
-      return () => {
-        // Optional cleanup actions
-      }
+      return () => {}
     }, [user, setCurrentUser])
   )
-
-  const changeToCommunity = () => {
-    setUserMessages(false)
-  }
-
-  const changeToUserMessage = () => {
-    setUserMessages(true)
-  }
   return (
     <View className="bg-primary-900">
       <View>
         <CommunitiesScroll communities={communities} />
-        <View className="mt-5">
-          <Tabs
-            changeToCommunityTab={changeToCommunity}
-            changeToMessagesTab={changeToUserMessage}
-            userMessages={userMessages}
-          />
-        </View>
       </View>
       <View>
         {loading ? (
           <View>
             <Text>Loading...</Text>
-          </View>
-        ) : userMessages ? (
-          <View>
-            <Messages user={currentUser} />
           </View>
         ) : (
           <View>

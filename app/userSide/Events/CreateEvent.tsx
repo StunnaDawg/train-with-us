@@ -22,6 +22,7 @@ import { Profile } from "../../@types/supabaseTypes"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import NewPhoto from "../../components/NewPhoto"
 import * as ImagePicker from "expo-image-picker"
+import showAlert from "../../utilFunctions/showAlert"
 
 const CreateEvent = () => {
   const { user } = useAuth()
@@ -30,6 +31,7 @@ const CreateEvent = () => {
   const [description, setDescription] = useState<string>("")
   const [eventTitle, setEventTitle] = useState<string>("")
   const [eventStyle, setEventStyle] = useState<string>("")
+  const [eventLimit, setEventLimit] = useState<string>("")
   const [date, setDate] = useState<Date>(new Date())
   const [price, setPrice] = useState<string>("")
   const [eventPicture, setEventPicture] =
@@ -154,9 +156,33 @@ const CreateEvent = () => {
               />
             </View>
 
+            <View className="mb-4">
+              <Text className="mb-2 text-sm font-semibold text-gray">
+                Attendance Limit
+              </Text>
+              <TextInput
+                value={eventLimit}
+                onChangeText={setEventLimit}
+                placeholder="Attendance Limit, leave blank for no limit"
+                className="border  p-2 rounded-lg"
+              />
+            </View>
+
             <Pressable
               onPress={async () => {
                 setTimeout(() => {
+                  const eventLimitNumber =
+                    eventLimit.trim() === "" ? null : Number(eventLimit)
+
+                  // Now we know eventLimitNumber is a number, check if it is zero or any other invalid case
+                  if (!eventLimitNumber || eventLimitNumber <= 0) {
+                    showAlert({
+                      title: "Invalid Limit",
+                      message: "Please enter a valid limit greater than zero.",
+                    })
+                    return // Stop further execution if validation fails
+                  }
+
                   if (!currentUser?.id && !currentUser?.community_created)
                     return
                   addNewEvent(
@@ -169,10 +195,11 @@ const CreateEvent = () => {
                     description,
                     eventPicture,
                     location,
-                    eventStyle
+                    eventStyle,
+                    eventLimitNumber
                   )
                   navigation.goBack()
-                }, 2000)
+                }, 1000)
               }}
               className=" bg-black p-4 rounded-lg items-center mb-20"
             >

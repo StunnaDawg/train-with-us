@@ -313,6 +313,7 @@ export type Database = {
           event_cover_photo: string | null
           event_description: string | null
           event_host: string
+          event_limit: number | null
           event_photos: string[] | null
           event_style: string | null
           event_title: string | null
@@ -328,6 +329,7 @@ export type Database = {
           event_cover_photo?: string | null
           event_description?: string | null
           event_host: string
+          event_limit?: number | null
           event_photos?: string[] | null
           event_style?: string | null
           event_title?: string | null
@@ -343,6 +345,7 @@ export type Database = {
           event_cover_photo?: string | null
           event_description?: string | null
           event_host?: string
+          event_limit?: number | null
           event_photos?: string[] | null
           event_style?: string | null
           event_title?: string | null

@@ -21,7 +21,7 @@ const PurchaseFooter = ({
   eventHost,
 }: PurchaseFooterProps) => {
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
-  const [eventHost, setEventHost] = useState<Profile | null>({} as Profile)
+  const [eventHostState, setEventHost] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
 
@@ -83,6 +83,7 @@ const PurchaseFooter = ({
 
             await addEventUser(
               eventId,
+              eventHostState?.expo_push_token,
               user?.id,
               currentUser?.first_name,
               currentUser?.last_name

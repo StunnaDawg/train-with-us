@@ -34,6 +34,7 @@ const EditEvent = () => {
   const [location, setLocation] = useState<string>("")
   const [description, setDescription] = useState<string>("")
   const [eventTitle, setEventTitle] = useState<string>("")
+  const [eventLimit, setEventLimit] = useState<string>("")
   const [date, setDate] = useState<Date>(new Date())
   const [price, setPrice] = useState<string>("")
   const [eventPicture, setEventPicture] = useState<string | null | undefined>(
@@ -87,6 +88,7 @@ const EditEvent = () => {
     setEventPicture(event?.event_cover_photo || null)
     setLocation(event?.location || "")
     setEventStyle(event?.event_style || "")
+    setEventLimit(event?.event_limit?.toString() || "")
   }, [event])
   return (
     <SafeAreaView className="flex-1">
@@ -205,6 +207,18 @@ const EditEvent = () => {
               />
             </View>
 
+            <View className="mb-4">
+              <Text className="mb-2 text-sm font-semibold text-gray">
+                Attendance Limit
+              </Text>
+              <TextInput
+                value={eventLimit}
+                onChangeText={setEventLimit}
+                placeholder="Attendance Limit, leave blank for no limit"
+                className="border  p-2 rounded-lg"
+              />
+            </View>
+
             <Pressable
               onPress={async () => {
                 setTimeout(() => {
@@ -261,6 +275,26 @@ const EditEvent = () => {
                       eventId,
                       "event_style",
                       eventStyle
+                    )
+                  }
+
+                  if (event.event_limit !== Number(eventLimit)) {
+                    const eventLimitNumber =
+                      eventLimit.trim() === "" ? null : Number(eventLimit)
+
+                    if (!eventLimitNumber || eventLimitNumber <= 0) {
+                      showAlert({
+                        title: "Invalid Limit",
+                        message:
+                          "Please enter a valid limit greater than zero.",
+                      })
+                      return
+                    }
+                    updateSingleEventTrait(
+                      setLoading,
+                      eventId,
+                      "event_limit",
+                      eventLimitNumber
                     )
                   }
 
