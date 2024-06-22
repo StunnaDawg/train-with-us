@@ -106,6 +106,7 @@ const CommunityHome = () => {
               onPress={() => {
                 navigation.navigate("MyCommunityRequests", {
                   communityId: communityId,
+                  communityTitle: currentCommunity?.community_title,
                 })
               }}
             >

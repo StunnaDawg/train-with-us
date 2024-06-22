@@ -1,12 +1,38 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
+import { FunctionsHttpError } from "@supabase/supabase-js"
+
+const sendNotification = async (
+  token: string,
+  title: string,
+  body: string,
+  communityId: number
+) => {
+  console.log("Sending notification to", token)
+  const { data, error } = await supabase.functions.invoke("push", {
+    body: {
+      token,
+      titleWords: title,
+      bodyWords: body,
+      data: { communityId },
+    },
+  })
+
+  if (error && error instanceof FunctionsHttpError) {
+    const errorMessage = await error.context.json()
+    console.log("Function returned an error", errorMessage)
+  }
+
+  console.log("Notification sent:", data)
+}
 
 const acceptRequest = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   userId: string,
   expoPushToken: string | null,
   communityId: number,
-  requestId: string
+  requestId: string,
+  communityTitle: string
 ) => {
   try {
     setLoading(true)
@@ -50,6 +76,14 @@ const acceptRequest = async (
       } else {
         console.log("Member count updated successfully")
       }
+
+      if (expoPushToken)
+        await sendNotification(
+          expoPushToken,
+          "Request Accepted",
+          "Your request to join has been accepted by " + communityTitle,
+          communityId
+        )
     }
   } catch (error) {
     console.log(error)

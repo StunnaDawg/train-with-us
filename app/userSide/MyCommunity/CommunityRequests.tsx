@@ -16,7 +16,6 @@ import getCommunityRequests from "../../supabaseFunctions/getFuncs/getCommunityR
 import acceptRequest from "../../supabaseFunctions/addFuncs/acceptRequest"
 import denyRequest from "../../supabaseFunctions/addFuncs/denyRequest"
 import showAlert from "../../utilFunctions/showAlert"
-import { set } from "date-fns"
 
 const CommunityRequestsPage = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -27,18 +26,21 @@ const CommunityRequestsPage = () => {
 
   const route = useRoute<RouteProp<RootStackParamList, "MyCommunityRequests">>()
   const communityId = route.params.communityId
+  const communityTitle = route.params.communityTitle
   const navigation = useNavigation<NavigationType>()
-
+  const title = `${communityTitle || ""}`
   const acceptRequestFunc = async (request: CommunityRequests) => {
     try {
       setLoading(true)
+
       if (request.user_id && request.requested_community && request.id)
         acceptRequest(
           setLoading,
           request.user_id,
           request.expo_push_token,
           request.requested_community,
-          request.id
+          request.id,
+          title
         )
       showAlert({
         title: "Request Accepted",
@@ -113,7 +115,13 @@ const CommunityRequestsPage = () => {
                 </Pressable>
                 <Pressable
                   onPress={() => {
-                    if (request.id) denyRequest(setLoading, request.id)
+                    if (request.id)
+                      denyRequest(
+                        setLoading,
+                        request.id,
+                        request.expo_push_token,
+                        title
+                      )
                     showAlert({
                       title: "Request Denied",
                       message: "User has been Denied Access",

@@ -1,4 +1,8 @@
-import { RootStackParamList, TabParamList } from "./@types/navigation"
+import {
+  NavigationType,
+  RootStackParamList,
+  TabParamList,
+} from "./@types/navigation"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { NavBar } from "../components"
@@ -68,9 +72,10 @@ import LoginWithEmail from "./UserAuth/LoginWithEmail"
 import SignUpWithEmail from "./UserAuth/SignUpWithEmail"
 import ViewFullUserProfile from "./userSide/Connections/ViewFullUserProfile"
 import AnnoucementsScreen from "./userSide/UserCommunities/components/AnnoucmentChannel"
-import AboutMeEdit from "./userSide/Profile/AddInfoComponents/AboutMeEdit"
 import AddBio from "./userSide/Profile/AddInfoComponents/AddBio"
 import ManageConnections from "./userSide/ManageConnections"
+import * as Notifications from "expo-notifications"
+import { useNavigation } from "@react-navigation/native"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -121,9 +126,27 @@ const NavStack = () => {
   const [userProfile, setUserProfile] = useState<
     Database["public"]["Tables"]["profiles"]["Row"] | null
   >(null)
+  const navigation = useNavigation<NavigationType>()
 
   useEffect(() => {
     getUserId(setCurrentUserId)
+  }, [])
+
+  useEffect(() => {
+    const subscription = Notifications.addNotificationResponseReceivedListener(
+      (response) => {
+        const data = response.notification.request.content.data
+        if (data.chatSession) {
+          navigation.navigate("MessagingScreen", {
+            chatSession: data.chatSession,
+          })
+        } else if (data.channel) {
+          navigation.navigate("ChannelScreen", { channelId: data.channel })
+        }
+      }
+    )
+
+    return () => subscription.remove()
   }, [])
 
   useEffect(() => {

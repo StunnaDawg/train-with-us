@@ -4,11 +4,8 @@ import { AuthProvider } from "./supabaseFunctions/authcontext"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 import * as SplashScreen from "expo-splash-screen"
-import React, { useEffect } from "react"
 import { Linking } from "react-native"
 import * as Notifications from "expo-notifications"
-import { useNavigation } from "@react-navigation/native"
-import { NavigationType } from "./@types/navigation"
 
 SplashScreen.preventAutoHideAsync()
 

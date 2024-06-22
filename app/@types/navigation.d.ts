@@ -102,6 +102,7 @@ export type RootStackParamList = {
 
   MyCommunityRequests: {
     communityId: number
+    communityTitle: string | undefined | null
   }
 
   MyCommunityMembers: {

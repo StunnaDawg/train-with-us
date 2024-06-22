@@ -1,5 +1,31 @@
 import supabase from "../../../lib/supabase"
 
+import { FunctionsHttpError } from "@supabase/supabase-js"
+
+const sendNotification = async (
+  token: string,
+  title: string,
+  body: string,
+  communityId: number
+) => {
+  console.log("Sending notification to", token)
+  const { data, error } = await supabase.functions.invoke("push", {
+    body: {
+      token,
+      titleWords: title,
+      bodyWords: body,
+      data: { communityId },
+    },
+  })
+
+  if (error && error instanceof FunctionsHttpError) {
+    const errorMessage = await error.context.json()
+    console.log("Function returned an error", errorMessage)
+  }
+
+  console.log("Notification sent:", data)
+}
+
 const requestToJoin = async (
   community_id: number,
   userId: string,
@@ -39,6 +65,14 @@ const requestToJoin = async (
   if (insertError) throw insertError
 
   showAlert("Request Sent", "Your request to join has been sent.")
+
+  if (expo_push_token)
+    await sendNotification(
+      expo_push_token,
+      "Request to Join",
+      first_name + " has requested to join your community.",
+      community_id
+    )
 }
 
 export default requestToJoin

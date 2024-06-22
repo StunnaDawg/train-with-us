@@ -106,7 +106,7 @@ const ProfileView = () => {
           />
         </View>
 
-        <View className="mx-1">
+        {/* <View className="mx-1">
           <GenericButton
             roundness="rounded-lg"
             textSize="text-xs"
@@ -127,7 +127,7 @@ const ProfileView = () => {
               }
             }}
           />
-        </View>
+        </View> */}
       </View>
 
       <View className="mx-3">
