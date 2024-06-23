@@ -6,6 +6,7 @@ import { NavigationType } from "../../../@types/navigation"
 import { Image } from "expo-image"
 import supabase from "../../../../lib/supabase"
 import CommunityContact from "./CommunityContact"
+import BackButton from "../../../components/BackButton"
 
 type ViewCommunityTitleProps = {
   community: Communities | null
@@ -44,6 +45,9 @@ const ViewCommunityTitle = ({
     <View>
       <View className="flex flex-row justify-between items-center">
         <View className="flex flex-row items-center">
+          <View className="ml-1">
+            <BackButton colour="white" />
+          </View>
           <View className="m-4">
             <Pressable onPress={() => navigation.goBack()}>
               <Image

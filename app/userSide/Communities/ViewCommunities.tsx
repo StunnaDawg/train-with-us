@@ -1,19 +1,23 @@
 import { View, SafeAreaView, ScrollView } from "react-native"
 import React, { useEffect, useState } from "react"
 import ViewCommunityTitle from "./components/ViewCommunityTitle"
-import CommunityContact from "./components/CommunityContact"
+
 import PhotoArray from "./components/PhotosArray"
 import CommunityAbout from "./components/CommunityAbout"
 import UpcomingCommunityEvents from "./components/UpcomingEvents"
-import { Communities } from "../../@types/supabaseTypes"
+import { Communities, Profile } from "../../@types/supabaseTypes"
 import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommunity"
 import { RootStackParamList } from "../../@types/navigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import JoinFooter from "./components/JoinFooter"
+import { useAuth } from "../../supabaseFunctions/authcontext"
+import getCommunityMembersUUID from "../../supabaseFunctions/getFuncs/getCommunityMembers"
 
 const ViewCommunities = () => {
+  const { user } = useAuth()
   const [loading, setLoading] = useState<boolean>(true)
   const [community, setCommunities] = useState<Communities | null>(null)
+  const [profiles, setProfiles] = useState<string[] | null>(null)
 
   const route =
     useRoute<RouteProp<RootStackParamList, "ViewCommunitiesScreen">>()
@@ -21,7 +25,11 @@ const ViewCommunities = () => {
 
   useEffect(() => {
     getSingleCommunity(setLoading, communityId, setCommunities)
+
+    getCommunityMembersUUID(setLoading, communityId, setProfiles)
   }, [communityId])
+
+  const isUserAMember = profiles?.includes(user!.id)
 
   return (
     <SafeAreaView className=" flex-1 bg-primary-900 ">
@@ -43,10 +51,12 @@ const ViewCommunities = () => {
         </View>
       </ScrollView>
 
-      <JoinFooter
-        communityId={communityId}
-        communityTitle={community?.community_title}
-      />
+      {!isUserAMember && (
+        <JoinFooter
+          communityId={communityId}
+          communityTitle={community?.community_title}
+        />
+      )}
     </SafeAreaView>
   )
 }

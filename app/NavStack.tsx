@@ -113,8 +113,9 @@ const UserFooter = () => {
       <Tab.Screen name="Events" component={Events} />
       <Tab.Screen name="Communities" component={CommunitiesHome} />
       <Tab.Screen name="Connections" component={Connections} />
-      <Tab.Screen name="Profile" component={ProfileView} />
+
       <Tab.Screen name="Community" component={CommunitiesDash} />
+      <Tab.Screen name="Profile" component={ProfileView} />
     </Tab.Navigator>
   )
 }

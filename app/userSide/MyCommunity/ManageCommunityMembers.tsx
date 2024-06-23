@@ -18,6 +18,7 @@ import MemberCard from "../Communities/components/MemberCard"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { set } from "date-fns"
 import showAlert from "../../utilFunctions/showAlert"
+import BackButton from "../../components/BackButton"
 
 const ManageCommunityMembers = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -117,7 +118,11 @@ const ManageCommunityMembers = () => {
   return (
     <SafeAreaView className="flex-1">
       <View className="m-2">
-        <Text className=" font-bold text-xl">Members</Text>
+        <View className="flex flex-row justify-between items-center">
+          <BackButton />
+          <Text className=" font-bold text-xl">Members</Text>
+          <View />
+        </View>
         <ScrollView className=" h-full">
           {!loading ? (
             communityMembers?.map((member) => {

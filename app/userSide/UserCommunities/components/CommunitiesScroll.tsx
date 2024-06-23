@@ -85,19 +85,21 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
 
   return (
     <View className="px-5">
-      <Pressable
-        className={`flex flex-row justify-between items-center border rounded-xl py-3 mt-4 mb-3 px-6 mx-10 ${
-          isPressed ? "bg-gray-200 " : "bg-white "
-        }`}
-        onPress={() => {
-          goToCommunity()
-        }}
-        onPressIn={handleOnPressIn}
-        onPressOut={handleOnPressOut}
-      >
-        <Text className="font-bold">My Community Settings</Text>
-        <FontAwesome6 name="house-chimney" size={20} color="black" />
-      </Pressable>
+      {currentUser?.community_created ? (
+        <Pressable
+          className={`flex flex-row justify-between items-center border rounded-xl py-3 mt-4 mb-3 px-6 mx-10 ${
+            isPressed ? "bg-gray-200 " : "bg-white "
+          }`}
+          onPress={() => {
+            goToCommunity()
+          }}
+          onPressIn={handleOnPressIn}
+          onPressOut={handleOnPressOut}
+        >
+          <Text className="font-bold">My Community Settings</Text>
+          <FontAwesome6 name="house-chimney" size={20} color="black" />
+        </Pressable>
+      ) : null}
       <View className="flex flex-row justify-between px-3 mb-3 items-center">
         <View>
           <Text className="font-bold text-white text-lg">My Communities</Text>

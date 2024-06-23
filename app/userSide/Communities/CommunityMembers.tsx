@@ -13,6 +13,7 @@ import getCommunityMembersUUID from "../../supabaseFunctions/getFuncs/getCommuni
 import supabase from "../../../lib/supabase"
 import getProfiles from "../../supabaseFunctions/getFuncs/getProfiles"
 import MemberCard from "./components/MemberCard"
+import BackButton from "../../components/BackButton"
 
 const CommunityMembers = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -46,7 +47,11 @@ const CommunityMembers = () => {
   return (
     <SafeAreaView className="flex-1">
       <View className="m-2">
-        <Text className=" font-bold text-xl">Members</Text>
+        <View className="flex flex-row justify-between items-center">
+          <BackButton />
+          <Text className=" font-bold text-xl">Members</Text>
+          <View />
+        </View>
         <ScrollView className=" h-full">
           {!loading ? (
             communityMembers?.map((member) => {

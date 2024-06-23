@@ -70,7 +70,7 @@ const ViewEvent = () => {
         >
           <View>
             <View className="mx-3">
-              <BackButton size={36} colour="white" />
+              <BackButton size={22} colour="white" />
             </View>
             <ViewEventTitle
               userId={user?.id}
@@ -97,7 +97,7 @@ const ViewEvent = () => {
         </ScrollView>
 
         {!isAttending ? (
-          <View className="absolute inset-x-0 bottom-0 pb-12 bg-white/75">
+          <View className="absolute inset-x-0 bottom-0 bg-white/75">
             <Checkout
               ticketPrice={event?.price ? event.price : 0}
               event={event}

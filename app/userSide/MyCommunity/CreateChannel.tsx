@@ -11,6 +11,7 @@ import * as ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system"
 import { decode } from "base64-arraybuffer"
 import BackButton from "../../components/BackButton"
+import Loading from "../../components/Loading"
 
 type ChannelTypeOption = "Text" | "Annoucement" | "Forum"
 
@@ -69,45 +70,51 @@ const CreateChannel = () => {
   const channelOptions: ChannelTypeOption[] = ["Text", "Annoucement", "Forum"]
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-between w-full p-3">
-        <View className="flex flex-row items-center">
-          <BackButton />
-          <Text className="text-lg font-semibold mx-3">Create Channel</Text>
-        </View>
+      {!loading ? (
+        <>
+          <View className="flex flex-row justify-between w-full p-3">
+            <View className="flex flex-row items-center">
+              <BackButton />
+              <Text className="text-lg font-semibold mx-3">Create Channel</Text>
+            </View>
 
-        <Pressable
-          onPress={async () => {
-            await handleChannelCreation()
-            navigation.goBack()
-          }}
-        >
-          <Text className="text-lg font-bold underline">Done</Text>
-        </Pressable>
-      </View>
+            <Pressable
+              onPress={async () => {
+                await handleChannelCreation()
+                navigation.goBack()
+              }}
+            >
+              <Text className="text-lg font-bold underline">Done</Text>
+            </Pressable>
+          </View>
 
-      <NewPhoto setProfilePic={setChannelPic} />
-      <View className="border w-full rounded-none p-3">
-        <TextInput
-          value={channelName}
-          onChangeText={(text: string) => setChannelName(text)}
-          placeholder="new-channel"
-        />
-      </View>
-
-      <View className="w-full rounded-none p-3 mt-5">
-        <Text className="text-sm font-bold">Channel Type</Text>
-
-        {channelOptions.map((type, index) => (
-          <View key={index} className="flex flex-row justify-between m-2">
-            <Text className="text-sm font-bold">#{type}</Text>
-            <BouncyCheckbox
-              size={20}
-              isChecked={selectedChannelType === type}
-              onPress={() => handleSelectType(type)}
+          <NewPhoto setProfilePic={setChannelPic} />
+          <View className="border w-full rounded-none p-3">
+            <TextInput
+              value={channelName}
+              onChangeText={(text: string) => setChannelName(text)}
+              placeholder="new-channel"
             />
           </View>
-        ))}
-      </View>
+
+          <View className="w-full rounded-none p-3 mt-5">
+            <Text className="text-sm font-bold">Channel Type</Text>
+
+            {channelOptions.map((type, index) => (
+              <View key={index} className="flex flex-row justify-between m-2">
+                <Text className="text-sm font-bold">#{type}</Text>
+                <BouncyCheckbox
+                  size={20}
+                  isChecked={selectedChannelType === type}
+                  onPress={() => handleSelectType(type)}
+                />
+              </View>
+            ))}
+          </View>
+        </>
+      ) : (
+        <Loading />
+      )}
     </SafeAreaView>
   )
 }

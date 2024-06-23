@@ -24,6 +24,8 @@ import CommunityImageGrid from "./ImageGrid"
 import showAlert from "../../utilFunctions/showAlert"
 import CancelButton from "../../components/CancelButton"
 import { TouchableWithoutFeedback } from "react-native"
+import { set } from "mongoose"
+import Loading from "../../components/Loading"
 
 const CommunitySettings = () => {
   const [communityState, setCommunityState] = useState<Communities | null>(
@@ -68,6 +70,7 @@ const CommunitySettings = () => {
 
   const updateCommunity = () => {
     setTimeout(() => {
+      setLoading(true)
       if (!user?.id) return
       if (!community) return
 
@@ -115,94 +118,103 @@ const CommunitySettings = () => {
         title: "Community Updated",
         message: "Your community has been updated.",
       })
+      setLoading(false)
       navigation.goBack()
     }, 2000)
   }
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="mx-2">
-        <CancelButton size={32} />
-      </View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView>
-            <View>
-              <CommunityProfilePicSupa
-                communityId={community.id}
-                imageUrl={singleImageFile}
-                imageUrlToRead={singleImageFile}
-                setImageUrl={setSingleImageFile}
-              />
-            </View>
-
-            <View className="flex flex-row mx-5">
-              <View className="w-full">
-                <Text className="font-bold text-sm">Community Name</Text>
-                <View className="border rounded-lg p-2 w-full">
-                  <TextInput
-                    value={communityName} // Binds the TextInput value to the state
-                    onChangeText={setCommunityName}
+      {!loading ? (
+        <>
+          <View className="mx-2">
+            <CancelButton size={32} />
+          </View>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+          >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <ScrollView>
+                <View>
+                  <CommunityProfilePicSupa
+                    communityId={community.id}
+                    imageUrl={singleImageFile}
+                    imageUrlToRead={singleImageFile}
+                    setImageUrl={setSingleImageFile}
                   />
                 </View>
 
-                <Text className="font-bold text-sm">Community Description</Text>
-                <View className="border rounded-lg p-2 w-full">
-                  <TextInput
-                    value={communityAbout}
-                    onChangeText={setCommunityAbout} // Increased font size, padding and fixed height
-                    placeholder="Description of your community..."
-                    multiline={true} // Allow multi-line input
-                    numberOfLines={10} // Default number of lines when multiline is true
-                    className="h-20"
-                  />
+                <View className="flex flex-row mx-5">
+                  <View className="w-full">
+                    <Text className="font-bold text-sm">Community Name</Text>
+                    <View className="border rounded-lg p-2 w-full">
+                      <TextInput
+                        value={communityName} // Binds the TextInput value to the state
+                        onChangeText={setCommunityName}
+                      />
+                    </View>
+
+                    <Text className="font-bold text-sm">
+                      Community Description
+                    </Text>
+                    <View className="border rounded-lg p-2 w-full">
+                      <TextInput
+                        value={communityAbout}
+                        onChangeText={setCommunityAbout} // Increased font size, padding and fixed height
+                        placeholder="Description of your community..."
+                        multiline={true} // Allow multi-line input
+                        numberOfLines={10} // Default number of lines when multiline is true
+                        className="h-20"
+                      />
+                    </View>
+
+                    <Text className="font-bold text-sm">Community Style</Text>
+                    <View className="border rounded-lg p-2 w-full">
+                      <TextInput
+                        value={communityStyle} // Binds the TextInput value to the state
+                        onChangeText={setCommunityStyle}
+                      />
+                    </View>
+
+                    <Text className="font-bold text-sm">Community Address</Text>
+                    <View className="border rounded-lg p-2 w-full">
+                      <TextInput
+                        value={location}
+                        onChangeText={setLocation}
+                        placeholder="Please input an accurate location"
+                      />
+                    </View>
+
+                    <Text className="font-bold text-sm">
+                      Community Phone Number
+                    </Text>
+                    <View className="border rounded-lg p-2 w-full">
+                      <TextInput
+                        value={communityNumber}
+                        onChangeText={setCommunityNumber}
+                        placeholder="Please input an accurate phone number"
+                      />
+                    </View>
+                  </View>
+                </View>
+                <View>
+                  <CommunityImageGrid community={community} />
                 </View>
 
-                <Text className="font-bold text-sm">Community Style</Text>
-                <View className="border rounded-lg p-2 w-full">
-                  <TextInput
-                    value={communityStyle} // Binds the TextInput value to the state
-                    onChangeText={setCommunityStyle}
+                <View className="flex flex-row justify-center my-2">
+                  <BasicButton
+                    text="Update Community"
+                    buttonFunction={updateCommunity}
                   />
                 </View>
-
-                <Text className="font-bold text-sm">Community Address</Text>
-                <View className="border rounded-lg p-2 w-full">
-                  <TextInput
-                    value={location}
-                    onChangeText={setLocation}
-                    placeholder="Please input an accurate location"
-                  />
-                </View>
-
-                <Text className="font-bold text-sm">
-                  Community Phone Number
-                </Text>
-                <View className="border rounded-lg p-2 w-full">
-                  <TextInput
-                    value={communityNumber}
-                    onChangeText={setCommunityNumber}
-                    placeholder="Please input an accurate phone number"
-                  />
-                </View>
-              </View>
-            </View>
-            <View>
-              <CommunityImageGrid community={community} />
-            </View>
-
-            <View className="flex flex-row justify-center my-2">
-              <BasicButton
-                text="Update Community"
-                buttonFunction={updateCommunity}
-              />
-            </View>
-          </ScrollView>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+              </ScrollView>
+            </TouchableWithoutFeedback>
+          </KeyboardAvoidingView>
+        </>
+      ) : (
+        <Loading />
+      )}
     </SafeAreaView>
   )
 }

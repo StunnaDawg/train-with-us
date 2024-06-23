@@ -26,6 +26,7 @@ import showAlert from "../../utilFunctions/showAlert"
 import { FontAwesome6 } from "@expo/vector-icons"
 import BackButton from "../../components/BackButton"
 import { TouchableWithoutFeedback } from "react-native"
+import Loading from "../../components/Loading"
 
 const EditEvent = () => {
   const { user } = useAuth()
@@ -92,230 +93,248 @@ const EditEvent = () => {
   }, [event])
   return (
     <SafeAreaView className="flex-1">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView className=" p-4 bg-white">
-            <View className="flex flex-row justify-between items-center mb-8">
-              <BackButton />
-              <Text className="mx-1 text-lg font-semibold ">Update Event</Text>
+      {!loading ? (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <ScrollView className=" p-4 bg-white">
+              <View className="flex flex-row justify-between items-center mb-8">
+                <BackButton />
+                <Text className="mx-1 text-lg font-semibold ">
+                  Update Event
+                </Text>
+                <Pressable
+                  onPress={() => {
+                    deleteEvent()
+                  }}
+                >
+                  <FontAwesome6 name="trash" size={24} color="black" />
+                </Pressable>
+              </View>
+
+              <View>
+                <EventCoverPhotoEdit
+                  eventId={eventId}
+                  imageUrl={eventPicture}
+                  imageUrlToRead={eventPicture}
+                  setImageUrl={setEventPicture}
+                />
+              </View>
+
+              <View className="mb-4">
+                <Text className="mb-2 text-sm font-semibold text-gray">
+                  Title
+                </Text>
+                <TextInput
+                  value={eventTitle}
+                  onChangeText={setEventTitle}
+                  placeholder="Add a Title"
+                  className="border  p-2 rounded-lg"
+                />
+              </View>
+
+              <View className="mb-4">
+                <Text className="mb-2 text-sm font-semibold text-gray">
+                  Description
+                </Text>
+                <TextInput
+                  value={description}
+                  onChangeText={setDescription}
+                  placeholder="Event Description"
+                  className="border p-2 rounded-lg"
+                  multiline={true}
+                />
+              </View>
+
+              <View className="mb-4">
+                <Text className="mb-2 text-sm font-semibold text-gray">
+                  Date
+                </Text>
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={date}
+                  mode="date"
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChangeDate}
+                  className="mb-4"
+                />
+              </View>
+
+              <View className="mb-4">
+                <Text className="mb-2 text-sm font-semibold text-gray">
+                  Time
+                </Text>
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={date}
+                  mode="time"
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChangeDate}
+                />
+              </View>
+
+              <View className="mb-4">
+                <Text className="mb-2 text-sm font-semibold text-gray">
+                  Price
+                </Text>
+                <TextInput
+                  value={price || ""}
+                  onChangeText={setPrice}
+                  placeholder="Set a Price"
+                  className="border  p-2 rounded-lg"
+                  keyboardType="numeric"
+                />
+              </View>
+
+              <View className="mb-4">
+                <Text className="mb-2 text-sm font-semibold text-gray">
+                  Location
+                </Text>
+                <TextInput
+                  value={location || ""}
+                  onChangeText={setLocation}
+                  placeholder="Set Location"
+                  className="border  p-2 rounded-lg"
+                  keyboardType="numeric"
+                />
+              </View>
+
+              <View className="mb-4">
+                <Text className="mb-2 text-sm font-semibold text-gray">
+                  Event Style
+                </Text>
+                <TextInput
+                  value={eventStyle}
+                  onChangeText={setEventStyle}
+                  placeholder="What's the event style? eg: Hyrox, Crossfit, etc."
+                  className="border  p-2 rounded-lg"
+                />
+              </View>
+
+              <View className="mb-4">
+                <Text className="mb-2 text-sm font-semibold text-gray">
+                  Attendance Limit
+                </Text>
+                <TextInput
+                  value={eventLimit}
+                  onChangeText={setEventLimit}
+                  placeholder="Attendance Limit, leave blank for no limit"
+                  className="border  p-2 rounded-lg"
+                />
+              </View>
+
               <Pressable
-                onPress={() => {
-                  deleteEvent()
-                }}
-              >
-                <FontAwesome6 name="trash" size={24} color="black" />
-              </Pressable>
-            </View>
+                onPress={async () => {
+                  setTimeout(() => {
+                    setLoading(true)
+                    if (!currentUser?.id && !currentUser?.community_created)
+                      return
+                    if (!event) return
 
-            <View>
-              <EventCoverPhotoEdit
-                eventId={eventId}
-                imageUrl={eventPicture}
-                imageUrlToRead={eventPicture}
-                setImageUrl={setEventPicture}
-              />
-            </View>
+                    console.log(event.event_host, eventId)
 
-            <View className="mb-4">
-              <Text className="mb-2 text-sm font-semibold text-gray">
-                Title
-              </Text>
-              <TextInput
-                value={eventTitle}
-                onChangeText={setEventTitle}
-                placeholder="Add a Title"
-                className="border  p-2 rounded-lg"
-              />
-            </View>
-
-            <View className="mb-4">
-              <Text className="mb-2 text-sm font-semibold text-gray">
-                Description
-              </Text>
-              <TextInput
-                value={description}
-                onChangeText={setDescription}
-                placeholder="Event Description"
-                className="border p-2 rounded-lg"
-                multiline={true}
-              />
-            </View>
-
-            <View className="mb-4">
-              <Text className="mb-2 text-sm font-semibold text-gray">Date</Text>
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={date}
-                mode="date"
-                is24Hour={true}
-                display="default"
-                onChange={onChangeDate}
-                className="mb-4"
-              />
-            </View>
-
-            <View className="mb-4">
-              <Text className="mb-2 text-sm font-semibold text-gray">Time</Text>
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={date}
-                mode="time"
-                is24Hour={true}
-                display="default"
-                onChange={onChangeDate}
-              />
-            </View>
-
-            <View className="mb-4">
-              <Text className="mb-2 text-sm font-semibold text-gray">
-                Price
-              </Text>
-              <TextInput
-                value={price || ""}
-                onChangeText={setPrice}
-                placeholder="Set a Price"
-                className="border  p-2 rounded-lg"
-                keyboardType="numeric"
-              />
-            </View>
-
-            <View className="mb-4">
-              <Text className="mb-2 text-sm font-semibold text-gray">
-                Location
-              </Text>
-              <TextInput
-                value={location || ""}
-                onChangeText={setLocation}
-                placeholder="Set Location"
-                className="border  p-2 rounded-lg"
-                keyboardType="numeric"
-              />
-            </View>
-
-            <View className="mb-4">
-              <Text className="mb-2 text-sm font-semibold text-gray">
-                Event Style
-              </Text>
-              <TextInput
-                value={eventStyle}
-                onChangeText={setEventStyle}
-                placeholder="What's the event style? eg: Hyrox, Crossfit, etc."
-                className="border  p-2 rounded-lg"
-              />
-            </View>
-
-            <View className="mb-4">
-              <Text className="mb-2 text-sm font-semibold text-gray">
-                Attendance Limit
-              </Text>
-              <TextInput
-                value={eventLimit}
-                onChangeText={setEventLimit}
-                placeholder="Attendance Limit, leave blank for no limit"
-                className="border  p-2 rounded-lg"
-              />
-            </View>
-
-            <Pressable
-              onPress={async () => {
-                setTimeout(() => {
-                  if (!currentUser?.id && !currentUser?.community_created)
-                    return
-                  if (!event) return
-
-                  console.log(event.event_host, eventId)
-
-                  if (!eventTitle.trim()) {
-                    alert("Title is required.")
-                    return
-                  }
-
-                  if (event.event_title !== eventTitle) {
-                    updateSingleEventTrait(
-                      setLoading,
-                      eventId,
-                      "event_title",
-                      eventTitle
-                    )
-                  }
-
-                  if (event.event_description !== description) {
-                    updateSingleEventTrait(
-                      setLoading,
-                      eventId,
-                      "event_description",
-                      description
-                    )
-                  }
-
-                  if (event.location !== location) {
-                    updateSingleEventTrait(
-                      setLoading,
-                      eventId,
-                      "location",
-                      location
-                    )
-                  }
-
-                  if (event.price !== Number(price)) {
-                    updateSingleEventTrait(
-                      setLoading,
-                      eventId,
-                      "price",
-                      Number(price)
-                    )
-                  }
-
-                  if (event.event_style !== eventStyle) {
-                    updateSingleEventTrait(
-                      setLoading,
-                      eventId,
-                      "event_style",
-                      eventStyle
-                    )
-                  }
-
-                  if (event.event_limit !== Number(eventLimit)) {
-                    const eventLimitNumber =
-                      eventLimit.trim() === "" ? null : Number(eventLimit)
-
-                    if (!eventLimitNumber || eventLimitNumber <= 0) {
-                      showAlert({
-                        title: "Invalid Limit",
-                        message:
-                          "Please enter a valid limit greater than zero.",
-                      })
+                    if (!eventTitle.trim()) {
+                      alert("Title is required.")
                       return
                     }
-                    updateSingleEventTrait(
-                      setLoading,
-                      eventId,
-                      "event_limit",
-                      eventLimitNumber
-                    )
-                  }
 
-                  if (event.date !== null) {
-                    const dateVar = Date.parse(event?.date)
-                    const editDate = new Date(dateVar)
-                    if (editDate !== date) {
-                      updateSingleEventTrait(setLoading, eventId, "date", date)
+                    if (event.event_title !== eventTitle) {
+                      updateSingleEventTrait(
+                        setLoading,
+                        eventId,
+                        "event_title",
+                        eventTitle
+                      )
                     }
-                  }
 
-                  navigation.goBack()
-                }, 2000)
-              }}
-              className=" bg-black p-4 rounded-lg items-center mb-20"
-            >
-              <Text className="text-white text-lg font-bold">Update Event</Text>
-            </Pressable>
-          </ScrollView>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+                    if (event.event_description !== description) {
+                      updateSingleEventTrait(
+                        setLoading,
+                        eventId,
+                        "event_description",
+                        description
+                      )
+                    }
+
+                    if (event.location !== location) {
+                      updateSingleEventTrait(
+                        setLoading,
+                        eventId,
+                        "location",
+                        location
+                      )
+                    }
+
+                    if (event.price !== Number(price)) {
+                      updateSingleEventTrait(
+                        setLoading,
+                        eventId,
+                        "price",
+                        Number(price)
+                      )
+                    }
+
+                    if (event.event_style !== eventStyle) {
+                      updateSingleEventTrait(
+                        setLoading,
+                        eventId,
+                        "event_style",
+                        eventStyle
+                      )
+                    }
+
+                    if (event.event_limit !== Number(eventLimit)) {
+                      const eventLimitNumber =
+                        eventLimit.trim() === "" ? null : Number(eventLimit)
+
+                      if (!eventLimitNumber || eventLimitNumber <= 0) {
+                        showAlert({
+                          title: "Invalid Limit",
+                          message:
+                            "Please enter a valid limit greater than zero.",
+                        })
+                        return
+                      }
+                      updateSingleEventTrait(
+                        setLoading,
+                        eventId,
+                        "event_limit",
+                        eventLimitNumber
+                      )
+                    }
+
+                    if (event.date !== null) {
+                      const dateVar = Date.parse(event?.date)
+                      const editDate = new Date(dateVar)
+                      if (editDate !== date) {
+                        updateSingleEventTrait(
+                          setLoading,
+                          eventId,
+                          "date",
+                          date
+                        )
+                      }
+                    }
+                    setLoading(false)
+                    navigation.goBack()
+                  }, 2000)
+                }}
+                className=" bg-black p-4 rounded-lg items-center mb-20"
+              >
+                <Text className="text-white text-lg font-bold">
+                  Update Event
+                </Text>
+              </Pressable>
+            </ScrollView>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      ) : (
+        <Loading />
+      )}
     </SafeAreaView>
   )
 }
