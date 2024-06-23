@@ -77,6 +77,7 @@ import ManageConnections from "./userSide/ManageConnections"
 import * as Notifications from "expo-notifications"
 import { useNavigation } from "@react-navigation/native"
 import Messages from "./userSide/UserCommunities/components/Messages"
+import SexualityEdit from "./userSide/Profile/AddInfoComponents/SexualityEdit"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -276,6 +277,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="MusicPreference"
                 component={MusicPref}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="SexualityEdit"
+                component={SexualityEdit}
               />
 
               <Stack.Screen

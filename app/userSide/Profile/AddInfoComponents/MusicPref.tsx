@@ -8,6 +8,7 @@ import supabase from "../../../../lib/supabase"
 import NextButton from "../../../components/NextButton"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import EnhancedTextInput from "../../../components/TextInput"
+import BackButton from "../../../components/BackButton"
 
 type MusicOptions =
   | "Pop"
@@ -121,12 +122,16 @@ const MusicPref = () => {
   return (
     <SafeAreaView className="flex-1">
       <ScrollView>
-        <View className="flex justify-center mx-12">
-          <View className="items-start w-full">
-            <View className="my-5">
-              <Text className="font-bold text-2xl">
+        <View className="flex justify-center ">
+          <View>
+            <View className="flex flex-row justify-between items-center">
+              <View className="ml-2">
+                <BackButton />
+              </View>
+              <Text className="font-bold text-lg text-center">
                 Music Preferences While Working Out?
               </Text>
+              <View />
             </View>
 
             <View className="flex flex-row justify-center">

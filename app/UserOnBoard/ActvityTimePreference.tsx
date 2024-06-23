@@ -7,6 +7,7 @@ import BouncyCheckbox from "react-native-bouncy-checkbox"
 import { NavigationType } from "../@types/navigation"
 import supabase from "../../lib/supabase"
 import { useAuth } from "../supabaseFunctions/authcontext"
+import BackButton from "../components/BackButton"
 
 type TimeOption =
   | "Morning"
@@ -20,7 +21,6 @@ const ActivityTimePreference = () => {
   const navigation = useNavigation<NavigationType>()
 
   const [selectedTime, setSelectedTime] = useState<TimeOption>("Morning")
-  const [displayOnProfile, setDisplayOnProfile] = useState<boolean>(false)
   const { user } = useAuth()
 
   const handleSelectTime = (Time: TimeOption) => {
@@ -51,32 +51,32 @@ const ActivityTimePreference = () => {
   ]
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex justify-center mx-12">
-        <View className="items-start w-full">
-          <View className="my-5">
-            <Text className="font-bold text-2xl">
-              What Time Do You Prefer to Workout?
-            </Text>
-          </View>
+      <View className="flex justify-center">
+        <View className="flex flex-row justify-between items-center mx-1">
+          <BackButton />
+          <Text className="font-bold text-lg">
+            What Time Do You Prefer to Workout?
+          </Text>
+          <View />
+        </View>
 
-          {TimeOptions.map((Time, index) => (
-            <View
-              key={index}
-              className="w-full border-b flex flex-row justify-between items-center p-2"
-            >
-              <Text className="text-lg font-semibold">{Time}</Text>
-              <BouncyCheckbox
-                fillColor="blue"
-                unFillColor="#FFFFFF"
-                isChecked={selectedTime === Time}
-                onPress={() => handleSelectTime(Time)}
-              />
-            </View>
-          ))}
-        </View>
-        <View className="mt-4 flex flex-row justify-end">
-          <NextButton onPress={() => handleUserUpdate()} />
-        </View>
+        {TimeOptions.map((Time, index) => (
+          <View
+            key={index}
+            className="w-full border-b flex flex-row justify-between items-center p-2"
+          >
+            <Text className="text-lg font-semibold">{Time}</Text>
+            <BouncyCheckbox
+              fillColor="blue"
+              unFillColor="#FFFFFF"
+              isChecked={selectedTime === Time}
+              onPress={() => handleSelectTime(Time)}
+            />
+          </View>
+        ))}
+      </View>
+      <View className="mt-4 flex flex-row justify-end">
+        <NextButton onPress={() => handleUserUpdate()} />
       </View>
     </SafeAreaView>
   )

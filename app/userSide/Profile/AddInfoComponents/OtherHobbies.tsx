@@ -8,6 +8,7 @@ import supabase from "../../../../lib/supabase"
 import NextButton from "../../../components/NextButton"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import EnhancedTextInput from "../../../components/TextInput"
+import BackButton from "../../../components/BackButton"
 
 type HobbiesOptions =
   | "Gardening"
@@ -103,12 +104,16 @@ const Hobbies = () => {
   return (
     <SafeAreaView className="flex-1">
       <ScrollView>
-        <View className="flex justify-center mx-12">
-          <View className="items-start w-full">
-            <View className="my-5">
-              <Text className="font-bold text-2xl text-center">
+        <View className="">
+          <View>
+            <View className="flex flex-row justify-between items-center">
+              <View className="ml-2">
+                <BackButton />
+              </View>
+              <Text className="font-bold text-lg">
                 Non-Fitness related Hobbies
               </Text>
+              <View />
             </View>
 
             <View className="flex flex-row justify-center">

@@ -7,6 +7,7 @@ import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
 import NextButton from "../../../components/NextButton"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
+import BackButton from "../../../components/BackButton"
 
 type LvlOptions =
   | "Beginner"
@@ -61,12 +62,14 @@ const FitnessLevel = () => {
   return (
     <SafeAreaView className="flex-1">
       <ScrollView>
-        <View className="flex justify-center mx-12">
-          <View className="items-start w-full">
-            <View className="my-5">
-              <Text className="font-bold text-2xl">
+        <View className="flex justify-center">
+          <View>
+            <View className="flex flex-row justify-between items-center mx-2">
+              <BackButton />
+              <Text className="font-bold text-lg">
                 What are your fitness interests
               </Text>
+              <View />
             </View>
 
             {LvlOptions.map((Lvl, index) => (
@@ -76,7 +79,7 @@ const FitnessLevel = () => {
               >
                 <Text className="text-lg font-semibold">{Lvl}</Text>
                 <BouncyCheckbox
-                  isChecked={selectedLvl.includes(Lvl)}
+                  isChecked={selectedLvl?.includes(Lvl)}
                   onPress={() => handleSelectLvl(Lvl)}
                 />
               </View>

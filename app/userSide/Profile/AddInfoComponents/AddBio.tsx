@@ -5,6 +5,7 @@ import NextButton from "../../../components/NextButton"
 import supabase from "../../../../lib/supabase"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { NavigationType, RootStackParamList } from "../../../@types/navigation"
+import BackButton from "../../../components/BackButton"
 
 const AddBio = () => {
   const route = useRoute<RouteProp<RootStackParamList, "EditBio">>()
@@ -34,12 +35,16 @@ const AddBio = () => {
   return (
     <SafeAreaView className="flex-1">
       <ScrollView>
-        <View className="flex justify-center mx-12">
-          <View className="items-start w-full">
-            <View className="flex flex-row justify-center my-5">
+        <View className="flex justify-center">
+          <View>
+            <View className="flex flex-row justify-between items-center">
+              <View className="mx-1">
+                <BackButton />
+              </View>
               <Text className="font-bold text-lg text-center">
-                What are you looking for?
+                What do you want people to know about you?
               </Text>
+              <View />
             </View>
 
             <View className="flex flex-row justify-center">

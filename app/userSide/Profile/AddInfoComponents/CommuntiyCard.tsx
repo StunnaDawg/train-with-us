@@ -19,7 +19,7 @@ const CommunityCardAboutMe = ({ community }: CommunityCardProps) => {
     <View className="flex flex-row items-center">
       <View className="m-2">
         <SinglePic
-          size={90}
+          size={50}
           item={community.community_profile_pic}
           avatarRadius={100}
           noAvatarRadius={100}
@@ -27,7 +27,7 @@ const CommunityCardAboutMe = ({ community }: CommunityCardProps) => {
       </View>
 
       <View className="flex-col flex-1">
-        <Text className="font-bold text-2xl">{community.community_title}</Text>
+        <Text className="font-bold text-lg">{community.community_title}</Text>
         <View className="border-b p-3" />
       </View>
     </View>

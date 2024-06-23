@@ -8,6 +8,7 @@ import supabase from "../../../../lib/supabase"
 import NextButton from "../../../components/NextButton"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import EnhancedTextInput from "../../../components/TextInput"
+import BackButton from "../../../components/BackButton"
 
 type FitnessBucketListOptions =
   | "Run a 5K"
@@ -101,15 +102,20 @@ const FitnessBucketList = () => {
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-center mx-12">
-        <View className="items-start w-full">
-          <View className="my-5">
-            <Text className="font-bold text-2xl text-center">
+      <View className="flex flex-row justify-center">
+        <View>
+          <View className="flex flex-row justify-between items-center">
+            <View className="mr-5">
+              <BackButton />
+            </View>
+
+            <Text className="font-bold text-lg text-center">
               What's on your Fitness Bucket List?
             </Text>
+            <View />
           </View>
 
-          <View className="flex flex-row justify-center">
+          <View className="flex flex-row justify-center my-2">
             <EnhancedTextInput
               text={bucketList}
               setText={setBucketList}

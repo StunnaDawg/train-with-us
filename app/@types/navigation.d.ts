@@ -188,6 +188,8 @@ export type RootStackParamList = {
   ManageConnections: undefined
 
   DirectMessageTab: undefined
+
+  SexualityEdit: undefined
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

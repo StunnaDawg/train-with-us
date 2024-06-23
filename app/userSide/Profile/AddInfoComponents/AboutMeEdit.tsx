@@ -108,7 +108,7 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
 
       <View className="border-b border-black/45 p-2">
         <Pressable
-          onPress={() => navigation.navigate("Sexuality")}
+          onPress={() => navigation.navigate("SexualityEdit")}
           className="flex flex-row justify-between items-center"
         >
           <Text className=" font-bold text-sm">

@@ -17,6 +17,7 @@ import supabase from "../../../../lib/supabase"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import CommunityCardAboutMe from "./CommuntiyCard"
+import BackButton from "../../../components/BackButton"
 
 const PrimaryGym = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -67,10 +68,15 @@ const PrimaryGym = () => {
   }, [currentUser])
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-center">
-        <Text className="text-xl">
-          Press your primary gym from the list below
+      <View className="flex flex-row justify-between items-center">
+        <View className="ml-1">
+          <BackButton />
+        </View>
+
+        <Text className="font-bold text-lg text-center mx-2">
+          Select your primary gym from the list below
         </Text>
+        <View />
       </View>
       <ScrollView>
         {communities &&
