@@ -3,6 +3,7 @@ import React from "react"
 import { useNavigation } from "@react-navigation/native"
 import WhiteSkinnyButton from "../../components/WhiteSkinnyButton"
 import { NavigationType, TabNavigationType } from "../../@types/navigation"
+import GenericButton from "../../components/GenericButton"
 
 const PurchaseScreen = () => {
   const navigation = useNavigation<TabNavigationType | NavigationType>()
@@ -17,15 +18,39 @@ const PurchaseScreen = () => {
   return (
     <SafeAreaView className="flex-1 items-center justify-center">
       <View className="flex flex-col items-center justify-center">
-        <Text>Purchase Complete</Text>
-        <Text>Event Booked!</Text>
+        <View className="items-center">
+          <Text className="font-bold text-xl">Event Booked!</Text>
+        </View>
 
-        <WhiteSkinnyButton text="Go Home" buttonFunction={goToHome} />
+        <View className="m-2">
+          <GenericButton
+            textSize="text-sm"
+            width={150}
+            roundness="rounded-xl"
+            textCenter={true}
+            colourPressed="bg-slate-200"
+            colourDefault="bg-white"
+            borderColourPressed="border-gray-200"
+            borderColourDefault="border-black"
+            text="Return to Events Page"
+            buttonFunction={() => goToHome()}
+          />
+        </View>
 
-        <WhiteSkinnyButton
-          text="View My Events"
-          buttonFunction={goToMyEvents}
-        />
+        <View className="m-2">
+          <GenericButton
+            textSize="text-sm"
+            width={150}
+            roundness="rounded-xl"
+            textCenter={true}
+            colourPressed="bg-slate-200"
+            colourDefault="bg-white"
+            borderColourPressed="border-gray-200"
+            borderColourDefault="border-black"
+            text="View My Events"
+            buttonFunction={() => goToMyEvents()}
+          />
+        </View>
       </View>
     </SafeAreaView>
   )
