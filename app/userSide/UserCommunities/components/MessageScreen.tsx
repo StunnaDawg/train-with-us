@@ -15,7 +15,12 @@ import {
 import SinglePic from "../../../components/SinglePic"
 import { RootStackParamList } from "../../../@types/navigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
-import { Events, Messages, Profile } from "../../../@types/supabaseTypes"
+import {
+  Communities,
+  Events,
+  Messages,
+  Profile,
+} from "../../../@types/supabaseTypes"
 import getChatSessionMessages from "../../../supabaseFunctions/getFuncs/getChatSessionMessages"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import sendMessage from "../../../supabaseFunctions/addFuncs/sendMessage"
@@ -24,24 +29,39 @@ import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import sendNotification from "../../../utilFunctions/sendNotification"
 import upsertChatSession from "../../../supabaseFunctions/updateFuncs/updateChatSession"
 import BackButton from "../../../components/BackButton"
-import { get } from "mongoose"
 import getSingleEvent from "../../../supabaseFunctions/getFuncs/getSingleEvent"
 import EventCard from "../../Events/components/EventCard"
+import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
+import CommunityMessageCard from "./CommunityMessageCard"
 
 type UserMessage = {
   message: string | null
   isLink: boolean
   eventId: number | null
+  communityId: number | null
 }
 
-const UserMessage = ({ message, isLink, eventId }: UserMessage) => {
+const UserMessage = ({
+  message,
+  isLink,
+  eventId,
+  communityId,
+}: UserMessage) => {
   const [event, setEvent] = useState<Events | null>(null)
+  const [community, setCommunity] = useState<Communities | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
+  const { user } = useAuth()
 
   useEffect(() => {
     if (!eventId || isLink === false) return
     getSingleEvent(setLoading, eventId, setEvent)
   }, [eventId])
+
+  useEffect(() => {
+    if (!communityId || isLink === false) return
+    getSingleCommunity(setLoading, communityId, setCommunity)
+  }, [communityId])
+
   return (
     <View className="flex flex-row justify-end mt-2 mr-4 ml-36">
       {isLink && event ? (
@@ -60,6 +80,13 @@ const UserMessage = ({ message, isLink, eventId }: UserMessage) => {
             />
           </View>
         </View>
+      ) : isLink && community ? (
+        <View>
+          <View className="rounded-2xl bg-blue-500/80 p-2 mb-1">
+            <Text className="font-bold text-xs">{message}</Text>
+          </View>
+          <CommunityMessageCard community={community} userId={user?.id} />
+        </View>
       ) : (
         <View>
           <View className="rounded-2xl bg-blue-500/80 p-2">
@@ -76,6 +103,7 @@ type MatchesMessageProps = {
   name: string | null | undefined
   isLink: boolean
   eventId: number | null
+  communityId: number | null
 }
 
 const MatchesMessage = ({
@@ -83,14 +111,21 @@ const MatchesMessage = ({
   name,
   isLink,
   eventId,
+  communityId,
 }: MatchesMessageProps) => {
   const [event, setEvent] = useState<Events | null>({} as Events)
   const [loading, setLoading] = useState<boolean>(false)
+  const [community, setCommunity] = useState<Communities | null>(null)
 
   useEffect(() => {
     if (!eventId || isLink === false) return
     getSingleEvent(setLoading, eventId, setEvent)
   }, [eventId])
+
+  useEffect(() => {
+    if (!communityId || isLink === false) return
+    getSingleCommunity(setLoading, communityId, setCommunity)
+  }, [communityId])
   return (
     <View className="flex flex-row justify-start mt-2 ml-4 mr-36">
       <View>
@@ -104,6 +139,15 @@ const MatchesMessage = ({
               date={event.date}
               communityId={event.community_host}
             />
+          ) : isLink && community ? (
+            <View>
+              <View className="rounded-2xl bg-blue-500/80 p-2 mb-1">
+                <Text className="font-bold text-xs">{message}</Text>
+              </View>
+              <View className=" rounded-xl py-1">
+                <Text>{community.community_title}</Text>
+              </View>
+            </View>
           ) : (
             <Text className=" text-xs text-black font-bold">{message}</Text>
           )}
@@ -221,6 +265,7 @@ const MessageScreen = () => {
                   message={item.message}
                   isLink={item.community_or_event_link}
                   eventId={item.eventId}
+                  communityId={item.community_id}
                 />
               ) : (
                 <MatchesMessage
@@ -228,6 +273,7 @@ const MessageScreen = () => {
                   message={item.message}
                   isLink={item.community_or_event_link}
                   eventId={item.eventId}
+                  communityId={item.community_id}
                 />
               )
             }

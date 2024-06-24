@@ -66,7 +66,7 @@ const ViewEvent = () => {
   return (
     <View className="flex-1" style={{ backgroundColor: "#07182d" }}>
       <SafeAreaView className="flex-1">
-        <View className="flex flex-row justify-between mx-3 p-2">
+        <View className="flex flex-row justify-between  items-center mx-3 p-2">
           <BackButton size={22} colour="white" />
           <Text className="text-white text-lg font-bold">
             {event?.event_title || "Event"}

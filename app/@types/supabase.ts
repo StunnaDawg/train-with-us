@@ -93,6 +93,7 @@ export type Database = {
           id: number
           member_count: number
           phone_number: string | null
+          public_community: boolean
         }
         Insert: {
           about?: string | null
@@ -109,6 +110,7 @@ export type Database = {
           id?: number
           member_count?: number
           phone_number?: string | null
+          public_community?: boolean
         }
         Update: {
           about?: string | null
@@ -125,6 +127,7 @@ export type Database = {
           id?: number
           member_count?: number
           phone_number?: string | null
+          public_community?: boolean
         }
         Relationships: [
           {
@@ -320,6 +323,7 @@ export type Database = {
           id: number
           location: string | null
           price: number | null
+          public_event: boolean
         }
         Insert: {
           community_host?: number | null
@@ -336,6 +340,7 @@ export type Database = {
           id?: number
           location?: string | null
           price?: number | null
+          public_event?: boolean
         }
         Update: {
           community_host?: number | null
@@ -352,6 +357,7 @@ export type Database = {
           id?: number
           location?: string | null
           price?: number | null
+          public_event?: boolean
         }
         Relationships: [
           {
@@ -405,6 +411,7 @@ export type Database = {
       messages: {
         Row: {
           chat_session: string
+          community_id: number | null
           community_or_event_link: boolean
           eventId: number | null
           id: string
@@ -415,6 +422,7 @@ export type Database = {
         }
         Insert: {
           chat_session: string
+          community_id?: number | null
           community_or_event_link?: boolean
           eventId?: number | null
           id?: string
@@ -425,6 +433,7 @@ export type Database = {
         }
         Update: {
           chat_session?: string
+          community_id?: number | null
           community_or_event_link?: boolean
           eventId?: number | null
           id?: string
@@ -444,6 +453,12 @@ export type Database = {
             foreignKeyName: "messages_sender_fkey"
             columns: ["sender"]
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_messages_community_id_fkey"
+            columns: ["community_id"]
+            referencedRelation: "communities"
             referencedColumns: ["id"]
           },
           {

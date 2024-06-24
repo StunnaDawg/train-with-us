@@ -33,11 +33,15 @@ const ViewCommunities = () => {
 
   return (
     <SafeAreaView className=" flex-1 bg-primary-900 ">
-      <ScrollView>
-        <View>
-          <ViewCommunityTitle community={community} communityId={communityId} />
-        </View>
+      <View>
+        <ViewCommunityTitle
+          community={community}
+          communityId={communityId}
+          userId={user?.id}
+        />
+      </View>
 
+      <ScrollView>
         <View className="my-2">
           {community ? <PhotoArray community={community} /> : null}
         </View>

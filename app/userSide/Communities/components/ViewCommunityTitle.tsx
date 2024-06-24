@@ -11,11 +11,13 @@ import BackButton from "../../../components/BackButton"
 type ViewCommunityTitleProps = {
   community: Communities | null
   communityId: number
+  userId: string | undefined | null
 }
 
 const ViewCommunityTitle = ({
   community,
   communityId,
+  userId,
 }: ViewCommunityTitleProps) => {
   const [image, setImage] = useState<string>("")
 
@@ -82,7 +84,7 @@ const ViewCommunityTitle = ({
           </View>
         </View>
         <View>
-          <CommunityContact community={community} />
+          <CommunityContact community={community} userId={userId} />
         </View>
       </View>
     </View>

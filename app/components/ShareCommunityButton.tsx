@@ -6,18 +6,19 @@ import { ChatSession } from "../@types/supabaseTypes"
 import { FontAwesome6, Feather } from "@expo/vector-icons"
 import ShareProfile from "./ShareProfile"
 import sendEventLink from "../supabaseFunctions/addFuncs/sendEventLink"
+import sendCommunityLink from "../supabaseFunctions/addFuncs/sendCommunityLink"
 
 type shareButtonProps = {
-  eventId: number | undefined | null
+  communityId: number | undefined | null
   userId: string | undefined | null
 }
 
-const ShareButton = ({ eventId, userId }: shareButtonProps) => {
+const ShareCommunityButton = ({ communityId, userId }: shareButtonProps) => {
   const [userChatSessions, setUserChatSessions] = useState<
     ChatSession[] | null
   >([])
 
-  const [eventSent, setEventSent] = useState<boolean>(false)
+  const [communitySent, setCommunitySent] = useState<boolean>(false)
   const [isPressed, setIsPressed] = useState(false)
   const [sessionsToSend, setSessionsToSend] = useState<string[]>([])
 
@@ -41,21 +42,21 @@ const ShareButton = ({ eventId, userId }: shareButtonProps) => {
 
   const sendButton = (sessions: string[]) => {
     sessions.forEach((sessionId) => {
-      sendEventTo(sessionId)
+      sendCommunityTo(sessionId)
     })
 
-    setEventSent(true)
+    setCommunitySent(true)
 
     setTimeout(() => {
-      setEventSent(false)
+      setCommunitySent(false)
     }, 2000)
   }
 
-  const sendEventTo = (sessionId: string) => {
+  const sendCommunityTo = (sessionId: string) => {
     console.log("Send Event to", sessionsToSend)
-    if (!userId || !sessionId || !eventId) return
+    if (!userId || !sessionId || !communityId) return
 
-    sendEventLink(userId, sessionId, eventId)
+    sendCommunityLink(userId, sessionId, communityId)
   }
 
   useEffect(() => {
@@ -117,7 +118,7 @@ const ShareButton = ({ eventId, userId }: shareButtonProps) => {
             onPressOut={handleOnPressOut}
           >
             <Text className="font-bold text-center text-xl">{`${
-              eventSent ? "Event Sent" : "Send"
+              communitySent ? "Event Sent" : "Send"
             }`}</Text>
           </Pressable>
         </View>
@@ -126,4 +127,4 @@ const ShareButton = ({ eventId, userId }: shareButtonProps) => {
   )
 }
 
-export default ShareButton
+export default ShareCommunityButton
