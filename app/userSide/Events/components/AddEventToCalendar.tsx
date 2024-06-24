@@ -4,14 +4,37 @@ import * as Calendar from "expo-calendar"
 import { Events } from "../../../@types/supabaseTypes"
 import getSingleEvent from "../../../supabaseFunctions/getFuncs/getSingleEvent"
 import { FontAwesome6 } from "@expo/vector-icons"
+import formatTimestamp from "../../../utilFunctions/formatTimeStamp"
+import showAlertFunc from "../../../utilFunctions/showAlertFunc"
 
 type EventProps = {
   eventId: number
+  date: string | null | undefined
 }
 
-const AddEventToCalendar = ({ eventId }: EventProps) => {
+const AddEventToCalendar = ({ eventId, date }: EventProps) => {
   const [eventState, setEventState] = useState<Events | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
+  const [handlePress, setHandlePress] = useState<boolean>(false)
+
+  const addCalenadarEvent = () => {
+    showAlertFunc({
+      title: "Add to Calendar?",
+      message: "Do you want to add to Calendar?",
+      buttons: [
+        {
+          text: "Add to Calendar",
+          onPress: () => addEvent(),
+          style: "default",
+        },
+        {
+          text: "Cancel",
+          onPress: () => console.log("Delete Account"),
+          style: "cancel",
+        },
+      ],
+    })
+  }
 
   const addEvent = async () => {
     ;(async () => {
@@ -75,8 +98,19 @@ const AddEventToCalendar = ({ eventId }: EventProps) => {
   }, [eventId])
 
   return (
-    <Pressable className="bg-white rounded-xl p-1" onPress={() => addEvent()}>
-      <FontAwesome6 name="calendar-plus" size={22} color="black" />
+    <Pressable onPress={() => addCalenadarEvent()}>
+      <View className="flex flex-row  justify-between items-center mb-2">
+        <View className="flex flex-row items-center">
+          <FontAwesome6 name="calendar" size={20} color="white" />
+          <Text className="font-bold text-sm text-white mx-1  ">
+            {date ? formatTimestamp(date) : "No Date"}
+          </Text>
+        </View>
+
+        <View className="mt-2">
+          <FontAwesome6 name="chevron-right" size={20} color="white" />
+        </View>
+      </View>
     </Pressable>
   )
 }

@@ -18,7 +18,7 @@ const Upcoming = ({ refreshing }: RefreshProp) => {
   return (
     <View className="flex flex-col m-5">
       <Text className="text-lg font-bold text-white m-1">Upcoming</Text>
-      <ScrollView horizontal={true}>
+      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         {loading ? (
           <ActivityIndicator />
         ) : upcomingEvents && upcomingEvents?.length > 0 ? (

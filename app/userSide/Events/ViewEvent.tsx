@@ -20,6 +20,7 @@ import checkIfAttending from "../../supabaseFunctions/checkIfAttending"
 import BackButton from "../../components/BackButton"
 import LeaveEvent from "./components/LeaveEvent"
 import { Text } from "react-native"
+import ShareButton from "../../components/ShareButton"
 
 const ViewEvent = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -63,12 +64,12 @@ const ViewEvent = () => {
   return (
     <View className="flex-1" style={{ backgroundColor: "#07182d" }}>
       <SafeAreaView className="flex-1">
-        <View className="flex flex-row justify-between mx-3">
+        <View className="flex flex-row justify-between mx-3 p-2">
           <BackButton size={22} colour="white" />
           <Text className="text-white text-lg font-bold">
             {event?.event_title || "Event"}
           </Text>
-          <View />
+          <ShareButton eventId={eventId} userId={user?.id} />
         </View>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -94,6 +95,8 @@ const ViewEvent = () => {
               date={event?.date}
               eventId={eventId}
               location={event?.location}
+              price={event?.price}
+              attendanceLimit={event?.event_limit}
             />
           </View>
 

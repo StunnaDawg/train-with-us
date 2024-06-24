@@ -3,15 +3,15 @@ import supabase from "../../../lib/supabase"
 import { Profile } from "../../@types/supabaseTypes"
 
 const getEventAttendees = async (
-  eventId: string,
+  eventId: number,
   setLoading: Dispatch<SetStateAction<boolean>>,
   setUserProfiles: Dispatch<SetStateAction<Profile[] | null>>
 ) => {
   try {
     setLoading(true)
     const { data: eventAttendees, error: attendeesError } = await supabase
-      .from("event_attendees")
-      .select("profile_id")
+      .from("events_users")
+      .select("user_id")
       .eq("event_id", eventId)
 
     if (attendeesError) throw attendeesError
@@ -21,7 +21,7 @@ const getEventAttendees = async (
       return
     }
 
-    const profileIds = eventAttendees.map((attendee) => attendee.profile_id)
+    const profileIds = eventAttendees.map((attendee) => attendee.user_id)
     const { data: profiles, error: profilesError } = await supabase
       .from("profiles")
       .select("*")
