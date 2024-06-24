@@ -19,6 +19,7 @@ import getSingleEvent from "../../supabaseFunctions/getFuncs/getSingleEvent"
 import checkIfAttending from "../../supabaseFunctions/checkIfAttending"
 import BackButton from "../../components/BackButton"
 import LeaveEvent from "./components/LeaveEvent"
+import { Text } from "react-native"
 
 const ViewEvent = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -62,16 +63,21 @@ const ViewEvent = () => {
   return (
     <View className="flex-1" style={{ backgroundColor: "#07182d" }}>
       <SafeAreaView className="flex-1">
+        <View className="flex flex-row justify-between mx-3">
+          <BackButton size={22} colour="white" />
+          <Text className="text-white text-lg font-bold">
+            {event?.event_title || "Event"}
+          </Text>
+          <View />
+        </View>
         <ScrollView
+          showsVerticalScrollIndicator={false}
           className="flex-1"
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         >
           <View>
-            <View className="mx-3">
-              <BackButton size={22} colour="white" />
-            </View>
             <ViewEventTitle
               userId={user?.id}
               eventId={event?.id}

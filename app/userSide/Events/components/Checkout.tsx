@@ -1,8 +1,11 @@
 import { View, Text, Pressable } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { NavigationType } from "../../../@types/navigation"
-import { Events } from "../../../@types/supabaseTypes"
+import { Events, Profile } from "../../../@types/supabaseTypes"
+import { useAuth } from "../../../supabaseFunctions/authcontext"
+import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
+import addEventUser from "../../../supabaseFunctions/addFuncs/addEventUser"
 
 type CheckoutProps = {
   ticketPrice: number
@@ -10,59 +13,54 @@ type CheckoutProps = {
 }
 
 const Checkout = ({ ticketPrice, event }: CheckoutProps) => {
-  const [count, setCount] = useState(0)
-
-  // Function to decrement the count, not going below 0
-  const decrementCount = () => {
-    setCount((prev) => (prev > 0 ? prev - 1 : 0))
-  }
-
-  // Function to increment the count
-  const incrementCount = () => {
-    setCount((prev) => prev + 1)
-  }
+  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
+  const [eventHostState, setEventHost] = useState<Profile | null>({} as Profile)
+  const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
+
+  const handleCheckout = async () => {
+    if (!event || !user || !currentUser?.first_name || !currentUser?.last_name)
+      return
+
+    if (ticketPrice === 0) {
+      await addEventUser(
+        event?.id,
+        eventHostState?.expo_push_token,
+        user?.id,
+        currentUser?.first_name,
+        currentUser?.last_name
+      )
+      navigation.navigate("PurchaseScreen")
+    } else {
+      navigation.navigate("EventCheckout", {
+        event: event,
+        ticketPrice: ticketPrice,
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (!user) return
+    useCurrentUser(user?.id, setCurrentUser)
+  }, [user])
+
+  useEffect(() => {
+    if (!event?.event_host) return
+    useCurrentUser(event.event_host, setEventHost)
+  }, [event?.event_host])
+
   return (
     <View className="flex flex-row justify-center">
       <View className="items-center">
-        <View className="flex flex-row justify-between bg-white border rounded-full px-20 mx-12 py-3 mt-4 items-center ">
-          <View>
-            <Text className="font-bold">Admission</Text>
-          </View>
-
-          <View className="flex flex-row justify-between">
-            <Pressable
-              onPress={decrementCount}
-              className="flex flex-row bg-white border rounded-full px-3 py-1 items-center mx-2"
-            >
-              <Text>-</Text>
-            </Pressable>
-
-            <View>
-              <Text className="font-bold text-lg">{count}</Text>
-            </View>
-
-            <Pressable
-              onPress={incrementCount}
-              className="flex flex-row bg-blue-400/90 border rounded-full px-3  py-1 items-center  mx-2"
-            >
-              <Text>+</Text>
-            </Pressable>
-          </View>
-        </View>
         <Pressable
           onPress={() => {
-            if (!event) return
-            navigation.navigate("EventCheckout", {
-              event: event,
-              ticketNumber: count,
-              ticketPrice: ticketPrice,
-            })
-            console.log("Checkout")
+            handleCheckout()
           }}
-          className=" bg-blue-400/90 border rounded-full px-32 my-2 py-2"
+          className=" bg-white border rounded-lg px-20 my-2 py-2"
         >
-          <Text className="font-bold">Checkout</Text>
+          <Text className="font-bold text-sm">
+            {ticketPrice > 0 ? "Purchase Ticket" : "RVSP for Event"}
+          </Text>
         </Pressable>
       </View>
     </View>

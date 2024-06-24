@@ -11,13 +11,8 @@ const EventCheckout = () => {
   const [totalAmount, setTotalAmount] = useState<number>(0)
   const [ticketNumberState, setTicketNumberState] = useState<number>(0)
   const route = useRoute<RouteProp<RootStackParamList, "EventCheckout">>()
-  const ticketNumber = route.params.ticketNumber
   const ticketPrice = route.params.ticketPrice
   const event = route.params.event
-
-  useEffect(() => {
-    setTicketNumberState(ticketNumber)
-  }, [ticketNumber])
 
   useEffect(() => {
     setTotalAmount(ticketNumberState * ticketPrice)
@@ -39,7 +34,7 @@ const EventCheckout = () => {
           </View>
           <View className="mt-5">
             <EventAdmissionCheckout
-              firstAmountTickets={ticketNumber}
+              firstAmountTickets={0}
               tickets={ticketNumberState}
               setTickets={setTicketNumberState}
               date={event.date}

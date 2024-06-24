@@ -87,7 +87,7 @@ export type RootStackParamList = {
   CreateNewChannel: undefined
   EventCheckout: {
     event: Events
-    ticketNumber: number
+
     ticketPrice: number
   }
   MyCommunityHome: {
