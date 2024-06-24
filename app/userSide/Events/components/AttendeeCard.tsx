@@ -1,10 +1,8 @@
-import { View, Text, Pressable, ActivityIndicator } from "react-native"
-import React, { useEffect, useState } from "react"
-import SinglePic from "../../../components/SinglePic"
+import { View, Text, Pressable } from "react-native"
+
 import { NavigationType } from "../../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import { Profile } from "../../../@types/supabaseTypes"
-import supabase from "../../../../lib/supabase"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 
 type MemberCardProps = {

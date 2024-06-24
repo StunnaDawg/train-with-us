@@ -4,6 +4,7 @@ import showAlertFunc from "../../../utilFunctions/showAlertFunc"
 import supabase from "../../../../lib/supabase"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
+import showAlert from "../../../utilFunctions/showAlert"
 
 type LeaveEventProps = { eventId: number; userId: string | null | undefined }
 
@@ -23,6 +24,8 @@ const LeaveEvent = ({ eventId, userId }: LeaveEventProps) => {
     }
 
     navigation.goBack()
+
+    showAlert({ title: "Success", message: "Event Left" })
   }
 
   const handleLeaveButton = () => {

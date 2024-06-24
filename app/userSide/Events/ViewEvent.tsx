@@ -21,6 +21,8 @@ import BackButton from "../../components/BackButton"
 import LeaveEvent from "./components/LeaveEvent"
 import { Text } from "react-native"
 import ShareButton from "../../components/ShareButton"
+import CommunityCard from "../Communities/components/CommunityCard"
+import CommunityEventCard from "./components/CommunityEventCard"
 
 const ViewEvent = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -103,15 +105,22 @@ const ViewEvent = () => {
           <View>
             <AboutViewEvent description={event?.event_description} />
           </View>
+
+          {event?.community_host ? (
+            <View>
+              <CommunityEventCard
+                communityId={event?.community_host}
+                userId={user?.id}
+              />
+            </View>
+          ) : null}
         </ScrollView>
 
         {!isAttending ? (
-          <View className="absolute inset-x-0 bottom-0 bg-white/75">
-            <Checkout
-              ticketPrice={event?.price ? event.price : 0}
-              event={event}
-            />
-          </View>
+          <Checkout
+            ticketPrice={event?.price ? event.price : 0}
+            event={event}
+          />
         ) : (
           <LeaveEvent eventId={eventId} userId={user?.id} />
         )}
