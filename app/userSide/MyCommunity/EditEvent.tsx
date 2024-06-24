@@ -27,10 +27,13 @@ import { FontAwesome6 } from "@expo/vector-icons"
 import BackButton from "../../components/BackButton"
 import { TouchableWithoutFeedback } from "react-native"
 import Loading from "../../components/Loading"
+import { Switch } from "react-native-gesture-handler"
 
 const EditEvent = () => {
   const { user } = useAuth()
   const [event, setEvent] = useState<Events | null>(null)
+  const [attendaceLimitSwitch, setAttendaceLimitSwitch] =
+    useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [location, setLocation] = useState<string>("")
   const [description, setDescription] = useState<string>("")
@@ -90,6 +93,10 @@ const EditEvent = () => {
     setLocation(event?.location || "")
     setEventStyle(event?.event_style || "")
     setEventLimit(event?.event_limit?.toString() || "")
+
+    if (event?.event_limit) {
+      setAttendaceLimitSwitch(true)
+    }
   }, [event])
   return (
     <SafeAreaView className="flex-1">
@@ -215,16 +222,33 @@ const EditEvent = () => {
                 />
               </View>
 
-              <View className="mb-4">
-                <Text className="mb-2 text-sm font-semibold text-gray">
-                  Attendance Limit
+              <View className="items-center mb-1">
+                <Text className="text-lg font-bold text-gray underline">
+                  Advanced Settings
                 </Text>
-                <TextInput
-                  value={eventLimit}
-                  onChangeText={setEventLimit}
-                  placeholder="Attendance Limit, leave blank for no limit"
-                  className="border  p-2 rounded-lg"
-                />
+              </View>
+
+              <View className="mb-4">
+                <View className="flex flex-row justify-between items-center mb-2">
+                  <Text className=" text-sm font-semibold text-gray">
+                    Attendance Limit
+                  </Text>
+                  <Switch
+                    value={attendaceLimitSwitch}
+                    onChange={() =>
+                      setAttendaceLimitSwitch(!attendaceLimitSwitch)
+                    }
+                  />
+                </View>
+                {attendaceLimitSwitch ? (
+                  <TextInput
+                    keyboardType="numeric"
+                    value={eventLimit}
+                    onChangeText={setEventLimit}
+                    placeholder="Attendance Limit, leave blank for no limit"
+                    className="border  p-2 rounded-lg"
+                  />
+                ) : null}
               </View>
 
               <Pressable
@@ -287,7 +311,10 @@ const EditEvent = () => {
                       )
                     }
 
-                    if (event.event_limit !== Number(eventLimit)) {
+                    if (
+                      event.event_limit !== Number(eventLimit) &&
+                      attendaceLimitSwitch
+                    ) {
                       const eventLimitNumber =
                         eventLimit.trim() === "" ? null : Number(eventLimit)
 
@@ -304,6 +331,13 @@ const EditEvent = () => {
                         eventId,
                         "event_limit",
                         eventLimitNumber
+                      )
+                    } else if (!attendaceLimitSwitch) {
+                      updateSingleEventTrait(
+                        setLoading,
+                        eventId,
+                        "event_limit",
+                        null
                       )
                     }
 

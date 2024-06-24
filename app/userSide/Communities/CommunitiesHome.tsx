@@ -6,12 +6,14 @@ import getAllCommunities from "../../supabaseFunctions/getFuncs/getAllCommunitie
 import { Communities } from "../../@types/supabaseTypes"
 import CommunityCard from "./components/CommunityCard"
 import { FontAwesome6 } from "@expo/vector-icons"
+import { useAuth } from "../../supabaseFunctions/authcontext"
 
 const CommunitiesHome = () => {
   const [communities, setCommunities] = useState<Communities[] | null>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const navigation = useNavigation<NavigationType>()
+  const { user } = useAuth()
 
   const onRefresh = useCallback(() => {
     setRefreshing(true)
@@ -49,7 +51,7 @@ const CommunitiesHome = () => {
             communities && communities.length > 0 ? (
               communities.map((community) => (
                 <View key={community.id} className="m-2">
-                  <CommunityCard community={community} />
+                  <CommunityCard community={community} userId={user?.id} />
                 </View>
               ))
             ) : (

@@ -6,7 +6,7 @@ const updateSingleEventTrait = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   eventId: number,
   row: string,
-  value: string | number | Date
+  value: string | number | Date | null
 ) => {
   try {
     console.log("updating on event", eventId, row, value)
