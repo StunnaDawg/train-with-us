@@ -78,6 +78,7 @@ import * as Notifications from "expo-notifications"
 import { useNavigation } from "@react-navigation/native"
 import Messages from "./userSide/UserCommunities/components/Messages"
 import SexualityEdit from "./userSide/Profile/AddInfoComponents/SexualityEdit"
+import EventAttendees from "./userSide/Events/components/EventAttendees"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -285,6 +286,11 @@ const NavStack = () => {
                 component={SexualityEdit}
               />
 
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ViewEventAttendees"
+                component={EventAttendees}
+              />
               <Stack.Screen
                 options={{ headerShown: false }}
                 name="SearchUsers"

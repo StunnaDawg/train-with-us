@@ -8,6 +8,9 @@ import openInMaps from "../../../utilFunctions/openMaps"
 import openInGoogleMaps from "../../../utilFunctions/openGoogleMaps"
 import getEventAttendees from "../../../supabaseFunctions/getFuncs/getEventAttendees"
 import { Profile } from "../../../@types/supabaseTypes"
+import SinglePic from "../../../components/SinglePic"
+import { useNavigation } from "@react-navigation/native"
+import { NavigationType } from "../../../@types/navigation"
 
 type ViewEventDetailsProps = {
   date: string | null | undefined
@@ -24,9 +27,15 @@ const ViewEventDetails = ({
   price,
   attendanceLimit,
 }: ViewEventDetailsProps) => {
+  const navigation = useNavigation<NavigationType>()
   const [handlePress, setHandlePress] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [eventProfiles, setEventProfiles] = useState<Profile[] | null>([])
+  const maxDisplayCount = 2
+
+  const displayProfiles = eventProfiles?.slice(0, maxDisplayCount)
+  const additionalCount = eventProfiles!.length - maxDisplayCount
+  //
   useEffect(() => {
     getEventAttendees(eventId, setLoading, setEventProfiles)
   }, [eventId])
@@ -91,22 +100,38 @@ const ViewEventDetails = ({
         </View>
       </View>
 
-      {attendanceLimit ? (
-        <View className="flex flex-row  justify-between items-center mb-2 mt-2">
-          <View>
-            <FontAwesome6 name="people-line" size={20} color="white" />
-          </View>
+      <Pressable
+        onPress={() => {
+          navigation.navigate("ViewEventAttendees", { profile: eventProfiles })
+        }}
+      >
+        <View className="flex flex-row  justify-between items-center mb-1 mt-2">
           <View>
             <Text className="font-bold text-sm text-white mx-1  ">
-              {attendanceLimit === 0
-                ? "Unlimited"
-                : `Attendees: ${
-                    eventProfiles?.length
-                  }/${attendanceLimit?.toString()} going`}
+              Attendees
             </Text>
           </View>
+
+          <View className="flex flex-row items-center">
+            {displayProfiles?.map((profile) => (
+              <SinglePic
+                key={profile.id}
+                item={profile.profile_pic}
+                size={30}
+                avatarRadius={100}
+                noAvatarRadius={100}
+              />
+            ))}
+            <View>
+              {additionalCount > 0 ? (
+                <Text className="font-bold text-sm text-white mx-1  ">
+                  +{additionalCount} more
+                </Text>
+              ) : null}
+            </View>
+          </View>
         </View>
-      ) : null}
+      </Pressable>
     </View>
   )
 }
