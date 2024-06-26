@@ -103,7 +103,8 @@ const ChannelMessageScreen = () => {
       channel.id,
       currentUser?.first_name,
       channel.community,
-      channel.channel_title
+      channel.channel_title,
+      channel
     )
     await upsertCommunitySession(channel.id, messageToSend)
     setMessageToSend("")

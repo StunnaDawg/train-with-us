@@ -30,6 +30,7 @@ const ViewCommunities = () => {
   }, [communityId])
 
   const isUserAMember = profiles?.includes(user!.id)
+  const isOwner = community?.community_owner === user?.id
 
   return (
     <SafeAreaView className=" flex-1 bg-primary-900 ">
@@ -55,12 +56,12 @@ const ViewCommunities = () => {
         </View>
       </ScrollView>
 
-      {!isUserAMember && (
+      {!isUserAMember || !isOwner ? (
         <JoinFooter
           communityId={communityId}
           communityTitle={community?.community_title}
         />
-      )}
+      ) : null}
     </SafeAreaView>
   )
 }

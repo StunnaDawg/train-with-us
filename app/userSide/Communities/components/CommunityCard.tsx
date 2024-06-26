@@ -30,7 +30,9 @@ const CommunityCard = ({
   }, [userId])
 
   useEffect(() => {
-    if (userUUIDS) {
+    if (community.community_owner === userId) {
+      setJoined(true)
+    } else if (userUUIDS) {
       setJoined(userUUIDS.includes(userId!))
     }
   }, [userUUIDS])
