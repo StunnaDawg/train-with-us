@@ -71,18 +71,18 @@ const Messages = () => {
             const otherUserId =
               session.user1 === user?.id ? session.user2 : session.user1
             return (
-              <View key={session.id}>
+              <View className="flex-1 w-full" key={session.id}>
                 <Pressable
                   onPress={() => {
                     navigation.navigate("MessagingScreen", {
                       chatSession: session,
                     })
                   }}
-                  className="flex flex-row items-center"
                 >
                   <MessageCard
                     otherUserId={otherUserId}
                     recentMessage={session.recent_message}
+                    updatedAt={session.updated_at}
                   />
                 </Pressable>
               </View>

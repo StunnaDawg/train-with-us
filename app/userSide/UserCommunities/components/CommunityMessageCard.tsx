@@ -3,7 +3,6 @@ import { NavigationType } from "../../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import { Communities } from "../../../@types/supabaseTypes"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
-import { FontAwesome6 } from "@expo/vector-icons"
 import { useEffect, useState } from "react"
 import getCommunityMembersUUID from "../../../supabaseFunctions/getFuncs/getCommunityMembers"
 

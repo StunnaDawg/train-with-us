@@ -1,4 +1,4 @@
-import { View, Text, Platform, Pressable, Share } from "react-native"
+import { View, Platform, Pressable } from "react-native"
 import React from "react"
 import { Communities } from "../../../@types/supabaseTypes"
 import PhoneCallButton from "../../../components/PhoneNumberButton"
