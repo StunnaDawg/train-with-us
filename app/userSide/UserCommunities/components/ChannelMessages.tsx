@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   View,
   Text,
@@ -15,7 +15,7 @@ import {
 import SinglePic from "../../../components/SinglePic"
 import { NavigationType, RootStackParamList } from "../../../@types/navigation"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
-import { get } from "mongoose"
+import { FontAwesome6 } from "@expo/vector-icons"
 import {
   CommunityChannelMessages,
   Messages,
@@ -30,6 +30,8 @@ import sendChannelMessage from "../../../supabaseFunctions/addFuncs/sendChannelM
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import upsertCommunitySession from "../../../supabaseFunctions/updateFuncs/updateCommunitySession"
 import BackButton from "../../../components/BackButton"
+import { BottomSheetModal } from "@gorhom/bottom-sheet"
+import ChannelBottomModal from "./ChannelBottomModal"
 
 type UserMessage = {
   message: string | null
@@ -78,6 +80,7 @@ const OthersMessage = ({ message, name, id }: OthersMessageProps) => {
 }
 
 const ChannelMessageScreen = () => {
+  const [loading, setLoading] = useState(false)
   const route = useRoute<RouteProp<RootStackParamList, "ChannelScreen">>()
   const channel = route.params.channelId
 
@@ -87,6 +90,15 @@ const ChannelMessageScreen = () => {
   const [messageToSend, setMessageToSend] = useState("")
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const { user } = useAuth()
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null)
+  const snapPoints = useMemo(() => ["1%", "99%"], [])
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present()
+  }, [])
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index)
+  }, [])
 
   const sendMessageAction = async () => {
     if (
@@ -149,21 +161,20 @@ const ChannelMessageScreen = () => {
         <BackButton size={32} />
       </View>
 
-      <View className="flex flex-row justify-center ">
-        <View className="items-center">
-          <View className="mb-2">
-            <SinglePicCommunity
-              size={50}
-              avatarRadius={100}
-              noAvatarRadius={100}
-              item={channel.channel_pic}
-            />
+      <Pressable
+        onPress={() => {
+          handlePresentModalPress()
+        }}
+      >
+        <View className="flex flex-row justify-center items-center">
+          <View className="flex flex-row items-center">
+            <Text className="font-bold text-lg mb-1 underline mx-1">
+              {channel.channel_title}
+            </Text>
+            <FontAwesome6 name="chevron-right" size={20} color="black" />
           </View>
-          <Text className="font-bold text-lg mb-1">
-            {channel.channel_title}
-          </Text>
         </View>
-      </View>
+      </Pressable>
 
       <KeyboardAvoidingView
         className="flex-1 border-transparent bg-white rounded-3xl mx-2"
@@ -213,6 +224,19 @@ const ChannelMessageScreen = () => {
           </Pressable>
         </View>
       </KeyboardAvoidingView>
+      <BottomSheetModal
+        enablePanDownToClose={true}
+        ref={bottomSheetModalRef}
+        index={1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+      >
+        <ChannelBottomModal
+          channel={channel}
+          userId={user?.id}
+          setLoading={setLoading}
+        />
+      </BottomSheetModal>
     </SafeAreaView>
   )
 }

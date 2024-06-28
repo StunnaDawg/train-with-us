@@ -138,6 +138,49 @@ export type Database = {
           }
         ]
       }
+      community_channel_membership: {
+        Row: {
+          channel_id: string
+          community_id: number | null
+          expo_push_token: string | null
+          muted: boolean | null
+          user_id: string
+        }
+        Insert: {
+          channel_id?: string
+          community_id?: number | null
+          expo_push_token?: string | null
+          muted?: boolean | null
+          user_id?: string
+        }
+        Update: {
+          channel_id?: string
+          community_id?: number | null
+          expo_push_token?: string | null
+          muted?: boolean | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_community_channel_membership_channel_id_fkey"
+            columns: ["channel_id"]
+            referencedRelation: "community_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_community_channel_membership_community_id_fkey"
+            columns: ["community_id"]
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_community_channel_membership_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       community_channel_messages: {
         Row: {
           channel_id: string | null

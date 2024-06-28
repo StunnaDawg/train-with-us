@@ -46,4 +46,4 @@ export type NewChatSession =
   Database["public"]["Tables"]["chat_sessions"]["Insert"]
 
 export type CommunityMembership =
-  Database["public"]["Tables"]["community_memberships"]["Row"]
+  Database["public"]["Tables"]["community_channel_membership"]["Row"]

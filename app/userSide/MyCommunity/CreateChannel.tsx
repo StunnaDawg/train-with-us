@@ -20,6 +20,7 @@ import { decode } from "base64-arraybuffer"
 import BackButton from "../../components/BackButton"
 import Loading from "../../components/Loading"
 import { FontAwesome6 } from "@expo/vector-icons"
+import showAlert from "../../utilFunctions/showAlert"
 
 type ChannelTypeOption = "Text" | "Annoucement" | "Forum"
 
@@ -43,7 +44,6 @@ const CreateChannel = () => {
   }
 
   const handleChannelCreation = async () => {
-    // create channel
     try {
       setLoading(true)
       if (communityId === null) throw new Error("Community ID is null")
@@ -68,11 +68,23 @@ const CreateChannel = () => {
             community: communityId,
             channel_pic: filePath,
             private: privateChannel,
-            channel_members: [{ uuid: user?.id, muted: false, admin: true }],
           },
         ])
 
-        if (error) throw error
+        if (error) {
+          console.error("Error creating private channel:", error.message)
+          showAlert({
+            title: "Error Creating Channel",
+            message:
+              "There was an error creating the channel. Please try again.",
+          })
+          throw error
+        }
+
+        showAlert({
+          title: "Private Channel Created",
+          message: "You have successfully created the channel",
+        })
       } else {
         const { error } = await supabase.from("community_channels").insert([
           {
@@ -86,6 +98,11 @@ const CreateChannel = () => {
         ])
 
         if (error) throw error
+
+        showAlert({
+          title: " Channel Created",
+          message: "You have successfully created the channel",
+        })
       }
     } catch (error) {
       console.log(error)
@@ -111,7 +128,7 @@ const CreateChannel = () => {
                 navigation.goBack()
               }}
             >
-              <Text className="text-lg font-bold underline">Done</Text>
+              <Text className="text-lg font-bold underline">Save</Text>
             </Pressable>
           </View>
 

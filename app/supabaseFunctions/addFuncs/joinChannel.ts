@@ -13,25 +13,16 @@ const joinChannel = async (
   setLoading(true)
   console.log("Joining channel", channelId, userId, communityId, pushToken)
   try {
-    const { data: userProfile, error: profileError } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("id", userId)
-      .single()
-
-    if (profileError || !userProfile) {
-      console.error("User ID does not exist in profiles table.")
-      return
-    }
-
-    const { error } = await supabase.from("community_memberships").insert([
-      {
-        user_id: userId,
-        channel_id: channelId,
-        community_id: communityId,
-        expo_push_token: pushToken,
-      },
-    ])
+    const { error } = await supabase
+      .from("community_channel_membership")
+      .insert([
+        {
+          user_id: userId,
+          channel_id: channelId,
+          community_id: communityId,
+          expo_push_token: pushToken,
+        },
+      ])
 
     if (error) {
       showAlert({

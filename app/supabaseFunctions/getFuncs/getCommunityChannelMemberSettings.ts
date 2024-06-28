@@ -5,17 +5,19 @@ import {
   CommunityMembership,
 } from "../../@types/supabaseTypes"
 
-const getCommunityMemberShips = async (
+const getSingleChannelSettings = async (
   communityId: number,
+  channelId: string,
   userId: string,
   setLoading: Dispatch<SetStateAction<boolean>>,
-  setCommunityChannels: Dispatch<SetStateAction<CommunityMembership[] | null>>
+  setSettings: Dispatch<SetStateAction<CommunityMembership | null>>
 ) => {
   setLoading(true)
   try {
     const { data, error } = await supabase
       .from("community_channel_membership")
       .select("*")
+      .eq("channel_id", channelId)
       .eq("community_id", communityId)
       .eq("user_id", userId)
 
@@ -26,9 +28,9 @@ const getCommunityMemberShips = async (
 
     console.log("Community channels data", data)
     if (data) {
-      setCommunityChannels([...data])
+      setSettings(data[0])
     } else {
-      setCommunityChannels(null)
+      setSettings(null)
     }
   } catch (error) {
     console.log(error)
@@ -37,4 +39,4 @@ const getCommunityMemberShips = async (
   }
 }
 
-export default getCommunityMemberShips
+export default getSingleChannelSettings
