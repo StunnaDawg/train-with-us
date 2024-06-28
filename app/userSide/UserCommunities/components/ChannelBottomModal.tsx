@@ -38,11 +38,11 @@ const muteChannel = async ({
   setMuted,
 }: MuteChannelProps) => {
   setLoading(true)
-  console.log("Mute value", channelId)
+  console.log("Mute value", channelId, communityId)
   try {
     const { error } = await supabase
       .from("community_channel_membership")
-      .upsert({ muted: muteValue })
+      .update({ muted: muteValue })
       .eq("channel_id", channelId)
       .eq("community_id", communityId)
       .eq("user_id", userId)
