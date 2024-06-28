@@ -187,6 +187,8 @@ export type Database = {
           community_owner: string | null
           created_at: string
           id: string
+          members_of_channel: string[] | null
+          private: boolean
           recent_message: string | null
           updated_at: string | null
         }
@@ -198,6 +200,8 @@ export type Database = {
           community_owner?: string | null
           created_at?: string
           id?: string
+          members_of_channel?: string[] | null
+          private?: boolean
           recent_message?: string | null
           updated_at?: string | null
         }
@@ -209,6 +213,8 @@ export type Database = {
           community_owner?: string | null
           created_at?: string
           id?: string
+          members_of_channel?: string[] | null
+          private?: boolean
           recent_message?: string | null
           updated_at?: string | null
         }
@@ -261,6 +267,49 @@ export type Database = {
           },
           {
             foreignKeyName: "public_community_members_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      community_memberships: {
+        Row: {
+          channel_id: string
+          community_id: number
+          expo_push_token: string | null
+          muted: boolean
+          user_id: string
+        }
+        Insert: {
+          channel_id?: string
+          community_id: number
+          expo_push_token?: string | null
+          muted?: boolean
+          user_id?: string
+        }
+        Update: {
+          channel_id?: string
+          community_id?: number
+          expo_push_token?: string | null
+          muted?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_community_memberships_channel_id_fkey"
+            columns: ["channel_id"]
+            referencedRelation: "community_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_community_memberships_community_id_fkey"
+            columns: ["community_id"]
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_community_memberships_user_id_fkey"
             columns: ["user_id"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]

@@ -1,4 +1,11 @@
-import { View, Text, SafeAreaView, TextInput, Pressable } from "react-native"
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TextInput,
+  Pressable,
+  Switch,
+} from "react-native"
 import React, { useState } from "react"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import { RootStackParamList } from "../../@types/navigation"
@@ -12,6 +19,7 @@ import * as FileSystem from "expo-file-system"
 import { decode } from "base64-arraybuffer"
 import BackButton from "../../components/BackButton"
 import Loading from "../../components/Loading"
+import { FontAwesome6 } from "@expo/vector-icons"
 
 type ChannelTypeOption = "Text" | "Annoucement" | "Forum"
 
@@ -21,8 +29,10 @@ const CreateChannel = () => {
   const [channelPic, setChannelPic] = useState<ImagePicker.ImagePickerAsset>(
     {} as ImagePicker.ImagePickerAsset
   )
+  const [privateChannel, setPrivateChannel] = useState<boolean>(false)
   const [selectedChannelType, setChannelType] =
     useState<ChannelTypeOption>("Text")
+
   const [channelName, setChannelName] = useState<string>("")
   const route = useRoute<RouteProp<RootStackParamList, "CreateChannel">>()
   const communityId = route.params.communityId
@@ -49,17 +59,34 @@ const CreateChannel = () => {
         contentType: contentType,
       })
 
-      const { error } = await supabase.from("community_channels").insert([
-        {
-          channel_title: channelName,
-          channel_type: selectedChannelType,
-          community_owner: user?.id,
-          community: communityId,
-          channel_pic: filePath,
-        },
-      ])
+      if (privateChannel === true) {
+        const { error } = await supabase.from("community_channels").insert([
+          {
+            channel_title: channelName,
+            channel_type: selectedChannelType,
+            community_owner: user?.id,
+            community: communityId,
+            channel_pic: filePath,
+            private: privateChannel,
+            channel_members: [{ uuid: user?.id, muted: false, admin: true }],
+          },
+        ])
 
-      if (error) throw error
+        if (error) throw error
+      } else {
+        const { error } = await supabase.from("community_channels").insert([
+          {
+            channel_title: channelName,
+            channel_type: selectedChannelType,
+            community_owner: user?.id,
+            community: communityId,
+            channel_pic: filePath,
+            private: privateChannel,
+          },
+        ])
+
+        if (error) throw error
+      }
     } catch (error) {
       console.log(error)
     } finally {
@@ -94,6 +121,21 @@ const CreateChannel = () => {
               value={channelName}
               onChangeText={(text: string) => setChannelName(text)}
               placeholder="new-channel"
+            />
+          </View>
+
+          <View className="flex flex-row justify-between m-2">
+            <View className="flex flex-row items-center">
+              <Text className="text-sm font-bold mx-1">Private Channel</Text>
+              <FontAwesome6
+                name={privateChannel ? "lock" : "unlock"}
+                size={20}
+                color="black"
+              />
+            </View>
+            <Switch
+              value={privateChannel}
+              onChange={() => setPrivateChannel(!privateChannel)}
             />
           </View>
 

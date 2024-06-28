@@ -44,3 +44,6 @@ export type NewEventAttendee =
 
 export type NewChatSession =
   Database["public"]["Tables"]["chat_sessions"]["Insert"]
+
+export type CommunityMembership =
+  Database["public"]["Tables"]["community_memberships"]["Row"]

@@ -1,19 +1,23 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
-import { CommunityChannel } from "../../@types/supabaseTypes"
-import { set } from "date-fns"
+import {
+  CommunityChannel,
+  CommunityMembership,
+} from "../../@types/supabaseTypes"
 
-const getCommunityChannels = async (
+const getCommunityMemberShips = async (
   communityId: number,
+  userId: string,
   setLoading: Dispatch<SetStateAction<boolean>>,
-  setCommunityChannels: Dispatch<SetStateAction<CommunityChannel[] | null>>
+  setCommunityChannels: Dispatch<SetStateAction<CommunityMembership[] | null>>
 ) => {
   setLoading(true)
   try {
     const { data, error } = await supabase
-      .from("community_channels")
+      .from("community_memberships")
       .select("*")
-      .eq("community", communityId)
+      .eq("community_id", communityId)
+      .eq("user_id", userId)
 
     if (error) {
       console.error("Error fetching community channels:", error.message)
@@ -33,4 +37,4 @@ const getCommunityChannels = async (
   }
 }
 
-export default getCommunityChannels
+export default getCommunityMemberShips
