@@ -5,7 +5,7 @@ const sendNotification = async (
   token: string,
   title: string,
   body: string,
-  communityId: number
+  eventId: number
 ) => {
   console.log("Sending notification to", token)
   const { data, error } = await supabase.functions.invoke("push", {
@@ -13,10 +13,16 @@ const sendNotification = async (
       token,
       titleWords: title,
       bodyWords: body,
-      data: { communityId, type: "event_joined" },
+      data: { eventId: eventId, type: "event_joined" },
     },
   })
 
+  console.log("Sending notification with data:", {
+    token,
+    titleWords: title,
+    bodyWords: body,
+    data: { eventId: eventId, type: "event_joined" },
+  })
   if (error && error instanceof FunctionsHttpError) {
     const errorMessage = await error.context.json()
     console.log("Function returned an error", errorMessage)
@@ -44,6 +50,7 @@ const addEventUser = async (
     if (error) throw error
 
     if (!expo_push_token) return
+    console.log("Sending notification to", expo_push_token)
     sendNotification(
       expo_push_token,
       "Event Joined",

@@ -206,13 +206,15 @@ const CreateEvent = () => {
                         : Number(eventLimit)
 
                     // Now we know eventLimitNumber is a number, check if it is zero or any other invalid case
-                    if (!eventLimitNumber || eventLimitNumber <= 0) {
-                      showAlert({
-                        title: "Invalid Limit",
-                        message:
-                          "Please enter a valid limit greater than zero.",
-                      })
-                      return // Stop further execution if validation fails
+                    if (attendaceLimitSwitch) {
+                      if (!eventLimitNumber || eventLimitNumber <= 0) {
+                        showAlert({
+                          title: "Invalid Limit",
+                          message:
+                            "Please enter a valid limit greater than zero.",
+                        })
+                        return // Stop further execution if validation fails
+                      }
                     }
 
                     if (!currentUser?.id && !currentUser?.community_created)

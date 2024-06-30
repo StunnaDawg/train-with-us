@@ -121,11 +121,6 @@ const ChannelBottomModal = ({
           setLoading,
           setMuted,
         })
-
-        showAlert({
-          title: "Channel muted",
-          message: "You have successfully muted the channel.",
-        })
       } else {
         showAlert({
           title: "Authentication error",

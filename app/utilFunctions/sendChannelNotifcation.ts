@@ -39,7 +39,9 @@ const sendChannelNotification = async (
 
   if (error) throw error
 
-  const tokens = data.map((member) => member.expo_push_token)
+  const tokens = data
+    .filter((member) => member.expo_push_token !== null)
+    .map((member) => member.expo_push_token)
 
   console.log("Sending notification to", tokens)
 

@@ -139,7 +139,9 @@ const NavStack = () => {
   useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener(
       (response) => {
+        console.log("response from notification", response.notification)
         const data = response.notification.request.content.data
+        console.log("data from notification", JSON.stringify(data))
         if (data.chatSession) {
           navigation.navigate("MessagingScreen", {
             chatSession: data.chatSession,
@@ -155,10 +157,9 @@ const NavStack = () => {
           navigation.navigate("CommunityPage", {
             communityId: data.communityId,
           })
+        } else if (data.type === "event_joined") {
+          navigation.navigate("ViewEvent", { eventId: data.eventId })
         }
-        // } else if (data.type === "event_joined") {
-        //   navigation.navigate("ViewEvent", { eventId: data.eventId })
-        // }
       }
     )
 

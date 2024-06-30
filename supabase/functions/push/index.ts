@@ -6,7 +6,7 @@
 /// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
 
 Deno.serve(async (req) => {
-  const { token, titleWords, bodyWords } = await req.json()
+  const { token, titleWords, bodyWords, data } = await req.json()
   const expoPushToken = token
 
   const res = await fetch("https://exp.host/--/api/v2/push/send", {
@@ -19,6 +19,7 @@ Deno.serve(async (req) => {
       to: expoPushToken,
       title: titleWords,
       body: bodyWords,
+      data: data,
     }),
   }).then((res) => res.json())
 
