@@ -15,6 +15,7 @@ import getCommunityMembersUUID from "../../supabaseFunctions/getFuncs/getCommuni
 
 const ViewCommunities = () => {
   const { user } = useAuth()
+  const [joined, setJoined] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
   const [community, setCommunities] = useState<Communities | null>(null)
   const [profiles, setProfiles] = useState<string[] | null>(null)
@@ -29,8 +30,15 @@ const ViewCommunities = () => {
     getCommunityMembersUUID(setLoading, communityId, setProfiles)
   }, [communityId])
 
-  const isUserAMember = profiles?.includes(user!.id)
-  const isOwner = community?.community_owner === user?.id
+  useEffect(() => {
+    console.log(profiles)
+    if (community?.community_owner === user?.id) {
+      setJoined(true)
+    }
+    if (profiles?.includes(user?.id!)) {
+      setJoined(true)
+    }
+  }, [profiles])
 
   return (
     <SafeAreaView className=" flex-1 bg-primary-900 ">
@@ -56,7 +64,7 @@ const ViewCommunities = () => {
         </View>
       </ScrollView>
 
-      {!isUserAMember || !isOwner ? (
+      {!joined ? (
         <JoinFooter
           communityId={communityId}
           communityTitle={community?.community_title}
