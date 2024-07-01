@@ -31,19 +31,18 @@ const sendChannelMessage = async (
       throw error
     }
 
-    // const { error: insertError } = await supabase
-    //   .from("community_channel")
-    //   .upsert([
-    //     {
-    //       id: channelId,
-    //       recent_message: message,
-    //     },
-    //   ])
+    console.log("sending message", message, userId)
+    const { error: updateError } = await supabase
+      .from("community_channels")
+      .update({
+        recent_message: message, // Only the fields to update
+      })
+      .eq("id", channelId)
 
-    // if (insertError) {
-    //   console.log("message error", error)
-    //   throw error
-    // }
+    if (updateError) {
+      console.error("message error", updateError)
+      throw error
+    }
 
     sendChannelNotification(communityId, notificationTtle, message, channel)
   } catch (error) {

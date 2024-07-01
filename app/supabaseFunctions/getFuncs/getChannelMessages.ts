@@ -19,7 +19,6 @@ const getChannelSessionMessages = async (
       throw error // Or handle it according to your application's needs
     }
 
-    console.log("got messages,", messages)
     setMessages(messages as CommunityChannelMessages[])
 
     return messages

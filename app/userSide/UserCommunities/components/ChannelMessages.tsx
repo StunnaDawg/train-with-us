@@ -142,7 +142,6 @@ const ChannelMessageScreen = () => {
           filter: `channel_id=eq.${channel.id}`,
         },
         (payload) => {
-          console.log("Message received: ", payload)
           getChannelSessionMessages(channel.id, setServerMessages)
         }
       )

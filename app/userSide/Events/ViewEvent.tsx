@@ -107,7 +107,7 @@ const ViewEvent = () => {
           </View>
 
           {event?.community_host ? (
-            <View>
+            <View className="mx-2">
               <CommunityEventCard
                 communityId={event?.community_host}
                 userId={user?.id}
