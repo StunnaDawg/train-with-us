@@ -117,7 +117,7 @@ const ViewEvent = () => {
         </ScrollView>
 
         {!isAttending ? (
-          <Checkout
+          <Checkout // this is used to buy a ticket and attend the event
             ticketPrice={event?.price ? event.price : 0}
             event={event}
           />

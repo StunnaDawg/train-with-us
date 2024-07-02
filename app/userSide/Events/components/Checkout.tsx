@@ -6,6 +6,7 @@ import { Events, Profile } from "../../../@types/supabaseTypes"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import addEventUser from "../../../supabaseFunctions/addFuncs/addEventUser"
+import showAlertFunc from "../../../utilFunctions/showAlertFunc"
 
 type CheckoutProps = {
   ticketPrice: number
@@ -17,6 +18,17 @@ const Checkout = ({ ticketPrice, event }: CheckoutProps) => {
   const [eventHostState, setEventHost] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
+
+  const alert = () => {
+    showAlertFunc({
+      title: "Join Event",
+      message: `Would you like to RVSP ${event?.event_title}?`,
+      buttons: [
+        { text: "RVSP", onPress: () => handleCheckout() },
+        { text: "Cancel" },
+      ],
+    })
+  }
 
   const handleCheckout = async () => {
     if (!event || !user || !currentUser?.first_name || !currentUser?.last_name)
@@ -54,7 +66,7 @@ const Checkout = ({ ticketPrice, event }: CheckoutProps) => {
       <View className="items-center">
         <Pressable
           onPress={() => {
-            handleCheckout()
+            alert()
           }}
           className=" bg-white border rounded-lg px-20 my-2 py-2"
         >
