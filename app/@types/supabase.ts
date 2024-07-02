@@ -42,7 +42,9 @@ export type Database = {
           recent_message: string | null
           updated_at: string | null
           user1: string | null
+          user1_read: boolean
           user2: string | null
+          user2_read: boolean
         }
         Insert: {
           created_at?: string
@@ -51,7 +53,9 @@ export type Database = {
           recent_message?: string | null
           updated_at?: string | null
           user1?: string | null
+          user1_read?: boolean
           user2?: string | null
+          user2_read?: boolean
         }
         Update: {
           created_at?: string
@@ -60,7 +64,9 @@ export type Database = {
           recent_message?: string | null
           updated_at?: string | null
           user1?: string | null
+          user1_read?: boolean
           user2?: string | null
+          user2_read?: boolean
         }
         Relationships: [
           {
@@ -141,21 +147,21 @@ export type Database = {
       community_channel_membership: {
         Row: {
           channel_id: string
-          community_id: number | null
+          community_id: number
           expo_push_token: string | null
           muted: boolean | null
           user_id: string
         }
         Insert: {
           channel_id?: string
-          community_id?: number | null
+          community_id: number
           expo_push_token?: string | null
           muted?: boolean | null
           user_id?: string
         }
         Update: {
           channel_id?: string
-          community_id?: number | null
+          community_id?: number
           expo_push_token?: string | null
           muted?: boolean | null
           user_id?: string
@@ -316,49 +322,6 @@ export type Database = {
           }
         ]
       }
-      community_memberships: {
-        Row: {
-          channel_id: string
-          community_id: number
-          expo_push_token: string | null
-          muted: boolean
-          user_id: string
-        }
-        Insert: {
-          channel_id?: string
-          community_id: number
-          expo_push_token?: string | null
-          muted?: boolean
-          user_id?: string
-        }
-        Update: {
-          channel_id?: string
-          community_id?: number
-          expo_push_token?: string | null
-          muted?: boolean
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "public_community_memberships_channel_id_fkey"
-            columns: ["channel_id"]
-            referencedRelation: "community_channels"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "public_community_memberships_community_id_fkey"
-            columns: ["community_id"]
-            referencedRelation: "communities"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "public_community_memberships_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
       community_requests: {
         Row: {
           created_at: string
@@ -394,6 +357,40 @@ export type Database = {
           {
             foreignKeyName: "community_requests_user_id_fkey"
             columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      connection_requests: {
+        Row: {
+          message: string
+          request_sent: string | null
+          requested: string
+          requester: string
+        }
+        Insert: {
+          message?: string
+          request_sent?: string | null
+          requested?: string
+          requester?: string
+        }
+        Update: {
+          message?: string
+          request_sent?: string | null
+          requested?: string
+          requester?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_connection_requests_requested_fkey"
+            columns: ["requested"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_connection_requests_requester_fkey"
+            columns: ["requester"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
@@ -1044,6 +1041,10 @@ export type Database = {
           metadata: Json
           updated_at: string
         }[]
+      }
+      operation: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       search: {
         Args: {

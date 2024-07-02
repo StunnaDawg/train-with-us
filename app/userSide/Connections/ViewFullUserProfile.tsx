@@ -61,9 +61,12 @@ const ViewFullUserProfile = () => {
               <Text className="text-2xl font-bold">
                 {profile?.first_name} {profile?.last_name}
               </Text>
-              <Text className="text-2xl font-bold">
-                {calculateAge(profile.birthday)}
-              </Text>
+              <View>
+                <Text className="text-2xl font-bold">
+                  {calculateAge(profile.birthday)}
+                </Text>
+                <Text>{profile.gender}</Text>
+              </View>
             </View>
           </View>
         </View>

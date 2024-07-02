@@ -12,6 +12,7 @@ import { BottomSheetModal, useBottomSheetModal } from "@gorhom/bottom-sheet"
 import sendNewMessage from "../../../supabaseFunctions/addFuncs/sendNewMessage"
 
 import { ChatSession } from "../../../@types/supabaseTypes"
+import requestConnection from "../../../supabaseFunctions/addFuncs/requestConnection"
 
 type MessageButtonProps = {
   coach: boolean
@@ -84,7 +85,7 @@ const MessageButton = ({
               if (!profileId || !user) return
               console.log("profileId", profileId)
 
-              await sendNewMessage(message, user?.id, profileId)
+              await requestConnection(message, user.id, profileId)
               setLoading(false)
               dismiss()
             }}

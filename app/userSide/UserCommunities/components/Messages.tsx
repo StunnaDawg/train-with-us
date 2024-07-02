@@ -7,48 +7,119 @@ import { NavigationType } from "../../../@types/navigation"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import MessageCard from "./MessageCard"
 import BackButton from "../../../components/BackButton"
+import supabase from "../../../../lib/supabase"
+import { se } from "date-fns/locale"
+
+type TabButtonProps = {
+  title: string
+  onPress: () => void
+  active: boolean
+}
+
+const TabButton = ({ title, onPress, active }: TabButtonProps) => {
+  return (
+    <Pressable
+      className={`bg-white w-18 rounded-md items-center mx-1 p-1 ${
+        active ? "bg-slate-500" : ""
+      }`}
+      onPress={onPress}
+    >
+      <Text className={`font-bold text-black`}>{title}</Text>
+    </Pressable>
+  )
+}
 
 const Messages = () => {
   const [chatSessions, setChatSessions] = useState<ChatSession[] | null>([])
   const navigation = useNavigation<NavigationType>()
+  const [activeTab, setActiveTab] = useState<string>("Recent")
   const { user } = useAuth()
 
-  // useEffect(() => {
-  //   getAllUserChatSessions(user!.id, setChatSessions)
-  //   const channelSubscription = supabase
-  //     .channel("schema-db-changes")
-  //     .on(
-  //       "postgres_changes",
-  //       {
-  //         event: "INSERT",
-  //         schema: "public",
-  //         table: "chat_sessions",
-  //         filter: `user1=eq.${user?.id} or user2=eq.${user?.id}`,
-  //       },
-  //       (payload) => {
-  //         console.log("Message received: ", payload)
-  //         getAllUserChatSessions(user!.id, setChatSessions)
-  //       }
-  //     )
-  //     .subscribe((status, error) => {
-  //       console.log("Subscription status:", status)
-  //       if (error) {
-  //         console.error("Subscription error:", error)
-  //       }
-  //     })
+  const getUserCommutiy = async () => {
+    if (user && activeTab === "Recent") {
+      console.log("Recent")
+      getAllUserChatSessions(user!.id, setChatSessions)
+    }
 
-  //   return () => {
-  //     supabase.removeChannel(channelSubscription)
-  //   }
-  // }, [chatSessions, user])
+    if (user && activeTab === "UnRead") {
+      try {
+        const { data: chatSessions, error } = await supabase
+          .from("chat_sessions")
+          .select("*")
+          .or(`user1.eq.${user.id},user2.eq.${user.id}`)
+          .order("updated_at", { ascending: false })
+          .eq("user1_read", false)
 
+        if (error) throw error
+        if (!chatSessions || chatSessions.length === 0) {
+          throw new Error("No chat session found")
+        }
+        const chatSession: ChatSession[] = chatSessions
+
+        if (!chatSession) {
+          setChatSessions(null)
+          throw new Error("No chat session found")
+        }
+        setChatSessions(chatSession)
+      } catch (error) {
+        console.error("Error fetching chat session:", error)
+        return null // Consider returning null or appropriate error handling
+      }
+    }
+
+    if (user && activeTab === "Read") {
+      try {
+        const { data: chatSessions, error } = await supabase
+          .from("chat_sessions")
+          .select("*")
+          .or(`user1.eq.${user.id},user2.eq.${user.id}`)
+          .order("updated_at", { ascending: false })
+          .eq("user1_read", true)
+
+        if (error) throw error
+        if (!chatSessions || chatSessions.length === 0) {
+          throw new Error("No chat session found")
+        }
+        const chatSession: ChatSession[] = chatSessions
+
+        if (!chatSession) {
+          setChatSessions(null)
+          throw new Error("No chat session found")
+        }
+        setChatSessions(chatSession)
+      } catch (error) {
+        console.error("Error fetching chat session:", error)
+        return null // Consider returning null or appropriate error handling
+      }
+    }
+
+    if (user && activeTab === "Requested") {
+      try {
+        const { data: chatSessions, error } = await supabase
+          .from("connection_requests")
+          .select("*")
+          .eq("requested", user.id)
+
+        if (error) throw error
+        if (!chatSessions || chatSessions.length === 0) {
+          setChatSessions(null)
+          throw new Error("No chat session found")
+        }
+        const chatSession: ChatSession[] = chatSessions
+
+        setChatSessions(chatSession)
+      } catch (error) {
+        console.error("Error fetching chat session:", error)
+      } finally {
+      }
+    }
+
+    if (user && activeTab === "All") {
+      getAllUserChatSessions(user!.id, setChatSessions)
+    }
+  }
   useFocusEffect(
     useCallback(() => {
-      const getUserCommutiy = async () => {
-        if (!user) return
-        getAllUserChatSessions(user!.id, setChatSessions)
-      }
-
       getUserCommutiy()
 
       return () => {
@@ -57,6 +128,14 @@ const Messages = () => {
     }, [user, setChatSessions])
   )
 
+  useEffect(() => {
+    getUserCommutiy()
+  }, [activeTab])
+
+  const handlePressTab = (tabName: string) => {
+    setActiveTab(tabName)
+  }
+
   return (
     <SafeAreaView className="bg-primary-900 flex-1">
       <View>
@@ -64,6 +143,17 @@ const Messages = () => {
           <BackButton colour="white" />
           <Text className="font-bold text-lg text-white">My Messages</Text>
           <View />
+        </View>
+
+        <View className="flex flex-row items-center">
+          {["Recent", "UnRead", "Read", "Requested", "All"].map((tab) => (
+            <TabButton
+              key={tab}
+              title={tab}
+              onPress={() => handlePressTab(tab)}
+              active={activeTab === tab}
+            />
+          ))}
         </View>
 
         <ScrollView className="h-full">
