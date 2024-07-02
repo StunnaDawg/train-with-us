@@ -1,4 +1,4 @@
-import { View, Text, Platform, Dimensions } from "react-native"
+import { View, Text, Platform, Dimensions, Pressable } from "react-native"
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import PhotoArray from "./PhotoArray"
 import ActivitySection from "../../Profile/components/ActivitySection"
@@ -7,6 +7,8 @@ import UserTopGyms from "../../Profile/components/UserTopGyms"
 import MessageButton from "./MessageButton"
 import { Profile } from "../../../@types/supabaseTypes"
 import returnCommunityName from "../../../utilFunctions/returnCommunityName"
+import { useNavigation } from "@react-navigation/native"
+import { NavigationType } from "../../../@types/navigation"
 
 type ConnectionsCardProps = {
   profile?: Profile | null
@@ -26,6 +28,7 @@ const ConnectionsCard = ({
   const [primaryGymName, setPrimaryGymName] = useState<string>("")
   const screenHeight = Dimensions.get("window").height
   const cardHeight = Platform.OS == "android" ? screenHeight * 0.75 : 600
+  const navigation = useNavigation<NavigationType>()
 
   useEffect(() => {
     const getPrimaryGymName = async () => {
@@ -65,6 +68,15 @@ const ConnectionsCard = ({
               profileId={profile?.id}
               coach={false}
             />
+            <Pressable
+              onPress={() =>
+                navigation.navigate("ViewFullUserProfile", {
+                  user: profile,
+                })
+              }
+            >
+              <Text>View Profile</Text>
+            </Pressable>
           </View>
           <View className="mt-1 mx-2">
             <UserAboutSection profile={profile} />
