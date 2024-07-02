@@ -47,3 +47,6 @@ export type NewChatSession =
 
 export type CommunityMembership =
   Database["public"]["Tables"]["community_channel_membership"]["Row"]
+
+export type ConnectionRequest =
+  Database["public"]["Tables"]["connection_requests"]["Row"]

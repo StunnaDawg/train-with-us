@@ -1,14 +1,26 @@
-import { View, Text, Pressable, ScrollView, SafeAreaView } from "react-native"
+import {
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  SafeAreaView,
+  Modal,
+} from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import getAllUserChatSessions from "../../../supabaseFunctions/getFuncs/getAllUserChatSessions"
-import { ChatSession, Profile } from "../../../@types/supabaseTypes"
+import {
+  ChatSession,
+  ConnectionRequest,
+  Profile,
+} from "../../../@types/supabaseTypes"
 import { NavigationType } from "../../../@types/navigation"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import MessageCard from "./MessageCard"
 import BackButton from "../../../components/BackButton"
 import supabase from "../../../../lib/supabase"
 import { se } from "date-fns/locale"
+import RequestCard from "./RequestedConnectionCard"
 
 type TabButtonProps = {
   title: string
@@ -31,8 +43,12 @@ const TabButton = ({ title, onPress, active }: TabButtonProps) => {
 
 const Messages = () => {
   const [chatSessions, setChatSessions] = useState<ChatSession[] | null>([])
+  const [connectionRequest, setConnectionRequest] = useState<
+    ConnectionRequest[] | null
+  >([])
   const navigation = useNavigation<NavigationType>()
   const [activeTab, setActiveTab] = useState<string>("Recent")
+  const [modalVisible, setModalVisible] = useState(false)
   const { user } = useAuth()
 
   const getUserCommutiy = async () => {
@@ -95,19 +111,19 @@ const Messages = () => {
 
     if (user && activeTab === "Requested") {
       try {
-        const { data: chatSessions, error } = await supabase
+        const { data: requestData, error } = await supabase
           .from("connection_requests")
           .select("*")
           .eq("requested", user.id)
 
         if (error) throw error
-        if (!chatSessions || chatSessions.length === 0) {
-          setChatSessions(null)
+        if (!requestData || requestData.length === 0) {
+          setConnectionRequest(null)
           throw new Error("No chat session found")
         }
-        const chatSession: ChatSession[] = chatSessions
+        const requestArray: ConnectionRequest[] = requestData
 
-        setChatSessions(chatSession)
+        setConnectionRequest(requestArray)
       } catch (error) {
         console.error("Error fetching chat session:", error)
       } finally {
@@ -146,38 +162,60 @@ const Messages = () => {
         </View>
 
         <View className="flex flex-row items-center">
-          {["Recent", "UnRead", "Read", "Requested", "All"].map((tab) => (
-            <TabButton
-              key={tab}
-              title={tab}
-              onPress={() => handlePressTab(tab)}
-              active={activeTab === tab}
-            />
-          ))}
+          {["Recent", "UnRead", "Read", "Requested", "Sent", "All"].map(
+            (tab) => (
+              <TabButton
+                key={tab}
+                title={tab}
+                onPress={() => handlePressTab(tab)}
+                active={activeTab === tab}
+              />
+            )
+          )}
         </View>
 
         <ScrollView className="h-full">
-          {chatSessions?.map((session, index) => {
-            const otherUserId =
-              session.user1 === user?.id ? session.user2 : session.user1
-            return (
-              <View className="flex-1 w-full" key={session.id}>
-                <Pressable
-                  onPress={() => {
-                    navigation.navigate("MessagingScreen", {
-                      chatSession: session,
-                    })
-                  }}
-                >
-                  <MessageCard
-                    otherUserId={otherUserId}
-                    recentMessage={session.recent_message}
-                    updatedAt={session.updated_at}
-                  />
-                </Pressable>
-              </View>
-            )
-          })}
+          {activeTab !== "Requested"
+            ? chatSessions?.map((session, index) => {
+                const otherUserId =
+                  session.user1 === user?.id ? session.user2 : session.user1
+                return (
+                  <View className="flex-1 w-full" key={session.id}>
+                    <Pressable
+                      onPress={() =>
+                        navigation.navigate("MessagingScreen", {
+                          chatSession: session,
+                        })
+                      }
+                    >
+                      <MessageCard
+                        otherUserId={otherUserId}
+                        recentMessage={session.recent_message}
+                        updatedAt={session.updated_at}
+                      />
+                    </Pressable>
+                  </View>
+                )
+              })
+            : connectionRequest?.map((request, index) => (
+                <>
+                  <View className="flex-1 w-full" key={request.requested}>
+                    <Pressable
+                      onPress={() => {
+                        setModalVisible(true)
+                      }}
+                    >
+                      <RequestCard
+                        otherUserId={request.requested} // Make sure 'requested' is the correct property
+                        recentMessage={request.message} // Ensure these properties exist on 'request'
+                        updatedAt={request.request_sent}
+                        setModalVisible={setModalVisible}
+                        modalVisible={modalVisible}
+                      />
+                    </Pressable>
+                  </View>
+                </>
+              ))}
         </ScrollView>
       </View>
     </SafeAreaView>
