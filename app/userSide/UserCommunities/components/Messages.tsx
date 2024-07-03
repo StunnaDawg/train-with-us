@@ -51,7 +51,7 @@ const Messages = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const { user } = useAuth()
 
-  const getUserCommutiy = async () => {
+  const getUserMessages = async () => {
     if (user && activeTab === "Recent") {
       console.log("Recent")
       getAllUserChatSessions(user!.id, setChatSessions)
@@ -136,7 +136,7 @@ const Messages = () => {
   }
   useFocusEffect(
     useCallback(() => {
-      getUserCommutiy()
+      getUserMessages()
 
       return () => {
         // Optional cleanup actions
@@ -145,7 +145,7 @@ const Messages = () => {
   )
 
   useEffect(() => {
-    getUserCommutiy()
+    getUserMessages()
   }, [activeTab])
 
   const handlePressTab = (tabName: string) => {
@@ -206,11 +206,12 @@ const Messages = () => {
                       }}
                     >
                       <RequestCard
-                        otherUserId={request.requested} // Make sure 'requested' is the correct property
+                        otherUserId={request.requester} // Make sure 'requested' is the correct property
                         recentMessage={request.message} // Ensure these properties exist on 'request'
                         updatedAt={request.request_sent}
                         setModalVisible={setModalVisible}
                         modalVisible={modalVisible}
+                        onPress={getUserMessages}
                       />
                     </Pressable>
                   </View>

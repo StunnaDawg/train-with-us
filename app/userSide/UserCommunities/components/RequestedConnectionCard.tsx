@@ -1,4 +1,4 @@
-import { View, Text, Modal, Pressable } from "react-native"
+import { View, Text, Modal, Pressable, Alert } from "react-native"
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
@@ -6,6 +6,8 @@ import { Profile } from "../../../@types/supabaseTypes"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import { formatDistanceToNowStrict } from "date-fns"
 import sendNewMessage from "../../../supabaseFunctions/addFuncs/sendNewMessage"
+import supabase from "../../../../lib/supabase"
+import showAlert from "../../../utilFunctions/showAlert"
 
 type RequestCardProps = {
   otherUserId: string | null
@@ -13,6 +15,7 @@ type RequestCardProps = {
   updatedAt: string | null
   setModalVisible: Dispatch<SetStateAction<boolean>>
   modalVisible: boolean
+  onPress: () => void
 }
 
 const formatRelativeTime = (timestamp: string) => {
@@ -35,6 +38,7 @@ const RequestCard = ({
   updatedAt,
   setModalVisible,
   modalVisible,
+  onPress,
 }: RequestCardProps) => {
   const [profile, setProfile] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
@@ -44,8 +48,50 @@ const RequestCard = ({
       if (!user || !otherUserId || !recentMessage) return
       await sendNewMessage(recentMessage, user?.id, otherUserId)
       setModalVisible(!modalVisible)
+      onPress()
+      declineRequest(false)
     } catch (error) {
       console.error("Error accepting request", error)
+    }
+  }
+
+  const declineRequest = async (showAlertBoolean: boolean) => {
+    if (!user || !otherUserId) {
+      console.error("Missing user or otherUserId data.")
+      return
+    }
+
+    console.log("Requester:", otherUserId, "Requested:", user.id)
+
+    try {
+      const { error } = await supabase
+        .from("connection_requests")
+        .delete()
+        .match({ requester: otherUserId, requested: user.id })
+
+      if (error) {
+        showAlert({
+          title: "Error leaving channel",
+          message: "There was an error leaving the channel. Please try again.",
+        })
+        console.error("Error leaving channel:", error)
+        return
+      }
+
+      if (showAlertBoolean) {
+        showAlert({
+          title: "Request Deleted",
+          message: "The request has been deleted.",
+        })
+      }
+      setModalVisible(!modalVisible)
+    } catch (error) {
+      console.error("Error during the decline operation", error)
+
+      Alert.alert(
+        "Error",
+        "An unexpected error occurred. Please try again later."
+      )
     }
   }
 
@@ -113,7 +159,10 @@ const RequestCard = ({
               >
                 <Text className="text-white">Accept</Text>
               </Pressable>
-              <Pressable className="mt-4 bg-red-500 px-3 py-2 rounded-md">
+              <Pressable
+                onPress={() => declineRequest(true)}
+                className="mt-4 bg-red-500 px-3 py-2 rounded-md"
+              >
                 <Text className="text-white">Decline</Text>
               </Pressable>
             </View>
