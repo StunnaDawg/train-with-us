@@ -1,6 +1,32 @@
+import { FunctionsHttpError } from "@supabase/supabase-js"
 import supabase from "../../../lib/supabase"
-import getChatSession from "../getFuncs/getChatSession"
 import createNewChatSession from "./newChatSession"
+import { ChatSession } from "../../@types/supabaseTypes"
+import getUserToken from "../getFuncs/getUserExpoToken"
+
+const sendNotification = async (
+  token: string,
+  title: string,
+  body: string,
+  chatSession: ChatSession
+) => {
+  console.log("Sending notification to", token)
+  const { data, error } = await supabase.functions.invoke("push", {
+    body: {
+      token,
+      titleWords: title,
+      bodyWords: body,
+      data: { chatSession, type: "connection_accepted" },
+    },
+  })
+
+  if (error && error instanceof FunctionsHttpError) {
+    const errorMessage = await error.context.json()
+    console.log("Function returned an error", errorMessage)
+  }
+
+  console.log("Notification sent:", data)
+}
 
 const sendNewMessage = async (
   message: string,
@@ -8,13 +34,14 @@ const sendNewMessage = async (
   user2Id: string
 ) => {
   try {
-    const chatSessionId = await createNewChatSession(userId, user2Id)
+    const userExpotoken = await getUserToken(user2Id)
+    const chatSession = await createNewChatSession(userId, user2Id)
     const { error } = await supabase.from("messages").insert([
       {
         message: message,
         sent_at: new Date(),
         sender: userId,
-        chat_session: chatSessionId?.id,
+        chat_session: chatSession?.id,
       },
     ])
 
@@ -23,7 +50,6 @@ const sendNewMessage = async (
       throw error
     }
 
-    // Function to update connected users array safely
     const updateConnection = async (
       userIdToUpdate: string,
       otherUserId: string
@@ -61,6 +87,17 @@ const sendNewMessage = async (
       updateConnection(userId, user2Id),
       updateConnection(user2Id, userId),
     ])
+
+    if (!chatSession) {
+      console.error("No chat session found")
+      return
+    }
+    await sendNotification(
+      userExpotoken,
+      "Connection Accepted",
+      message,
+      chatSession
+    )
   } catch (error) {
     console.error("sendNewMessage error:", error)
   }

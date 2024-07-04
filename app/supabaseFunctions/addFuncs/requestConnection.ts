@@ -1,6 +1,7 @@
 import { FunctionsHttpError } from "@supabase/supabase-js"
 import supabase from "../../../lib/supabase"
 import showAlert from "../../utilFunctions/showAlert"
+import getUserToken from "../getFuncs/getUserExpoToken"
 
 const sendNotification = async (token: string, title: string, body: string) => {
   console.log("Sending notification to", token)
@@ -47,18 +48,10 @@ const requestConnection = async (
       message: "Your connection request has been sent.",
     })
 
-    const { data: user2Data, error: user2Error } = await supabase
-      .from("users")
-      .select("expo_push_token")
-      .eq("id", user2Id)
-
-    if (user2Error) {
-      console.log("User 2 error", user2Error)
-      throw user2Error
-    }
+    const expoPushToken = await getUserToken(user2Id)
 
     await sendNotification(
-      user2Data[0].expo_push_token,
+      expoPushToken,
       `Connection Request form ${myName || "Someone"}`,
       message
     )
