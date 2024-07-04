@@ -9,6 +9,9 @@ import { Profile } from "../../../@types/supabaseTypes"
 import returnCommunityName from "../../../utilFunctions/returnCommunityName"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
+import { FontAwesome6, Foundation, FontAwesome5 } from "@expo/vector-icons"
+import calculateAge from "../../../utilFunctions/calculateAge"
+import ActivityTags from "../../../components/AcvitivityTags"
 
 type ConnectionsCardProps = {
   profile?: Profile | null
@@ -44,21 +47,53 @@ const ConnectionsCard = ({
   }, [profile])
 
   return (
-    <View className="flex-1" style={{ height: cardHeight }}>
+    <View className="flex-1 mx-5" style={{ height: cardHeight }}>
       {!isLast && profile ? (
         <>
-          <View className="flex flex-row justify-center mt-1 mb-2">
-            <Text className="text-xl font-bold">
-              {profile?.first_name} {profile?.last_name}
-            </Text>
-          </View>
-          <View>
-            <PhotoArray
-              index1={0}
-              index2={1}
-              index3={2}
-              profileId={profile?.id}
-            />
+          <View className="bg-white border-slate-200 rounded-md p-2">
+            <View className="flex flex-row items-center p-2">
+              <Text className="font-bold text-center mx-1">
+                {calculateAge(profile.birthday)}
+              </Text>
+              <FontAwesome6 name="cake-candles" size={24} color="black" />
+            </View>
+            <View className="flex flex-row items-center p-2">
+              <Text className="font-bold text-center mx-1">
+                {profile.gender}
+              </Text>
+              {profile.gender === "Male" ? (
+                <Foundation name="male-symbol" size={24} color="black" />
+              ) : profile.gender === "Female" ? (
+                <Foundation name="female-symbol" size={24} color="black" />
+              ) : (
+                <FontAwesome5 name="transgender-alt" size={24} color="black" />
+              )}
+            </View>
+            <View className="flex flex-row items-center p-2">
+              <View>
+                <View className="flex flex-row items-center">
+                  <Text className="font-bold mx-1">Fitness Interests</Text>
+                  <FontAwesome6 name="person-running" size={24} color="black" />
+                </View>
+                <View className="flex flex-row flex-wrap mt-1">
+                  {profile?.activities && profile.activities.length > 0 ? (
+                    profile.activities.map((tag) => (
+                      <View className="mb-1">
+                        <ActivityTags key={tag} activity={`${tag}`} />
+                      </View>
+                    ))
+                  ) : (
+                    <Text>No Activities!</Text>
+                  )}
+                </View>
+              </View>
+            </View>
+            <View className="flex flex-row items-center p-2">
+              <Text className="font-bold text-center mx-1">
+                {calculateAge(profile.birthday)}
+              </Text>
+              <FontAwesome6 name="cake-candles" size={24} color="black" />
+            </View>
           </View>
 
           <View>
@@ -68,15 +103,6 @@ const ConnectionsCard = ({
               profileId={profile?.id}
               coach={false}
             />
-            <Pressable
-              onPress={() =>
-                navigation.navigate("ViewFullUserProfile", {
-                  user: profile,
-                })
-              }
-            >
-              <Text>View Profile</Text>
-            </Pressable>
           </View>
           <View className="mt-1 mx-2">
             <UserAboutSection profile={profile} />
@@ -86,21 +112,6 @@ const ConnectionsCard = ({
               mt={false}
             />
           </View>
-
-          <View className="mt-1">
-            <PhotoArray
-              index1={3}
-              index2={4}
-              index3={5}
-              profileId={profile?.id}
-            />
-          </View>
-
-          {profile?.activities?.length && profile?.activities?.length > 0 && (
-            <View className="flex flex-row items-center">
-              <ActivitySection profile={profile} />
-            </View>
-          )}
         </>
       ) : (
         <>
@@ -117,3 +128,14 @@ const ConnectionsCard = ({
 }
 
 export default ConnectionsCard
+{
+  /* <Pressable
+              onPress={() =>
+                navigation.navigate("ViewFullUserProfile", {
+                  user: profile,
+                })
+              }
+            >
+              <Text>View Profile</Text>
+            </Pressable> */
+}
