@@ -16,6 +16,7 @@ type RequestCardProps = {
   setModalVisible: Dispatch<SetStateAction<boolean>>
   modalVisible: boolean
   onPress: () => void
+  isRequester: boolean
 }
 
 const formatRelativeTime = (timestamp: string) => {
@@ -39,6 +40,7 @@ const RequestCard = ({
   setModalVisible,
   modalVisible,
   onPress,
+  isRequester,
 }: RequestCardProps) => {
   const [profile, setProfile] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
@@ -48,7 +50,6 @@ const RequestCard = ({
       if (!user || !otherUserId || !recentMessage) return
       await sendNewMessage(recentMessage, user?.id, otherUserId)
       setModalVisible(!modalVisible)
-      onPress()
       declineRequest(false)
     } catch (error) {
       console.error("Error accepting request", error)
@@ -80,10 +81,52 @@ const RequestCard = ({
 
       if (showAlertBoolean) {
         showAlert({
+          title: "Request Declined",
+          message: "The request has been declined.",
+        })
+      }
+      onPress()
+      setModalVisible(!modalVisible)
+    } catch (error) {
+      console.error("Error during the decline operation", error)
+
+      Alert.alert(
+        "Error",
+        "An unexpected error occurred. Please try again later."
+      )
+    }
+  }
+
+  const deleteRequest = async (showAlertBoolean: boolean) => {
+    if (!user || !otherUserId) {
+      console.error("Missing user or otherUserId data.")
+      return
+    }
+
+    console.log("Requester:", otherUserId, "Requested:", user.id)
+
+    try {
+      const { error } = await supabase
+        .from("connection_requests")
+        .delete()
+        .match({ requester: user.id, requested: otherUserId })
+
+      if (error) {
+        showAlert({
+          title: "Error leaving channel",
+          message: "There was an error leaving the channel. Please try again.",
+        })
+        console.error("Error leaving channel:", error)
+        return
+      }
+
+      if (showAlertBoolean) {
+        showAlert({
           title: "Request Deleted",
           message: "The request has been deleted.",
         })
       }
+      onPress()
       setModalVisible(!modalVisible)
     } catch (error) {
       console.error("Error during the decline operation", error)
@@ -146,33 +189,57 @@ const RequestCard = ({
       >
         <View className="flex-1 items-center justify-center">
           <View className="m-4 p-5 bg-white rounded-lg border-2 border-gray-500 shadow-lg">
-            <Text className="mb-4 font-bold text-lg">
-              Request from {profile?.first_name}
-            </Text>
-            <Text>
-              {profile?.first_name} says {recentMessage}
-            </Text>
+            {!isRequester ? (
+              <Text className="mb-4 font-bold text-lg">
+                Request from {profile?.first_name}
+              </Text>
+            ) : (
+              <Text className="mb-4 font-bold text-lg">
+                Your Request to {profile?.first_name}
+              </Text>
+            )}
+            <Text className="font-semibold">You said {recentMessage}</Text>
             <View className="flex flex-row justify-center items-center">
-              <Pressable
-                className="mt-4 mx-1 bg-green-500 px-3 py-2 rounded-md"
-                onPress={() => acceptRequest()}
-              >
-                <Text className="text-white">Accept</Text>
-              </Pressable>
-              <Pressable
-                onPress={() => declineRequest(true)}
-                className="mt-4 bg-red-500 px-3 py-2 rounded-md"
-              >
-                <Text className="text-white">Decline</Text>
-              </Pressable>
+              {!isRequester ? (
+                <Pressable
+                  className="mt-4 mx-1 bg-green-500 px-3 py-2 rounded-md"
+                  onPress={() => acceptRequest()}
+                >
+                  <Text className="text-white">Accept</Text>
+                </Pressable>
+              ) : (
+                <Pressable
+                  className="mt-4 mx-1 bg-green-500 px-3 py-2 rounded-md"
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text className="text-white">Okay</Text>
+                </Pressable>
+              )}
+              {!isRequester ? (
+                <Pressable
+                  onPress={() => declineRequest(true)}
+                  className="mt-4 bg-red-500 px-3 py-2 rounded-md"
+                >
+                  <Text className="text-white">Decline</Text>
+                </Pressable>
+              ) : null}
             </View>
             <View className="flex flex-row justify-center">
-              <Pressable
-                className="mt-4 bg-red-500 px-3 py-2 rounded-md"
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text className="text-white">ignore</Text>
-              </Pressable>
+              {!isRequester ? (
+                <Pressable
+                  className="mt-4 bg-red-500 px-3 py-2 rounded-md"
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text className="text-white">Ignore</Text>
+                </Pressable>
+              ) : (
+                <Pressable
+                  className="mt-4 bg-red-500 px-3 py-2 rounded-md"
+                  onPress={() => deleteRequest(true)}
+                >
+                  <Text className="text-white">Delete Request</Text>
+                </Pressable>
+              )}
             </View>
           </View>
         </View>

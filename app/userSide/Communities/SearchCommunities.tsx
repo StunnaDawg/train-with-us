@@ -6,8 +6,10 @@ import CommunityCard from "./components/CommunityCard"
 import searchCommuntiesFunction from "../../supabaseFunctions/getFuncs/searchCommunities"
 import SearchBar from "../Events/components/SearchBar"
 import BackButton from "../../components/BackButton"
+import { useAuth } from "../../supabaseFunctions/authcontext"
 
 const SearchCommunities = () => {
+  const { user } = useAuth()
   const [searchText, setSearchText] = useState<string>("")
   const [communities, setCommunities] = useState<Communities[] | null>([])
   const [loading, setLoading] = useState<boolean>(false)
@@ -35,7 +37,7 @@ const SearchCommunities = () => {
           communities && communities.length > 0 ? (
             communities.map((community) => (
               <View key={community.id} className="m-2">
-                <CommunityCard community={community} />
+                <CommunityCard community={community} userId={user!.id} />
               </View>
             ))
           ) : (
