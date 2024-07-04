@@ -3,6 +3,7 @@ import React, {
   Dispatch,
   SetStateAction,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -11,8 +12,9 @@ import { useAuth } from "../../../supabaseFunctions/authcontext"
 import { BottomSheetModal, useBottomSheetModal } from "@gorhom/bottom-sheet"
 import sendNewMessage from "../../../supabaseFunctions/addFuncs/sendNewMessage"
 
-import { ChatSession } from "../../../@types/supabaseTypes"
+import { ChatSession, Profile } from "../../../@types/supabaseTypes"
 import requestConnection from "../../../supabaseFunctions/addFuncs/requestConnection"
+import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 
 type MessageButtonProps = {
   coach: boolean
@@ -31,6 +33,7 @@ const MessageButton = ({
   const { user } = useAuth()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const { dismiss } = useBottomSheetModal()
+  const [currentUser, setCurrentUser] = useState<Profile | null>(null)
 
   const snapPoints = useMemo(() => ["25%", "50%"], [])
 
@@ -40,6 +43,11 @@ const MessageButton = ({
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index)
   }, [])
+
+  useEffect(() => {
+    if (!user?.id) return
+    useCurrentUser(user?.id, setCurrentUser)
+  }, [user])
 
   return (
     <>
@@ -85,7 +93,12 @@ const MessageButton = ({
               if (!profileId || !user) return
               console.log("profileId", profileId)
 
-              await requestConnection(message, user.id, profileId)
+              await requestConnection(
+                currentUser?.first_name,
+                message,
+                user.id,
+                profileId
+              )
               setLoading(false)
               dismiss()
             }}
