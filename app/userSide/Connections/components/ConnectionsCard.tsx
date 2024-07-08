@@ -1,4 +1,12 @@
-import { View, Text, Platform, Dimensions, Pressable } from "react-native"
+import {
+  View,
+  Text,
+  Platform,
+  Dimensions,
+  Pressable,
+  StyleSheet,
+  ScrollView,
+} from "react-native"
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import PhotoArray from "./PhotoArray"
 import ActivitySection from "../../Profile/components/ActivitySection"
@@ -12,6 +20,8 @@ import { NavigationType } from "../../../@types/navigation"
 import { FontAwesome6, Foundation, FontAwesome5 } from "@expo/vector-icons"
 import calculateAge from "../../../utilFunctions/calculateAge"
 import ActivityTags from "../../../components/AcvitivityTags"
+import SinglePic from "../../../components/SinglePic"
+import { Image } from "expo-image"
 
 type ConnectionsCardProps = {
   profile?: Profile | null
@@ -32,6 +42,7 @@ const ConnectionsCard = ({
   const screenHeight = Dimensions.get("window").height
   const cardHeight = Platform.OS == "android" ? screenHeight * 0.75 : 600
   const navigation = useNavigation<NavigationType>()
+  const avatarSize = { height: 100, width: 100 }
 
   useEffect(() => {
     const getPrimaryGymName = async () => {
@@ -46,71 +57,119 @@ const ConnectionsCard = ({
     getPrimaryGymName()
   }, [profile])
 
+  const styles = StyleSheet.create({
+    avatar: {
+      borderRadius: 10,
+      overflow: "hidden",
+      maxWidth: "100%",
+    },
+    image: {
+      objectFit: "cover",
+      paddingTop: 0,
+    },
+    noImage: {
+      backgroundColor: "#333",
+      borderWidth: 1,
+      borderStyle: "solid",
+      borderColor: "rgb(200, 200, 200)",
+      borderRadius: 10,
+    },
+  })
   return (
     <View className="flex-1 mx-5" style={{ height: cardHeight }}>
       {!isLast && profile ? (
         <>
-          <View className="bg-white border-slate-200 rounded-md p-2">
-            <View className="flex flex-row items-center p-2">
-              <Text className="font-bold text-center mx-1">
-                {calculateAge(profile.birthday)}
-              </Text>
-              <FontAwesome6 name="cake-candles" size={24} color="black" />
+          <View className="bg-white border-slate-200 rounded-md p-1">
+            <View className="flex flex-row justify-center">
+              <Text className="font-bold text-2xl">{profile.first_name}</Text>
             </View>
-            <View className="flex flex-row items-center p-2">
-              <Text className="font-bold text-center mx-1">
-                {profile.gender}
-              </Text>
-              {profile.gender === "Male" ? (
-                <Foundation name="male-symbol" size={24} color="black" />
-              ) : profile.gender === "Female" ? (
-                <Foundation name="female-symbol" size={24} color="black" />
-              ) : (
-                <FontAwesome5 name="transgender-alt" size={24} color="black" />
-              )}
+            <View className="flex flex-row p-2">
+              <View className="flex flex-row items-center">
+                <FontAwesome6 name="cake-candles" size={20} color="black" />
+                <Text className="font-bold text-center mx-1">
+                  {calculateAge(profile.birthday)}
+                </Text>
+              </View>
             </View>
+
+            <View className="flex flex-row items-center p-2">
+              <View className="flex flex-row items-center">
+                {profile.gender === "Male" ? (
+                  <Foundation name="male-symbol" size={20} color="black" />
+                ) : profile.gender === "Female" ? (
+                  <Foundation name="female-symbol" size={20} color="black" />
+                ) : (
+                  <FontAwesome5
+                    name="transgender-alt"
+                    size={20}
+                    color="black"
+                  />
+                )}
+                <Text className="font-bold text-center mx-1">
+                  {profile.gender}
+                </Text>
+              </View>
+            </View>
+
             <View className="flex flex-row items-center p-2">
               <View>
                 <View className="flex flex-row items-center">
+                  <FontAwesome6 name="person-running" size={20} color="black" />
                   <Text className="font-bold mx-1">Fitness Interests</Text>
-                  <FontAwesome6 name="person-running" size={24} color="black" />
                 </View>
-                <View className="flex flex-row flex-wrap mt-1">
-                  {profile?.activities && profile.activities.length > 0 ? (
-                    profile.activities.map((tag) => (
-                      <View className="mb-1">
-                        <ActivityTags key={tag} activity={`${tag}`} />
-                      </View>
-                    ))
-                  ) : (
-                    <Text>No Activities!</Text>
-                  )}
-                </View>
+
+                <ScrollView horizontal={true} className="mt-1">
+                  {profile?.activities && profile.activities.length > 0
+                    ? profile.activities.map((tag) => (
+                        <View className="mb-1">
+                          <ActivityTags key={tag} activity={`${tag}`} />
+                        </View>
+                      ))
+                    : null}
+                </ScrollView>
               </View>
             </View>
-            <View className="flex flex-row items-center p-2">
-              <Text className="font-bold text-center mx-1">
-                {calculateAge(profile.birthday)}
-              </Text>
-              <FontAwesome6 name="cake-candles" size={24} color="black" />
+            <View className="flex flex-row justify-center m-1">
+              {profile.photos_url?.length && profile?.photos_url[0] !== null ? (
+                <View className="m-1">
+                  <SinglePic
+                    size={250}
+                    avatarRadius={10}
+                    noAvatarRadius={10}
+                    item={profile?.photos_url[0]}
+                  />
+                </View>
+              ) : (
+                <View className="m-1">
+                  <Image
+                    source={require("../../../../assets/images/TWU-Logo.png")}
+                    accessibilityLabel="Avatar"
+                    style={[avatarSize, styles.avatar, styles.image]}
+                  />
+                </View>
+              )}
             </View>
-          </View>
+            <View className="flex flex-row justify-center items-center">
+              <View>
+                <MessageButton
+                  setLoading={setLoading}
+                  loading={loading}
+                  profileId={profile?.id}
+                  coach={false}
+                />
+              </View>
 
-          <View>
-            <MessageButton
-              setLoading={setLoading}
-              loading={loading}
-              profileId={profile?.id}
-              coach={false}
-            />
-          </View>
-          <View className="mt-1 mx-2">
-            <UserAboutSection profile={profile} />
-            <UserTopGyms
-              communityName={primaryGymName}
-              borderB={false}
-              mt={false}
-            />
+              <Pressable
+                className=" border-2 rounded-full px-5 py-1 mx-1"
+                onPress={() =>
+                  navigation.navigate("ViewFullUserProfile", {
+                    user: profile,
+                  })
+                }
+              >
+                <FontAwesome6 name="eye" size={24} />
+              </Pressable>
+            </View>
           </View>
         </>
       ) : (

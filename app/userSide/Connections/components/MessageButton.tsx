@@ -10,7 +10,7 @@ import React, {
 } from "react"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import { BottomSheetModal, useBottomSheetModal } from "@gorhom/bottom-sheet"
-import sendNewMessage from "../../../supabaseFunctions/addFuncs/sendNewMessage"
+import { FontAwesome6 } from "@expo/vector-icons"
 
 import { ChatSession, Profile } from "../../../@types/supabaseTypes"
 import requestConnection from "../../../supabaseFunctions/addFuncs/requestConnection"
@@ -58,9 +58,9 @@ const MessageButton = ({
               onPress={() => {
                 handlePresentModalPress()
               }}
-              className="border-2 rounded-full px-5 py-1 mx-1"
+              className=" border-2 rounded-full px-5 py-1 mx-1"
             >
-              <Text className="text-lg font-bold">Say Hi</Text>
+              <FontAwesome6 name="message" size={24} color="black" />
             </Pressable>
           </View>
         ) : (
