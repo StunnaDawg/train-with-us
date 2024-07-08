@@ -13,6 +13,8 @@ import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCom
 import { Communities } from "../../../@types/supabaseTypes"
 import supabase from "../../../../lib/supabase"
 import formatBirthdate from "../../../utilFunctions/calculateDOB"
+import { Skeleton } from "moti/skeleton"
+import { se } from "date-fns/locale"
 
 type EventCardProps = {
   eventId: number
@@ -49,6 +51,7 @@ const EventCard = ({
   }, [eventCoverPhoto])
 
   const readImage = () => {
+    setLoading(true)
     if (eventCoverPhoto === undefined) return
     console.log("reading", `${eventCoverPhoto}`)
     supabase.storage
@@ -59,6 +62,7 @@ const EventCard = ({
         fr.readAsDataURL(data!)
         fr.onload = () => {
           setCoverPhotoState(fr.result as string)
+          setLoading(false)
         }
       })
   }
@@ -99,33 +103,33 @@ const EventCard = ({
     },
   })
 
-  return !loading ? (
-    <Pressable
-      className="mx-1"
-      onPress={() => navigation.navigate("ViewEvent", { eventId })}
-    >
-      <ImageBackground
-        source={coverPhoto}
-        style={styles.container}
-        imageStyle={styles.image}
+  return (
+    <Skeleton show={loading}>
+      <Pressable
+        className="mx-1"
+        onPress={() => navigation.navigate("ViewEvent", { eventId })}
       >
-        <View className="m-1">
-          <Text className="" style={styles.price}>
-            {eventPrice ? eventPrice.toString() : "Free"}
-          </Text>
-        </View>
-        <View style={[{ flex: 1, justifyContent: "flex-end" }]}>
-          <Text className="text-sm" style={styles.text}>
-            {title}
-          </Text>
-          <Text className="text-xs" style={styles.text}>
-            {formatBirthdate(date)}
-          </Text>
-        </View>
-      </ImageBackground>
-    </Pressable>
-  ) : (
-    <ActivityIndicator />
+        <ImageBackground
+          source={coverPhoto}
+          style={styles.container}
+          imageStyle={styles.image}
+        >
+          <View className="m-1">
+            <Text className="" style={styles.price}>
+              {eventPrice ? eventPrice.toString() : "Free"}
+            </Text>
+          </View>
+          <View style={[{ flex: 1, justifyContent: "flex-end" }]}>
+            <Text className="text-sm" style={styles.text}>
+              {title}
+            </Text>
+            <Text className="text-xs" style={styles.text}>
+              {formatBirthdate(date)}
+            </Text>
+          </View>
+        </ImageBackground>
+      </Pressable>
+    </Skeleton>
   )
 }
 

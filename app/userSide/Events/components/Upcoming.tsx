@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react"
 import EventCard from "./EventCard"
 import { Events } from "../../../@types/supabaseTypes"
 import getUpcomingEvents from "../../../supabaseFunctions/getFuncs/getUpcomingEvents"
+import { Skeleton } from "moti/skeleton"
 
 type RefreshProp = {
   refreshing?: boolean
@@ -29,8 +30,8 @@ const Upcoming = ({ refreshing }: RefreshProp) => {
               date={event.date}
               communityId={event.community_host}
               eventCoverPhoto={event.event_cover_photo}
-              key={event.id}
               eventPrice={event.price}
+              key={event.id}
             />
           ))
         ) : (

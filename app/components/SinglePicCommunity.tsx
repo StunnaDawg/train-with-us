@@ -5,6 +5,7 @@ import { FileObject } from "@supabase/storage-js"
 import supabase from "../../lib/supabase"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import { Profile } from "../@types/supabaseTypes"
+import { Skeleton } from "moti/skeleton"
 
 type SinglePicProps = {
   size: number
@@ -19,6 +20,7 @@ export default function SinglePicCommunity({
   avatarRadius,
   noAvatarRadius,
 }: SinglePicProps) {
+  const [loading, setLoading] = useState<boolean>(false)
   const [avatarUrl, setAvatarUrl] = useState<string>("")
   const avatarSize = { height: size, width: size }
 
@@ -27,7 +29,11 @@ export default function SinglePicCommunity({
   }, [item])
 
   const readImage = () => {
-    if (item === undefined) return
+    setLoading(true)
+    if (item === undefined) {
+      setLoading(false)
+      return
+    }
     console.log("reading ya mom", `${item}`)
     supabase.storage
       .from("photos")
@@ -37,7 +43,13 @@ export default function SinglePicCommunity({
         fr.readAsDataURL(data!)
         fr.onload = () => {
           setAvatarUrl(fr.result as string)
+          setLoading(false)
         }
+      })
+
+      .catch((error) => {
+        console.error("Error downloading image:", error)
+        setLoading(false)
       })
   }
 
@@ -62,7 +74,9 @@ export default function SinglePicCommunity({
 
   return (
     <View>
-      {avatarUrl !== "" ? (
+      {loading ? (
+        <Skeleton radius="round" height={size} width={size} />
+      ) : avatarUrl !== "" ? (
         <Image
           source={{ uri: avatarUrl }}
           accessibilityLabel="Avatar"

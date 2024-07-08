@@ -4,6 +4,7 @@ import SinglePic from "../../../components/SinglePic"
 import formatBirthdate from "../../../utilFunctions/calculateDOB"
 import ShareButton from "../../../components/ShareButton"
 import EventCoverPic from "./EventCoverPic"
+import { Skeleton } from "moti/skeleton"
 
 type ViewEventTitleProps = {
   userId: string | null | undefined

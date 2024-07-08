@@ -2,6 +2,7 @@ import { Image } from "expo-image"
 import { useState, useEffect } from "react"
 import { StyleSheet, View, ActivityIndicator, Dimensions } from "react-native"
 import supabase from "../../../../lib/supabase"
+import { Skeleton } from "moti/skeleton"
 
 type SinglePicProps = {
   height: number
@@ -83,7 +84,7 @@ export default function EventCoverPic({
       style={avatarSize}
     >
       {loading && (
-        <ActivityIndicator size="large" color="black" style={styles.loader} />
+        <Skeleton colorMode={"dark"} radius={25} height={200} width={300} />
       )}
       {!loading && avatarUrl !== "" ? (
         <View>

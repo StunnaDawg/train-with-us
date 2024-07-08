@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   RefreshControl,
   Platform,
+  StyleSheet,
 } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import ViewEventTitle from "./components/ViewEventTitle"
@@ -23,9 +24,11 @@ import { Text } from "react-native"
 import ShareButton from "../../components/ShareButton"
 import CommunityCard from "../Communities/components/CommunityCard"
 import CommunityEventCard from "./components/CommunityEventCard"
+import { MotiView } from "moti"
+import { Skeleton } from "moti/skeleton"
 
 const ViewEvent = () => {
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const { user } = useAuth()
   const [userProfile, setUserProfile] = useState<Profile | null>(null)
   const [isAttending, setIsAttending] = useState<boolean>(false)
@@ -33,6 +36,9 @@ const ViewEvent = () => {
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const route = useRoute<RouteProp<RootStackParamList, "ViewEvent">>()
   const eventId = route.params.eventId
+  const colorMode = "dark"
+
+  const Spacer = ({ height = 16 }) => <MotiView style={{ height }} />
 
   const onRefresh = useCallback(() => {
     setRefreshing(true)
@@ -59,70 +65,104 @@ const ViewEvent = () => {
     checkIfAttending(eventId, userProfile.id, setIsAttending)
   }, [userProfile])
 
-  useEffect(() => {
-    console.log("isAttending", isAttending)
-  }, [isAttending])
-
   return (
     <View className="flex-1" style={{ backgroundColor: "#07182d" }}>
       <SafeAreaView className="flex-1">
-        <View className="flex flex-row justify-between  items-center mx-3 p-2">
-          <BackButton size={22} colour="white" />
-          <Text className="text-white text-lg font-bold">
-            {event?.event_title || "Event"}
-          </Text>
-          <ShareButton eventId={eventId} userId={user?.id} />
-        </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          className="flex-1"
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
+        {loading ? (
           <View>
-            <ViewEventTitle
-              userId={user?.id}
-              eventId={event?.id}
-              title={event?.event_title}
-              date={event?.date}
-              eventCommunityTitle={event?.community_host_name}
-              eventPhoto={event?.event_cover_photo}
-              eventStyle={event?.event_style}
-            />
+            <MotiView
+              transition={{
+                type: "timing",
+              }}
+              className="items-center mx-3 flex flex-row justify-center"
+              animate={{ backgroundColor: "#07182d" }}
+            >
+              <View className="items-center">
+                <Skeleton colorMode={colorMode} width={"100%"} />
+                <Spacer height={8} />
+                <Skeleton
+                  colorMode={colorMode}
+                  radius="square"
+                  height={200}
+                  width={275}
+                />
+                <Spacer />
+                <Skeleton colorMode={colorMode} width={250} />
+                <Spacer height={8} />
+                <Skeleton colorMode={colorMode} width={"100%"} />
+                <Spacer height={8} />
+                <Skeleton colorMode={colorMode} width={"100%"} />
+                <Spacer height={8} />
+                <Skeleton colorMode={colorMode} width={"100%"} />
+                <Spacer height={8} />
+                <Skeleton colorMode={colorMode} width={"100%"} />
+                <Spacer height={30} />
+
+                <Skeleton height={50} colorMode={colorMode} width={"100%"} />
+              </View>
+            </MotiView>
           </View>
-
-          <View className="mx-5 mt-2">
-            <ViewEventDetails
-              date={event?.date}
-              eventId={eventId}
-              location={event?.location}
-              price={event?.price}
-              attendanceLimit={event?.event_limit}
-            />
-          </View>
-
-          <View>
-            <AboutViewEvent description={event?.event_description} />
-          </View>
-
-          {event?.community_host ? (
-            <View className="mx-2">
-              <CommunityEventCard
-                communityId={event?.community_host}
-                userId={user?.id}
-              />
-            </View>
-          ) : null}
-        </ScrollView>
-
-        {!isAttending ? (
-          <Checkout // this is used to buy a ticket and attend the event
-            ticketPrice={event?.price ? event.price : 0}
-            event={event}
-          />
         ) : (
-          <LeaveEvent eventId={eventId} userId={user?.id} />
+          <>
+            <View className="flex flex-row justify-between items-center mx-3 p-2">
+              <BackButton size={22} colour="white" />
+              <Text className="text-white text-lg font-bold">
+                {event?.event_title || "Event"}
+              </Text>
+              <ShareButton eventId={eventId} userId={user?.id} />
+            </View>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              className="flex-1"
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+            >
+              <View>
+                <ViewEventTitle
+                  userId={user?.id}
+                  eventId={event?.id}
+                  title={event?.event_title}
+                  date={event?.date}
+                  eventCommunityTitle={event?.community_host_name}
+                  eventPhoto={event?.event_cover_photo}
+                  eventStyle={event?.event_style}
+                />
+              </View>
+
+              <View className="mx-5 mt-2">
+                <ViewEventDetails
+                  date={event?.date}
+                  eventId={eventId}
+                  location={event?.location}
+                  price={event?.price}
+                  attendanceLimit={event?.event_limit}
+                />
+              </View>
+
+              <View>
+                <AboutViewEvent description={event?.event_description} />
+              </View>
+
+              {event?.community_host ? (
+                <View className="mx-2">
+                  <CommunityEventCard
+                    communityId={event?.community_host}
+                    userId={user?.id}
+                  />
+                </View>
+              ) : null}
+            </ScrollView>
+
+            {!isAttending ? (
+              <Checkout // this is used to buy a ticket and attend the event
+                ticketPrice={event?.price ? event.price : 0}
+                event={event}
+              />
+            ) : (
+              <LeaveEvent eventId={eventId} userId={user?.id} />
+            )}
+          </>
         )}
       </SafeAreaView>
     </View>
@@ -130,3 +170,12 @@ const ViewEvent = () => {
 }
 
 export default ViewEvent
+
+// const styles = StyleSheet.create({
+//   container: {
+//     justifyContent: "center",
+//   },
+//   padded: {
+//     padding: 16,
+//   },
+// })

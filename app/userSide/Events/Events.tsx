@@ -6,6 +6,7 @@ import { RefreshControl } from "react-native-gesture-handler"
 import EventTypes from "./components/EventTypes"
 import UpdateModal from "../UpdateModal"
 import Upcoming from "./components/Upcoming"
+import { Skeleton } from "moti/skeleton"
 
 const Events = () => {
   const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -30,9 +31,9 @@ const Events = () => {
           <JustAdded refreshing={refreshing} />
         </View> */}
 
-        <View>
+        <Skeleton>
           <Upcoming refreshing={refreshing} />
-        </View>
+        </Skeleton>
 
         <View>
           <AllEvents />

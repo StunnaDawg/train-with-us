@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { StyleSheet, View, ActivityIndicator } from "react-native"
 import supabase from "../../lib/supabase"
 import { StatusBar } from "expo-status-bar"
+import { Skeleton } from "moti/skeleton"
 
 type SinglePicProps = {
   size: number
@@ -74,9 +75,7 @@ export default function SinglePic({
   }
   return (
     <View style={avatarSize}>
-      {loading && (
-        <ActivityIndicator size="large" color="black" style={styles.loader} />
-      )}
+      {loading && <Skeleton height={size} width={size} />}
       {!loading && avatarUrl !== "" ? (
         <Image
           source={{ uri: avatarUrl }}
