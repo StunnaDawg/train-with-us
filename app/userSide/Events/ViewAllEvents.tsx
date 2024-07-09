@@ -11,10 +11,12 @@ import getUpcomingEvents from "../../supabaseFunctions/getFuncs/getUpcomingEvent
 import getNewEvents from "../../supabaseFunctions/getFuncs/getNewEvents"
 import getTmrwEvents from "../../supabaseFunctions/getFuncs/getTmrwEvents"
 import BackButton from "../../components/BackButton"
+import { Skeleton } from "moti/skeleton"
+import { MotiView } from "moti"
 
 const ViewAllEvents = () => {
   const [searchText, setSearchText] = useState<string>("")
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const [allEvents, setAllEvents] = useState<Events[] | null>([])
 
   const currentDate = new Date()
@@ -26,11 +28,7 @@ const ViewAllEvents = () => {
 
   const tomorrowDate = tomorrow.toISOString().split("T")[0]
   const dayAfterTomorrowDate = dayAfterTomorrow.toISOString().split("T")[0]
-
-  useEffect(() => {
-    getAllEvents(setLoading, setAllEvents, 30)
-    console.log("tmrw", tomorrowDate)
-  }, [])
+  const colorMode = "dark"
 
   const handleSearch = (text: string) => {
     setSearchText(text)
@@ -133,7 +131,64 @@ const ViewAllEvents = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View className="flex flex-row flex-wrap justify-center">
             {loading ? (
-              <ActivityIndicator />
+              <MotiView
+                transition={{
+                  type: "timing",
+                }}
+                className="items-center mx-3 flex flex-row justify-center"
+                animate={{ backgroundColor: "#07182d" }}
+              >
+                <View className="flex flex-row justify-center flex-wrap items-center">
+                  <View className=" my-2 mx-2">
+                    <Skeleton
+                      colorMode={colorMode}
+                      radius="square"
+                      height={150}
+                      width={150}
+                    />
+                  </View>
+                  <View className=" my-2 mx-1">
+                    <Skeleton
+                      colorMode={colorMode}
+                      radius="square"
+                      height={150}
+                      width={150}
+                    />
+                  </View>
+                  <View className="my-2 mx-2">
+                    <Skeleton
+                      colorMode={colorMode}
+                      radius="square"
+                      height={150}
+                      width={150}
+                    />
+                  </View>
+                  <View className="my-2 mx-2">
+                    <Skeleton
+                      colorMode={colorMode}
+                      radius="square"
+                      height={150}
+                      width={150}
+                    />
+                  </View>
+                  <View className="my-2 mx-2">
+                    <Skeleton
+                      colorMode={colorMode}
+                      radius="square"
+                      height={150}
+                      width={150}
+                    />
+                  </View>
+                  <View className="my-2 mx-2">
+                    <Skeleton
+                      colorMode={colorMode}
+                      radius="square"
+                      height={150}
+                      width={150}
+                    />
+                  </View>
+                </View>
+              </MotiView>
             ) : allEvents && allEvents?.length > 0 ? (
               allEvents?.map(
                 (event) => (
