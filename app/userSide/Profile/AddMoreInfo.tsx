@@ -8,6 +8,8 @@ import Tabs from "./AddInfoComponents/TabsInfo"
 import AboutMeEdit from "./AddInfoComponents/AboutMeEdit"
 import InterestsEdit from "./AddInfoComponents/InterestsEdit"
 import BackButton from "../../components/BackButton"
+import PhotoArrayProfile from "./components/PhotoArrayProfile"
+import ViewFullUserProfile from "../Connections/ViewFullUserProfile"
 
 const AddMoreInfo = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -26,39 +28,17 @@ const AddMoreInfo = () => {
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex-1">
-        <View className="flex flex-row justify-between mx-2 items-center">
-          <View>
-            <BackButton size={32} />
-          </View>
-          <Text className="text-lg font-bold m-1">My Profile</Text>
-
-          <View />
-        </View>
-
-        <UserProfilePic profile={currentUser} refresh={refreshing} />
-
-        <View>
-          <Tabs
-            changeToAboutMeTab={changeToAboutMeTab}
-            changeToInterestTab={changeToInterestTab}
-            aboutMe={aboutMe}
-          />
-        </View>
-        {loading ? (
-          <View className="flex-1 justify-center items-center">
-            <Text>Loading...</Text>
-          </View>
-        ) : aboutMe ? (
+      <ScrollView>
+        <View className="flex-1">
           <View className="flex-1">
             <AboutMeEdit currentUserId={currentUser.id} />
           </View>
-        ) : (
+
           <View className="flex-1">
             <InterestsEdit currentUserId={currentUser.id} />
           </View>
-        )}
-      </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }

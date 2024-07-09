@@ -34,19 +34,12 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
     }, [currentUserId, setCurrentUserState])
   )
 
-  useEffect(() => {
-    const getPrimaryGymName = async () => {
-      const PrimaryGymName = await returnCommunityName(
-        currentUserState?.primary_gym
-      )
-      setPrimaryGymName(PrimaryGymName)
-    }
-
-    getPrimaryGymName()
-  }, [currentUserState])
   return (
-    <ScrollView className="mx-7">
-      <View className="border-b border-black/45 p-2">
+    <View className="m-3">
+      <View className="px-2">
+        <Text className="text-sm text-slate-400 font-bold">Basic Info</Text>
+      </View>
+      <View className="border-b border-black/45 p-2 py-3">
         <Pressable
           onPress={() => {
             if (currentUserState) {
@@ -57,73 +50,51 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
           }}
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-sm">Bio</Text>
-          <FontAwesome6 name="edit" size={20} color="blue" />
+          <Text className=" font-bold text-xs">About Me</Text>
+          <FontAwesome6 name="edit" size={16} color="gray" />
         </Pressable>
       </View>
 
-      <View className="border-b border-black/45 p-2">
+      <View className="border-b border-black/45 p-2 py-3">
         <Pressable className="flex flex-row justify-between items-center">
-          <Text className=" font-bold text-sm">
+          <Text className=" font-bold text-xs">
             {!loading && currentUserState
               ? formatBirthdate(currentUserState.birthday)
               : "Add Birthday"}
           </Text>
-
-          <FontAwesome6 name="edit" size={20} color="blue" />
         </Pressable>
       </View>
 
-      <View className="border-b border-black/45 p-2">
-        <Pressable
-          onPress={() =>
-            navigation.navigate("PrimaryGym", {
-              userProfile: currentUserState,
-            })
-          }
-          className="flex flex-row justify-between items-center"
-        >
-          <Text className=" font-bold text-sm">Primary Community:</Text>
-          <Text className=" font-bold text-sm">{PrimaryGymName}</Text>
-          <View />
-          <View />
-          <View />
-          <View className="items-center">
-            <FontAwesome6 name="edit" size={20} color="blue" />
-          </View>
-        </Pressable>
-      </View>
-
-      <View className="border-b border-black/45 p-2">
+      <View className="border-b border-black/45 p-2 py-3">
         <Pressable
           onPress={() => navigation.navigate("QuestionThree")}
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-sm">
+          <Text className=" font-bold text-xs">
             Gender - {currentUserState?.gender || "Add Gender"}
           </Text>
-          <FontAwesome6 name="edit" size={20} color="blue" />
+          <FontAwesome6 name="edit" size={16} color="gray" />
         </Pressable>
       </View>
 
-      <View className="border-b border-black/45 p-2">
+      <View className="border-b border-black/45 p-2 py-3">
         <Pressable
           onPress={() => navigation.navigate("SexualityEdit")}
           className="flex flex-row justify-between items-center"
         >
-          <Text className=" font-bold text-sm">
+          <Text className=" font-bold text-xs">
             Sexuality - {currentUserState?.sexuality || "Add Sexuality"}
           </Text>
-          <FontAwesome6 name="edit" size={20} color="blue" />
+          <FontAwesome6 name="edit" size={16} color="gray" />
         </Pressable>
       </View>
 
-      <View className="border-b border-black/45 p-2">
+      <View className="border-b border-black/45 p-2 py-3">
         <Pressable className="flex flex-row justify-between items-center">
-          <Text className=" font-bold text-sm">Location - Halifax NS</Text>
+          <Text className=" font-bold text-xs">Location - Halifax NS</Text>
         </Pressable>
       </View>
-    </ScrollView>
+    </View>
   )
 }
 

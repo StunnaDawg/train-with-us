@@ -1,22 +1,18 @@
 import { View, Text } from "react-native"
 import React, { useEffect, useState } from "react"
-import SingleEditPic from "../../../components/SingleEditPic"
 import ProfilePicSupa from "../../../components/EditProfilePicture"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import { Profile } from "../../../@types/supabaseTypes"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
-import BackButton from "../../../components/BackButton"
+import { se } from "date-fns/locale"
+import { Skeleton } from "moti/skeleton"
 
-const ProfilePicture = () => {
-  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
+type ProfilePictureProps = {
+  currentUser: Profile | null
+}
+
+const ProfilePicture = ({ currentUser }: ProfilePictureProps) => {
   const [profilePic, setProfilePic] = useState<string | null | undefined>()
-  const { user } = useAuth()
-
-  useEffect(() => {
-    if (!user) return
-
-    useCurrentUser(user?.id, setCurrentUser)
-  }, [user])
 
   useEffect(() => {
     if (
@@ -29,16 +25,9 @@ const ProfilePicture = () => {
 
   return (
     <View>
-      <View className="items-center flex flex-row justify-between">
-        <View className="mx-2">
-          <BackButton size={28} />
-        </View>
-        <Text className="font-bold text-lg">Edit Profile Picture</Text>
-        <View />
-      </View>
-
       <View>
         <ProfilePicSupa
+          size={120}
           imageUrl={profilePic}
           imageUrlToRead={profilePic}
           setImageUrl={setProfilePic}

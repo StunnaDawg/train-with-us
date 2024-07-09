@@ -1,23 +1,13 @@
 import { View, Text, ScrollView, RefreshControl, Pressable } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
-import SinglePic from "../../components/SinglePic"
 import UserProfilePic from "./components/UserProfilePic"
-import UserTopGyms from "./components/UserTopGyms"
-import UserAboutSection from "./components/UserAboutSection"
-import ActivitySection from "./components/ActivitySection"
-import PictureSection from "./components/PictureSection"
 import { Profile } from "../../@types/supabaseTypes"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { useAuth } from "../../supabaseFunctions/authcontext"
-import WhiteSkinnyButton from "../../components/WhiteSkinnyButton"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../@types/navigation"
 import MyEventsButton from "../../components/MyEventsButton"
-import PhotoArray from "../Connections/components/PhotoArray"
-import { FontAwesome6 } from "@expo/vector-icons"
 import returnCommunityName from "../../utilFunctions/returnCommunityName"
-import sendNotification from "../../utilFunctions/sendNotification"
-import PhotoArrayProfile from "./components/PhotoArrayProfile"
 import GenericButton from "../../components/GenericButton"
 
 const ProfileView = () => {
@@ -80,10 +70,6 @@ const ProfileView = () => {
 
       <UserProfilePic profile={currentUser} refresh={refreshing} />
 
-      <View className="mx-3">
-        <UserTopGyms communityName={primaryGymName} borderB={true} mt={true} />
-      </View>
-
       <View className="flex flex-row justify-center mt-3 items-center">
         <View className="mx-1">
           <GenericButton
@@ -95,72 +81,16 @@ const ProfileView = () => {
             colourDefault="bg-white"
             borderColourPressed="border-gray-200"
             borderColourDefault="border-black"
-            text="Add More Info"
+            text="Edit Profile"
             buttonFunction={() => {
               if (currentUser) {
-                navigation.navigate("AddMoreUserInfo", {
+                navigation.navigate("UserEditProfile", {
                   userProfile: currentUser,
                 })
               }
             }}
           />
         </View>
-
-        {/* <View className="mx-1">
-          <GenericButton
-            roundness="rounded-lg"
-            textSize="text-xs"
-            width={100}
-            textCenter={true}
-            colourPressed="bg-slate-200"
-            colourDefault="bg-white"
-            borderColourPressed="border-gray-200"
-            borderColourDefault="border-black"
-            text="Test notifications"
-            buttonFunction={() => {
-              if (currentUser && currentUser.expo_push_token) {
-                sendNotification(
-                  currentUser.expo_push_token,
-                  "Test Notification",
-                  "This is a test notification"
-                )
-              }
-            }}
-          />
-        </View> */}
-      </View>
-
-      <View className="mx-3">
-        <UserAboutSection profile={currentUser} />
-      </View>
-
-      <ActivitySection profile={currentUser} />
-
-      <View className="my-3">
-        <Pressable
-          onPress={() => {
-            navigation.navigate("UserEditProfile")
-          }}
-        >
-          <View className="flex flex-row items-center">
-            <Text className="font-bold text-md mx-2">
-              Change or Add Pictures!
-            </Text>
-            <FontAwesome6 name="edit" size={20} color="blue" />
-          </View>
-        </Pressable>
-        <PhotoArrayProfile
-          index1={0}
-          index2={1}
-          index3={2}
-          profileId={user?.id}
-        />
-        <PhotoArrayProfile
-          index1={3}
-          index2={4}
-          index3={5}
-          profileId={user?.id}
-        />
       </View>
     </ScrollView>
   )

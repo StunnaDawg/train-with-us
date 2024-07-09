@@ -5,15 +5,14 @@ import React, { useEffect, useState } from "react"
 import * as ImagePicker from "expo-image-picker"
 import { FontAwesome6 } from "@expo/vector-icons"
 import supabase from "../../lib/supabase"
-import { FileObject } from "@supabase/storage-js"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import { decode } from "base64-arraybuffer"
-import insertPhoto from "../supabaseFunctions/updateFuncs/insertPhoto"
 import { Profile } from "../@types/supabaseTypes"
 import useCurrentUser from "../supabaseFunctions/getFuncs/useCurrentUser"
-import { set } from "date-fns"
 import removePhoto from "../supabaseFunctions/deleteFuncs/removePhoto"
 import insertProfilePhoto from "../supabaseFunctions/updateFuncs/insertProfilePhotos"
+import { Skeleton } from "moti/skeleton"
+import { set } from "mongoose"
 
 type SingleImageProp = {
   imageUrl: string | null | undefined
@@ -22,6 +21,7 @@ type SingleImageProp = {
   setImageUrls: React.Dispatch<
     React.SetStateAction<string[] | null | undefined>
   >
+  size?: number
 }
 
 const SingleImageSupa = ({
@@ -29,17 +29,19 @@ const SingleImageSupa = ({
   listIndex,
   imageUrls,
   setImageUrls,
+  size = 150,
 }: SingleImageProp) => {
   const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
-  const avatarSize = { height: 150, width: 150 }
+  const avatarSize = { height: size, width: size }
   const userId = user?.id
   let profileType: Profile
   const [image, setImage] = useState<string>("")
 
   useEffect(() => {
     readImage()
+    setLoading(false)
   }, [imageUrl])
 
   useEffect(() => {
@@ -48,6 +50,7 @@ const SingleImageSupa = ({
   }, [])
 
   const readImage = () => {
+    setLoading(true)
     if (imageUrl === "") return
     console.log("reading", `${imageUrl}`)
     supabase.storage
@@ -124,22 +127,24 @@ const SingleImageSupa = ({
 
   return (
     <View className="flex flex-row justify-center flex-wrap">
-      {image !== "" ? (
+      {loading ? (
+        <Skeleton height={size} width={size} />
+      ) : image !== "" ? (
         <View>
           <Image
             className="m-1 relative overflow-hidden max-w-full rounded-lg bg-gray-800 border-1 border-solid border-gray-200 border-r-10"
             source={{ uri: image }}
-            style={{ width: 150, height: 150 }}
+            style={{ width: size, height: size }}
             cachePolicy="memory-disk"
           />
           {loading ? <ActivityIndicator /> : null}
           <Pressable
-            className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded hover:bg-blue-800 m-2"
+            className="absolute bottom-0 right-0 bg-white text-white p-2 rounded-full hover:bg-blue-800 m-2"
             onPress={async () => {
               onRemoveImage(imageUrl, listIndex)
             }}
           >
-            <FontAwesome6 name="trash" size={24} color="black" />
+            <FontAwesome6 name="x" size={20} color="black" />
           </Pressable>
         </View>
       ) : (
@@ -153,9 +158,9 @@ const SingleImageSupa = ({
               await pickImage()
               //   await uploadImage(image, "image", image + id, submitNewUserPhotos)
             }}
-            className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded hover:bg-blue-800 m-2"
+            className="absolute bottom-0 right-0 bg-white text-white p-2 rounded-full hover:bg-blue-800 m-2"
           >
-            <FontAwesome6 name="circle-plus" size={24} color="blue" />
+            <FontAwesome6 name="plus" size={20} color="black" />
           </Pressable>
         </View>
       )}

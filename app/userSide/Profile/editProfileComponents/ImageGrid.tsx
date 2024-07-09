@@ -9,16 +9,10 @@ import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import { Profile } from "../../../@types/supabaseTypes"
 import { useFocusEffect } from "@react-navigation/native"
 
-const ImageGrid = () => {
-  const [currentUser, setCurrentUser] = useState<Profile | null>(null)
+type ImageGridProps = { currentUser: Profile | null }
+
+const ImageGrid = ({ currentUser }: ImageGridProps) => {
   const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
-  const { user } = useAuth()
-
-  useEffect(() => {
-    if (!user) return
-
-    useCurrentUser(user.id, setCurrentUser)
-  }, [user])
 
   useEffect(() => {
     if (currentUser?.photos_url) {
@@ -28,13 +22,13 @@ const ImageGrid = () => {
 
   useFocusEffect(
     useCallback(() => {
-      const getUser = async () => {
+      const getSetPhotos = async () => {
         if (currentUser?.photos_url) {
           setImageFiles(currentUser.photos_url)
         }
       }
 
-      getUser()
+      getSetPhotos()
 
       return () => {
         // Optional cleanup actions
@@ -45,8 +39,9 @@ const ImageGrid = () => {
   return (
     <View className="flex flex-row flex-wrap justify-center">
       {Array.from({ length: 6 }).map((_, index) => (
-        <View key={index} className="mx-1">
+        <View key={index}>
           <SingleImageSupa
+            size={110}
             imageUrl={imageFiles?.[index]}
             listIndex={index}
             imageUrls={currentUser?.photos_url}

@@ -14,16 +14,18 @@ type SingleImageProp = {
   imageUrl: string | null | undefined
   imageUrlToRead: string | null | undefined
   setImageUrl: React.Dispatch<React.SetStateAction<string | null | undefined>>
+  size?: number
 }
 
 const ProfilePicSupa = ({
+  size = 120,
   imageUrl,
   imageUrlToRead,
   setImageUrl,
 }: SingleImageProp) => {
   const [loading, setLoading] = useState(false)
   const { user } = useAuth()
-  const avatarSize = { height: 120, width: 120 }
+  const avatarSize = { height: size, width: size }
   const userId = user?.id
 
   const [image, setImage] = useState<string>("")
@@ -106,16 +108,16 @@ const ProfilePicSupa = ({
           <Image
             className="m-1 relative overflow-hidden max-w-full rounded-full bg-gray-800 border-1 border-solid border-gray-200 border-r-10"
             source={{ uri: image }}
-            style={{ width: 150, height: 150 }}
+            style={{ width: size, height: size }}
           />
           {loading ? <ActivityIndicator /> : null}
           <Pressable
-            className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded hover:bg-blue-800 m-2"
+            className="absolute bottom-0 right-0 bg-white  text-white p-2 rounded-full hover:bg-blue-800 m-2"
             onPress={async () => {
               onRemoveImage(imageUrl)
             }}
           >
-            <FontAwesome6 name="trash" size={24} color="black" />
+            <FontAwesome6 name="x" size={20} color="black" />
           </Pressable>
         </View>
       ) : (

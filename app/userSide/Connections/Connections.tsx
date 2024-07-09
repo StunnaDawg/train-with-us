@@ -19,10 +19,11 @@ import Animated, {
 import { NavigationType } from "../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import { FontAwesome6 } from "@expo/vector-icons"
+import CardSkeleton from "./components/CardSkeleton"
 
 const Connections = () => {
   const { user } = useAuth()
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const [newConnection, setNewConnection] = useState<boolean>(false)
   const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
   const [scrollEnabledState, setScrollEnabled] = useState(true)
@@ -105,7 +106,7 @@ const Connections = () => {
         snapToAlignment="start"
       >
         {loading ? (
-          <Text>Loading...</Text>
+          <CardSkeleton />
         ) : (
           connectionProfiles.map((profile, index) => (
             <ConnectionsCard

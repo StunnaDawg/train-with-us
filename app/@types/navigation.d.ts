@@ -29,7 +29,9 @@ export type RootStackParamList = {
   ViewEvent: {
     eventId: number
   }
-  UserEditProfile: undefined
+  UserEditProfile: {
+    userProfile: Profile | undefined | null
+  }
   UserSettings: undefined
   ViewUserProfile: {
     userProfile: Profile

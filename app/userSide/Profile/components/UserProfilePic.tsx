@@ -4,6 +4,7 @@ import SinglePic from "../../../components/SinglePic"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import { Profile } from "../../../@types/supabaseTypes"
+import SinglePicCommunity from "../../../components/SinglePicCommunity"
 
 type UserProfilePicProps = {
   refresh: boolean
@@ -39,7 +40,7 @@ const UserProfilePic = ({ refresh, profile }: UserProfilePicProps) => {
   return (
     <View className="flex flex-row justify-center mt-12">
       <View>
-        <SinglePic
+        <SinglePicCommunity
           size={150}
           item={profilePic}
           avatarRadius={230}
