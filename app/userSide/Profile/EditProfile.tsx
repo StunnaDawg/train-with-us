@@ -44,7 +44,7 @@ const EditProfile = () => {
       {!loading ? (
         <ScrollView className="flex-1">
           <View>
-            <ProfilePicture currentUser={currentUser} />
+            <ProfilePicture currentUser={currentUser} setLoading={setLoading} />
           </View>
           <View className="m-5">
             <Text className="text-lg font-bold text-center mt-4">
@@ -52,7 +52,7 @@ const EditProfile = () => {
             </Text>
           </View>
           <View>
-            <ImageGrid currentUser={currentUser} />
+            <ImageGrid currentUser={currentUser} setLoading={setLoading} />
           </View>
 
           <AddMoreInfo />

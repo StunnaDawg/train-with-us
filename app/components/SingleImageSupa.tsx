@@ -13,6 +13,8 @@ import removePhoto from "../supabaseFunctions/deleteFuncs/removePhoto"
 import insertProfilePhoto from "../supabaseFunctions/updateFuncs/insertProfilePhotos"
 import { Skeleton } from "moti/skeleton"
 import { set } from "mongoose"
+import { se } from "date-fns/locale"
+import { MotiView } from "moti"
 
 type SingleImageProp = {
   imageUrl: string | null | undefined
@@ -74,6 +76,7 @@ const SingleImageSupa = ({
     })
 
     if (!result.canceled) {
+      setLoading(true)
       const img = result.assets[0]
       const base64 = await FileSystem.readAsStringAsync(img.uri, {
         encoding: "base64",
@@ -89,6 +92,7 @@ const SingleImageSupa = ({
       if (userId === undefined) return
       insertProfilePhoto(setLoading, filePath, userId)
       setImage(img.uri)
+      setLoading(false)
     }
   }
 
@@ -128,7 +132,13 @@ const SingleImageSupa = ({
   return (
     <View className="flex flex-row justify-center flex-wrap">
       {loading ? (
-        <Skeleton height={size} width={size} />
+        <MotiView
+          transition={{
+            type: "timing",
+          }}
+        >
+          <Skeleton height={size} width={size} />
+        </MotiView>
       ) : image !== "" ? (
         <View>
           <Image

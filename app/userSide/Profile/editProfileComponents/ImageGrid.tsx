@@ -1,17 +1,17 @@
 import { View, Text } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
-import SingleEditPic from "../../../components/SingleEditPic"
-import supabase from "../../../../lib/supabase"
-import { useAuth } from "../../../supabaseFunctions/authcontext"
-import { FileObject } from "@supabase/storage-js"
+
 import SingleImageSupa from "../../../components/SingleImageSupa"
-import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
+
 import { Profile } from "../../../@types/supabaseTypes"
 import { useFocusEffect } from "@react-navigation/native"
 
-type ImageGridProps = { currentUser: Profile | null }
+type ImageGridProps = {
+  currentUser: Profile | null
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-const ImageGrid = ({ currentUser }: ImageGridProps) => {
+const ImageGrid = ({ currentUser, setLoading }: ImageGridProps) => {
   const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
 
   useEffect(() => {

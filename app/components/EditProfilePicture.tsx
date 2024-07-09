@@ -9,6 +9,9 @@ import { useAuth } from "../supabaseFunctions/authcontext"
 import { decode } from "base64-arraybuffer"
 import removeProfilePic from "../supabaseFunctions/deleteFuncs/removeProfilePic"
 import updateProfilePic from "../supabaseFunctions/imageFuncs/addProiflePic"
+import { MotiView } from "moti"
+import { Skeleton } from "moti/skeleton"
+import { se } from "date-fns/locale"
 
 type SingleImageProp = {
   imageUrl: string | null | undefined
@@ -58,6 +61,7 @@ const ProfilePicSupa = ({
     })
 
     if (!result.canceled) {
+      setLoading(true)
       const img = result.assets[0]
       const base64 = await FileSystem.readAsStringAsync(img.uri, {
         encoding: "base64",
@@ -74,6 +78,7 @@ const ProfilePicSupa = ({
       updateProfilePic(userId, filePath)
       setImageUrl(filePath)
       setImage(img.uri)
+      setLoading(false)
     }
   }
 
@@ -103,7 +108,15 @@ const ProfilePicSupa = ({
 
   return (
     <View className="flex flex-row justify-center flex-wrap">
-      {image !== "" ? (
+      {loading ? (
+        <MotiView
+          transition={{
+            type: "timing",
+          }}
+        >
+          <Skeleton radius={"round"} height={size} width={size} />
+        </MotiView>
+      ) : image !== "" ? (
         <View>
           <Image
             className="m-1 relative overflow-hidden max-w-full rounded-full bg-gray-800 border-1 border-solid border-gray-200 border-r-10"
@@ -122,7 +135,7 @@ const ProfilePicSupa = ({
         </View>
       ) : (
         <View
-          className="m-1 relative overflow-hidden max-w-full rounded-lg bg-gray-600 border-1 border-solid border-gray-200 border-r-10"
+          className="m-1 relative overflow-hidden max-w-full rounded-full bg-gray-600 border-1 border-solid border-gray-200 border-r-10"
           style={[avatarSize]}
         >
           {loading ? <ActivityIndicator /> : null}
@@ -131,9 +144,9 @@ const ProfilePicSupa = ({
               await pickImage()
               //   await uploadImage(image, "image", image + id, submitNewUserPhotos)
             }}
-            className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded hover:bg-blue-800 m-2"
+            className="absolute bottom-0 right-0 bg-white text-white p-2 rounded-full hover:bg-blue-800 m-2"
           >
-            <FontAwesome6 name="circle-plus" size={24} color="blue" />
+            <FontAwesome6 name="plus" size={20} color="black" />
           </Pressable>
         </View>
       )}

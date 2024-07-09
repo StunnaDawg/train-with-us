@@ -12,6 +12,8 @@ import { Communities, Profile } from "../@types/supabaseTypes"
 import useCurrentUser from "../supabaseFunctions/getFuncs/useCurrentUser"
 import removeCommunityPhoto from "../supabaseFunctions/deleteFuncs/removeCommunityPhoto"
 import insertCommunityPhoto from "../supabaseFunctions/updateFuncs/insertPhoto"
+import { MotiView } from "moti"
+import { Skeleton } from "moti/skeleton"
 
 type SingleImageProp = {
   imageUrl: string | null | undefined
@@ -72,6 +74,7 @@ const SingleImageSupaCommunity = ({
     })
 
     if (!result.canceled) {
+      setLoading(true)
       const img = result.assets[0]
       const base64 = await FileSystem.readAsStringAsync(img.uri, {
         encoding: "base64",
@@ -91,6 +94,8 @@ const SingleImageSupaCommunity = ({
       setImage(img.uri)
 
       setRefresh(true)
+
+      setLoading(false)
     }
   }
 
@@ -129,7 +134,15 @@ const SingleImageSupaCommunity = ({
 
   return (
     <View className="flex flex-row justify-center flex-wrap">
-      {image !== "" ? (
+      {loading ? (
+        <MotiView
+          transition={{
+            type: "timing",
+          }}
+        >
+          <Skeleton radius={"round"} height={150} width={150} />
+        </MotiView>
+      ) : image !== "" ? (
         <View>
           <Image
             className="m-1 relative overflow-hidden max-w-full rounded-lg bg-gray-800 border-1 border-solid border-gray-200 border-r-10"

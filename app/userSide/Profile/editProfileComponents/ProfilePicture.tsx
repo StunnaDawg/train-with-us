@@ -1,17 +1,14 @@
 import { View, Text } from "react-native"
 import React, { useEffect, useState } from "react"
 import ProfilePicSupa from "../../../components/EditProfilePicture"
-import { useAuth } from "../../../supabaseFunctions/authcontext"
 import { Profile } from "../../../@types/supabaseTypes"
-import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
-import { se } from "date-fns/locale"
-import { Skeleton } from "moti/skeleton"
 
 type ProfilePictureProps = {
   currentUser: Profile | null
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ProfilePicture = ({ currentUser }: ProfilePictureProps) => {
+const ProfilePicture = ({ currentUser, setLoading }: ProfilePictureProps) => {
   const [profilePic, setProfilePic] = useState<string | null | undefined>()
 
   useEffect(() => {
