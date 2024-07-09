@@ -22,7 +22,7 @@ import BackButton from "../../components/BackButton"
 import LeaveEvent from "./components/LeaveEvent"
 import { Text } from "react-native"
 import ShareButton from "../../components/ShareButton"
-import CommunityCard from "../Communities/components/CommunityCard"
+import Spacer from "../../components/Spacer"
 import CommunityEventCard from "./components/CommunityEventCard"
 import { MotiView } from "moti"
 import { Skeleton } from "moti/skeleton"
@@ -37,8 +37,6 @@ const ViewEvent = () => {
   const route = useRoute<RouteProp<RootStackParamList, "ViewEvent">>()
   const eventId = route.params.eventId
   const colorMode = "dark"
-
-  const Spacer = ({ height = 16 }) => <MotiView style={{ height }} />
 
   const onRefresh = useCallback(() => {
     setRefreshing(true)

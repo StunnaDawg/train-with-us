@@ -30,6 +30,7 @@ import getCommunityMemberShips from "../../supabaseFunctions/getFuncs/getCommuni
 import joinChannel from "../../supabaseFunctions/addFuncs/joinChannel"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import showAlert from "../../utilFunctions/showAlert"
+import SinglePicCommunity from "../../components/SinglePicCommunity"
 
 const CommunityPage = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -144,22 +145,21 @@ const CommunityPage = () => {
 
   return (
     <SafeAreaView className="flex-1">
+      <View className="flex flex-row justify-between m-2">
+        <BackButton size={22} />
+        <Pressable
+          className="flex flex-row items-center"
+          onPress={() => handlePresentModalPress()}
+        >
+          <Text className="font-bold text-sm mx-1">
+            {`${community?.community_title}`}'s Community Page
+          </Text>
+          <FontAwesome6 name="chevron-right" size={16} color="black" />
+        </Pressable>
+        <View />
+      </View>
       <ScrollView className="flex-1">
         <View className="m-2">
-          <View className="flex flex-row justify-between mb-1">
-            <BackButton size={22} />
-            <Pressable
-              className="flex flex-row items-center"
-              onPress={() => handlePresentModalPress()}
-            >
-              <Text className="font-bold text-sm mx-1">
-                {`${community?.community_title}`}'s Community Page
-              </Text>
-              <FontAwesome6 name="chevron-right" size={16} color="black" />
-            </Pressable>
-            <View />
-          </View>
-
           <View className="m-2">
             <Text className="text-sm underline">Information Channels</Text>
             {!loading && communityChannels && communityChannels.length > 0 ? (
@@ -240,7 +240,7 @@ const CommunityPage = () => {
                       className="flex flex-row items-center"
                     >
                       <View className="m-2">
-                        <SinglePic
+                        <SinglePicCommunity
                           size={50}
                           avatarRadius={100}
                           noAvatarRadius={100}

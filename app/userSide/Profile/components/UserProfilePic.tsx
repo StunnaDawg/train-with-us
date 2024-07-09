@@ -1,11 +1,7 @@
 import { View, Text, Pressable } from "react-native"
 import React, { useEffect, useState } from "react"
 import SinglePic from "../../../components/SinglePic"
-import { NavigationType } from "../../../@types/navigation"
-import { useNavigation } from "@react-navigation/native"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
-import supabase from "../../../../lib/supabase"
-import { FileObject } from "@supabase/storage-js"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import { Profile } from "../../../@types/supabaseTypes"
 

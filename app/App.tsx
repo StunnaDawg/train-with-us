@@ -6,10 +6,12 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 import * as SplashScreen from "expo-splash-screen"
 import { Linking } from "react-native"
 import * as Notifications from "expo-notifications"
+import { enableScreens } from "react-native-screens"
 
 SplashScreen.preventAutoHideAsync()
 
 export default function App() {
+  enableScreens(true)
   return (
     <AuthProvider>
       <NavigationContainer
