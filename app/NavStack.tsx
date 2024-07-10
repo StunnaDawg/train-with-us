@@ -88,6 +88,7 @@ const UserFooter = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
+        tabBarShowLabel: false,
         tabBarIcon: () => {
           let iconName
 

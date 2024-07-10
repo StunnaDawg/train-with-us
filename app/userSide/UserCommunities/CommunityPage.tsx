@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   Pressable,
   ScrollView,
-  ActivityIndicator,
   Alert,
 } from "react-native"
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
@@ -29,11 +28,12 @@ import { FontAwesome6 } from "@expo/vector-icons"
 import getCommunityMemberShips from "../../supabaseFunctions/getFuncs/getCommunityChannelMemberships"
 import joinChannel from "../../supabaseFunctions/addFuncs/joinChannel"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
-import showAlert from "../../utilFunctions/showAlert"
+
 import SinglePicCommunity from "../../components/SinglePicCommunity"
+import CommunityPageSkeleton from "./CommunityPageSkeleton"
 
 const CommunityPage = () => {
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const [community, setCommunity] = useState<Communities | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [communityChannels, setCommunityChannels] = useState<
@@ -47,7 +47,6 @@ const CommunityPage = () => {
   const navigation = useNavigation<NavigationType>()
   const { user } = useAuth()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
-  const { dismiss } = useBottomSheetModal()
 
   useEffect(() => {
     getSingleCommunity(setLoading, communityId, setCommunity)
@@ -145,163 +144,167 @@ const CommunityPage = () => {
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-between m-2">
-        <BackButton size={22} />
-        <Pressable
-          className="flex flex-row items-center"
-          onPress={() => handlePresentModalPress()}
-        >
-          <Text className="font-bold text-sm mx-1">
-            {`${community?.community_title}`}'s Community Page
-          </Text>
-          <FontAwesome6 name="chevron-right" size={16} color="black" />
-        </Pressable>
-        <View />
-      </View>
-      <ScrollView className="flex-1">
-        <View className="m-2">
-          <View className="m-2">
-            <Text className="text-sm underline">Information Channels</Text>
-            {!loading && communityChannels && communityChannels.length > 0 ? (
-              communityChannels.map((c) => {
-                if (c.channel_type !== "Annoucement") return null
-
-                return (
-                  <View
-                    key={c.id}
-                    className="flex-row justify-between items-center"
-                  >
-                    <Pressable
-                      onPress={() =>
-                        navigation.navigate("AnnouncementChannel", {
-                          channelId: c,
-                        })
-                      }
-                      className="flex flex-row items-center"
-                    >
-                      <View className="m-2">
-                        <SinglePic
-                          size={50}
-                          avatarRadius={100}
-                          noAvatarRadius={100}
-                          item={c.channel_pic}
-                        />
-                      </View>
-
-                      <View>
-                        <Text className="text-sm font-bold mb-1">
-                          {c.channel_title || "error loading channel title"}
-                        </Text>
-                      </View>
-                    </Pressable>
-
-                    <Pressable onPress={() => pinChannel(c.id)}>
-                      <Entypo name="pin" size={16} color="black" />
-                    </Pressable>
-                  </View>
-                )
-              })
-            ) : (
-              <ActivityIndicator />
-            )}
+      {loading ? (
+        <CommunityPageSkeleton />
+      ) : (
+        <>
+          <View className="flex flex-row justify-between m-2">
+            <BackButton size={22} />
+            <Pressable
+              className="flex flex-row items-center"
+              onPress={handlePresentModalPress}
+            >
+              <Text className="font-bold text-sm mx-1">
+                {`${community?.community_title}`}'s Community Page
+              </Text>
+              <FontAwesome6 name="chevron-right" size={16} color="black" />
+            </Pressable>
+            <View />
           </View>
+          <ScrollView className="flex-1">
+            <View className="m-2">
+              <View className="m-2">
+                <Text className="text-sm underline">Information Channels</Text>
+                {!loading && communityChannels && communityChannels.length
+                  ? communityChannels.map((c) => {
+                      if (c.channel_type !== "Annoucement") return null
 
-          <View className="m-2">
-            <Text className="text-sm underline">Text Channels</Text>
-            {!communityChannels?.length ? (
-              <ActivityIndicator />
-            ) : (
-              communityChannels.map((c) => {
-                if (c.channel_type !== "Text") return null
+                      return (
+                        <View
+                          key={c.id}
+                          className="flex-row justify-between items-center"
+                        >
+                          <Pressable
+                            onPress={() =>
+                              navigation.navigate("AnnouncementChannel", {
+                                channelId: c,
+                              })
+                            }
+                            className="flex flex-row items-center"
+                          >
+                            <View className="m-2">
+                              <SinglePic
+                                size={50}
+                                avatarRadius={100}
+                                noAvatarRadius={100}
+                                item={c.channel_pic}
+                              />
+                            </View>
 
-                const isMember = communityMemberShips?.some(
-                  (membership) => membership.channel_id === c.id
-                )
+                            <View>
+                              <Text className="text-sm font-bold mb-1">
+                                {c.channel_title ||
+                                  "error loading channel title"}
+                              </Text>
+                            </View>
+                          </Pressable>
 
-                return (
-                  <View
-                    key={c.id}
-                    className="flex-row justify-between items-center"
-                  >
-                    <Pressable
-                      onPress={() => {
-                        // Allow navigation only if the channel is not private or the user is a member
-                        if (!c.private || isMember) {
-                          navigation.navigate("ChannelScreen", {
-                            channelId: c,
-                          })
-                        } else {
-                          Alert.alert(
-                            "Restricted Access",
-                            "You must join this channel to view its content."
-                          )
-                        }
-                      }}
-                      className="flex flex-row items-center"
-                    >
-                      <View className="m-2">
-                        <SinglePicCommunity
-                          size={50}
-                          avatarRadius={100}
-                          noAvatarRadius={100}
-                          item={c.channel_pic}
-                        />
-                      </View>
+                          <Pressable onPress={() => pinChannel(c.id)}>
+                            <Entypo name="pin" size={16} color="black" />
+                          </Pressable>
+                        </View>
+                      )
+                    })
+                  : null}
+              </View>
 
-                      <View>
-                        <Text className="text-sm font-bold mb-1">
-                          {c.channel_title || "error loading channel title"}
-                        </Text>
-                        {c.private && (
-                          <Text className="text-xs text-red-500">
-                            (Private)
-                          </Text>
-                        )}
-                      </View>
-                    </Pressable>
+              <View className="m-2">
+                <Text className="text-sm underline">Text Channels</Text>
+                {!loading && communityChannels && communityChannels.length > 0
+                  ? communityChannels.map((c) => {
+                      if (c.channel_type !== "Text") return null
 
-                    {c.private && !isMember && (
-                      <Pressable
-                        onPress={() => {
-                          if (
-                            profile?.id &&
-                            communityId &&
-                            c.id &&
-                            c.channel_title
-                          ) {
-                            joinChannel(
-                              setLoading,
-                              c.id,
-                              profile.id,
-                              communityId,
-                              profile.expo_push_token || "",
-                              c.channel_title
-                            )
-                          } else {
-                            Alert.alert(
-                              "Error",
-                              "Unable to join the channel. Please try again later."
-                            )
-                          }
-                        }}
-                        className="bg-blue-500 rounded-full p-2"
-                      >
-                        <Text className="text-white">Join</Text>
-                      </Pressable>
-                    )}
+                      const isMember = communityMemberShips?.some(
+                        (membership) => membership.channel_id === c.id
+                      )
 
-                    {(c.private === false || isMember) && (
-                      <Pressable onPress={() => pinChannel(c.id)}>
-                        <Entypo name="pin" size={16} color="black" />
-                      </Pressable>
-                    )}
-                  </View>
-                )
-              })
-            )}
-          </View>
-        </View>
-      </ScrollView>
+                      return (
+                        <View
+                          key={c.id}
+                          className="flex-row justify-between items-center"
+                        >
+                          <Pressable
+                            onPress={() => {
+                              // Allow navigation only if the channel is not private or the user is a member
+                              if (!c.private || isMember) {
+                                navigation.navigate("ChannelScreen", {
+                                  channelId: c,
+                                })
+                              } else {
+                                Alert.alert(
+                                  "Restricted Access",
+                                  "You must join this channel to view its content."
+                                )
+                              }
+                            }}
+                            className="flex flex-row items-center"
+                          >
+                            <View className="m-2">
+                              <SinglePicCommunity
+                                size={50}
+                                avatarRadius={100}
+                                noAvatarRadius={100}
+                                item={c.channel_pic}
+                              />
+                            </View>
+
+                            <View>
+                              <Text className="text-sm font-bold mb-1">
+                                {c.channel_title ||
+                                  "error loading channel title"}
+                              </Text>
+                              {c.private && (
+                                <Text className="text-xs text-red-500">
+                                  (Private)
+                                </Text>
+                              )}
+                            </View>
+                          </Pressable>
+
+                          {c.private && !isMember && (
+                            <Pressable
+                              onPress={() => {
+                                if (
+                                  profile?.id &&
+                                  communityId &&
+                                  c.id &&
+                                  c.channel_title
+                                ) {
+                                  joinChannel(
+                                    setLoading,
+                                    c.id,
+                                    profile.id,
+                                    communityId,
+                                    profile.expo_push_token || "",
+                                    c.channel_title
+                                  )
+                                } else {
+                                  Alert.alert(
+                                    "Error",
+                                    "Unable to join the channel. Please try again later."
+                                  )
+                                }
+                              }}
+                              className="bg-blue-500 rounded-full p-2"
+                            >
+                              <Text className="text-white">Join</Text>
+                            </Pressable>
+                          )}
+
+                          {(c.private === false || isMember) && (
+                            <Pressable onPress={() => pinChannel(c.id)}>
+                              <Entypo name="pin" size={16} color="black" />
+                            </Pressable>
+                          )}
+                        </View>
+                      )
+                    })
+                  : null}
+              </View>
+            </View>
+          </ScrollView>
+        </>
+      )}
 
       <BottomSheetModal
         enablePanDownToClose={true}

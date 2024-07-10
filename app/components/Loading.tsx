@@ -8,8 +8,7 @@ const Loading = () => {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        // Semi-transparent background
-        position: "absolute", // Ensure it covers the entire screen
+        position: "absolute",
         top: 0,
         left: 0,
         right: 0,
