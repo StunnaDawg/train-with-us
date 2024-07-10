@@ -8,10 +8,15 @@ const Loading = () => {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        // Semi-transparent background
+        position: "absolute", // Ensure it covers the entire screen
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
       }}
     >
-      <ActivityIndicator size="large" color="#0000ff" />
-      {/* Optional: added color for visibility */}
+      <ActivityIndicator size="large" />
     </View>
   )
 }

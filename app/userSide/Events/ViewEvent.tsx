@@ -78,12 +78,7 @@ const ViewEvent = () => {
               <View className="items-center">
                 <Skeleton colorMode={colorMode} width={"100%"} />
                 <Spacer height={8} />
-                <Skeleton
-                  colorMode={colorMode}
-                  radius="square"
-                  height={200}
-                  width={275}
-                />
+                <Skeleton colorMode={colorMode} height={200} width={275} />
                 <Spacer />
                 <Skeleton colorMode={colorMode} width={250} />
                 <Spacer height={8} />

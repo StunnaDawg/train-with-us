@@ -9,9 +9,13 @@ import { NavigationType } from "../../../@types/navigation"
 
 type CommunityBubbleProps = {
   community: number
+  setNavigating: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CommunityBubble = ({ community }: CommunityBubbleProps) => {
+const CommunityBubble = ({
+  community,
+  setNavigating,
+}: CommunityBubbleProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [currentCommunity, setCurrentCommunity] = useState<Communities | null>(
     {} as Communities
@@ -38,11 +42,12 @@ const CommunityBubble = ({ community }: CommunityBubbleProps) => {
     <View className="items-center">
       <Pressable
         className="items-center"
-        onPress={() =>
+        onPress={() => {
+          setNavigating(true)
           navigation.navigate("CommunityPage", {
             communityId: community,
           })
-        }
+        }}
       >
         <SinglePic
           size={65}

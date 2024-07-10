@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native"
+import { View, Text } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import CommunitiesScroll from "./components/CommunitiesScroll"
 import CommunitiesRead from "./components/CommunitiesRead"
@@ -7,9 +7,11 @@ import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { Communities, Profile } from "../../@types/supabaseTypes"
 import getAllUsersCommunities from "../../supabaseFunctions/getFuncs/getUsersCommunities"
 import { useFocusEffect } from "@react-navigation/native"
+import Loading from "../../components/Loading"
 
 const CommunitiesDash = () => {
   const [loading, setLoading] = useState<boolean>(false)
+  const [navigating, setNavigating] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const [communities, setCommunities] = useState<Communities[] | null>([])
   const { user } = useAuth()
@@ -27,6 +29,7 @@ const CommunitiesDash = () => {
 
   useFocusEffect(
     useCallback(() => {
+      setNavigating(false)
       const getUserCommutiy = async () => {
         setLoading(true)
         if (!user) return
@@ -40,22 +43,31 @@ const CommunitiesDash = () => {
     }, [user, setCurrentUser])
   )
   return (
-    <View className="bg-primary-900">
-      <View>
-        <CommunitiesScroll communities={communities} />
-      </View>
-      <View>
-        {loading ? (
+    <>
+      {navigating ? (
+        <Loading />
+      ) : (
+        <View className="bg-primary-900 flex-1">
           <View>
-            <Text>Loading...</Text>
+            <CommunitiesScroll
+              communities={communities}
+              setNavigating={setNavigating}
+            />
           </View>
-        ) : (
           <View>
-            <CommunitiesRead user={currentUser} />
+            {loading ? (
+              <View>
+                <Text>Loading...</Text>
+              </View>
+            ) : (
+              <View>
+                <CommunitiesRead user={currentUser} />
+              </View>
+            )}
           </View>
-        )}
-      </View>
-    </View>
+        </View>
+      )}
+    </>
   )
 }
 

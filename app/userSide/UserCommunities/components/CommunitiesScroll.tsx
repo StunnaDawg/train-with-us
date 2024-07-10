@@ -16,9 +16,13 @@ import sendEmail from "../../../utilFunctions/sendEmail"
 
 type CommunitiesScrollProps = {
   communities: Communities[] | null
+  setNavigating: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
+const CommunitiesScroll = ({
+  communities,
+  setNavigating,
+}: CommunitiesScrollProps) => {
   const [isPressed, setIsPressed] = useState(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const { user } = useAuth()
@@ -121,7 +125,10 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
           {communities &&
             communities?.map((community) => (
               <View key={community.id} className="m-2">
-                <CommunityBubble community={community.id} />
+                <CommunityBubble
+                  setNavigating={setNavigating}
+                  community={community.id}
+                />
               </View>
             ))}
         </View>
