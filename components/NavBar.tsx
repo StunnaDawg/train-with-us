@@ -1,38 +1,53 @@
 import { Text, SafeAreaView, Pressable, View, Platform } from "react-native"
-import supabase from "../lib/supabase"
-import { FontAwesome6 } from "@expo/vector-icons"
+import { FontAwesome6, FontAwesome } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType, TabNavigationType } from "../app/@types/navigation"
 import { Image } from "expo-image"
-import UpdateModal from "../app/userSide/UpdateModal"
-import { useAuth } from "../app/supabaseFunctions/authcontext"
-import { useEffect, useState } from "react"
-import useCurrentUser from "../app/supabaseFunctions/getFuncs/useCurrentUser"
 import { Profile } from "../app/@types/supabaseTypes"
 
-const NavBar = () => {
-  const [show, setShow] = useState<boolean>(false)
-  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
+type NavBarProps = {
+  title: string
+  userProp?: Profile
+  bgColour?: string
+  textColour?: string
+  iconColour?: string
+  showFriends: boolean
+  showSettings: boolean
+  showSearchCommunities: boolean
+}
+
+const NavBar = ({
+  title,
+  userProp,
+  bgColour,
+  textColour,
+  iconColour,
+  showFriends,
+  showSettings,
+  showSearchCommunities,
+}: NavBarProps) => {
+  // const [show, setShow] = useState<boolean>(false)
+  // const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const navigationTab = useNavigation<TabNavigationType>()
   const navigation = useNavigation<NavigationType>()
-  const { user } = useAuth()
+  // const { user } = useAuth()
 
-  useEffect(() => {
-    if (!user) return
-    useCurrentUser(user?.id, setCurrentUser)
-  }, [user])
+  // useEffect(() => {
+  //   if (!userProp || !user) return
+  //   useCurrentUser(user?.id, setCurrentUser)
+  // }, [user])
 
-  useEffect(() => {
-    if (currentUser?.new_update_modal === false) {
-      setShow(true)
-    }
-  }, [currentUser])
+  // useEffect(() => {
+  //   if (currentUser?.new_update_modal === false) {
+  //     setShow(true)
+  //   }
+  // }, [currentUser])
 
   return (
     <>
       <SafeAreaView
         style={{ paddingTop: Platform.OS == "android" ? 20 : 0 }}
-        className="flex flex-row justify-between items-center"
+        className={`flex flex-row justify-between items-center ${bgColour}`}
       >
         <View className="flex flex-row items-center">
           <Pressable onPress={() => navigationTab.navigate("Events")}>
@@ -41,28 +56,57 @@ const NavBar = () => {
               style={{ width: 50, height: 50 }}
             />
           </Pressable>
-          <Text className="font-bold text-lg">Train With Us</Text>
+          <Text className={`font-bold text-lg ${textColour}`}>{title}</Text>
         </View>
-        <View className="flex flex-row mx-2">
+        <View className="flex flex-row justify-center mx-2 items-center">
+          {showSearchCommunities ? (
+            <Pressable
+              className="mx-2 mt-1"
+              onPress={() => {
+                navigation.navigate("SearchCommunities")
+              }}
+            >
+              <FontAwesome6 name="magnifying-glass" size={24} color="white" />
+            </Pressable>
+          ) : null}
           <Pressable
             className="mx-2"
             onPress={() => navigation.navigate("DirectMessageTab")}
           >
-            <FontAwesome6 name="message" size={24} color="black" />
+            <FontAwesome
+              name="comment"
+              size={30}
+              color={iconColour ? iconColour : "white"}
+            />
           </Pressable>
-          <Pressable
-            className="mx-2"
-            onPress={() => navigation.navigate("ManageConnections")}
-          >
-            <FontAwesome6 name="users" size={24} color="black" />
-          </Pressable>
-          <Pressable onPress={() => navigation.navigate("UserSettings")}>
-            <FontAwesome6 name="gear" size={24} color="black" />
-          </Pressable>
+          {showFriends ? (
+            <Pressable
+              className="mx-2"
+              onPress={() => navigation.navigate("ManageConnections")}
+            >
+              <FontAwesome6
+                name="users"
+                size={24}
+                color={iconColour ? iconColour : "white"}
+              />
+            </Pressable>
+          ) : null}
+          {showSettings ? (
+            <Pressable
+              className="mx-2"
+              onPress={() => navigation.navigate("UserSettings")}
+            >
+              <FontAwesome6
+                name="gear"
+                size={24}
+                color={iconColour ? iconColour : "white"}
+              />
+            </Pressable>
+          ) : null}
         </View>
       </SafeAreaView>
 
-      <UpdateModal show={show} userId={currentUser?.id} />
+      {/* <UpdateModal show={show} userId={currentUser?.id} /> */}
     </>
   )
 }

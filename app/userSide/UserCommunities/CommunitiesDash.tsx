@@ -8,6 +8,7 @@ import { Communities, Profile } from "../../@types/supabaseTypes"
 import getAllUsersCommunities from "../../supabaseFunctions/getFuncs/getUsersCommunities"
 import { useFocusEffect } from "@react-navigation/native"
 import Loading from "../../components/Loading"
+import { NavBar } from "../../../components"
 
 const CommunitiesDash = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -44,6 +45,15 @@ const CommunitiesDash = () => {
   )
   return (
     <>
+      <NavBar
+        title="Communities"
+        bgColour="bg-primary-900"
+        textColour="text-white"
+        iconColour="white"
+        showFriends={false}
+        showSettings={false}
+        showSearchCommunities={false}
+      />
       {navigating ? (
         <Loading />
       ) : (

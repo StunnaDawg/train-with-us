@@ -10,6 +10,7 @@ import MyEventsButton from "../../components/MyEventsButton"
 import returnCommunityName from "../../utilFunctions/returnCommunityName"
 import GenericButton from "../../components/GenericButton"
 import MyEvents from "../Events/MyEvents"
+import { NavBar } from "../../../components"
 
 const ProfileView = () => {
   const { user } = useAuth()
@@ -62,38 +63,24 @@ const ProfileView = () => {
   )
 
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      <UserProfilePic profile={currentUser} refresh={refreshing} />
+    <>
+      <NavBar
+        title="My Profile"
+        iconColour="black"
+        showFriends={true}
+        showSettings={true}
+        showSearchCommunities={false}
+      />
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <UserProfilePic profile={currentUser} refresh={refreshing} />
 
-      <View className="flex flex-row justify-center mt-3 items-center">
-        <View className="mx-1">
-          <GenericButton
-            textSize="text-xs"
-            width={100}
-            roundness="rounded-xl"
-            textCenter={true}
-            colourPressed="bg-slate-200"
-            colourDefault="bg-white"
-            borderColourPressed="border-gray-200"
-            borderColourDefault="border-black"
-            text="Edit Profile"
-            buttonFunction={() => {
-              if (currentUser) {
-                navigation.navigate("UserEditProfile", {
-                  userProfile: currentUser,
-                })
-              }
-            }}
-          />
-        </View>
-      </View>
-
-      <MyEvents />
-    </ScrollView>
+        <MyEvents />
+      </ScrollView>
+    </>
   )
 }
 

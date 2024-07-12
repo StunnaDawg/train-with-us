@@ -207,7 +207,7 @@ const NavStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        header: () => (user ? <NavBar /> : null),
+        headerShown: false,
       }}
     >
       {user ? (

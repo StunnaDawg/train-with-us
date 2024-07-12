@@ -7,6 +7,7 @@ import EventTypes from "./components/EventTypes"
 import UpdateModal from "../UpdateModal"
 import Upcoming from "./components/Upcoming"
 import { Skeleton } from "moti/skeleton"
+import { NavBar } from "../../../components"
 
 const Events = () => {
   const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -20,6 +21,15 @@ const Events = () => {
 
   return (
     <>
+      <NavBar
+        title="Events"
+        bgColour="bg-primary-900"
+        textColour="text-white"
+        iconColour="white"
+        showFriends={false}
+        showSettings={false}
+        showSearchCommunities={false}
+      />
       <ScrollView
         className=" bg-primary-900"
         style={{ backgroundColor: "#07182d" }}

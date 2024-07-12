@@ -81,7 +81,7 @@ const CommunityBottomModal = ({ community }: CommunityBottomModalProps) => {
             </View>
           </View>
           <View>
-            <CommunityContact community={community} />
+            <CommunityContact community={community} userId={user?.id} />
           </View>
         </View>
       </View>

@@ -7,6 +7,7 @@ import { Communities } from "../../@types/supabaseTypes"
 import CommunityCard from "./components/CommunityCard"
 import { FontAwesome6 } from "@expo/vector-icons"
 import { useAuth } from "../../supabaseFunctions/authcontext"
+import { NavBar } from "../../../components"
 
 const CommunitiesHome = () => {
   const [communities, setCommunities] = useState<Communities[] | null>([])
@@ -28,20 +29,15 @@ const CommunitiesHome = () => {
 
   return (
     <>
+      <NavBar
+        title="Communities"
+        bgColour="bg-primary-900"
+        textColour="text-white"
+        showFriends={false}
+        showSettings={false}
+        showSearchCommunities={true}
+      />
       <View className="flex-1 bg-primary-900">
-        <View className="flex flex-row justify-between m-6 items-center">
-          <View>
-            <Text className="text-xl text-white font-bold">Communites</Text>
-          </View>
-
-          <Pressable
-            onPress={() => {
-              navigation.navigate("SearchCommunities")
-            }}
-          >
-            <FontAwesome6 name="magnifying-glass" size={20} color="white" />
-          </Pressable>
-        </View>
         <ScrollView
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
