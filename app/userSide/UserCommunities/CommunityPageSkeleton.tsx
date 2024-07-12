@@ -15,7 +15,8 @@ const CommunityPageSkeleton = () => {
         className="items-center mx-3 flex flex-row justify-center"
       >
         <View className="items-center">
-          <Skeleton colorMode={colorMode} height={50} width={"100%"} />
+          <Spacer height={32} />
+          <Skeleton colorMode={colorMode} height={30} width={"100%"} />
           <Spacer height={8} />
           <Skeleton colorMode={colorMode} height={65} width={"75%"} />
           <Spacer height={8} />

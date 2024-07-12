@@ -9,6 +9,7 @@ import { NavigationType } from "../../@types/navigation"
 import MyEventsButton from "../../components/MyEventsButton"
 import returnCommunityName from "../../utilFunctions/returnCommunityName"
 import GenericButton from "../../components/GenericButton"
+import MyEvents from "../Events/MyEvents"
 
 const ProfileView = () => {
   const { user } = useAuth()
@@ -66,8 +67,6 @@ const ProfileView = () => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <MyEventsButton />
-
       <UserProfilePic profile={currentUser} refresh={refreshing} />
 
       <View className="flex flex-row justify-center mt-3 items-center">
@@ -92,6 +91,8 @@ const ProfileView = () => {
           />
         </View>
       </View>
+
+      <MyEvents />
     </ScrollView>
   )
 }

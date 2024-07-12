@@ -86,18 +86,19 @@ const Tab = createBottomTabNavigator<TabParamList>()
 const UserFooter = () => {
   return (
     <Tab.Navigator
+      initialRouteName="Events"
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarIcon: () => {
+        tabBarIcon: ({ focused, color }) => {
           let iconName
 
           if (route.name === "Events") {
-            iconName = "calendar"
+            iconName = "calendar-day"
           } else if (route.name === "Communities") {
             iconName = "user-group"
           } else if (route.name === "Profile") {
-            iconName = "user"
+            iconName = "user-large"
           } else if (route.name === "Connections") {
             iconName = "people-group"
           } else if (route.name === "Messages") {
@@ -106,8 +107,7 @@ const UserFooter = () => {
             iconName = "house"
           }
 
-          // You can return any component that you like here!
-          return <FontAwesome6 name={iconName} size={20} color={"black"} />
+          return <FontAwesome6 name={iconName} size={20} color={color} />
         },
         tabBarActiveTintColor: "red",
         tabBarInactiveTintColor: "gray",
