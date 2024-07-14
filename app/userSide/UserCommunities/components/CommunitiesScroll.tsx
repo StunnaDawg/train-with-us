@@ -23,10 +23,19 @@ const CommunitiesScroll = ({
   communities,
   setNavigating,
 }: CommunitiesScrollProps) => {
-  const [isPressed, setIsPressed] = useState(false)
+  const [isDashPressed, setIsDashPressed] = useState(true)
+  const [activeCommunity, setActiveCommunity] = useState<number | null>(null)
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
+
+  const handleOnPressIn = () => {
+    setIsDashPressed(true)
+  }
+
+  const handleOnPressOut = () => {
+    setIsDashPressed(false)
+  }
 
   const handleCreateCommunityPress = () => {
     currentUser?.allowed_create_community
@@ -67,14 +76,6 @@ const CommunitiesScroll = ({
         })
   }
 
-  const handleOnPressIn = () => {
-    setIsPressed(true)
-  }
-
-  const handleOnPressOut = () => {
-    setIsPressed(false)
-  }
-
   const goToCommunity = () => {
     if (!currentUser?.community_created) return
     navigation.navigate("MyCommunityHome", {
@@ -88,14 +89,9 @@ const CommunitiesScroll = ({
   }, [user])
 
   return (
-    <View className="px-5">
-      <View className="flex flex-row justify-between px-3 mb-3 items-center">
-        <View>
-          <Text className="font-bold text-white text-lg">My Communities</Text>
-        </View>
-      </View>
-      <ScrollView>
-        <View className="flex">
+    <View className="max-h-full border-r border-slate-400">
+      <ScrollView className="h-full">
+        <View className="items-center">
           {!currentUser?.community_created ? (
             <Pressable
               onPress={() => {
@@ -103,33 +99,50 @@ const CommunitiesScroll = ({
               }}
               className="m-2"
             >
-              <FontAwesome6 name="circle-plus" size={74} color="white" />
+              <FontAwesome6 name="circle-plus" size={64} color="white" />
             </Pressable>
-          ) : (
-            <Pressable
-              className={`flex flex-row justify-between items-center border rounded-xl py-3 mt-4 mb-3 px-6 mx-10 ${
-                isPressed ? "bg-gray-200 " : "bg-white "
-              }`}
-              onPress={() => {
-                goToCommunity()
-              }}
-              onPressIn={handleOnPressIn}
-              onPressOut={handleOnPressOut}
-            >
-              <Text className="font-bold">My Community Settings</Text>
-              <FontAwesome6 name="house-chimney" size={20} color="black" />
-            </Pressable>
-          )}
+          ) : null}
+
+          <Pressable
+            onPressIn={handleOnPressIn}
+            onPressOut={handleOnPressOut}
+            onPress={() => {
+              navigation.navigate("SearchCommunities")
+              setActiveCommunity(null)
+            }}
+            className={`m-2 ${
+              isDashPressed ? "bg-black" : "bg-white"
+            } rounded-full p-2 items-center`}
+          >
+            <FontAwesome6
+              name="magnifying-glass"
+              size={36}
+              color={isDashPressed ? "white" : "black"}
+            />
+          </Pressable>
 
           {communities &&
-            communities?.map((community) => (
-              <View key={community.id} className="m-2">
-                <CommunityBubble
-                  setNavigating={setNavigating}
-                  community={community.id}
-                />
-              </View>
-            ))}
+            communities?.map((community) => {
+              const isActive = activeCommunity === community.id
+              return (
+                <Pressable
+                  onPress={() => {
+                    setIsDashPressed(false)
+                    navigation.navigate("CommunityPage", {
+                      community: community,
+                    })
+                  }}
+                  key={community.id}
+                  className="m-2"
+                >
+                  <CommunityBubble
+                    isActive={isActive}
+                    setNavigating={setNavigating}
+                    community={community.id}
+                  />
+                </Pressable>
+              )
+            })}
         </View>
       </ScrollView>
     </View>

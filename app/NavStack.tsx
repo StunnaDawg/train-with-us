@@ -156,7 +156,7 @@ const NavStack = () => {
           })
         } else if (data.type === "request_accepted") {
           navigation.navigate("CommunityPage", {
-            communityId: data.communityId,
+            community: data.community,
           })
         } else if (data.type === "event_joined") {
           navigation.navigate("ViewEvent", { eventId: data.eventId })

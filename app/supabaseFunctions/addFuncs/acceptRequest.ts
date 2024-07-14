@@ -1,12 +1,13 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { FunctionsHttpError } from "@supabase/supabase-js"
+import { Communities } from "../../@types/supabaseTypes"
 
 const sendNotification = async (
   token: string,
   title: string,
   body: string,
-  communityId: number
+  community: Communities
 ) => {
   console.log("Sending notification to", token)
   const { data, error } = await supabase.functions.invoke("push", {
@@ -14,7 +15,7 @@ const sendNotification = async (
       token,
       titleWords: title,
       bodyWords: body,
-      data: { communityId, type: "request_accepted" },
+      data: { community, type: "request_accepted" },
     },
   })
 
@@ -30,9 +31,8 @@ const acceptRequest = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   userId: string,
   expoPushToken: string | null,
-  communityId: number,
-  requestId: string,
-  communityTitle: string
+  community: Communities,
+  requestId: string
 ) => {
   try {
     setLoading(true)
@@ -48,7 +48,7 @@ const acceptRequest = async (
       .insert([
         {
           user_id: userId,
-          community_id: communityId,
+          community_id: community.id,
           expo_push_token: expoPushToken,
         },
       ])
@@ -58,7 +58,7 @@ const acceptRequest = async (
     const { data: communityData, error: fetchError } = await supabase
       .from("communities")
       .select("member_count")
-      .eq("id", communityId)
+      .eq("id", community.id)
       .single()
 
     if (fetchError) {
@@ -69,7 +69,7 @@ const acceptRequest = async (
       const { error: updateError } = await supabase
         .from("communities")
         .update({ member_count: newMemberCount })
-        .eq("id", communityId)
+        .eq("id", community.id)
 
       if (updateError) {
         console.error("Error updating member count:", updateError)
@@ -81,8 +81,9 @@ const acceptRequest = async (
         await sendNotification(
           expoPushToken,
           "Request Accepted",
-          "Your request to join has been accepted by " + communityTitle,
-          communityId
+          "Your request to join has been accepted by " +
+            community.community_title,
+          community
         )
     }
   } catch (error) {

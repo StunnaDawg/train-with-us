@@ -9,12 +9,17 @@ import getAllUsersCommunities from "../../supabaseFunctions/getFuncs/getUsersCom
 import { useFocusEffect } from "@react-navigation/native"
 import Loading from "../../components/Loading"
 import { NavBar } from "../../../components"
+import CommunityPage from "./CommunityPage"
+import CommunityChannels from "./components/CommunityChannels"
 
 const CommunitiesDash = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [navigating, setNavigating] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const [communities, setCommunities] = useState<Communities[] | null>([])
+  const [selectedCommunity, setSelectedCommunity] = useState<number | null>(
+    null
+  )
   const { user } = useAuth()
 
   useEffect(() => {
@@ -57,25 +62,27 @@ const CommunitiesDash = () => {
       {navigating ? (
         <Loading />
       ) : (
-        <View className="bg-primary-900 flex-1">
-          <View>
-            <CommunitiesScroll
-              communities={communities}
-              setNavigating={setNavigating}
-            />
+        <>
+          <View className="flex flex-row bg-primary-900">
+            <View className="bg-primary-900">
+              <CommunitiesScroll
+                communities={communities}
+                setNavigating={setNavigating}
+              />
+            </View>
+            <View>
+              {loading && !currentUser ? (
+                <View>
+                  <Text>Loading...</Text>
+                </View>
+              ) : (
+                <View>
+                  <CommunitiesRead user={currentUser} />
+                </View>
+              )}
+            </View>
           </View>
-          <View>
-            {loading ? (
-              <View>
-                <Text>Loading...</Text>
-              </View>
-            ) : (
-              <View>
-                <CommunitiesRead user={currentUser} />
-              </View>
-            )}
-          </View>
-        </View>
+        </>
       )}
     </>
   )

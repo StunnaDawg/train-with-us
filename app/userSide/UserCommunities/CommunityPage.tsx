@@ -34,7 +34,6 @@ import CommunityPageSkeleton from "./CommunityPageSkeleton"
 
 const CommunityPage = () => {
   const [loading, setLoading] = useState<boolean>(true)
-  const [community, setCommunity] = useState<Communities | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [communityChannels, setCommunityChannels] = useState<
     CommunityChannel[] | null
@@ -43,21 +42,17 @@ const CommunityPage = () => {
     CommunityMembership[] | null
   >([])
   const route = useRoute<RouteProp<RootStackParamList, "CommunityPage">>()
-  const communityId = route.params.communityId
+  const community = route.params.community
   const navigation = useNavigation<NavigationType>()
   const { user } = useAuth()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
 
   useEffect(() => {
-    getSingleCommunity(setLoading, communityId, setCommunity)
-  }, [communityId])
-
-  useEffect(() => {
     if (!community || !user?.id) return
-    getCommunityChannels(communityId, setLoading, setCommunityChannels)
+    getCommunityChannels(community.id, setLoading, setCommunityChannels)
 
     getCommunityMemberShips(
-      communityId,
+      community.id,
       user.id,
       setLoading,
       setCommunityMemberShips
@@ -74,6 +69,17 @@ const CommunityPage = () => {
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index)
   }, [])
+
+  const goToCommunity = () => {
+    if (
+      !profile?.community_created ||
+      profile?.community_created === community?.id
+    )
+      return
+    navigation.navigate("MyCommunityHome", {
+      communityId: profile?.community_created,
+    })
+  }
 
   const showAlertConfirm = (onConfirm: () => void) =>
     Alert.alert(
@@ -266,7 +272,7 @@ const CommunityPage = () => {
                               onPress={() => {
                                 if (
                                   profile?.id &&
-                                  communityId &&
+                                  community.id &&
                                   c.id &&
                                   c.channel_title
                                 ) {
@@ -274,7 +280,7 @@ const CommunityPage = () => {
                                     setLoading,
                                     c.id,
                                     profile.id,
-                                    communityId,
+                                    community.id,
                                     profile.expo_push_token || "",
                                     c.channel_title
                                   )

@@ -10,15 +10,17 @@ import {
 import React, { useCallback, useEffect, useState } from "react"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
-import { CommunityRequests } from "../../@types/supabaseTypes"
+import { Communities, CommunityRequests } from "../../@types/supabaseTypes"
 import { FontAwesome6 } from "@expo/vector-icons"
 import getCommunityRequests from "../../supabaseFunctions/getFuncs/getCommunityRequests"
 import acceptRequest from "../../supabaseFunctions/addFuncs/acceptRequest"
 import denyRequest from "../../supabaseFunctions/addFuncs/denyRequest"
 import showAlert from "../../utilFunctions/showAlert"
+import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommunity"
 
 const CommunityRequestsPage = () => {
   const [loading, setLoading] = useState<boolean>(false)
+  const [community, setCommunity] = useState<Communities | null>(null)
   const [communityRequests, setCommunityRequests] = useState<
     CommunityRequests[] | null
   >([])
@@ -33,22 +35,35 @@ const CommunityRequestsPage = () => {
     try {
       setLoading(true)
 
-      if (request.user_id && request.requested_community && request.id)
+      if (request.requested_community !== null) {
+        getSingleCommunity(
+          setLoading,
+          request.requested_community,
+          setCommunity
+        )
+      }
+
+      if (
+        request.user_id &&
+        request.requested_community &&
+        request.id &&
+        community
+      ) {
         acceptRequest(
           setLoading,
           request.user_id,
           request.expo_push_token,
-          request.requested_community,
-          request.id,
-          title
+          community,
+          request.id
         )
-      showAlert({
-        title: "Request Accepted",
-        message: "User has been added to the community",
-      })
-      setTimeout(() => {
-        getCommunityRequests(setLoading, communityId, setCommunityRequests)
-      }, 500)
+        showAlert({
+          title: "Request Accepted",
+          message: "User has been added to the community",
+        })
+        setTimeout(() => {
+          getCommunityRequests(setLoading, communityId, setCommunityRequests)
+        }, 500)
+      }
     } catch (error) {
       console.error(error)
     } finally {

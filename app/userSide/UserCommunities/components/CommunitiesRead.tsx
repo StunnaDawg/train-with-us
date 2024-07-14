@@ -117,15 +117,14 @@ const CommunitiesRead = ({ user }: CommunitiesReadProps) => {
     }, [user, setCommunityChannels])
   )
   return (
-    <View className="mt-8 mx-8 pb-2 h-full">
-      <View>
-        <Text className="font-bold text-lg text-white">My Pinned Channels</Text>
-      </View>
-
+    <View>
       <ScrollView className="h-full">
         {!loading && communityChannels && communityChannels.length > 0 ? (
           communityChannels.map((c) => (
-            <View key={c.id} className="flex-row justify-between items-center">
+            <View
+              key={c.id}
+              className=" w-full flex flex-row justify-between items-center"
+            >
               <Pressable
                 key={c.id}
                 onPress={() => {

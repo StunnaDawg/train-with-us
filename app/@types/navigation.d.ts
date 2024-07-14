@@ -154,7 +154,7 @@ export type RootStackParamList = {
   FitnessBucketList: { userProfile: Profile }
 
   CommunityPage: {
-    communityId: number
+    community: Communities
   }
 
   PrimaryGym: {
