@@ -31,9 +31,11 @@ import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 
 import SinglePicCommunity from "../../components/SinglePicCommunity"
 import CommunityPageSkeleton from "./CommunityPageSkeleton"
+import { useLoading } from "../../context/LoadingContext"
 
 const CommunityPage = () => {
-  const [loading, setLoading] = useState<boolean>(true)
+  const { setLoading } = useLoading()
+  const [loading, setLoadingState] = useState<boolean>(true)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [communityChannels, setCommunityChannels] = useState<
     CommunityChannel[] | null
@@ -48,13 +50,14 @@ const CommunityPage = () => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
 
   useEffect(() => {
+    setLoading(false)
     if (!community || !user?.id) return
-    getCommunityChannels(community.id, setLoading, setCommunityChannels)
+    getCommunityChannels(community.id, setLoadingState, setCommunityChannels)
 
     getCommunityMemberShips(
       community.id,
       user.id,
-      setLoading,
+      setLoadingState,
       setCommunityMemberShips
     )
 
@@ -277,7 +280,7 @@ const CommunityPage = () => {
                                   c.channel_title
                                 ) {
                                   joinChannel(
-                                    setLoading,
+                                    setLoadingState,
                                     c.id,
                                     profile.id,
                                     community.id,

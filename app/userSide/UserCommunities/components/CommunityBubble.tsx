@@ -1,45 +1,29 @@
 import { View, Text, Pressable } from "react-native"
 import React, { useEffect, useState } from "react"
 import { Communities } from "../../../@types/supabaseTypes"
-import { useAuth } from "../../../supabaseFunctions/authcontext"
-import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
 import SinglePic from "../../../components/SinglePic"
+import { useLoading } from "../../../context/LoadingContext"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 
 type CommunityBubbleProps = {
-  community: number
-  setNavigating: React.Dispatch<React.SetStateAction<boolean>>
+  community: Communities
   isActive: boolean
 }
 
-const CommunityBubble = ({
-  community,
-  setNavigating,
-  isActive,
-}: CommunityBubbleProps) => {
-  const [loading, setLoading] = useState<boolean>(false)
-  const [currentCommunity, setCurrentCommunity] = useState<Communities | null>(
-    {} as Communities
-  )
+const CommunityBubble = ({ community, isActive }: CommunityBubbleProps) => {
+  const { setLoading } = useLoading()
   const [imageFile, setImageFile] = useState<string | null | undefined>(null)
-  const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
 
   useEffect(() => {
-    if (!user || community === null) return
-
-    getSingleCommunity(setLoading, community, setCurrentCommunity)
-  }, [user])
-
-  useEffect(() => {
     if (
-      currentCommunity?.community_profile_pic === null ||
-      currentCommunity?.community_profile_pic === undefined
+      community?.community_profile_pic === null ||
+      community?.community_profile_pic === undefined
     )
       return
-    setImageFile(currentCommunity?.community_profile_pic)
-  }, [currentCommunity])
+    setImageFile(community?.community_profile_pic)
+  }, [community])
 
   const handleCharacterLimit = (text: string | undefined | null) => {
     if (text) {
@@ -52,7 +36,16 @@ const CommunityBubble = ({
     return ""
   }
   return (
-    <View className={`items-center`}>
+    <Pressable
+      className="m-2 items-center"
+      onPress={() => {
+        setLoading(true)
+
+        navigation.navigate("CommunityPage", {
+          community: community,
+        })
+      }}
+    >
       <View
         style={{ backgroundColor: isActive ? "white" : "transparent" }}
         className={` rounded-full p-1`}
@@ -65,9 +58,9 @@ const CommunityBubble = ({
         />
       </View>
       <Text className="text-white font-bold text-xs">
-        {handleCharacterLimit(currentCommunity?.community_title)}
+        {handleCharacterLimit(community?.community_title)}
       </Text>
-    </View>
+    </Pressable>
   )
 }
 

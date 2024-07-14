@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView } from "react-native"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { ScrollView } from "react-native-gesture-handler"
 import { Communities } from "../../@types/supabaseTypes"
 import CommunityCard from "./components/CommunityCard"
@@ -7,16 +7,22 @@ import searchCommuntiesFunction from "../../supabaseFunctions/getFuncs/searchCom
 import SearchBar from "../Events/components/SearchBar"
 import BackButton from "../../components/BackButton"
 import { useAuth } from "../../supabaseFunctions/authcontext"
+import { useLoading } from "../../context/LoadingContext"
 
 const SearchCommunities = () => {
+  const { setLoading } = useLoading()
   const { user } = useAuth()
   const [searchText, setSearchText] = useState<string>("")
   const [communities, setCommunities] = useState<Communities[] | null>([])
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoadingState] = useState<boolean>(false)
+
+  useEffect(() => {
+    setLoading(false)
+  }, [])
 
   const handleSearch = (text: string) => {
     setSearchText(text)
-    searchCommuntiesFunction(text, setCommunities, setLoading)
+    searchCommuntiesFunction(text, setCommunities, setLoadingState)
   }
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
