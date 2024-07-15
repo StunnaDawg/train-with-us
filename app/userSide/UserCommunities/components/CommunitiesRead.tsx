@@ -14,12 +14,12 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { useAuth } from "../../../supabaseFunctions/authcontext"
+import SinglePic from "../../../components/SinglePic"
 
-type CommunitiesReadProps = {
-  user: Profile | null
-}
+const CommunitiesRead = React.memo(() => {
+  const { user } = useAuth()
 
-const CommunitiesRead = ({ user }: CommunitiesReadProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [communityChannels, setCommunityChannels] = useState<
     CommunityChannel[] | null
@@ -40,7 +40,7 @@ const CommunitiesRead = ({ user }: CommunitiesReadProps) => {
   const removePinChannel = async (channelId: string) => {
     showAlert(async () => {
       try {
-        if (!user?.id) {
+        if (!user) {
           console.error("No user logged in!")
           return
         }
@@ -111,45 +111,36 @@ const CommunitiesRead = ({ user }: CommunitiesReadProps) => {
 
   const renderChannels = useCallback(() => {
     return communityChannels?.map((c) => (
-      <View
-        key={c.id}
-        className="w-full flex flex-row justify-between items-center"
-      >
-        <Pressable
+      <View className="flex-1">
+        <View
           key={c.id}
-          onPress={() => {
-            if (c.channel_type === "Annoucement") {
-              navigation.navigate("AnnouncementChannel", { channelId: c })
-            } else {
-              navigation.navigate("ChannelScreen", { channelId: c })
-            }
-          }}
-          className="flex flex-row items-center"
+          className="border-b-slate-400 p-4 flex flex-row justify-between items-center border-b-2 w-full"
         >
-          <View className="m-2">
-            <SinglePicCommunity
-              size={50}
-              avatarRadius={100}
-              noAvatarRadius={100}
-              item={c.channel_pic}
+          <Pressable
+            key={c.id}
+            onPress={() => {
+              if (c.channel_type === "Annoucement") {
+                navigation.navigate("AnnouncementChannel", { channelId: c })
+              } else {
+                navigation.navigate("ChannelScreen", { channelId: c })
+              }
+            }}
+            className="flex-1"
+          >
+            <View>
+              <Text className="font-bold mb-1 text-sm text-white">
+                #{c.channel_title || "Error loading channel title"}
+              </Text>
+            </View>
+          </Pressable>
+          <Pressable onPress={() => removePinChannel(c.id)} className="ml-32">
+            <MaterialCommunityIcons
+              name="dots-vertical"
+              size={20}
+              color="white"
             />
-          </View>
-          <View>
-            <Text className="font-bold mb-1 text-sm text-white">
-              {c.channel_title || "Error loading channel title"}
-            </Text>
-            <Text className="text-xs font-bold text-white">
-              {c.recent_message || "No Messages yet!"}
-            </Text>
-          </View>
-        </Pressable>
-        <Pressable onPress={() => removePinChannel(c.id)}>
-          <MaterialCommunityIcons
-            name="dots-vertical"
-            size={20}
-            color="white"
-          />
-        </Pressable>
+          </Pressable>
+        </View>
       </View>
     ))
   }, [communityChannels, navigation, removePinChannel])
@@ -173,6 +164,6 @@ const CommunitiesRead = ({ user }: CommunitiesReadProps) => {
       </ScrollView>
     </View>
   )
-}
+})
 
 export default CommunitiesRead

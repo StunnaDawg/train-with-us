@@ -8,17 +8,20 @@ import React, {
   useCallback,
 } from "react"
 import supabase from "../../lib/supabase"
+import useCurrentUser from "./getFuncs/useCurrentUser"
+import { Profile } from "../@types/supabaseTypes"
 
-// Create a context for authentication
 const AuthContext = createContext<{
   session: Session | null | undefined
   user: User | null | undefined
+  userProfile: Profile | null | undefined
   signOut: () => void
-}>({ session: null, user: null, signOut: () => {} })
+}>({ session: null, user: null, userProfile: null, signOut: () => {} })
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
+  const [userProfile, setUserProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -49,19 +52,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [])
 
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (user) {
+        await useCurrentUser(user.id, setUserProfile) // Adjust to use your actual fetching logic
+      }
+    }
+    fetchUserProfile()
+  }, [user])
+
   const signOut = useCallback(async () => {
     await supabase.auth.signOut()
     setSession(null)
     setUser(null)
+    setUserProfile(null)
   }, [])
 
   const value = React.useMemo(
     () => ({
       session,
       user,
+      userProfile,
       signOut,
     }),
-    [session, user, signOut]
+    [session, user, userProfile, signOut]
   )
 
   return (

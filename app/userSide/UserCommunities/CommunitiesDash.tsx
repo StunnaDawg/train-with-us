@@ -11,14 +11,8 @@ import { NavBar } from "../../../components"
 
 const CommunitiesDash = () => {
   const [loading, setLoadingState] = useState<boolean>(false)
-  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const [communities, setCommunities] = useState<Communities[] | null>([])
   const { user } = useAuth()
-
-  const fetchCurrentUser = useCallback(async () => {
-    if (!user) return
-    await useCurrentUser(user?.id, setCurrentUser)
-  }, [user])
 
   const fetchUserCommunities = useCallback(async () => {
     if (!user) return
@@ -26,12 +20,8 @@ const CommunitiesDash = () => {
   }, [user])
 
   useEffect(() => {
-    fetchCurrentUser()
-  }, [fetchCurrentUser])
-
-  useEffect(() => {
     fetchUserCommunities()
-  }, [currentUser, fetchUserCommunities])
+  }, [user, fetchUserCommunities])
 
   useFocusEffect(
     useCallback(() => {
@@ -52,19 +42,16 @@ const CommunitiesDash = () => {
       />
       <View className="flex flex-row bg-primary-900">
         <View className="bg-primary-900">
-          <CommunitiesScroll
-            currentUser={currentUser}
-            communities={communities}
-          />
+          <CommunitiesScroll communities={communities} />
         </View>
         <View>
-          {loading && !currentUser ? (
+          {loading && !user ? (
             <View>
               <Text>Loading...</Text>
             </View>
           ) : (
             <View>
-              <CommunitiesRead user={currentUser} />
+              <CommunitiesRead />
             </View>
           )}
         </View>

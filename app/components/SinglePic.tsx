@@ -2,8 +2,8 @@ import { Image } from "expo-image"
 import { useState, useEffect } from "react"
 import { StyleSheet, View, ActivityIndicator } from "react-native"
 import supabase from "../../lib/supabase"
-import { StatusBar } from "expo-status-bar"
 import { Skeleton } from "moti/skeleton"
+import { Cache } from "../utilFunctions/cacheImage"
 
 type SinglePicProps = {
   size: number
@@ -19,31 +19,34 @@ export default function SinglePic({
   noAvatarRadius,
 }: SinglePicProps) {
   const [avatarUrl, setAvatarUrl] = useState<string>("")
-  const [loading, setLoading] = useState<boolean>()
+  const [loading, setLoading] = useState<boolean>(true)
   const avatarSize = { height: size, width: size }
 
   useEffect(() => {
-    readImage()
+    if (item) {
+      Cache.get(item, fetchAndCacheImage)
+    }
   }, [item])
 
-  const readImage = () => {
-    if (item === undefined) return
-    setLoading(true)
-    supabase.storage
-      .from("photos")
-      .download(`${item}`)
-      .then(({ data }) => {
-        const fr = new FileReader()
-        fr.readAsDataURL(data!)
-        fr.onload = () => {
-          setAvatarUrl(fr.result as string)
-          setLoading(false)
-        }
-      })
-      .catch((error) => {
-        console.error("Error downloading image:", error)
+  const fetchAndCacheImage = async () => {
+    try {
+      const { data, error } = await supabase.storage
+        .from("photos")
+        .download(item!)
+      if (error) throw error
+
+      const fr = new FileReader()
+      fr.readAsDataURL(data!)
+      fr.onload = () => {
+        const url = fr.result as string
+        Cache.set(item!, url) // Cache the image URL
+        setAvatarUrl(url)
         setLoading(false)
-      })
+      }
+    } catch (error) {
+      console.error("Error downloading image:", error)
+      setLoading(false)
+    }
   }
 
   const styles = StyleSheet.create({
@@ -70,12 +73,10 @@ export default function SinglePic({
       transform: [{ translateX: -15 }, { translateY: -15 }],
     },
   })
-  {
-    /* <ActivityIndicator size="large" color="black" style={styles.loader} /> */
-  }
+
   return (
     <View style={avatarSize}>
-      {loading && <Skeleton height={size} width={size} />}
+      {loading && <Skeleton height={size} width={size} radius="round" />}
       {!loading && avatarUrl !== "" ? (
         <Image
           source={{ uri: avatarUrl }}

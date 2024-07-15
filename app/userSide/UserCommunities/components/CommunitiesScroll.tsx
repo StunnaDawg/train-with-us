@@ -1,101 +1,70 @@
 import { View, ScrollView, Pressable } from "react-native"
-import React, { useState } from "react"
+import React, { useState, useCallback, useEffect } from "react"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import { Communities, Profile } from "../../../@types/supabaseTypes"
 import CommunityBubble from "./CommunityBubble"
 import { FontAwesome6 } from "@expo/vector-icons"
 import { useLoading } from "../../../context/LoadingContext"
+import { useAuth } from "../../../supabaseFunctions/authcontext"
 
 type CommunitiesScrollProps = {
   communities: Communities[] | null
-  currentUser: Profile | null
 }
 
-const CommunitiesScroll = ({
-  communities,
-  currentUser,
-}: CommunitiesScrollProps) => {
-  const { setLoading } = useLoading()
+const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
+  const { userProfile } = useAuth()
+  const [currentUserProfile, setCurrentUserProfile] = useState<Profile | null>(
+    null
+  )
   const [isDashPressed, setIsDashPressed] = useState(true)
   const [activeCommunity, setActiveCommunity] = useState<number | null>(null)
   const navigation = useNavigation<NavigationType>()
 
-  const handleOnPressIn = () => {
+  useEffect(() => {
+    if (userProfile) {
+      setCurrentUserProfile(userProfile)
+    }
+  }, [userProfile])
+
+  const handleOnPressIn = useCallback(() => {
     setIsDashPressed(true)
-  }
+  }, [])
 
-  const handleOnPressOut = () => {
+  const handleOnPressOut = useCallback(() => {
     setIsDashPressed(false)
-  }
+  }, [])
 
-  // const handleCreateCommunityPress = () => {
-  //   currentUser?.allowed_create_community
-  //     ? showAlertFunc({
-  //         title: "Alert Title",
-  //         message: "Create a Community",
-  //         buttons: [
-  //           {
-  //             text: "OK",
-  //             onPress: () => navigation.navigate("CreateCommunity"),
-  //           },
-  //           {
-  //             text: "Cancel",
-  //             onPress: () => console.log("Cancel Pressed"),
-  //             style: "cancel",
-  //           },
-  //         ],
-  //       })
-  //     : showAlertFunc({
-  //         title: "Alert Title",
-  //         message: "You are not allowed to create a community",
-  //         buttons: [
-  //           {
-  //             text: "Request Access",
-  //             onPress: () =>
-  //               sendEmail({
-  //                 recipients: ["jonsonallen9@gmail.com"],
-  //                 subject: "Request Access",
-  //                 body: `I would like to request access to create a community, my userId is ${user?.id}`,
-  //               }),
-  //           },
-  //           {
-  //             text: "OK",
-  //             onPress: () => console.log("OK Pressed"),
-  //             style: "cancel",
-  //           },
-  //         ],
-  //       })
-  // }
-
-  // const goToCommunity = () => {
-  //   if (!currentUser?.community_created) return
-  //   navigation.navigate("MyCommunityHome", {
-  //     communityId: currentUser?.community_created,
-  //   })
-  // }
+  const renderCommunities = useCallback(() => {
+    return communities?.map((community) => {
+      const isActive = activeCommunity === community.id
+      return (
+        <CommunityBubble
+          key={community.id}
+          isActive={isActive}
+          community={community}
+        />
+      )
+    })
+  }, [communities, activeCommunity])
 
   return (
     <View className="max-h-full border-r border-slate-400">
       <ScrollView className="h-full">
         <View className="items-center">
-          {!currentUser?.community_created ? (
+          {!userProfile?.community_created && (
             <Pressable
-              onPress={() => {
-                setLoading(true)
-                navigation.navigate("CreateCommunity")
-              }}
+              onPress={() => navigation.navigate("CreateCommunity")}
               className="m-2"
             >
               <FontAwesome6 name="circle-plus" size={64} color="white" />
             </Pressable>
-          ) : null}
+          )}
 
           <Pressable
             onPressIn={handleOnPressIn}
             onPressOut={handleOnPressOut}
             onPress={() => {
-              setLoading(true)
               navigation.navigate("SearchCommunities")
               setActiveCommunity(null)
             }}
@@ -110,17 +79,7 @@ const CommunitiesScroll = ({
             />
           </Pressable>
 
-          {communities &&
-            communities?.map((community) => {
-              const isActive = activeCommunity === community.id
-              return (
-                <CommunityBubble
-                  key={community.id}
-                  isActive={isActive}
-                  community={community}
-                />
-              )
-            })}
+          {renderCommunities()}
         </View>
       </ScrollView>
     </View>
