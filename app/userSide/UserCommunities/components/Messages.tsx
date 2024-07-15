@@ -19,11 +19,8 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import MessageCard from "./MessageCard"
 import BackButton from "../../../components/BackButton"
 import supabase from "../../../../lib/supabase"
-import { se } from "date-fns/locale"
 import RequestCard from "./RequestedConnectionCard"
-import SearchBar from "../../Events/components/SearchBar"
-import searchChatSessionsFunction from "../../../supabaseFunctions/getFuncs/searchMessages"
-import { set } from "mongoose"
+import { useLoading } from "../../../context/LoadingContext"
 
 type TabButtonProps = {
   title: string
@@ -49,7 +46,7 @@ const Messages = () => {
   const [connectionRequest, setConnectionRequest] = useState<
     ConnectionRequest[] | null
   >([])
-  const [loading, setLoading] = useState<boolean>(false)
+  const { isLoading, setLoading } = useLoading()
   const navigation = useNavigation<NavigationType>()
   const [activeTab, setActiveTab] = useState<string>("Recent")
   const [modalVisible, setModalVisible] = useState(false)
@@ -120,6 +117,10 @@ const Messages = () => {
       }
     }, [user, setChatSessions])
   )
+
+  useEffect(() => {
+    setLoading(true)
+  }, [])
 
   useEffect(() => {
     getUserMessages()

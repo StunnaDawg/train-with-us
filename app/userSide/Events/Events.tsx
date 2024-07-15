@@ -25,7 +25,6 @@ const Events = () => {
         title="Events"
         bgColour="bg-primary-900"
         textColour="text-white"
-        iconColour="white"
         showFriends={false}
         showSettings={false}
         showSearchCommunities={false}

@@ -21,29 +21,20 @@ type CommunitiesReadProps = {
 
 const CommunitiesRead = ({ user }: CommunitiesReadProps) => {
   const [loading, setLoading] = useState<boolean>(false)
-  const navigation = useNavigation<NavigationType>()
-
   const [communityChannels, setCommunityChannels] = useState<
     CommunityChannel[] | null
   >([])
+  const navigation = useNavigation<NavigationType>()
 
   const showAlert = (onConfirm: () => void) =>
     Alert.alert(
       "Do you want to unpin this channel?",
       "Please select an option.",
       [
-        {
-          text: "Yes",
-          onPress: onConfirm,
-        },
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
+        { text: "Yes", onPress: onConfirm },
+        { text: "Cancel", style: "cancel" },
       ],
-      {
-        cancelable: true,
-      }
+      { cancelable: true }
     )
 
   const removePinChannel = async (channelId: string) => {
@@ -65,12 +56,10 @@ const CommunitiesRead = ({ user }: CommunitiesReadProps) => {
           return
         }
 
-        // filters out the pinned channel from the profile
         const updatedPinnedChannels = profile.pinned_channels.filter(
           (url: string) => url !== channelId
         )
 
-        // Update the profile with the new array
         const { error: updateError } = await supabase
           .from("profiles")
           .update({ pinned_channels: updatedPinnedChannels })
@@ -82,92 +71,94 @@ const CommunitiesRead = ({ user }: CommunitiesReadProps) => {
             updateError.message
           )
         } else {
-          getUserPinnedChannels(setLoading, user?.id, setCommunityChannels)
+          await getUserPinnedChannels(
+            setLoading,
+            user?.id,
+            setCommunityChannels
+          )
           console.log("Channel unpinned successfully!")
         }
       } catch (err) {
-        console.error("Error pinning channel:", err)
+        console.error("Error unpinning channel:", err)
       }
     })
   }
 
-  useEffect(() => {
+  const fetchUserPinnedChannels = useCallback(async () => {
     if (!user) return
-    getUserPinnedChannels(setLoading, user?.id, setCommunityChannels)
+    setLoading(true)
+    await getUserPinnedChannels(setLoading, user.id, setCommunityChannels)
+    setLoading(false)
   }, [user])
 
   useEffect(() => {
-    console.log("community channels fetched", communityChannels)
-  }, [communityChannels])
+    fetchUserPinnedChannels()
+  }, [fetchUserPinnedChannels])
 
   useFocusEffect(
     useCallback(() => {
-      const getUser = async () => {
-        setLoading(true)
-        if (!user) return
-        getUserPinnedChannels(setLoading, user?.id, setCommunityChannels)
-        setLoading(false)
-      }
+      let isActive = true
 
-      getUser()
+      if (isActive) {
+        fetchUserPinnedChannels()
+      }
 
       return () => {
-        // Optional cleanup actions
+        isActive = false
       }
-    }, [user, setCommunityChannels])
+    }, [fetchUserPinnedChannels])
   )
+
+  const renderChannels = useCallback(() => {
+    return communityChannels?.map((c) => (
+      <View
+        key={c.id}
+        className="w-full flex flex-row justify-between items-center"
+      >
+        <Pressable
+          key={c.id}
+          onPress={() => {
+            if (c.channel_type === "Annoucement") {
+              navigation.navigate("AnnouncementChannel", { channelId: c })
+            } else {
+              navigation.navigate("ChannelScreen", { channelId: c })
+            }
+          }}
+          className="flex flex-row items-center"
+        >
+          <View className="m-2">
+            <SinglePicCommunity
+              size={50}
+              avatarRadius={100}
+              noAvatarRadius={100}
+              item={c.channel_pic}
+            />
+          </View>
+          <View>
+            <Text className="font-bold mb-1 text-sm text-white">
+              {c.channel_title || "Error loading channel title"}
+            </Text>
+            <Text className="text-xs font-bold text-white">
+              {c.recent_message || "No Messages yet!"}
+            </Text>
+          </View>
+        </Pressable>
+        <Pressable onPress={() => removePinChannel(c.id)}>
+          <MaterialCommunityIcons
+            name="dots-vertical"
+            size={20}
+            color="white"
+          />
+        </Pressable>
+      </View>
+    ))
+  }, [communityChannels, navigation, removePinChannel])
+
   return (
     <View>
       <ScrollView className="h-full">
         {!loading && communityChannels && communityChannels.length > 0 ? (
-          communityChannels.map((c) => (
-            <View
-              key={c.id}
-              className=" w-full flex flex-row justify-between items-center"
-            >
-              <Pressable
-                key={c.id}
-                onPress={() => {
-                  if (c.channel_type === "Annoucement") {
-                    navigation.navigate("AnnouncementChannel", {
-                      channelId: c,
-                    })
-                  } else {
-                    navigation.navigate("ChannelScreen", {
-                      channelId: c,
-                    })
-                  }
-                }}
-                className="flex flex-row items-center"
-              >
-                <View className="m-2">
-                  <SinglePicCommunity
-                    size={50}
-                    avatarRadius={100}
-                    noAvatarRadius={100}
-                    item={c.channel_pic} // Assuming this is correctly accessing the picture property
-                  />
-                </View>
-
-                <View>
-                  <Text className="font-bold mb-1 text-sm text-white">
-                    {c.channel_title || "error loading channel title"}
-                  </Text>
-                  <Text className="text-xs font-bold text-white">
-                    {c.recent_message || "No Messages yet!"}
-                  </Text>
-                </View>
-              </Pressable>
-
-              <Pressable onPress={() => removePinChannel(c.id)}>
-                <MaterialCommunityIcons
-                  name="dots-vertical"
-                  size={20}
-                  color="white"
-                />
-              </Pressable>
-            </View>
-          ))
+          renderChannels()
         ) : communityChannels?.length && communityChannels.length > 0 ? (
           <ActivityIndicator />
         ) : (

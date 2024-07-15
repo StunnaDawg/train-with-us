@@ -1,27 +1,24 @@
 import { View, ScrollView, Pressable } from "react-native"
 import React, { useState } from "react"
-
-import { useAuth } from "../../../supabaseFunctions/authcontext"
-import { useEffect } from "react"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import { Communities, Profile } from "../../../@types/supabaseTypes"
-import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import CommunityBubble from "./CommunityBubble"
 import { FontAwesome6 } from "@expo/vector-icons"
-import LoadingModal from "../../../components/LoadingModal"
 import { useLoading } from "../../../context/LoadingContext"
 
 type CommunitiesScrollProps = {
   communities: Communities[] | null
+  currentUser: Profile | null
 }
 
-const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
+const CommunitiesScroll = ({
+  communities,
+  currentUser,
+}: CommunitiesScrollProps) => {
   const { setLoading } = useLoading()
   const [isDashPressed, setIsDashPressed] = useState(true)
   const [activeCommunity, setActiveCommunity] = useState<number | null>(null)
-  const [currentUser, setCurrentUser] = useState<Profile | null>(null)
-  const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
 
   const handleOnPressIn = () => {
@@ -78,11 +75,6 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
   //   })
   // }
 
-  useEffect(() => {
-    if (!user) return
-    useCurrentUser(user.id, setCurrentUser)
-  }, [user])
-
   return (
     <View className="max-h-full border-r border-slate-400">
       <ScrollView className="h-full">
@@ -131,7 +123,6 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
             })}
         </View>
       </ScrollView>
-      <LoadingModal />
     </View>
   )
 }

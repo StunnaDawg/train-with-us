@@ -31,6 +31,7 @@ const getUserPinnedChannels = async (
         .from("community_channels")
         .select("*")
         .in("id", profileData.pinned_channels) // Fetch all pinned channels in one go
+        .order("updated_at", { ascending: true })
 
       if (channelsError) {
         console.error("Error fetching channel data:", channelsError.message)

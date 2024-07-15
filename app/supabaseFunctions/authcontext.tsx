@@ -1,10 +1,11 @@
 import { Session, User } from "@supabase/supabase-js"
-import {
+import React, {
   useContext,
   useState,
   useEffect,
   createContext,
   ReactNode,
+  useCallback,
 } from "react"
 import supabase from "../../lib/supabase"
 
@@ -48,17 +49,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [])
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     await supabase.auth.signOut()
     setSession(null)
     setUser(null)
-  }
+  }, [])
 
-  const value = {
-    session,
-    user,
-    signOut,
-  }
+  const value = React.useMemo(
+    () => ({
+      session,
+      user,
+      signOut,
+    }),
+    [session, user, signOut]
+  )
 
   return (
     <AuthContext.Provider value={value}>

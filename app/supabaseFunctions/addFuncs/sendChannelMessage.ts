@@ -36,6 +36,7 @@ const sendChannelMessage = async (
       .from("community_channels")
       .update({
         recent_message: message, // Only the fields to update
+        updated_at: new Date(),
       })
       .eq("id", channelId)
 

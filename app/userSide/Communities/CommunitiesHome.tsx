@@ -5,7 +5,6 @@ import { NavigationType } from "../../@types/navigation"
 import getAllCommunities from "../../supabaseFunctions/getFuncs/getAllCommunities"
 import { Communities } from "../../@types/supabaseTypes"
 import CommunityCard from "./components/CommunityCard"
-import { FontAwesome6 } from "@expo/vector-icons"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { NavBar } from "../../../components"
 
