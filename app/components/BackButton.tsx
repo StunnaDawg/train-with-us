@@ -10,9 +10,27 @@ type BackButtonProps = {
 }
 
 const BackButton = ({ colour, size }: BackButtonProps) => {
+  const [pressIn, setPressIn] = React.useState<boolean>(false)
   const navigation = useNavigation<NavigationType>()
+
+  const handlePressIn = () => {
+    setPressIn(true)
+  }
+
+  const handlePressOut = () => {
+    setPressIn(false)
+  }
+
+  const currentColor = pressIn
+    ? colour === "black"
+      ? "white"
+      : "black"
+    : colour
+
   return (
     <Pressable
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       onPress={() => {
         navigation.goBack()
       }}
@@ -20,7 +38,7 @@ const BackButton = ({ colour, size }: BackButtonProps) => {
       <FontAwesome6
         name="chevron-left"
         size={size ? size : 24}
-        color={colour ? colour : "black"}
+        color={currentColor}
       />
     </Pressable>
   )

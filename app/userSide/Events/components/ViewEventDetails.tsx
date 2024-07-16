@@ -11,6 +11,7 @@ import { Profile } from "../../../@types/supabaseTypes"
 import SinglePic from "../../../components/SinglePic"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
+import SinglePicCommunity from "../../../components/SinglePicCommunity"
 
 type ViewEventDetailsProps = {
   date: string | null | undefined
@@ -114,7 +115,7 @@ const ViewEventDetails = ({
 
           <View className="flex flex-row items-center">
             {displayProfiles?.map((profile) => (
-              <SinglePic
+              <SinglePicCommunity
                 key={profile.id}
                 item={profile.profile_pic}
                 size={30}

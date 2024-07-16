@@ -4,6 +4,7 @@ import { NavigationType } from "../../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import { Profile } from "../../../@types/supabaseTypes"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
+import SinglePic from "../../../components/SinglePic"
 
 type MemberCardProps = {
   member: Profile

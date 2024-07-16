@@ -18,6 +18,14 @@ const Checkout = ({ ticketPrice, event }: CheckoutProps) => {
   const [eventHostState, setEventHost] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
+  const [isPressed, setIsPressed] = useState<boolean>(false)
+
+  const handleOnPressIn = () => {
+    setIsPressed(true)
+  }
+  const handleOnPressOut = () => {
+    setIsPressed(false)
+  }
 
   const alert = () => {
     showAlertFunc({
@@ -65,10 +73,14 @@ const Checkout = ({ ticketPrice, event }: CheckoutProps) => {
     <View className="flex flex-row justify-center">
       <View className="items-center">
         <Pressable
+          onPressIn={handleOnPressIn}
+          onPressOut={handleOnPressOut}
           onPress={() => {
             alert()
           }}
-          className=" bg-white border rounded-lg px-20 my-2 py-2"
+          className={` ${
+            isPressed ? "bg-slate-500" : "bg-white"
+          } border rounded-lg px-20 my-2 py-2`}
         >
           <Text className="font-bold text-sm">
             {ticketPrice > 0 ? "Purchase Ticket" : "RVSP for Event"}

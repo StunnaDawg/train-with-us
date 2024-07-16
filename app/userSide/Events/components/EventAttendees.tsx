@@ -5,15 +5,12 @@ import {
   ScrollView,
   ActivityIndicator,
 } from "react-native"
-import React, { useEffect, useState } from "react"
 import { RootStackParamList } from "../../../@types/navigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import BackButton from "../../../components/BackButton"
 import AttendeeCard from "./AttendeeCard"
 
 const EventAttendees = () => {
-  const [loading, setLoading] = useState<boolean>(false)
-
   const route = useRoute<RouteProp<RootStackParamList, "ViewEventAttendees">>()
   const eventGoers = route.params.profile
 
@@ -26,13 +23,9 @@ const EventAttendees = () => {
           <View />
         </View>
         <ScrollView className=" h-full">
-          {!loading ? (
-            eventGoers?.map((member) => {
-              return <AttendeeCard key={member.id} member={member} />
-            })
-          ) : (
-            <ActivityIndicator />
-          )}
+          {eventGoers?.map((member) => {
+            return <AttendeeCard key={member.id} member={member} />
+          })}
         </ScrollView>
       </View>
     </SafeAreaView>

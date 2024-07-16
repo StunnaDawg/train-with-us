@@ -10,6 +10,14 @@ type LeaveEventProps = { eventId: number; userId: string | null | undefined }
 
 const LeaveEvent = ({ eventId, userId }: LeaveEventProps) => {
   const navigation = useNavigation<NavigationType>()
+  const [isPressed, setIsPressed] = React.useState<boolean>(false)
+
+  const handleOnPressIn = () => {
+    setIsPressed(true)
+  }
+  const handleOnPressOut = () => {
+    setIsPressed(false)
+  }
 
   const leaveEventFunc = async () => {
     if (!userId || !eventId) return
@@ -51,10 +59,14 @@ const LeaveEvent = ({ eventId, userId }: LeaveEventProps) => {
     <View className="flex flex-row justify-center">
       <View className="items-center">
         <Pressable
+          onPressIn={handleOnPressIn}
+          onPressOut={handleOnPressOut}
           onPress={() => {
             handleLeaveButton()
           }}
-          className=" bg-white border rounded-lg px-20 my-2 py-2"
+          className={`${
+            isPressed ? "bg-slate-500" : "bg-white"
+          } border rounded-lg px-20 my-2 py-2`}
         >
           <Text className="font-bold text-sm">Leave Event</Text>
         </Pressable>
