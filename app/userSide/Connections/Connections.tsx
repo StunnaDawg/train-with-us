@@ -20,6 +20,7 @@ import { NavigationType } from "../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import { FontAwesome6 } from "@expo/vector-icons"
 import CardSkeleton from "./components/CardSkeleton"
+import { NavBar } from "../../../components"
 
 const Connections = () => {
   const { user } = useAuth()
@@ -87,15 +88,14 @@ const Connections = () => {
 
   return (
     <SafeAreaView>
-      <View className="flex flex-row justify-end mx-2">
-        <Pressable
-          className="flex flex-row items-center"
-          onPress={() => navigation.navigate("SearchUsers")}
-        >
-          <Text className="mx-2 mt-1 text-xl font-bold">Search Users</Text>
-          <FontAwesome6 name="magnifying-glass" size={24} color="black" />
-        </Pressable>
-      </View>
+      <NavBar
+        title="Connections"
+        iconColour="black"
+        showFriends={true}
+        showSettings={false}
+        showSearchCommunities={false}
+        searchUsers={true}
+      />
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
         onScroll={scrollHandler}

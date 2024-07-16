@@ -22,6 +22,7 @@ import calculateAge from "../../../utilFunctions/calculateAge"
 import ActivityTags from "../../../components/AcvitivityTags"
 import SinglePic from "../../../components/SinglePic"
 import { Image } from "expo-image"
+import SinglePicCommunity from "../../../components/SinglePicCommunity"
 
 type ConnectionsCardProps = {
   profile?: Profile | null
@@ -132,11 +133,12 @@ const ConnectionsCard = ({
             <View className="flex flex-row justify-center m-1">
               {profile.photos_url?.length && profile?.photos_url[0] !== null ? (
                 <View className="m-1">
-                  <SinglePic
+                  <SinglePicCommunity
                     size={250}
                     avatarRadius={10}
                     noAvatarRadius={10}
                     item={profile?.photos_url[0]}
+                    skeletonRadius={"square"}
                   />
                 </View>
               ) : (

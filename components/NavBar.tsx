@@ -6,7 +6,6 @@ import { NavigationType, TabNavigationType } from "../app/@types/navigation"
 import { Image } from "expo-image"
 import { Profile } from "../app/@types/supabaseTypes"
 import { useLoading } from "../app/context/LoadingContext"
-import { set } from "mongoose"
 
 type NavBarProps = {
   title: string
@@ -17,6 +16,7 @@ type NavBarProps = {
   showFriends: boolean
   showSettings: boolean
   showSearchCommunities: boolean
+  searchUsers: boolean
 }
 
 const NavBar = ({
@@ -28,8 +28,9 @@ const NavBar = ({
   showFriends,
   showSettings,
   showSearchCommunities,
+  searchUsers,
 }: NavBarProps) => {
-  const { isLoading, setLoading } = useLoading()
+  const { setLoading } = useLoading()
   const navigationTab = useNavigation<TabNavigationType>()
   const navigation = useNavigation<NavigationType>()
 
@@ -44,6 +45,8 @@ const NavBar = ({
   }
 
   const getColor = (key: string) => (isPressed[key] ? "black" : "white")
+
+  const searchUsersColour = isPressed["searchothers"] ? "white" : "black"
 
   return (
     <>
@@ -61,6 +64,23 @@ const NavBar = ({
           <Text className={`font-bold text-lg ${textColour}`}>{title}</Text>
         </View>
         <View className="flex flex-row justify-center mx-2 items-center">
+          {searchUsers ? (
+            <Pressable
+              className="mx-2 mt-1"
+              onPressIn={() => handlePressIn("searchothers")}
+              onPressOut={() => handlePressOut("searchothers")}
+              onPress={() => {
+                setLoading(true)
+                navigation.navigate("SearchUsers")
+              }}
+            >
+              <FontAwesome6
+                name="magnifying-glass"
+                size={24}
+                color={searchUsersColour}
+              />
+            </Pressable>
+          ) : null}
           {showSearchCommunities ? (
             <Pressable
               className="mx-2 mt-1"

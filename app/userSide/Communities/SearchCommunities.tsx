@@ -7,18 +7,12 @@ import searchCommuntiesFunction from "../../supabaseFunctions/getFuncs/searchCom
 import SearchBar from "../Events/components/SearchBar"
 import BackButton from "../../components/BackButton"
 import { useAuth } from "../../supabaseFunctions/authcontext"
-import { useLoading } from "../../context/LoadingContext"
 
 const SearchCommunities = () => {
-  const { setLoading } = useLoading()
   const { user } = useAuth()
   const [searchText, setSearchText] = useState<string>("")
   const [communities, setCommunities] = useState<Communities[] | null>([])
   const [loading, setLoadingState] = useState<boolean>(false)
-
-  useEffect(() => {
-    setLoading(false)
-  }, [])
 
   const handleSearch = (text: string) => {
     setSearchText(text)
@@ -50,7 +44,7 @@ const SearchCommunities = () => {
             <>
               <View className="flex-row justify-center m-2">
                 <Text className="text-white text-xl font-bold">
-                  No Communities found!
+                  Search for Communtiies
                 </Text>
               </View>
             </>

@@ -35,8 +35,12 @@ const CommunitiesHome = () => {
         showFriends={false}
         showSettings={false}
         showSearchCommunities={true}
+        searchUsers={false}
       />
       <View className="flex-1 bg-primary-900">
+        <View className="m-2">
+          <Text className="text-white font-bold text-2xl">Halifax, NS</Text>
+        </View>
         <ScrollView
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

@@ -28,6 +28,7 @@ const Events = () => {
         showFriends={false}
         showSettings={false}
         showSearchCommunities={false}
+        searchUsers={false}
       />
       <ScrollView
         className=" bg-primary-900"

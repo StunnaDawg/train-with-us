@@ -39,6 +39,7 @@ const CommunitiesDash = () => {
         showFriends={false}
         showSettings={false}
         showSearchCommunities={false}
+        searchUsers={false}
       />
       <View className="flex flex-row bg-primary-900">
         <View className="bg-primary-900">

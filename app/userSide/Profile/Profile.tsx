@@ -70,6 +70,7 @@ const ProfileView = () => {
         showFriends={true}
         showSettings={true}
         showSearchCommunities={false}
+        searchUsers={false}
       />
       <ScrollView
         refreshControl={
