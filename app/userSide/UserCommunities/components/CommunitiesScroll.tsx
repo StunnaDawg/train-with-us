@@ -37,14 +37,7 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
 
   const renderCommunities = useCallback(() => {
     return communities?.map((community) => {
-      const isActive = activeCommunity === community.id
-      return (
-        <CommunityBubble
-          key={community.id}
-          isActive={isActive}
-          community={community}
-        />
-      )
+      return <CommunityBubble key={community.id} community={community} />
     })
   }, [communities, activeCommunity])
 

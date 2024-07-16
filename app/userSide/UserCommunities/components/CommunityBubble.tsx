@@ -1,69 +1,60 @@
 import { View, Text, Pressable } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { Communities } from "../../../@types/supabaseTypes"
-import SinglePic from "../../../components/SinglePic"
-import { useLoading } from "../../../context/LoadingContext"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
+import SinglePicCommunity from "../../../components/SinglePicCommunity"
 
 type CommunityBubbleProps = {
   community: Communities
-  isActive: boolean
 }
 
-const CommunityBubble = React.memo(
-  ({ community, isActive }: CommunityBubbleProps) => {
-    const { setLoading } = useLoading()
-    const [imageFile, setImageFile] = useState<string | null | undefined>(null)
-    const navigation = useNavigation<NavigationType>()
+const CommunityBubble = React.memo(({ community }: CommunityBubbleProps) => {
+  const [isPressed, setIsPressed] = useState<boolean>(false)
+  const navigation = useNavigation<NavigationType>()
 
-    useEffect(() => {
-      if (
-        community?.community_profile_pic === null ||
-        community?.community_profile_pic === undefined
-      )
-        return
-      setImageFile(community?.community_profile_pic)
-    }, [community])
-
-    const handleCharacterLimit = (text: string | undefined | null) => {
-      if (text) {
-        if (text.length > 10) {
-          return text.slice(0, 10) + "..."
-        } else {
-          return text
-        }
-      }
-      return ""
-    }
-    return (
-      <Pressable
-        className="m-2 items-center"
-        onPress={() => {
-          setLoading(true)
-
-          navigation.navigate("CommunityPage", {
-            community: community,
-          })
-        }}
-      >
-        <View
-          style={{ backgroundColor: isActive ? "white" : "transparent" }}
-          className={` rounded-full p-1`}
-        >
-          <SinglePic
-            size={54}
-            avatarRadius={100}
-            noAvatarRadius={100}
-            item={imageFile}
-          />
-        </View>
-        <Text className="text-white font-bold text-xs">
-          {handleCharacterLimit(community?.community_title)}
-        </Text>
-      </Pressable>
-    )
+  const handlePressIn = () => {
+    setIsPressed(true)
   }
-)
+  const handlePressOut = () => {
+    setIsPressed(false)
+  }
+
+  const handleCharacterLimit = (text: string | undefined | null) => {
+    if (text) {
+      if (text.length > 10) {
+        return text.slice(0, 10) + "..."
+      } else {
+        return text
+      }
+    }
+    return ""
+  }
+  return (
+    <Pressable
+      style={{ opacity: isPressed ? 0.4 : 1 }}
+      className={` m-2 items-center`}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      onPress={() => {
+        navigation.navigate("CommunityPage", {
+          community: community,
+        })
+      }}
+    >
+      <View className={` rounded-full p-1`}>
+        <SinglePicCommunity
+          size={54}
+          avatarRadius={100}
+          noAvatarRadius={100}
+          item={community?.community_profile_pic}
+        />
+      </View>
+      <Text className="text-white font-bold text-xs">
+        {handleCharacterLimit(community?.community_title)}
+      </Text>
+    </Pressable>
+  )
+})
 
 export default CommunityBubble

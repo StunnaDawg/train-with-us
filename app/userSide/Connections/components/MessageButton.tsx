@@ -29,11 +29,19 @@ const MessageButton = ({
   setLoading,
   loading,
 }: MessageButtonProps) => {
+  const [isPressed, setIsPressed] = useState<boolean>(false)
   const [message, setMessageToSend] = useState<string>("")
   const { user } = useAuth()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const { dismiss } = useBottomSheetModal()
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
+
+  const handlePressIn = () => {
+    setIsPressed(true)
+  }
+  const handlePressOut = () => {
+    setIsPressed(false)
+  }
 
   const snapPoints = useMemo(() => ["25%", "50%"], [])
 
@@ -55,12 +63,20 @@ const MessageButton = ({
         {!coach ? (
           <View className="flex flex-row">
             <Pressable
+              onPressIn={handlePressIn}
+              onPressOut={handlePressOut}
               onPress={() => {
                 handlePresentModalPress()
               }}
-              className=" border-2 rounded-full px-5 py-1 mx-1"
+              className={` ${
+                isPressed ? "bg-black" : "bg-white"
+              } border-2 rounded-full px-5 py-1 mx-1`}
             >
-              <FontAwesome6 name="message" size={24} color="black" />
+              <FontAwesome6
+                name="message"
+                size={24}
+                color={`${isPressed ? "white" : "black"}`}
+              />
             </Pressable>
           </View>
         ) : (

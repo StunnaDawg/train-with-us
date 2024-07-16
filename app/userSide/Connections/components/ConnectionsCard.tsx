@@ -33,10 +33,18 @@ const ConnectionsCard = ({
   isLast,
   setScroll,
 }: ConnectionsCardProps) => {
+  const [isPressed, setIsPressed] = useState<boolean>(false)
   const screenHeight = Dimensions.get("window").height
   const cardHeight = Platform.OS == "android" ? screenHeight * 0.75 : 600
   const navigation = useNavigation<NavigationType>()
   const avatarSize = { height: 100, width: 100 }
+
+  const handlePressIn = () => {
+    setIsPressed(true)
+  }
+  const handlePressOut = () => {
+    setIsPressed(false)
+  }
 
   const styles = StyleSheet.create({
     avatar: {
@@ -60,7 +68,7 @@ const ConnectionsCard = ({
     <View className="flex-1 mx-5" style={{ height: cardHeight }}>
       {!isLast && profile ? (
         <>
-          <View className="bg-white border-slate-200 rounded-md p-1">
+          <View className="bg-white border-slate-200 rounded-md px-1 py-3">
             <View className="flex flex-row justify-center">
               <Text className="font-bold text-2xl">{profile.first_name}</Text>
             </View>
@@ -142,14 +150,22 @@ const ConnectionsCard = ({
               </View>
 
               <Pressable
-                className=" border-2 rounded-full px-5 py-1 mx-1"
+                onPressIn={handlePressIn}
+                onPressOut={handlePressOut}
+                className={` ${
+                  isPressed ? "bg-black" : "bg-white"
+                } border-2 rounded-full px-5 py-1 mx-1`}
                 onPress={() =>
                   navigation.navigate("ViewFullUserProfile", {
                     user: profile,
                   })
                 }
               >
-                <FontAwesome6 name="eye" size={24} />
+                <FontAwesome6
+                  name="eye"
+                  size={24}
+                  color={`${isPressed ? "white" : "black"}`}
+                />
               </Pressable>
             </View>
           </View>

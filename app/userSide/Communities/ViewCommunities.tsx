@@ -70,7 +70,7 @@ const ViewCommunities = () => {
               <UpcomingCommunityEvents community={community} />
             </View>
           </ScrollView>
-          {!joined ? (
+          {!joined && community ? (
             <JoinFooter
               communityId={communityId}
               communityTitle={community?.community_title}

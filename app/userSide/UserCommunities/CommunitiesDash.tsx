@@ -3,14 +3,14 @@ import React, { useCallback, useEffect, useState } from "react"
 import CommunitiesScroll from "./components/CommunitiesScroll"
 import CommunitiesRead from "./components/CommunitiesRead"
 import { useAuth } from "../../supabaseFunctions/authcontext"
-import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
-import { Communities, Profile } from "../../@types/supabaseTypes"
+import { Communities } from "../../@types/supabaseTypes"
 import getAllUsersCommunities from "../../supabaseFunctions/getFuncs/getUsersCommunities"
 import { useFocusEffect } from "@react-navigation/native"
 import { NavBar } from "../../../components"
+import CommunitiesDashSkeleton from "./CommunitiesDashSkeleton"
 
 const CommunitiesDash = () => {
-  const [loading, setLoadingState] = useState<boolean>(false)
+  const [loading, setLoadingState] = useState<boolean>(true)
   const [communities, setCommunities] = useState<Communities[] | null>([])
   const { user } = useAuth()
 
@@ -41,22 +41,22 @@ const CommunitiesDash = () => {
         showSearchCommunities={false}
         searchUsers={false}
       />
-      <View className="flex flex-row bg-primary-900">
-        <View className="bg-primary-900">
-          <CommunitiesScroll communities={communities} />
-        </View>
+      {loading ? (
         <View>
-          {loading && !user ? (
-            <View>
-              <Text>Loading...</Text>
-            </View>
-          ) : (
+          <CommunitiesDashSkeleton />
+        </View>
+      ) : (
+        <View className="flex flex-row bg-primary-900">
+          <View className="bg-primary-900">
+            <CommunitiesScroll communities={communities} />
+          </View>
+          <View>
             <View>
               <CommunitiesRead />
             </View>
-          )}
+          </View>
         </View>
-      </View>
+      )}
     </>
   )
 }
