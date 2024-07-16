@@ -12,10 +12,14 @@ type SinglePicProps = {
   item: string | undefined | null
   avatarRadius: number
   noAvatarRadius: number
+  skeletonRadius?: any
+  showPlaceholder?: boolean
 }
 
 export default function SinglePicCommunity({
   size = 150,
+  skeletonRadius = "round",
+  showPlaceholder = true,
   item,
   avatarRadius,
   noAvatarRadius,
@@ -75,7 +79,7 @@ export default function SinglePicCommunity({
   return (
     <View>
       {loading ? (
-        <Skeleton radius="round" height={size} width={size} />
+        <Skeleton radius={skeletonRadius} height={size} width={size} />
       ) : avatarUrl !== "" ? (
         <Image
           source={{ uri: avatarUrl }}
@@ -83,14 +87,14 @@ export default function SinglePicCommunity({
           style={[avatarSize, styles.avatar, styles.image]}
           cachePolicy="memory-disk"
         />
-      ) : (
+      ) : showPlaceholder ? (
         <Image
           source={require("../../assets/images/TWU-Logo.png")}
           accessibilityLabel="Avatar"
           style={[avatarSize, styles.avatar, styles.image]}
           cachePolicy="memory-disk"
         />
-      )}
+      ) : null}
     </View>
   )
 }

@@ -6,6 +6,7 @@ import supabase from "../../../../lib/supabase"
 import { FileObject } from "@supabase/storage-js"
 import { Communities } from "../../../@types/supabaseTypes"
 import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
+import SinglePicCommunity from "../../../components/SinglePicCommunity"
 
 type PhotoArrayProps = {
   community: Communities
@@ -33,36 +34,44 @@ const PhotoArray = ({ community }: PhotoArrayProps) => {
     <View>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         <View className="m-1">
-          <SinglePic
+          <SinglePicCommunity
             size={165}
             avatarRadius={10}
             noAvatarRadius={10}
             item={imageFiles?.[0]}
+            skeletonRadius={"square"}
+            showPlaceholder={false}
           />
         </View>
 
         <View className="m-1">
-          <SinglePic
+          <SinglePicCommunity
             size={165}
             avatarRadius={10}
             noAvatarRadius={10}
             item={imageFiles?.[1]}
+            skeletonRadius={"square"}
+            showPlaceholder={false}
           />
         </View>
         <View className="m-1">
-          <SinglePic
+          <SinglePicCommunity
             size={165}
             avatarRadius={10}
             noAvatarRadius={10}
             item={imageFiles?.[2]}
+            skeletonRadius={"square"}
+            showPlaceholder={false}
           />
         </View>
         <View className="m-1">
-          <SinglePic
+          <SinglePicCommunity
             size={165}
             avatarRadius={10}
             noAvatarRadius={10}
             item={imageFiles?.[3]}
+            skeletonRadius={"square"}
+            showPlaceholder={false}
           />
         </View>
       </ScrollView>

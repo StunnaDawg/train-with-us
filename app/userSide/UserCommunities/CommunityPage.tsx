@@ -191,17 +191,9 @@ const CommunityPage = () => {
                             }
                             className="flex flex-row items-center"
                           >
-                            <View className="m-2">
-                              <SinglePic
-                                size={50}
-                                avatarRadius={100}
-                                noAvatarRadius={100}
-                                item={c.channel_pic}
-                              />
-                            </View>
-
                             <View>
                               <Text className="text-sm font-bold mb-1">
+                                #
                                 {c.channel_title ||
                                   "error loading channel title"}
                               </Text>
@@ -230,7 +222,7 @@ const CommunityPage = () => {
                       return (
                         <View
                           key={c.id}
-                          className="flex-row justify-between items-center"
+                          className="flex-row justify-between items-center my-2"
                         >
                           <Pressable
                             onPress={() => {
@@ -248,25 +240,12 @@ const CommunityPage = () => {
                             }}
                             className="flex flex-row items-center"
                           >
-                            <View className="m-2">
-                              <SinglePicCommunity
-                                size={50}
-                                avatarRadius={100}
-                                noAvatarRadius={100}
-                                item={c.channel_pic}
-                              />
-                            </View>
-
                             <View>
                               <Text className="text-sm font-bold mb-1">
+                                #
                                 {c.channel_title ||
                                   "error loading channel title"}
                               </Text>
-                              {c.private && (
-                                <Text className="text-xs text-red-500">
-                                  (Private)
-                                </Text>
-                              )}
                             </View>
                           </Pressable>
 

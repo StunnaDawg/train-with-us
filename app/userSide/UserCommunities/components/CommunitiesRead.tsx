@@ -18,6 +18,7 @@ import { useAuth } from "../../../supabaseFunctions/authcontext"
 import SinglePic from "../../../components/SinglePic"
 
 const CommunitiesRead = React.memo(() => {
+  const [isPressed, setIsPressed] = useState<boolean>(false)
   const { user } = useAuth()
 
   const [loading, setLoading] = useState<boolean>(false)
@@ -25,6 +26,14 @@ const CommunitiesRead = React.memo(() => {
     CommunityChannel[] | null
   >([])
   const navigation = useNavigation<NavigationType>()
+
+  const handlePressIn = () => {
+    setIsPressed(true)
+  }
+
+  const handlePressOut = () => {
+    setIsPressed(false)
+  }
 
   const showAlert = (onConfirm: () => void) =>
     Alert.alert(
@@ -111,42 +120,47 @@ const CommunitiesRead = React.memo(() => {
 
   const renderChannels = useCallback(() => {
     return communityChannels?.map((c) => (
-      <View className="flex-1">
-        <View
+      <View
+        key={c.id}
+        className={` mx-2 w-72 border-b-slate-400 p-4 flex flex-row justify-between  flex-grow items-center border-b-2 `}
+      >
+        <Pressable
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
           key={c.id}
-          className="border-b-slate-400 p-4 flex flex-row justify-between items-center border-b-2 w-full"
+          onPress={() => {
+            if (c.channel_type === "Annoucement") {
+              navigation.navigate("AnnouncementChannel", { channelId: c })
+            } else {
+              navigation.navigate("ChannelScreen", { channelId: c })
+            }
+          }}
+          className={`${isPressed ? "bg-slate-500" : null}`}
         >
-          <Pressable
-            key={c.id}
-            onPress={() => {
-              if (c.channel_type === "Annoucement") {
-                navigation.navigate("AnnouncementChannel", { channelId: c })
-              } else {
-                navigation.navigate("ChannelScreen", { channelId: c })
-              }
-            }}
-            className="flex-1"
-          >
-            <View>
-              <Text className="font-bold mb-1 text-sm text-white">
-                #{c.channel_title || "Error loading channel title"}
-              </Text>
-            </View>
-          </Pressable>
-          <Pressable onPress={() => removePinChannel(c.id)} className="ml-32">
-            <MaterialCommunityIcons
-              name="dots-vertical"
-              size={20}
-              color="white"
-            />
-          </Pressable>
-        </View>
+          <View>
+            <Text className="font-bold text-base text-white">
+              #{c.channel_title || "Error loading channel title"}
+            </Text>
+          </View>
+        </Pressable>
+        <Pressable onPress={() => removePinChannel(c.id)}>
+          <MaterialCommunityIcons
+            name="dots-vertical"
+            size={20}
+            color="white"
+          />
+        </Pressable>
       </View>
     ))
   }, [communityChannels, navigation, removePinChannel])
 
   return (
     <View>
+      <View>
+        <Text className="font-bold text-lg text-white p-4">
+          Pinned Channels
+        </Text>
+      </View>
       <ScrollView className="h-full">
         {!loading && communityChannels && communityChannels.length > 0 ? (
           renderChannels()
