@@ -13,6 +13,7 @@ import JoinFooter from "./components/JoinFooter"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import getCommunityMembersUUID from "../../supabaseFunctions/getFuncs/getCommunityMembers"
 import ViewCommuntiesSkeleton from "./components/ViewCommuntiesSkeleton"
+import ViewJoinedCommunityFooter from "./components/ViewJoinedCommunity"
 
 const ViewCommunities = () => {
   const { user } = useAuth()
@@ -74,7 +75,9 @@ const ViewCommunities = () => {
               communityId={communityId}
               communityTitle={community?.community_title}
             />
-          ) : null}
+          ) : (
+            <ViewJoinedCommunityFooter community={community} />
+          )}
         </>
       )}
     </SafeAreaView>
