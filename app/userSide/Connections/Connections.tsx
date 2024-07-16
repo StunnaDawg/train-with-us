@@ -109,14 +109,15 @@ const Connections = () => {
           <CardSkeleton />
         ) : (
           connectionProfiles.map((profile, index) => (
-            <ConnectionsCard
-              key={profile.id}
-              setLoading={setNewConnection}
-              loading={newConnection}
-              profile={profile}
-              isLast={profile.id === "fake"}
-              setScroll={setScrollEnabled}
-            />
+            <View className="mt-2" key={profile.id}>
+              <ConnectionsCard
+                setLoading={setNewConnection}
+                loading={newConnection}
+                profile={profile}
+                isLast={profile.id === "fake"}
+                setScroll={setScrollEnabled}
+              />
+            </View>
           ))
         )}
       </Animated.ScrollView>

@@ -34,9 +34,16 @@ const EventCard = ({
   eventPrice,
 }: EventCardProps) => {
   const [loading, setLoading] = useState<boolean>(false)
-
+  const [isPressed, setIsPressed] = useState<boolean>(false)
   const [coverPhotoState, setCoverPhotoState] = useState<string | null>(null)
   const navigation = useNavigation<NavigationType>()
+
+  const handlePressIn = () => {
+    setIsPressed(true)
+  }
+  const handlePressOut = () => {
+    setIsPressed(false)
+  }
 
   let coverPhoto = {
     uri:
@@ -106,7 +113,9 @@ const EventCard = ({
   return (
     <Skeleton show={loading}>
       <Pressable
-        className="mx-1"
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        className={`mx-1 ${isPressed ? "opacity-25" : ""}`}
         onPress={() => navigation.navigate("ViewEvent", { eventId })}
       >
         <ImageBackground
