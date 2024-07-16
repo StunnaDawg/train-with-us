@@ -21,7 +21,15 @@ const CommunityCard = ({
   const [loading, setLoading] = useState<boolean>(false)
   const [joined, setJoined] = useState<boolean>(false)
   const [userUUIDS, setUserUUIDS] = useState<string[] | null>([])
+  const [isPressed, setIsPressed] = useState<boolean>(false)
   const navigation = useNavigation<NavigationType>()
+
+  const handlePressIn = () => {
+    setIsPressed(true)
+  }
+  const handlePressOut = () => {
+    setIsPressed(false)
+  }
 
   useEffect(() => {
     if (userId) {
@@ -42,6 +50,9 @@ const CommunityCard = ({
 
   return (
     <Pressable
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      className={`${isPressed ? " opacity-10" : null} m-2 p-2 rounded-md`}
       onPress={() => {
         addPrimary
           ? null
