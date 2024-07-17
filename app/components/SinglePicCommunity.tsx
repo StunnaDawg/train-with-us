@@ -1,5 +1,5 @@
 import { Image } from "expo-image"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { StyleSheet, View } from "react-native"
 import supabase from "../../lib/supabase"
 import { Skeleton } from "moti/skeleton"
@@ -25,33 +25,43 @@ export default function SinglePicCommunity({
   const [avatarUrl, setAvatarUrl] = useState<string>("")
   const avatarSize = { height: size, width: size }
 
+  const isMounted = useRef(true)
+
   useEffect(() => {
-    readImage()
+    isMounted.current = true
+    if (item) {
+      readImage()
+    } else {
+      setLoading(false)
+    }
+
+    return () => {
+      isMounted.current = false
+    }
   }, [item])
 
-  const readImage = () => {
+  const readImage = async () => {
     setLoading(true)
-    if (item === undefined) {
-      setLoading(false)
-      return
-    }
-    console.log("reading ya mom", `${item}`)
-    supabase.storage
-      .from("photos")
-      .download(`${item}`)
-      .then(({ data }) => {
-        const fr = new FileReader()
-        fr.readAsDataURL(data!)
-        fr.onload = () => {
+    try {
+      const { data, error } = await supabase.storage
+        .from("photos")
+        .download(`${item}`)
+      if (error) throw error
+
+      const fr = new FileReader()
+      fr.readAsDataURL(data!)
+      fr.onload = () => {
+        if (isMounted.current) {
           setAvatarUrl(fr.result as string)
           setLoading(false)
         }
-      })
-
-      .catch((error) => {
-        console.error("Error downloading image:", error)
+      }
+    } catch (error) {
+      console.error("Error downloading image:", error)
+      if (isMounted.current) {
         setLoading(false)
-      })
+      }
+    }
   }
 
   const styles = StyleSheet.create({
