@@ -13,27 +13,28 @@ import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import BackButton from "../../components/BackButton"
 import CommunityBottomModal from "./CommunityBottomModal"
 import { BottomSheetModal, useBottomSheetModal } from "@gorhom/bottom-sheet"
-import CommunityPageSkeleton from "./CommunityPageSkeleton"
-import { useLoading } from "../../context/LoadingContext"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
 import CommunityNews from "./components/CommunityNews"
 import CommunityPageChannels from "./components/CommunityPageChannels"
 import CommuntiyPageEvents from "./components/CommuntiyPageEvents"
 import CommunityPageMembers from "./components/CommunityPageMembers"
 import CommunityPageAbout from "./components/CommunityPageAbout"
-import { Profile } from "../../@types/supabaseTypes"
+import { Events, Profile } from "../../@types/supabaseTypes"
 import getCommunityMembersUUID from "../../supabaseFunctions/getFuncs/getCommunityMembers"
 import getProfiles from "../../supabaseFunctions/getFuncs/getProfiles"
+import { useAuth } from "../../supabaseFunctions/authcontext"
 
 const CommunityPage = () => {
+  const { userProfile } = useAuth()
   const [commmunityMemberUUIDs, setCommunityMemberUUIDs] = useState<
     string[] | null
   >(null)
   const [communityMembers, setCommunityMembers] = useState<Profile[] | null>(
     null
   )
-  const [loading, setLoadingState] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true)
   const route = useRoute<RouteProp<RootStackParamList, "CommunityPage">>()
+  const navigation = useNavigation<NavigationType>()
   const community = route.params.community
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
 
@@ -49,17 +50,13 @@ const CommunityPage = () => {
   }, [])
 
   useEffect(() => {
-    getCommunityMembersUUID(
-      setLoadingState,
-      community.id,
-      setCommunityMemberUUIDs
-    )
+    getCommunityMembersUUID(setLoading, community.id, setCommunityMemberUUIDs)
   }, [])
 
   useEffect(() => {
     if (commmunityMemberUUIDs) {
       const getCommunityMembers = async () => {
-        getProfiles(setLoadingState, commmunityMemberUUIDs, setCommunityMembers)
+        getProfiles(setLoading, commmunityMemberUUIDs, setCommunityMembers)
       }
       getCommunityMembers()
     }
@@ -79,6 +76,21 @@ const CommunityPage = () => {
             {community.community_title}
           </Text>
           <Text className="text-white">{community.member_count} Members</Text>
+
+          {userProfile?.id === community.community_owner && (
+            <Pressable
+              onPress={() =>
+                navigation.navigate("MyCommunityHome", {
+                  communityId: community.id,
+                })
+              }
+              className="bg-slate-400/60 rounded-lg p-2 m-2"
+            >
+              <Text className="text-white font-bold text-xs">
+                My Community Dashboard
+              </Text>
+            </Pressable>
+          )}
         </View>
 
         <Tab.Navigator
@@ -102,7 +114,7 @@ const CommunityPage = () => {
               <CommunityPageChannels
                 community={community}
                 loading={loading}
-                setLoadingState={setLoadingState}
+                setLoadingState={setLoading}
               />
             )}
           </Tab.Screen>
@@ -127,8 +139,9 @@ const CommunityPage = () => {
               },
             }}
             name="Events"
-            component={CommuntiyPageEvents}
-          />
+          >
+            {() => <CommuntiyPageEvents community={community} />}
+          </Tab.Screen>
           <Tab.Screen
             options={{
               tabBarLabelStyle: {
@@ -149,9 +162,10 @@ const CommunityPage = () => {
                 fontWeight: "bold",
               },
             }}
-            name="About"
-            component={CommunityPageAbout}
-          />
+            name="Details"
+          >
+            {() => <CommunityPageAbout community={community} />}
+          </Tab.Screen>
         </Tab.Navigator>
       </>
       {/* )} */}

@@ -10,7 +10,6 @@ import { RouteProp, useRoute } from "@react-navigation/native"
 import BackButton from "../../components/BackButton"
 
 const CommunityHome = () => {
-  const { user } = useAuth()
   const [loading, setLoading] = useState<boolean>(false)
   const [currentCommunity, setCurrentCommunity] = useState<Communities | null>(
     {} as Communities
@@ -18,11 +17,6 @@ const CommunityHome = () => {
   const navigation = useNavigation<NavigationType>()
   const route = useRoute<RouteProp<RootStackParamList, "MyCommunityHome">>()
   const communityId = route.params.communityId
-
-  useEffect(() => {
-    if (!user) return
-    getSingleCommunity(setLoading, communityId, setCurrentCommunity)
-  }, [])
 
   useFocusEffect(
     useCallback(() => {

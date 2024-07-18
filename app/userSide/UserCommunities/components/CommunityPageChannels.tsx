@@ -70,17 +70,6 @@ const CommunityPageChannels = ({
     fetchData()
   }, [community])
 
-  const goToCommunity = () => {
-    if (
-      !profile?.community_created ||
-      profile?.community_created === community?.id
-    )
-      return
-    navigation.navigate("MyCommunityHome", {
-      communityId: profile?.community_created,
-    })
-  }
-
   const showAlertConfirm = (onConfirm: () => void) =>
     Alert.alert(
       "Do you want to pin this channel?",
