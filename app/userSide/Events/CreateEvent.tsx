@@ -29,6 +29,7 @@ import BackButton from "../../components/BackButton"
 
 const CreateEvent = () => {
   const { user } = useAuth()
+  const [createEventPressed, setCreateEventPressed] = useState<boolean>(false)
   const [attendaceLimitSwitch, setAttendaceLimitSwitch] =
     useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
@@ -44,6 +45,14 @@ const CreateEvent = () => {
   const [show, setShow] = useState(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const navigation = useNavigation<NavigationType>()
+
+  const handleEventButtonPressedIn = () => {
+    setCreateEventPressed(true)
+  }
+
+  const handleEventButtonPressedOut = () => {
+    setCreateEventPressed(false)
+  }
 
   const onChangeDate = (
     event: DateTimePickerEvent,
@@ -202,6 +211,8 @@ const CreateEvent = () => {
               </View>
 
               <Pressable
+                onPressIn={handleEventButtonPressedIn}
+                onPressOut={handleEventButtonPressedOut}
                 onPress={async () => {
                   setTimeout(() => {
                     setLoading(true)
@@ -241,7 +252,9 @@ const CreateEvent = () => {
                     setLoading(false)
                   }, 1000)
                 }}
-                className=" bg-black p-4 rounded-lg items-center mb-20"
+                className={`${
+                  createEventPressed ? "bg-opacity-50" : "bg-black"
+                } p-4 rounded-lg items-center mb-20`}
               >
                 <Text className="text-white text-lg font-bold">
                   Create Event

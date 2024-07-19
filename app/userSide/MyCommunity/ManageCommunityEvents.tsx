@@ -23,7 +23,7 @@ import EventCard from "../Events/components/EventCard"
 const ManageCommunityEvents = () => {
   const [searchUpcomingEvents, setSearchUpcomingEvents] =
     React.useState<boolean>(true)
-
+  const [pressPlus, setPressPlus] = React.useState<boolean>(false)
   const [searchPastEvents, setSearchPastEvents] = React.useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [upcomingEvents, setUpcomingEvents] = useState<Events[] | null>([])
@@ -33,6 +33,14 @@ const ManageCommunityEvents = () => {
   const [pastEvents, setPastEvents] = React.useState<Events[] | null>([])
 
   const colorMode = "dark"
+
+  const handlePressPlusIn = () => {
+    setPressPlus(true)
+  }
+
+  const handlePressPlusOut = () => {
+    setPressPlus(false)
+  }
 
   const getPastCommunityEvents = async () => {
     try {
@@ -163,7 +171,17 @@ const ManageCommunityEvents = () => {
         <View>
           <Text className="text-white font-bold text-xl">Manage Events</Text>
         </View>
-        <View />
+        <Pressable
+          onPressIn={handlePressPlusIn}
+          onPressOut={handlePressPlusOut}
+          onPress={() => navigation.navigate("CreateEvent")}
+        >
+          <FontAwesome6
+            name="plus"
+            size={24}
+            color={`${pressPlus ? "black" : "white"}`}
+          />
+        </Pressable>
       </View>
       <View className="m-5 mx-7">
         <View className="flex-row justify-center mt-4 mb-2">

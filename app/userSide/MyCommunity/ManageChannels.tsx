@@ -28,9 +28,25 @@ const ManageChannels = () => {
   const [communityChannels, setCommunityChannels] = useState<
     CommunityChannel[] | null
   >([])
+  const [deleteButtonPressed, setDeleteButtonPressed] = useState<boolean>(false)
+  const [editButtonPressed, setEditButtonPressed] = useState<boolean>(false)
   const route = useRoute<RouteProp<RootStackParamList, "ManageChannels">>()
   const communityId = route.params.communityId
   const navigation = useNavigation<NavigationType>()
+
+  const handleDeletePressedIn = () => {
+    setDeleteButtonPressed(true)
+  }
+  const handleDeletePressedOut = () => {
+    setDeleteButtonPressed(false)
+  }
+
+  const handleEditPressedIn = () => {
+    setEditButtonPressed(true)
+  }
+  const handleEditPressedOut = () => {
+    setEditButtonPressed(false)
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -118,6 +134,8 @@ const ManageChannels = () => {
                 </View>
                 <View className="flex flex-row">
                   <Pressable
+                    onPressIn={handleEditPressedIn}
+                    onPressOut={handleEditPressedOut}
                     className="mx-6"
                     onPress={() =>
                       navigation.navigate("EditChannel", {
@@ -125,17 +143,27 @@ const ManageChannels = () => {
                       })
                     }
                   >
-                    <FontAwesome6 name="edit" size={20} color="black" />
+                    <FontAwesome6
+                      name="edit"
+                      size={20}
+                      color={`${editButtonPressed ? "blue" : "black"}`}
+                    />
                   </Pressable>
 
                   <Pressable
+                    onPressIn={handleDeletePressedIn}
+                    onPressOut={handleDeletePressedOut}
                     onPress={() => {
                       showDeleteAlert(() => {
                         deleteChannel(c.id)
                       })
                     }}
                   >
-                    <FontAwesome6 name="trash" size={20} color="black" />
+                    <FontAwesome6
+                      name="trash"
+                      size={20}
+                      color={`${deleteButtonPressed ? "red" : "black"}`}
+                    />
                   </Pressable>
                 </View>
               </View>
