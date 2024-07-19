@@ -9,7 +9,7 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import showAlertFunc from "../../utilFunctions/showAlertFunc"
 
 const CreateNewsPost = () => {
-  const { user } = useAuth()
+  const { userProfile } = useAuth()
   const [title, setTitle] = useState<string>("")
   const [content, setContent] = useState<string>("")
   const [createButtonPressed, setCreateButtonPressed] = useState<boolean>(false)
@@ -18,7 +18,7 @@ const CreateNewsPost = () => {
   const navigation = useNavigation<NavigationType>()
 
   const handleCreateNewsPost = async () => {
-    if (title === "" || content === "" || !user) {
+    if (title === "" || content === "" || !userProfile) {
       showAlert({
         title: "Error creating news post",
         message: "Please fill out all fields before creating a news post.",
@@ -27,7 +27,8 @@ const CreateNewsPost = () => {
       return
     }
 
-    console.log("Creating news post", title, content, user.id, communityId)
+    console.log("Creating news post", title, content, userProfile, communityId)
+    const lastName = userProfile.last_name ? userProfile.last_name : ""
     const createdAt = new Date().toISOString()
     const { error } = await supabase.from("news_posts").insert([
       {
@@ -35,7 +36,8 @@ const CreateNewsPost = () => {
         content: content,
         created_at: createdAt,
         community_id: communityId,
-        author: user.id,
+        author: userProfile.id,
+        author_name: userProfile.first_name + " " + lastName,
       },
     ])
 

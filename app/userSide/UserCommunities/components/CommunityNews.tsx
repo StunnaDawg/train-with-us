@@ -9,12 +9,19 @@ export type NewsCard = {
 
 const NewsCard = ({ news }: NewsCard) => {
   return (
-    <View className="bg-white rounded-xl p-2">
-      <View className="flex flex-row justify-between">
-        <Text className="text-white font-semibold text-lg">{news.title}</Text>
-        <Text className="text-white font-semibold text-sm">{news.content}</Text>
+    <View className="rounded-xl p-2 m-2 bg-slate-500">
+      <View className="flex flex-row jus">
+        <Text className=" font-semibold text-lg">{news.title}</Text>
       </View>
-      <Text className="text-white">{news.content}</Text>
+
+      <Text className="">
+        {news.content}
+        sdfmnsdflsdbnskjdbfskjdgbskjdgbskjgdbsdkjgbskjbksjgbgbjksbkgjbsdgk
+        sbfkbgfskjdf ksdbhfdkjsfb sksjfsdjkfbsjdfsjkfbsd fsdjfsbd
+        fskdjhfsdjfkhsdf sjkdfhsjkdf hsdkjfhskjdfhs dfjsdfh s
+      </Text>
+
+      <Text className="text-xs">{news.author_name}</Text>
     </View>
   )
 }
@@ -26,10 +33,6 @@ export type CommunityNewsProps = {
 const CommunityNews = ({ communityNews }: CommunityNewsProps) => {
   return (
     <View className="flex-1 bg-primary-900">
-      <View className="flex flex-row justify-center m-2">
-        <Text className="text-white font-semibold text-xl">Community News</Text>
-      </View>
-
       <View>
         <FlatList
           data={communityNews}

@@ -561,6 +561,7 @@ export type Database = {
       news_posts: {
         Row: {
           author: string
+          author_name: string
           community_id: number
           content: string
           created_at: string
@@ -569,6 +570,7 @@ export type Database = {
         }
         Insert: {
           author: string
+          author_name?: string
           community_id: number
           content?: string
           created_at?: string
@@ -577,6 +579,7 @@ export type Database = {
         }
         Update: {
           author?: string
+          author_name?: string
           community_id?: number
           content?: string
           created_at?: string
