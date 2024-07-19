@@ -133,7 +133,7 @@ export type RootStackParamList = {
   }
 
   MyCommunityEvents: {
-    communityId: number
+    community: Communities
   }
   Notifications: undefined
   Location: undefined

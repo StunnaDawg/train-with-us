@@ -26,6 +26,23 @@ const CommunityRequestsPage = () => {
     CommunityRequests[] | null
   >([])
   const [refreshing, setRefreshing] = useState<boolean>(false)
+  const [acceptButtonPressed, setAcceptButtonPressed] = useState<boolean>(false)
+  const [denyButtonPressed, setDenyButtonPressed] = useState<boolean>(false)
+
+  const handleAcceptButtonPressed = () => {
+    setAcceptButtonPressed(true)
+  }
+  const handleAcceptButtonReleased = () => {
+    setAcceptButtonPressed(false)
+  }
+
+  const handleDenyButtonPressed = () => {
+    setDenyButtonPressed(true)
+  }
+
+  const handleDenyButtonReleased = () => {
+    setDenyButtonPressed(false)
+  }
 
   const route = useRoute<RouteProp<RootStackParamList, "MyCommunityRequests">>()
   const communityId = route.params.communityId
@@ -126,14 +143,20 @@ const CommunityRequestsPage = () => {
               </Pressable>
               <View className="flex flex-row ">
                 <Pressable
+                  onPressIn={handleAcceptButtonPressed}
+                  onPressOut={handleAcceptButtonReleased}
                   onPress={async () => {
                     await acceptRequestFunc(request)
                   }}
-                  className="mx-5"
+                  className={`${
+                    acceptButtonPressed ? "bg-opacity-50" : null
+                  } mx-5`}
                 >
                   <FontAwesome6 name="square-check" size={36} color="green" />
                 </Pressable>
                 <Pressable
+                  onPressIn={handleDenyButtonPressed}
+                  onPressOut={handleDenyButtonReleased}
                   onPress={() => {
                     if (request.id)
                       denyRequest(
@@ -154,6 +177,7 @@ const CommunityRequestsPage = () => {
                       )
                     }, 500)
                   }}
+                  className={`${acceptButtonPressed ? "bg-opacity-50" : null}`}
                 >
                   <FontAwesome6 name="square-xmark" size={36} color="red" />
                 </Pressable>

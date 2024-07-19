@@ -147,8 +147,9 @@ const CommunityHome = () => {
             <Pressable
               className="pt-2"
               onPress={() => {
+                if (!currentCommunity) return
                 navigation.navigate("MyCommunityEvents", {
-                  communityId: communityId,
+                  community: currentCommunity,
                 })
               }}
               onPressIn={() => setPressed("manageEvents")}
