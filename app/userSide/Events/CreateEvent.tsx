@@ -25,6 +25,7 @@ import NewPhoto from "../../components/NewPhoto"
 import * as ImagePicker from "expo-image-picker"
 import showAlert from "../../utilFunctions/showAlert"
 import Loading from "../../components/Loading"
+import BackButton from "../../components/BackButton"
 
 const CreateEvent = () => {
   const { user } = useAuth()
@@ -59,6 +60,10 @@ const CreateEvent = () => {
   }, [])
   return (
     <SafeAreaView className="flex-1">
+      <View className="mx-1">
+        <BackButton />
+      </View>
+
       {!loading ? (
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}

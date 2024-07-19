@@ -135,7 +135,7 @@ const CommunitySettings = () => {
             keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
           >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <ScrollView>
+              <ScrollView showsVerticalScrollIndicator={false}>
                 <View>
                   <CommunityProfilePicSupa
                     communityId={community.id}
@@ -191,6 +191,7 @@ const CommunitySettings = () => {
                     </Text>
                     <View className="border rounded-lg p-2 w-full">
                       <TextInput
+                        keyboardType="phone-pad"
                         value={communityNumber}
                         onChangeText={setCommunityNumber}
                         placeholder="Please input an accurate phone number"
@@ -201,8 +202,7 @@ const CommunitySettings = () => {
                 <View>
                   <CommunityImageGrid community={community} />
                 </View>
-
-                <View className="flex flex-row justify-center my-2">
+                <View className="flex flex-row justify-center my-12">
                   <BasicButton
                     text="Update Community"
                     buttonFunction={updateCommunity}

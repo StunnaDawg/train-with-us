@@ -18,7 +18,9 @@ import { useAuth } from "../../../supabaseFunctions/authcontext"
 import SinglePic from "../../../components/SinglePic"
 
 const CommunitiesRead = React.memo(() => {
-  const [isPressed, setIsPressed] = useState<boolean>(false)
+  const [pressedChannels, setPressedChannels] = useState<{
+    [key: string]: boolean
+  }>({})
   const { user } = useAuth()
 
   const [loading, setLoading] = useState<boolean>(false)
@@ -27,12 +29,12 @@ const CommunitiesRead = React.memo(() => {
   >([])
   const navigation = useNavigation<NavigationType>()
 
-  const handlePressIn = () => {
-    setIsPressed(true)
+  const handlePressIn = (channelId: string) => {
+    setPressedChannels((prev) => ({ ...prev, [channelId]: true }))
   }
 
-  const handlePressOut = () => {
-    setIsPressed(false)
+  const handlePressOut = (channelId: string) => {
+    setPressedChannels((prev) => ({ ...prev, [channelId]: false }))
   }
 
   const showAlert = (onConfirm: () => void) =>
@@ -125,8 +127,8 @@ const CommunitiesRead = React.memo(() => {
         className={` mx-2 w-72 border-b-slate-400 p-4 flex flex-row justify-between  flex-grow items-center border-b-2 `}
       >
         <Pressable
-          onPressIn={handlePressIn}
-          onPressOut={handlePressOut}
+          onPressIn={() => handlePressIn(c.id)}
+          onPressOut={() => handlePressOut(c.id)}
           key={c.id}
           onPress={() => {
             if (c.channel_type === "Annoucement") {
@@ -135,7 +137,7 @@ const CommunitiesRead = React.memo(() => {
               navigation.navigate("ChannelScreen", { channelId: c })
             }
           }}
-          className={`${isPressed ? "bg-slate-500" : null}`}
+          className={`${pressedChannels[c.id] ? "bg-slate-500" : null}`}
         >
           <View>
             <Text className="font-bold text-base text-white">

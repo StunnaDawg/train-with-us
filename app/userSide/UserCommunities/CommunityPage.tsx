@@ -33,6 +33,10 @@ const CommunityPage = () => {
     null
   )
   const [loading, setLoading] = useState<boolean>(true)
+  const [
+    isSettingsCommunityButtonPressed,
+    setIsSettingsCommunityButtonPressed,
+  ] = useState<boolean>(false)
   const route = useRoute<RouteProp<RootStackParamList, "CommunityPage">>()
   const navigation = useNavigation<NavigationType>()
   const community = route.params.community
@@ -41,6 +45,14 @@ const CommunityPage = () => {
   const Tab = createMaterialTopTabNavigator()
 
   const snapPoints = useMemo(() => ["1%", "90%"], [])
+
+  const handleCommunitySettingsPress = () => {
+    setIsSettingsCommunityButtonPressed(true)
+  }
+
+  const handleCommunitySettingsPressCancel = () => {
+    setIsSettingsCommunityButtonPressed(false)
+  }
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present()
@@ -71,7 +83,7 @@ const CommunityPage = () => {
         <View className="flex flex-row m-2">
           <BackButton colour="white" size={22} />
         </View>
-        <View>
+        <View className="m-1">
           <Text className="text-2xl text-white font-bold">
             {community.community_title}
           </Text>
@@ -79,14 +91,18 @@ const CommunityPage = () => {
 
           {userProfile?.id === community.community_owner && (
             <Pressable
+              onPressIn={handleCommunitySettingsPress}
+              onPressOut={handleCommunitySettingsPressCancel}
               onPress={() =>
                 navigation.navigate("MyCommunityHome", {
                   communityId: community.id,
                 })
               }
-              className="bg-slate-400/60 rounded-lg p-2 m-2"
+              className={`${
+                isSettingsCommunityButtonPressed ? "opacity-50" : null
+              } bg-slate-400/60 rounded-lg p-2 m-2`}
             >
-              <Text className="text-white font-bold text-xs">
+              <Text className="text-white font-bold text-sm text-center">
                 My Community Dashboard
               </Text>
             </Pressable>

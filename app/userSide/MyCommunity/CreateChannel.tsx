@@ -22,8 +22,6 @@ import Loading from "../../components/Loading"
 import { FontAwesome6 } from "@expo/vector-icons"
 import showAlert from "../../utilFunctions/showAlert"
 
-type ChannelTypeOption = "Text" | "Annoucement" | "Forum"
-
 const CreateChannel = () => {
   const { user } = useAuth()
   const [loading, setLoading] = useState<boolean>(false)
@@ -31,17 +29,11 @@ const CreateChannel = () => {
     {} as ImagePicker.ImagePickerAsset
   )
   const [privateChannel, setPrivateChannel] = useState<boolean>(false)
-  const [selectedChannelType, setChannelType] =
-    useState<ChannelTypeOption>("Text")
 
   const [channelName, setChannelName] = useState<string>("")
   const route = useRoute<RouteProp<RootStackParamList, "CreateChannel">>()
   const communityId = route.params.communityId
   const navigation = useNavigation()
-
-  const handleSelectType = (type: ChannelTypeOption) => {
-    setChannelType(selectedChannelType === type ? "Text" : type)
-  }
 
   const handleChannelCreation = async () => {
     try {
@@ -63,7 +55,7 @@ const CreateChannel = () => {
         const { error } = await supabase.from("community_channels").insert([
           {
             channel_title: channelName,
-            channel_type: selectedChannelType,
+            channel_type: "Text",
             community_owner: user?.id,
             community: communityId,
             channel_pic: filePath,
@@ -89,7 +81,7 @@ const CreateChannel = () => {
         const { error } = await supabase.from("community_channels").insert([
           {
             channel_title: channelName,
-            channel_type: selectedChannelType,
+            channel_type: "Text",
             community_owner: user?.id,
             community: communityId,
             channel_pic: filePath,
@@ -111,7 +103,6 @@ const CreateChannel = () => {
     }
   }
 
-  const channelOptions: ChannelTypeOption[] = ["Text", "Annoucement", "Forum"]
   return (
     <SafeAreaView className="flex-1">
       {!loading ? (
@@ -132,8 +123,7 @@ const CreateChannel = () => {
             </Pressable>
           </View>
 
-          <NewPhoto setProfilePic={setChannelPic} />
-          <View className="border w-full rounded-none p-3">
+          <View className="border mx-2 rounded-lg p-3">
             <TextInput
               value={channelName}
               onChangeText={(text: string) => setChannelName(text)}
@@ -142,33 +132,27 @@ const CreateChannel = () => {
           </View>
 
           <View className="flex flex-row justify-between m-2">
-            <View className="flex flex-row items-center">
-              <Text className="text-sm font-bold mx-1">Private Channel</Text>
-              <FontAwesome6
-                name={privateChannel ? "lock" : "unlock"}
-                size={20}
-                color="black"
-              />
+            <View>
+              <View className="flex flex-row items-center">
+                <Text className="text-sm font-bold mx-1">Private Channel</Text>
+                <FontAwesome6
+                  name={privateChannel ? "lock" : "unlock"}
+                  size={20}
+                  color="black"
+                />
+              </View>
+              {privateChannel ? (
+                <View>
+                  <Text className="text-xs font-semibold mx-1">
+                    Members will have to manually join
+                  </Text>
+                </View>
+              ) : null}
             </View>
             <Switch
               value={privateChannel}
               onChange={() => setPrivateChannel(!privateChannel)}
             />
-          </View>
-
-          <View className="w-full rounded-none p-3 mt-5">
-            <Text className="text-sm font-bold">Channel Type</Text>
-
-            {channelOptions.map((type, index) => (
-              <View key={index} className="flex flex-row justify-between m-2">
-                <Text className="text-sm font-bold">#{type}</Text>
-                <BouncyCheckbox
-                  size={20}
-                  isChecked={selectedChannelType === type}
-                  onPress={() => handleSelectType(type)}
-                />
-              </View>
-            ))}
           </View>
         </>
       ) : (

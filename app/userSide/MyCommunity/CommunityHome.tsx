@@ -17,6 +17,7 @@ const CommunityHome = () => {
   const navigation = useNavigation<NavigationType>()
   const route = useRoute<RouteProp<RootStackParamList, "MyCommunityHome">>()
   const communityId = route.params.communityId
+  const [pressed, setPressed] = useState<string | null>(null)
 
   useFocusEffect(
     useCallback(() => {
@@ -31,14 +32,15 @@ const CommunityHome = () => {
       }
     }, [communityId, setCurrentCommunity])
   )
+
   return (
-    <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-between px-5 pb-2 border-b items-center">
+    <SafeAreaView className="flex-1 bg-primary-900">
+      <View className="flex flex-row justify-between px-5 pb-2 border-b  items-center">
         <View className="mb-1">
-          <BackButton size={24} />
+          <BackButton size={24} colour="white" />
         </View>
 
-        <Text className="font-bold text-lg">
+        <Text className="font-bold  text-white text-lg">
           {currentCommunity?.community_title}
         </Text>
 
@@ -49,19 +51,27 @@ const CommunityHome = () => {
               community: currentCommunity,
             })
           }}
+          onPressIn={() => setPressed("settings")}
+          onPressOut={() => setPressed(null)}
+          style={{ opacity: pressed === "settings" ? 0.5 : 1 }}
         >
-          <FontAwesome6 name="gear" size={24} color="black" />
+          <FontAwesome6 name="gear" size={24} color="white" />
         </Pressable>
       </View>
       <ScrollView>
-        <View className="border rounded-xl mx-3 py-3  mt-5">
-          <View className="border-b pb-2">
+        <View className="border rounded-xl mx-3 py-3  mt-5 bg-slate-300">
+          <View
+            style={{ opacity: pressed === "createChannel" ? 0.5 : 1 }}
+            className="border-b pb-2 bg-slate-300"
+          >
             <Pressable
               onPress={() => {
                 navigation.navigate("CreateChannel", {
                   communityId: communityId,
                 })
               }}
+              onPressIn={() => setPressed("createChannel")}
+              onPressOut={() => setPressed(null)}
             >
               <Text className="mx-2 font-bold text-sm">Create Channel</Text>
             </Pressable>
@@ -73,6 +83,9 @@ const CommunityHome = () => {
               onPress={() => {
                 navigation.navigate("CreateEvent")
               }}
+              onPressIn={() => setPressed("createEvent")}
+              onPressOut={() => setPressed(null)}
+              style={{ opacity: pressed === "createEvent" ? 0.5 : 1 }}
             >
               <Text className="mx-2 font-bold text-sm">Create Event</Text>
             </Pressable>
@@ -86,15 +99,18 @@ const CommunityHome = () => {
                   communityId: communityId,
                 })
               }}
+              onPressIn={() => setPressed("viewCommunityProfile")}
+              onPressOut={() => setPressed(null)}
+              style={{ opacity: pressed === "viewCommunityProfile" ? 0.5 : 1 }}
             >
               <Text className="mx-2 font-bold text-sm">
-                View Community Profile
+                Preview Community Profile
               </Text>
             </Pressable>
           </View>
         </View>
 
-        <View className="border rounded-xl mx-3 py-3  mt-5">
+        <View className="border rounded-xl mx-3 py-3  mt-5 bg-slate-300">
           <View className="border-b pb-2">
             <Pressable
               onPress={() => {
@@ -103,6 +119,9 @@ const CommunityHome = () => {
                   communityTitle: currentCommunity?.community_title,
                 })
               }}
+              onPressIn={() => setPressed("viewRequests")}
+              onPressOut={() => setPressed(null)}
+              style={{ opacity: pressed === "viewRequests" ? 0.5 : 1 }}
             >
               <Text className="mx-2 font-bold text-sm">View Requests</Text>
             </Pressable>
@@ -116,6 +135,9 @@ const CommunityHome = () => {
                   communityId: communityId,
                 })
               }}
+              onPressIn={() => setPressed("manageMembers")}
+              onPressOut={() => setPressed(null)}
+              style={{ opacity: pressed === "manageMembers" ? 0.5 : 1 }}
             >
               <Text className="mx-2 font-bold text-sm">Manage Members</Text>
             </Pressable>
@@ -129,6 +151,9 @@ const CommunityHome = () => {
                   communityId: communityId,
                 })
               }}
+              onPressIn={() => setPressed("manageEvents")}
+              onPressOut={() => setPressed(null)}
+              style={{ opacity: pressed === "manageEvents" ? 0.5 : 1 }}
             >
               <Text className="mx-2 font-bold text-sm">Manage Events</Text>
             </Pressable>
@@ -141,6 +166,9 @@ const CommunityHome = () => {
                   communityId: communityId,
                 })
               }}
+              onPressIn={() => setPressed("manageChannels")}
+              onPressOut={() => setPressed(null)}
+              style={{ opacity: pressed === "manageChannels" ? 0.5 : 1 }}
             >
               <Text className="mx-2 font-bold text-sm">Manage Channels</Text>
             </Pressable>

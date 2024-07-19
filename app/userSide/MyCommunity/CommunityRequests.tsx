@@ -17,6 +17,7 @@ import acceptRequest from "../../supabaseFunctions/addFuncs/acceptRequest"
 import denyRequest from "../../supabaseFunctions/addFuncs/denyRequest"
 import showAlert from "../../utilFunctions/showAlert"
 import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommunity"
+import BackButton from "../../components/BackButton"
 
 const CommunityRequestsPage = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -83,8 +84,12 @@ const CommunityRequestsPage = () => {
   }, [])
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-center">
-        <Text className="font-bold text-2xl">Join Requests</Text>
+      <View className="flex flex-row justify-between items-center mx-2">
+        <BackButton />
+        <View>
+          <Text className="font-bold text-xl">Join Requests</Text>
+        </View>
+        <View />
       </View>
 
       <ScrollView
@@ -158,7 +163,9 @@ const CommunityRequestsPage = () => {
         ) : (
           <View className="flex-1 justify-center items-center">
             <View className="flex flex-row justify-center">
-              <Text className="text-2xl font-bold">No requests yet!</Text>
+              <Text className="text-lg font-semibold">
+                No requests at the moment
+              </Text>
             </View>
           </View>
         )}
