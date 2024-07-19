@@ -196,6 +196,10 @@ export type RootStackParamList = {
   ViewEventAttendees: {
     profile: Profile[] | null
   }
+
+  CreateNewsPost: {
+    communityId: number
+  }
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

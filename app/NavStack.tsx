@@ -79,6 +79,7 @@ import { useNavigation } from "@react-navigation/native"
 import Messages from "./userSide/UserCommunities/components/Messages"
 import SexualityEdit from "./userSide/Profile/AddInfoComponents/SexualityEdit"
 import EventAttendees from "./userSide/Events/components/EventAttendees"
+import CreateNewsPost from "./userSide/MyCommunity/CreateNewsPost"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -268,6 +269,11 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="EditEvent"
                 component={EditEvent}
+              />
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="CreateNewsPost"
+                component={CreateNewsPost}
               />
 
               <Stack.Screen

@@ -19,13 +19,17 @@ import CommunityPageChannels from "./components/CommunityPageChannels"
 import CommuntiyPageEvents from "./components/CommuntiyPageEvents"
 import CommunityPageMembers from "./components/CommunityPageMembers"
 import CommunityPageAbout from "./components/CommunityPageAbout"
-import { Events, Profile } from "../../@types/supabaseTypes"
+import { Events, News, Profile } from "../../@types/supabaseTypes"
 import getCommunityMembersUUID from "../../supabaseFunctions/getFuncs/getCommunityMembers"
 import getProfiles from "../../supabaseFunctions/getFuncs/getProfiles"
 import { useAuth } from "../../supabaseFunctions/authcontext"
+import getNewsFromCommunity from "../../supabaseFunctions/getFuncs/getNewsFromCommunity"
 
 const CommunityPage = () => {
   const { userProfile } = useAuth()
+  const [communityNewsState, setCommunityNewsState] = useState<News[] | null>(
+    null
+  )
   const [commmunityMemberUUIDs, setCommunityMemberUUIDs] = useState<
     string[] | null
   >(null)
@@ -63,7 +67,8 @@ const CommunityPage = () => {
 
   useEffect(() => {
     getCommunityMembersUUID(setLoading, community.id, setCommunityMemberUUIDs)
-  }, [])
+    getNewsFromCommunity(setLoading, community.id, setCommunityNewsState)
+  }, [community])
 
   useEffect(() => {
     if (commmunityMemberUUIDs) {
@@ -143,8 +148,9 @@ const CommunityPage = () => {
               },
             }}
             name="News"
-            component={CommunityNews}
-          />
+          >
+            {() => <CommunityNews communityNews={communityNewsState} />}
+          </Tab.Screen>
 
           <Tab.Screen
             options={{

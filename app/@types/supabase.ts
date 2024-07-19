@@ -484,13 +484,13 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "events_users_event_id_fkey"
+            foreignKeyName: "public_events_users_event_id_fkey"
             columns: ["event_id"]
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "events_users_user_id_fkey"
+            foreignKeyName: "public_events_users_user_id_fkey"
             columns: ["user_id"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -554,6 +554,46 @@ export type Database = {
             foreignKeyName: "public_messages_eventId_fkey"
             columns: ["eventId"]
             referencedRelation: "events"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      news_posts: {
+        Row: {
+          author: string
+          community_id: number
+          content: string
+          created_at: string
+          id: string
+          title: string | null
+        }
+        Insert: {
+          author: string
+          community_id: number
+          content?: string
+          created_at?: string
+          id?: string
+          title?: string | null
+        }
+        Update: {
+          author?: string
+          community_id?: number
+          content?: string
+          created_at?: string
+          id?: string
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_news_posts_author_fkey"
+            columns: ["author"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_news_posts_community_id_fkey"
+            columns: ["community_id"]
+            referencedRelation: "communities"
             referencedColumns: ["id"]
           }
         ]

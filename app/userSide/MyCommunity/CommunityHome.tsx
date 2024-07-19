@@ -91,6 +91,22 @@ const CommunityHome = () => {
             </Pressable>
           </View>
 
+          <View className="border-b pb-2 ">
+            <Pressable
+              className="pt-2"
+              onPress={() => {
+                navigation.navigate("CreateNewsPost", {
+                  communityId: communityId,
+                })
+              }}
+              onPressIn={() => setPressed("createNewsPost")}
+              onPressOut={() => setPressed(null)}
+              style={{ opacity: pressed === "createNewsPost" ? 0.5 : 1 }}
+            >
+              <Text className="mx-2 font-bold text-sm">Create News Post</Text>
+            </Pressable>
+          </View>
+
           <View>
             <Pressable
               className="pt-2"
