@@ -37,26 +37,14 @@ const CommunityHome = () => {
     <SafeAreaView className="flex-1 bg-primary-900">
       <View className="flex flex-row justify-between px-5 pb-2 border-b  items-center">
         <View className="mb-1">
-          <BackButton size={24} colour="white" />
+          <BackButton size={22} colour="white" />
         </View>
 
-        <Text className="font-bold  text-white text-lg">
+        <Text className="font-bold  text-white text-xl">
           {currentCommunity?.community_title}
         </Text>
 
-        <Pressable
-          onPress={() => {
-            if (!currentCommunity) return
-            navigation.navigate("MyCommunitySettings", {
-              community: currentCommunity,
-            })
-          }}
-          onPressIn={() => setPressed("settings")}
-          onPressOut={() => setPressed(null)}
-          style={{ opacity: pressed === "settings" ? 0.5 : 1 }}
-        >
-          <FontAwesome6 name="gear" size={24} color="white" />
-        </Pressable>
+        <View />
       </View>
       <ScrollView>
         <View className="border rounded-xl mx-3 py-3  mt-5 bg-slate-300">
@@ -175,6 +163,25 @@ const CommunityHome = () => {
               <Text className="mx-2 font-bold text-sm">Manage Events</Text>
             </Pressable>
           </View>
+          <View className="border-b pb-2">
+            <Pressable
+              className="pt-2"
+              onPress={() => {
+                if (!currentCommunity) return
+                navigation.navigate("MyCommunitySettings", {
+                  community: currentCommunity,
+                })
+              }}
+              onPressIn={() => setPressed("settings")}
+              onPressOut={() => setPressed(null)}
+              style={{ opacity: pressed === "settings" ? 0.5 : 1 }}
+            >
+              <Text className="mx-2 font-bold text-sm">
+                Update Community Info
+              </Text>
+            </Pressable>
+          </View>
+
           <View>
             <Pressable
               className="pt-2"

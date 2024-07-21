@@ -26,6 +26,7 @@ import CancelButton from "../../components/CancelButton"
 import { TouchableWithoutFeedback } from "react-native"
 import { set } from "mongoose"
 import Loading from "../../components/Loading"
+import GenericButton from "../../components/GenericButton"
 
 const CommunitySettings = () => {
   const [communityState, setCommunityState] = useState<Communities | null>(
@@ -203,9 +204,15 @@ const CommunitySettings = () => {
                   <CommunityImageGrid community={community} />
                 </View>
                 <View className="flex flex-row justify-center my-12">
-                  <BasicButton
-                    text="Update Community"
-                    buttonFunction={updateCommunity}
+                  <GenericButton
+                    textSize="text-xl"
+                    text="Update"
+                    roundness="rounded-lg"
+                    colourDefault="bg-blue-500"
+                    colourPressed="bg-white"
+                    borderColourDefault="border-black"
+                    borderColourPressed="border-blue-500"
+                    buttonFunction={() => updateCommunity()}
                   />
                 </View>
               </ScrollView>

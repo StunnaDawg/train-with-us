@@ -7,7 +7,12 @@ import {
   Alert,
 } from "react-native"
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
 
 import BackButton from "../../components/BackButton"
@@ -78,7 +83,6 @@ const CommunityPage = () => {
       getCommunityMembers()
     }
   }, [commmunityMemberUUIDs])
-
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
       {/* {loading ? (

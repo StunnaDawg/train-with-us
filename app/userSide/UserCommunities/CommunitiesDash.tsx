@@ -19,10 +19,6 @@ const CommunitiesDash = () => {
     await getAllUsersCommunities(user?.id, setLoadingState, setCommunities)
   }, [user])
 
-  useEffect(() => {
-    fetchUserCommunities()
-  }, [user, fetchUserCommunities])
-
   useFocusEffect(
     useCallback(() => {
       fetchUserCommunities()
