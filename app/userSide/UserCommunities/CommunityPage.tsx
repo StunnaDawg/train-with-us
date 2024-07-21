@@ -85,15 +85,18 @@ const CommunityPage = () => {
         <CommunityPageSkeleton />
       ) : ( */}
       <>
-        <View className="flex flex-row m-2">
+        <View className="flex flex-row m-2 items-center justify-between">
           <BackButton colour="white" size={22} />
-        </View>
-        <View className="m-1">
-          <Text className="text-2xl text-white font-bold">
-            {community.community_title}
-          </Text>
-          <Text className="text-white">{community.member_count} Members</Text>
+          <View>
+            <Text className="text-2xl text-white font-bold">
+              {community.community_title}
+            </Text>
+          </View>
 
+          <View />
+        </View>
+
+        <View className="m-1">
           {userProfile?.id === community.community_owner && (
             <Pressable
               onPressIn={handleCommunitySettingsPress}

@@ -48,11 +48,11 @@ const CommunityPageChannels = ({
     setPressedChannels((prev) => ({ ...prev, [channelId]: false }))
   }
 
-  useEffect(() => {
-    console.log(community)
-    if (!community || !user?.id) return
+  const fetchData = async () => {
     setLoadingState(true)
-    const fetchData = async () => {
+    if (!community || !user?.id) return
+
+    try {
       await getCommunityChannels(
         community.id,
         setLoadingState,
@@ -66,7 +66,14 @@ const CommunityPageChannels = ({
       )
       useCurrentUser(user.id, setProfile)
       setLoadingState(false)
+    } catch (error) {
+      console.error("Error fetching community channels:", error)
+    } finally {
+      setLoadingState(false)
     }
+  }
+
+  useEffect(() => {
     fetchData()
   }, [community])
 
@@ -165,7 +172,7 @@ const CommunityPageChannels = ({
                   </Pressable>
                   {c.private && !isMember && (
                     <Pressable
-                      onPress={() => {
+                      onPress={async () => {
                         if (
                           profile?.id &&
                           community?.id &&
@@ -180,6 +187,7 @@ const CommunityPageChannels = ({
                             profile.expo_push_token || "",
                             c.channel_title
                           )
+                          await fetchData()
                         } else {
                           Alert.alert(
                             "Error",
