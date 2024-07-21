@@ -2,6 +2,7 @@ import { View, Text, FlatList } from "react-native"
 import React from "react"
 import getNewsFromCommunity from "../../../supabaseFunctions/getFuncs/getNewsFromCommunity"
 import { News } from "../../../@types/supabaseTypes"
+import { formatDate } from "date-fns"
 
 export type NewsCard = {
   news: News
@@ -9,19 +10,16 @@ export type NewsCard = {
 
 const NewsCard = ({ news }: NewsCard) => {
   return (
-    <View className="rounded-xl p-2 m-2 bg-slate-500">
+    <View className="rounded-xl p-2 ">
+      <Text className="text-xs text-white font-bold">
+        {news.author_name},{" "}
+        {formatDate(new Date(news.created_at), "dd/MM/yyyy/HH:mm")}
+      </Text>
       <View className="flex flex-row jus">
-        <Text className=" font-semibold text-lg">{news.title}</Text>
+        <Text className=" font-bold text-lg text-white">{news.title}</Text>
       </View>
 
-      <Text className="">
-        {news.content}
-        sdfmnsdflsdbnskjdbfskjdgbskjdgbskjgdbsdkjgbskjbksjgbgbjksbkgjbsdgk
-        sbfkbgfskjdf ksdbhfdkjsfb sksjfsdjkfbsjdfsjkfbsd fsdjfsbd
-        fskdjhfsdjfkhsdf sjkdfhsjkdf hsdkjfhskjdfhs dfjsdfh s
-      </Text>
-
-      <Text className="text-xs">{news.author_name}</Text>
+      <Text className="text-slate-200 ">{news.content}</Text>
     </View>
   )
 }
@@ -35,9 +33,10 @@ const CommunityNews = ({ communityNews }: CommunityNewsProps) => {
     <View className="flex-1 bg-primary-900">
       <View>
         <FlatList
+          className="h-full"
           data={communityNews}
           renderItem={({ item }) => (
-            <View className="m-2">
+            <View className="m-2 border-b-2 border-slate-500">
               <NewsCard news={item} />
             </View>
           )}

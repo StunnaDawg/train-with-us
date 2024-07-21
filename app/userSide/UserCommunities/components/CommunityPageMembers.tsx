@@ -1,10 +1,47 @@
-import { View, Text, ScrollView, Pressable } from "react-native"
+import { View, Text, Pressable } from "react-native"
 import React, { useEffect, useState } from "react"
-import { CommunityMember, Profile } from "../../../@types/supabaseTypes"
+import { Profile } from "../../../@types/supabaseTypes"
 import supabase from "../../../../lib/supabase"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
+import { FlatList } from "react-native-gesture-handler"
+
+const CommunityMemberCard = ({
+  member,
+}: {
+  member: Profile & { role?: string }
+}) => {
+  const navigation = useNavigation<NavigationType>()
+  return (
+    <Pressable
+      key={member.id}
+      onPress={() =>
+        navigation.navigate("ViewUserProfile", {
+          userProfile: member,
+        })
+      }
+      className="m-4"
+    >
+      <View className="flex flex-row items-center">
+        {/* <SinglePicCommunity
+          item={member.profile_pic}
+          size={50}
+          avatarRadius={100}
+          noAvatarRadius={100}
+        /> */}
+        <Text className="mx-4 font-semibold text-white text-lg">
+          {member.last_name
+            ? [member.first_name, member?.last_name].join(" ")
+            : member.first_name}
+          <Text className="text-lg">
+            {member.role ? ` - ${member.role}` : ""}
+          </Text>
+        </Text>
+      </View>
+    </Pressable>
+  )
+}
 
 type CommunityPageMembersProps = { communityMembers: Profile[] | null }
 
@@ -14,7 +51,6 @@ const CommunityPageMembers = ({
   const [membersWithRoles, setMembersWithRoles] = useState<
     (Profile & { role?: string })[]
   >([])
-  const navigation = useNavigation<NavigationType>()
 
   useEffect(() => {
     if (!communityMembers) return
@@ -46,36 +82,12 @@ const CommunityPageMembers = ({
 
   return (
     <View className="bg-primary-900">
-      <ScrollView className="h-full">
-        {membersWithRoles.map((member) => (
-          <Pressable
-            key={member.id}
-            onPress={() =>
-              navigation.navigate("ViewUserProfile", {
-                userProfile: member,
-              })
-            }
-            className="m-4"
-          >
-            <View className="flex flex-row items-center">
-              {/* <SinglePicCommunity
-                item={member.profile_pic}
-                size={50}
-                avatarRadius={100}
-                noAvatarRadius={100}
-              /> */}
-              <Text className="mx-4 font-semibold text-white text-lg">
-                {member.last_name
-                  ? [member.first_name, member?.last_name].join(" ")
-                  : member.first_name}
-                <Text className="text-lg">
-                  {member.role ? ` - ${member.role}` : ""}
-                </Text>
-              </Text>
-            </View>
-          </Pressable>
-        ))}
-      </ScrollView>
+      <FlatList
+        className="h-full"
+        data={membersWithRoles}
+        renderItem={({ item }) => <CommunityMemberCard member={item} />}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   )
 }
