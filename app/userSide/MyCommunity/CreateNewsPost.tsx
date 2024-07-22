@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, TextInput, Pressable } from "react-native"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import BackButton from "../../components/BackButton"
 import supabase from "../../../lib/supabase"
 import showAlert from "../../utilFunctions/showAlert"
@@ -8,6 +8,8 @@ import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import showAlertFunc from "../../utilFunctions/showAlertFunc"
 import { FunctionsHttpError } from "@supabase/supabase-js"
+import { CommunityMember } from "../../@types/supabaseTypes"
+import getCommunityMembersType from "../../supabaseFunctions/getFuncs/getCommunityMemberArrayType"
 
 const sendNewsNotification = async (
   communityId: number,
@@ -36,20 +38,38 @@ const sendNewsNotification = async (
     }
   }
 
-  for (const token of tokens) {
-    await sendNotification(token)
+  for (const token of tokens!.filter((token) => token !== null)) {
+    await sendNotification(token as string)
   }
 }
 
 const CreateNewsPost = () => {
   const { userProfile } = useAuth()
+  const [tokens, setTokens] = useState<string[] | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
   const [title, setTitle] = useState<string>("")
   const [content, setContent] = useState<string>("")
   const [createButtonPressed, setCreateButtonPressed] = useState<boolean>(false)
+  const [communityMembers, setCommunityMembers] = useState<
+    CommunityMember[] | null
+  >(null)
   const route = useRoute<RouteProp<RootStackParamList, "CreateNewsPost">>()
   const communityId = route.params.communityId
   const communityTitle = route.params.communityTitle
   const navigation = useNavigation<NavigationType>()
+
+  useEffect(() => {
+    getCommunityMembersType(setLoading, communityId, setCommunityMembers)
+  }, [communityId])
+
+  useEffect(() => {
+    if (communityMembers) {
+      const validTokens = communityMembers
+        .map((member) => member.expo_push_token)
+        .filter((token): token is string => token !== null) // Filter out null values
+      setTokens(validTokens)
+    }
+  }, [communityMembers])
 
   const handleCreateNewsPost = async () => {
     if (title === "" || content === "" || !userProfile) {
@@ -90,6 +110,16 @@ const CreateNewsPost = () => {
       message: "You have successfully created a news post.",
       buttonText: "OK",
     })
+
+    if (tokens !== null) {
+      await sendNewsNotification(
+        communityId,
+        communityTitle,
+        title,
+        content,
+        tokens
+      )
+    }
 
     navigation.goBack()
   }
