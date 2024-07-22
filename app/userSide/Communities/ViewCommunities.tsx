@@ -11,9 +11,9 @@ import { RootStackParamList } from "../../@types/navigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import JoinFooter from "./components/JoinFooter"
 import { useAuth } from "../../supabaseFunctions/authcontext"
-import getCommunityMembersUUID from "../../supabaseFunctions/getFuncs/getCommunityMembers"
 import ViewCommuntiesSkeleton from "./components/ViewCommuntiesSkeleton"
 import ViewJoinedCommunityFooter from "./components/ViewJoinedCommunity"
+import getCommunityMembersUUIDs from "../../supabaseFunctions/getFuncs/getCommunityMembersUUIDS"
 
 const ViewCommunities = () => {
   const { user } = useAuth()
@@ -29,7 +29,7 @@ const ViewCommunities = () => {
   useEffect(() => {
     getSingleCommunity(setLoading, communityId, setCommunities)
 
-    getCommunityMembersUUID(setLoading, communityId, setProfiles)
+    getCommunityMembersUUIDs(setLoading, communityId, setProfiles)
   }, [communityId])
 
   useEffect(() => {

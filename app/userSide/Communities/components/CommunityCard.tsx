@@ -5,7 +5,8 @@ import { Communities } from "../../../@types/supabaseTypes"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import { FontAwesome6 } from "@expo/vector-icons"
 import { useEffect, useState } from "react"
-import getCommunityMembersUUID from "../../../supabaseFunctions/getFuncs/getCommunityMembers"
+
+import getCommunityMembersUUIDs from "../../../supabaseFunctions/getFuncs/getCommunityMembersUUIDS"
 
 type CommunityCardProps = {
   community: Communities
@@ -33,7 +34,7 @@ const CommunityCard = ({
 
   useEffect(() => {
     if (userId) {
-      getCommunityMembersUUID(setLoading, community.id, setUserUUIDS)
+      getCommunityMembersUUIDs(setLoading, community.id, setUserUUIDS)
     }
   }, [userId])
 

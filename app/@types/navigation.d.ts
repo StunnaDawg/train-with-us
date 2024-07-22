@@ -199,6 +199,7 @@ export type RootStackParamList = {
 
   CreateNewsPost: {
     communityId: number
+    communityTitle: string
   }
 }
 

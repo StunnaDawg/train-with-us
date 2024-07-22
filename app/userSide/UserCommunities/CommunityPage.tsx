@@ -29,6 +29,7 @@ import getCommunityMembersUUID from "../../supabaseFunctions/getFuncs/getCommuni
 import getProfiles from "../../supabaseFunctions/getFuncs/getProfiles"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import getNewsFromCommunity from "../../supabaseFunctions/getFuncs/getNewsFromCommunity"
+import getCommunityMembers from "../../supabaseFunctions/getFuncs/getCommunityMembers"
 
 const CommunityPage = () => {
   const { userProfile } = useAuth()
@@ -71,18 +72,10 @@ const CommunityPage = () => {
   }, [])
 
   useEffect(() => {
-    getCommunityMembersUUID(setLoading, community.id, setCommunityMemberUUIDs)
+    getCommunityMembers(setLoading, community.id, setCommunityMembers)
     getNewsFromCommunity(setLoading, community.id, setCommunityNewsState)
   }, [community])
 
-  useEffect(() => {
-    if (commmunityMemberUUIDs) {
-      const getCommunityMembers = async () => {
-        getProfiles(setLoading, commmunityMemberUUIDs, setCommunityMembers)
-      }
-      getCommunityMembers()
-    }
-  }, [commmunityMemberUUIDs])
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
       {/* {loading ? (

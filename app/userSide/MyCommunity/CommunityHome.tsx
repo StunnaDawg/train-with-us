@@ -83,8 +83,10 @@ const CommunityHome = () => {
             <Pressable
               className="pt-2"
               onPress={() => {
+                if (!currentCommunity?.community_title || !communityId) return
                 navigation.navigate("CreateNewsPost", {
                   communityId: communityId,
+                  communityTitle: currentCommunity?.community_title,
                 })
               }}
               onPressIn={() => setPressed("createNewsPost")}

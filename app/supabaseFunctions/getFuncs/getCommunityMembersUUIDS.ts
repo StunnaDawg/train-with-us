@@ -2,10 +2,10 @@ import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { Profile } from "../../@types/supabaseTypes"
 
-const getCommunityMembers = async (
+const getCommunityMembersUUIDs = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   id: number,
-  setCommunityMembers: Dispatch<SetStateAction<Profile[] | null>>
+  setCommunityMembersUUIDS: Dispatch<SetStateAction<string[] | null>>
 ) => {
   try {
     setLoading(true)
@@ -20,20 +20,8 @@ const getCommunityMembers = async (
 
       const uuids = communities.map((member) => member.user_id)
 
-      const { data, error: error2 } = await supabase
-        .from("profiles")
-        .select("*")
-        .in("id", uuids)
-
-      if (error2) throw error2
-
-      console.log("Community members data", data)
-
-      if (data) {
-        setCommunityMembers([...data])
-      } else {
-        setCommunityMembers(null)
-      }
+      console.log("Community members data", uuids)
+      setCommunityMembersUUIDS([...uuids])
     }
   } catch (error) {
     console.log(error)
@@ -42,4 +30,4 @@ const getCommunityMembers = async (
   }
 }
 
-export default getCommunityMembers
+export default getCommunityMembersUUIDs

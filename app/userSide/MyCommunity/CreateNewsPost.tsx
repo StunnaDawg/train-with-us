@@ -7,6 +7,39 @@ import { useAuth } from "../../supabaseFunctions/authcontext"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import showAlertFunc from "../../utilFunctions/showAlertFunc"
+import { FunctionsHttpError } from "@supabase/supabase-js"
+
+const sendNewsNotification = async (
+  communityId: number,
+  communityTitle: string,
+  title: string,
+  body: string,
+  tokens: string[]
+) => {
+  console.log("Sending notification to", tokens)
+
+  const sendNotification = async (token: string) => {
+    const { data, error } = await supabase.functions.invoke("push", {
+      body: {
+        token,
+        titleWords: title,
+        bodyWords: body,
+        data: { communityId, communityTitle, type: "community_news" },
+      },
+    })
+
+    if (error && error instanceof FunctionsHttpError) {
+      const errorMessage = await error.context.json()
+      console.log("Function returned an error", errorMessage)
+    } else {
+      console.log("Notification sent:", data)
+    }
+  }
+
+  for (const token of tokens) {
+    await sendNotification(token)
+  }
+}
 
 const CreateNewsPost = () => {
   const { userProfile } = useAuth()
@@ -15,6 +48,7 @@ const CreateNewsPost = () => {
   const [createButtonPressed, setCreateButtonPressed] = useState<boolean>(false)
   const route = useRoute<RouteProp<RootStackParamList, "CreateNewsPost">>()
   const communityId = route.params.communityId
+  const communityTitle = route.params.communityTitle
   const navigation = useNavigation<NavigationType>()
 
   const handleCreateNewsPost = async () => {

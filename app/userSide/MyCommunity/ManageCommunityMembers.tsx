@@ -19,6 +19,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { set } from "date-fns"
 import showAlert from "../../utilFunctions/showAlert"
 import BackButton from "../../components/BackButton"
+import getCommunityMembers from "../../supabaseFunctions/getFuncs/getCommunityMembers"
 
 const ManageCommunityMembers = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -48,7 +49,7 @@ const ManageCommunityMembers = () => {
               getCommunityMembersUUID(
                 setLoading,
                 communityId,
-                setCommunityMemberUUIDs
+                setCommunityMembers
               )
           },
           style: "default",
@@ -62,7 +63,7 @@ const ManageCommunityMembers = () => {
                   getCommunityMembersUUID(
                     setLoading,
                     communityId,
-                    setCommunityMemberUUIDs
+                    setCommunityMembers
                   )
                 setLoading(false)
               }, 500)
@@ -103,17 +104,8 @@ const ManageCommunityMembers = () => {
   }
 
   useEffect(() => {
-    getCommunityMembersUUID(setLoading, communityId, setCommunityMemberUUIDs)
+    getCommunityMembers(setLoading, communityId, setCommunityMembers)
   }, [])
-
-  useEffect(() => {
-    if (commmunityMemberUUIDs) {
-      const getCommunityMembers = async () => {
-        getProfiles(setLoading, commmunityMemberUUIDs, setCommunityMembers)
-      }
-      getCommunityMembers()
-    }
-  }, [commmunityMemberUUIDs])
 
   return (
     <SafeAreaView className="flex-1">
