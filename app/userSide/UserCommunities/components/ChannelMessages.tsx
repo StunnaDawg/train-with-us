@@ -32,6 +32,7 @@ import upsertCommunitySession from "../../../supabaseFunctions/updateFuncs/updat
 import BackButton from "../../../components/BackButton"
 import { BottomSheetModal } from "@gorhom/bottom-sheet"
 import ChannelBottomModal from "./ChannelBottomModal"
+import sendPrivateChannelMessage from "../../../supabaseFunctions/addFuncs/sendPrivateChannelMessage"
 
 type UserMessage = {
   message: string | null
@@ -109,15 +110,28 @@ const ChannelMessageScreen = () => {
     ) {
       return
     }
-    await sendChannelMessage(
-      messageToSend,
-      user?.id,
-      channel.id,
-      currentUser?.first_name,
-      channel.community,
-      channel.channel_title,
-      channel
-    )
+    if (!channel.private) {
+      await sendChannelMessage(
+        messageToSend,
+        user?.id,
+        channel.id,
+        currentUser?.first_name,
+        channel.community,
+        channel.channel_title,
+        channel
+      )
+    } else {
+      await sendPrivateChannelMessage(
+        messageToSend,
+        user?.id,
+        channel.id,
+        currentUser?.first_name,
+        channel.community,
+        channel.channel_title,
+        channel
+      )
+    }
+
     await upsertCommunitySession(channel.id, messageToSend)
     setMessageToSend("")
     getChannelSessionMessages(channel.id, setServerMessages)
