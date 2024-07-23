@@ -20,7 +20,16 @@ const ShareCommunityButton = ({ communityId, userId }: shareButtonProps) => {
 
   const [communitySent, setCommunitySent] = useState<boolean>(false)
   const [isPressed, setIsPressed] = useState(false)
+  const [iconPressed, setIconPressed] = useState<boolean>(false)
   const [sessionsToSend, setSessionsToSend] = useState<string[]>([])
+
+  const handleOnSharePressIn = () => {
+    setIconPressed(true)
+  }
+
+  const handleOnSharePressOut = () => {
+    setIconPressed(false)
+  }
 
   const handleOnPressIn = () => {
     setIsPressed(true)
@@ -67,12 +76,16 @@ const ShareCommunityButton = ({ communityId, userId }: shareButtonProps) => {
   return (
     <>
       <Pressable
-        className=" p-1"
+        onPressIn={handleOnSharePressIn}
+        onPressOut={handleOnSharePressOut}
+        className={`${
+          iconPressed ? `opacity-50` : null
+        } p-1 mx-1 bg-white rounded-xl`}
         onPress={() => {
           handlePresentModalPress()
         }}
       >
-        <Feather name="share" size={22} color="white" />
+        <Feather name="share" size={22} color="black" />
       </Pressable>
 
       <BottomSheetModal

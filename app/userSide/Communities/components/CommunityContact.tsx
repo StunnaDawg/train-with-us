@@ -1,5 +1,5 @@
 import { View, Platform, Pressable } from "react-native"
-import React from "react"
+import React, { useState } from "react"
 import { Communities } from "../../../@types/supabaseTypes"
 import PhoneCallButton from "../../../components/PhoneNumberButton"
 import { FontAwesome5 } from "@expo/vector-icons"
@@ -13,6 +13,15 @@ type CommunityContactProps = {
 }
 
 const CommunityContact = ({ community, userId }: CommunityContactProps) => {
+  const [isPressed, setIsPressed] = useState(false)
+
+  const handleOnPressIn = () => {
+    setIsPressed(true)
+  }
+
+  const handleOnPressOut = () => {
+    setIsPressed(false)
+  }
   return (
     <View className="flex flex-row">
       <View className="flex  flex-row items-center  mx-2 ">
@@ -22,7 +31,11 @@ const CommunityContact = ({ community, userId }: CommunityContactProps) => {
           {Platform.OS === "ios" ? (
             <>
               <Pressable
-                className="bg-white rounded-xl p-1"
+                onPressIn={handleOnPressIn}
+                onPressOut={handleOnPressOut}
+                className={`${
+                  isPressed ? "opacity-50" : null
+                } bg-white rounded-xl p-1`}
                 onPress={() => {
                   if (community?.address) {
                     openInMaps(community?.address)
@@ -34,7 +47,11 @@ const CommunityContact = ({ community, userId }: CommunityContactProps) => {
             </>
           ) : (
             <Pressable
-              className="bg-white rounded-xl p-1"
+              onPressIn={handleOnPressIn}
+              onPressOut={handleOnPressOut}
+              className={`${
+                isPressed ? "opacity-50" : null
+              } bg-white rounded-xl p-1`}
               onPress={() => {
                 if (community?.address) {
                   openInGoogleMaps(community?.address)

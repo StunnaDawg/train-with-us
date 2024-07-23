@@ -14,7 +14,7 @@ import {
   useRoute,
 } from "@react-navigation/native"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
-
+import { FontAwesome6 } from "@expo/vector-icons"
 import BackButton from "../../components/BackButton"
 import CommunityBottomModal from "./CommunityBottomModal"
 import { BottomSheetModal, useBottomSheetModal } from "@gorhom/bottom-sheet"
@@ -34,9 +34,7 @@ const CommunityPage = () => {
   const [communityNewsState, setCommunityNewsState] = useState<News[] | null>(
     null
   )
-  const [commmunityMemberUUIDs, setCommunityMemberUUIDs] = useState<
-    string[] | null
-  >(null)
+  const [gearPressed, setGearPressed] = useState<boolean>(false)
   const [communityMembers, setCommunityMembers] = useState<Profile[] | null>(
     null
   )
@@ -49,10 +47,19 @@ const CommunityPage = () => {
   const navigation = useNavigation<NavigationType>()
   const community = route.params.community
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
+  const { dismiss } = useBottomSheetModal()
 
   const Tab = createMaterialTopTabNavigator()
 
-  const snapPoints = useMemo(() => ["1%", "90%"], [])
+  const snapPoints = useMemo(() => ["25%", "90%"], [])
+
+  const handleGearPressIn = () => {
+    setGearPressed(true)
+  }
+
+  const handleGearPressOut = () => {
+    setGearPressed(false)
+  }
 
   const handleCommunitySettingsPress = () => {
     setIsSettingsCommunityButtonPressed(true)
@@ -88,7 +95,14 @@ const CommunityPage = () => {
             </Text>
           </View>
 
-          <View />
+          <Pressable
+            className={`${gearPressed ? "opacity-50" : null}`}
+            onPressIn={handleGearPressIn}
+            onPressOut={handleGearPressOut}
+            onPress={handlePresentModalPress}
+          >
+            <FontAwesome6 name="gear" size={22} color="white" />
+          </Pressable>
         </View>
 
         <View className="m-1">
@@ -196,7 +210,7 @@ const CommunityPage = () => {
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
       >
-        <CommunityBottomModal community={community} />
+        <CommunityBottomModal community={community} dismiss={dismiss} />
       </BottomSheetModal>
     </SafeAreaView>
   )

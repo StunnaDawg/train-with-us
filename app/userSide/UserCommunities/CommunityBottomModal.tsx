@@ -13,11 +13,24 @@ import { useAuth } from "../../supabaseFunctions/authcontext"
 
 type CommunityBottomModalProps = {
   community: Communities | null
+  dismiss: () => void
 }
 
-const CommunityBottomModal = ({ community }: CommunityBottomModalProps) => {
+const CommunityBottomModal = ({
+  community,
+  dismiss,
+}: CommunityBottomModalProps) => {
   const [image, setImage] = useState<string>("")
   const { user } = useAuth()
+  const [isPressed, setIsPressed] = useState<{ [key: string]: boolean }>({})
+
+  const handlePressIn = (key: string) => {
+    setIsPressed((prev) => ({ ...prev, [key]: true }))
+  }
+
+  const handlePressOut = (key: string) => {
+    setIsPressed((prev) => ({ ...prev, [key]: false }))
+  }
 
   const navigation = useNavigation<NavigationType>()
 
@@ -66,13 +79,18 @@ const CommunityBottomModal = ({ community }: CommunityBottomModalProps) => {
                   : "Community"}
               </Text>
               <Pressable
-                className="flex flex-row items-center"
                 onPress={() => {
                   if (!community) return
                   navigation.navigate("ViewCommunitiesMembersScreen", {
                     communityId: community?.id,
                   })
+                  dismiss()
                 }}
+                onPressIn={() => handlePressIn("members")}
+                onPressOut={() => handlePressOut("members")}
+                className={`${
+                  isPressed["members"] ? "opacity-50" : ""
+                }flex flex-row items-center`}
               >
                 <Text className="mr-1 text-white font-bold text-xs ">
                   {community?.member_count} Members
@@ -86,36 +104,20 @@ const CommunityBottomModal = ({ community }: CommunityBottomModalProps) => {
         </View>
       </View>
 
-      <View className="border border-white rounded-xl mx-3 py-3  mt-1">
-        <View className="border-b border-white pb-2">
-          <Pressable
-            onPress={async () => {
-              if (community && user?.id)
-                await leaveCommunity(community?.id, user?.id)
-              navigation.goBack()
-            }}
-          >
-            <Text className="text-white mx-2 font-bold text-sm">
-              Leave Community
-            </Text>
-          </Pressable>
-        </View>
-
-        <View>
-          <Pressable className="pt-2" onPress={() => {}}>
-            <Text className="mx-2 text-white font-bold text-sm">
-              View All Community Events - Coming Soon
-            </Text>
-          </Pressable>
-        </View>
-      </View>
-
-      <View>
-        <UpcomingCommunityEvents
-          textColour="text-white"
-          community={community}
-        />
-      </View>
+      <Pressable
+        onPress={async () => {
+          if (community && user?.id)
+            await leaveCommunity(community?.id, user?.id)
+          navigation.goBack()
+        }}
+        onPressIn={() => handlePressIn("leave")}
+        onPressOut={() => handlePressOut("leave")}
+        className={`${isPressed["leave"] ? "opacity-50" : ""}`}
+      >
+        <Text className="text-red-500 text-center mx-2 font-semibold text-lg">
+          Leave Community
+        </Text>
+      </Pressable>
     </ScrollView>
   )
 }
