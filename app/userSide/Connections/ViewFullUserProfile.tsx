@@ -10,6 +10,7 @@ import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommun
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import PrimaryGymCard from "./components/PrimaryGymCard"
 import SinglePicCommunity from "../../components/SinglePicCommunity"
+import BackButton from "../../components/BackButton"
 
 const ViewFullUserProfile = () => {
   const { user } = useAuth()
@@ -38,6 +39,7 @@ const ViewFullUserProfile = () => {
 
   return (
     <SafeAreaView className="flex-1 mx-2">
+      <BackButton />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="flex flex-row justify-center mt-1 mb-2 ">
           <View className="bg-white rounded-xl p-2">

@@ -1,14 +1,11 @@
 import { View, Text, Platform, Pressable } from "react-native"
 import React, { useEffect, useState } from "react"
-import formatTimestamp from "../../../utilFunctions/formatTimeStamp"
-import GenericButton from "../../../components/GenericButton"
 import AddEventToCalendar from "./AddEventToCalendar"
-import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons"
+import { FontAwesome6 } from "@expo/vector-icons"
 import openInMaps from "../../../utilFunctions/openMaps"
 import openInGoogleMaps from "../../../utilFunctions/openGoogleMaps"
 import getEventAttendees from "../../../supabaseFunctions/getFuncs/getEventAttendees"
 import { Profile } from "../../../@types/supabaseTypes"
-import SinglePic from "../../../components/SinglePic"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
@@ -29,14 +26,22 @@ const ViewEventDetails = ({
   attendanceLimit,
 }: ViewEventDetailsProps) => {
   const navigation = useNavigation<NavigationType>()
-  const [handlePress, setHandlePress] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [eventProfiles, setEventProfiles] = useState<Profile[] | null>([])
+  const [isPressed, setIsPressed] = useState<{ [key: string]: boolean }>({})
   const maxDisplayCount = 2
 
   const displayProfiles = eventProfiles?.slice(0, maxDisplayCount)
   const additionalCount = eventProfiles!.length - maxDisplayCount
-  //
+
+  const handlePressIn = (name: string) => {
+    setIsPressed((prev) => ({ ...prev, [name]: true }))
+  }
+
+  const handlePressOut = (name: string) => {
+    setIsPressed((prev) => ({ ...prev, [name]: false }))
+  }
+
   useEffect(() => {
     getEventAttendees(eventId, setLoading, setEventProfiles)
   }, [eventId])
@@ -48,6 +53,9 @@ const ViewEventDetails = ({
       {/* Location */}
       {Platform.OS === "ios" ? (
         <Pressable
+          className={`${isPressed["location"] ? "opacity-50" : null}`}
+          onPressIn={() => handlePressIn("location")}
+          onPressOut={() => handlePressOut("location")}
           onPress={() => {
             if (location) {
               openInMaps(location)
@@ -70,6 +78,9 @@ const ViewEventDetails = ({
         </Pressable>
       ) : (
         <Pressable
+          className={`${isPressed["locationAndroid"] ? "opacity-50" : null}`}
+          onPressIn={() => handlePressIn("locationAndroid")}
+          onPressOut={() => handlePressOut("locationAndroid")}
           onPress={() => {
             if (location) {
               openInGoogleMaps(location)
@@ -102,6 +113,9 @@ const ViewEventDetails = ({
       </View>
 
       <Pressable
+        className={`${isPressed["attendees"] ? "opacity-50" : null}`}
+        onPressIn={() => handlePressIn("attendees")}
+        onPressOut={() => handlePressOut("attendees")}
         onPress={() => {
           navigation.navigate("ViewEventAttendees", { profile: eventProfiles })
         }}

@@ -14,7 +14,7 @@ type NavBarProps = {
   textColour?: string
   iconColour?: string
   showFriends: boolean
-  showSettings: boolean
+  showSettings?: boolean
   showSearchCommunities: boolean
   searchUsers: boolean
 }
@@ -26,7 +26,7 @@ const NavBar = ({
   textColour,
   iconColour,
   showFriends,
-  showSettings,
+  showSettings = false,
   showSearchCommunities,
   searchUsers,
 }: NavBarProps) => {

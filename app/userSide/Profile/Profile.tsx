@@ -76,7 +76,6 @@ const ProfileView = () => {
         title="My Profile"
         iconColour="black"
         showFriends={true}
-        showSettings={true}
         showSearchCommunities={false}
         searchUsers={false}
       />

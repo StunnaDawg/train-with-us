@@ -35,8 +35,8 @@ const MemberCard = ({ member }: MemberCardProps) => {
   return (
     <Pressable
       onPress={() =>
-        navigation.navigate("ViewUserProfile", {
-          userProfile: member,
+        navigation.navigate("ViewFullUserProfile", {
+          user: member,
         })
       }
       className=" m-4"

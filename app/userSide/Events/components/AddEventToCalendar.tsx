@@ -17,6 +17,14 @@ const AddEventToCalendar = ({ eventId, date }: EventProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [handlePress, setHandlePress] = useState<boolean>(false)
 
+  const handlePressIn = () => {
+    setHandlePress(true)
+  }
+
+  const handlePressOut = () => {
+    setHandlePress(false)
+  }
+
   const addCalenadarEvent = () => {
     showAlertFunc({
       title: "Add to Calendar?",
@@ -98,7 +106,12 @@ const AddEventToCalendar = ({ eventId, date }: EventProps) => {
   }, [eventId])
 
   return (
-    <Pressable onPress={() => addCalenadarEvent()}>
+    <Pressable
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      onPress={() => addCalenadarEvent()}
+      className={`${handlePress ? "opacity-50" : null}`}
+    >
       <View className="flex flex-row  justify-between items-center mb-2">
         <View className="flex flex-row items-center">
           <FontAwesome6 name="calendar" size={20} color="white" />

@@ -58,18 +58,18 @@ const MessageButton = ({
       console.log(`user1.eq.${userId}.user2.eq.${user2Id}`)
       const { data: chatSessions, error } = await supabase
         .from("chat_sessions")
-        .select("*")
+        .select()
         .or(
-          `user1.eq.${userId},user2.eq.${user2Id}` ||
-            `user1.eq.${user2Id},user2.eq.${userId}`
+          `and(user1.eq.${userId},user2.eq.${user2Id}),and(user1.eq.${user2Id},user2.eq.${userId})`
         )
 
-      if (error) throw error
-      if (!chatSessions || chatSessions.length === 0) {
-        throw new Error("No chat session found")
+      if (error) {
+        console.error("Error fetching chat session:", error)
+        throw error
       }
 
       if (chatSessions.length > 0) {
+        console.log("Chat session found", chatSessions)
         setBooleanState(true)
         setSession(chatSessions[0])
       }
