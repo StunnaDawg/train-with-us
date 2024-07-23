@@ -16,10 +16,17 @@ const ShareButton = ({ eventId, userId }: shareButtonProps) => {
   const [userChatSessions, setUserChatSessions] = useState<
     ChatSession[] | null
   >([])
-
+  const [shareButtonState, setShareButton] = useState<boolean>(false)
   const [eventSent, setEventSent] = useState<boolean>(false)
   const [isPressed, setIsPressed] = useState(false)
   const [sessionsToSend, setSessionsToSend] = useState<string[]>([])
+
+  const handleOnSharePressIn = () => {
+    setShareButton(true)
+  }
+  const handleOnSharePressOut = () => {
+    setShareButton(false)
+  }
 
   const handleOnPressIn = () => {
     setIsPressed(true)
@@ -66,7 +73,9 @@ const ShareButton = ({ eventId, userId }: shareButtonProps) => {
   return (
     <>
       <Pressable
-        className=" p-1"
+        onPressIn={handleOnSharePressIn}
+        onPressOut={handleOnSharePressOut}
+        className={`${shareButtonState ? "opacity-50" : null} p-1`}
         onPress={() => {
           handlePresentModalPress()
         }}

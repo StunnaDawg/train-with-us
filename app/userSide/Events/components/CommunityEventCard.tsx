@@ -5,8 +5,9 @@ import { Communities } from "../../../@types/supabaseTypes"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import { FontAwesome6 } from "@expo/vector-icons"
 import { useEffect, useState } from "react"
-import getCommunityMembersUUID from "../../../supabaseFunctions/getFuncs/getCommunityMembers"
+
 import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
+import getCommunityMembersUUIDs from "../../../supabaseFunctions/getFuncs/getCommunityMembersUUIDS"
 
 type CommunityCardProps = {
   communityId: number | undefined | null
@@ -16,10 +17,18 @@ type CommunityCardProps = {
 
 const CommunityEventCard = ({ communityId, userId }: CommunityCardProps) => {
   const [loading, setLoading] = useState<boolean>(false)
+  const [pressed, setPressed] = useState<boolean>(false)
   const [joined, setJoined] = useState<boolean>(false)
   const [community, setCommunity] = useState<Communities | null>(null)
   const [userUUIDS, setUserUUIDS] = useState<string[] | null>([])
   const navigation = useNavigation<NavigationType>()
+
+  const handlePressIn = () => {
+    setPressed(true)
+  }
+  const handlePressOut = () => {
+    setPressed(false)
+  }
 
   useEffect(() => {
     if (!communityId) return
@@ -28,7 +37,7 @@ const CommunityEventCard = ({ communityId, userId }: CommunityCardProps) => {
 
   useEffect(() => {
     if (userId && communityId) {
-      getCommunityMembersUUID(setLoading, communityId, setUserUUIDS)
+      getCommunityMembersUUIDs(setLoading, communityId, setUserUUIDS)
     }
   }, [userId])
 
@@ -40,12 +49,15 @@ const CommunityEventCard = ({ communityId, userId }: CommunityCardProps) => {
 
   return (
     <Pressable
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       onPress={() => {
         if (!communityId) return
         navigation.navigate("ViewCommunitiesScreen", {
           communityId: communityId,
         })
       }}
+      className={`${pressed ? "opacity-50" : null}`}
     >
       <View className="flex flex-row items-center">
         <View className="m-2">

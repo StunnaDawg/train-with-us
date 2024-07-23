@@ -25,8 +25,6 @@ import CommuntiyPageEvents from "./components/CommuntiyPageEvents"
 import CommunityPageMembers from "./components/CommunityPageMembers"
 import CommunityPageAbout from "./components/CommunityPageAbout"
 import { Events, News, Profile } from "../../@types/supabaseTypes"
-import getCommunityMembersUUID from "../../supabaseFunctions/getFuncs/getCommunityMembers"
-import getProfiles from "../../supabaseFunctions/getFuncs/getProfiles"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import getNewsFromCommunity from "../../supabaseFunctions/getFuncs/getNewsFromCommunity"
 import getCommunityMembers from "../../supabaseFunctions/getFuncs/getCommunityMembers"
@@ -190,7 +188,6 @@ const CommunityPage = () => {
           </Tab.Screen>
         </Tab.Navigator>
       </>
-      {/* )} */}
 
       <BottomSheetModal
         enablePanDownToClose={true}

@@ -2,24 +2,14 @@ import { View, Text, SafeAreaView, ScrollView } from "react-native"
 import React, { useEffect, useState } from "react"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import { RootStackParamList } from "../../@types/navigation"
-import PhotoArray from "./components/PhotoArray"
 import MessageButton from "./components/MessageButton"
-import GenericButton from "../../components/GenericButton"
-import UserTopGyms from "../Profile/components/UserTopGyms"
-import ActivitySection from "../Profile/components/ActivitySection"
-import UserAboutSection from "../Profile/components/UserAboutSection"
-import returnCommunityName from "../../utilFunctions/returnCommunityName"
-import SinglePicCommunity from "../../components/SinglePicCommunity"
-import SinglePic from "../../components/SinglePic"
-import formatBirthdate from "../../utilFunctions/calculateDOB"
 import calculateAge from "../../utilFunctions/calculateAge"
 import ActivityTags from "../../components/AcvitivityTags"
-import CommunityCard from "../Communities/components/CommunityCard"
 import { Communities } from "../../@types/supabaseTypes"
 import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommunity"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import PrimaryGymCard from "./components/PrimaryGymCard"
-import FitnessLevel from "../Profile/AddInfoComponents/ExperienceLvl"
+import SinglePicCommunity from "../../components/SinglePicCommunity"
 
 const ViewFullUserProfile = () => {
   const { user } = useAuth()
@@ -51,7 +41,7 @@ const ViewFullUserProfile = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="flex flex-row justify-center mt-1 mb-2 ">
           <View className="bg-white rounded-xl p-2">
-            <SinglePic
+            <SinglePicCommunity
               size={250}
               avatarRadius={10}
               noAvatarRadius={10}
@@ -94,7 +84,7 @@ const ViewFullUserProfile = () => {
         {imageFiles?.[1] ? (
           <View className="flex flex-row justify-center mt-1 mb-2">
             <View className="bg-white rounded-xl p-2">
-              <SinglePic
+              <SinglePicCommunity
                 size={250}
                 avatarRadius={10}
                 noAvatarRadius={10}
@@ -133,7 +123,7 @@ const ViewFullUserProfile = () => {
         {imageFiles?.[2] ? (
           <View className="flex flex-row justify-center mt-1 mb-2">
             <View className="bg-white rounded-xl p-2">
-              <SinglePic
+              <SinglePicCommunity
                 size={250}
                 avatarRadius={10}
                 noAvatarRadius={10}
@@ -176,7 +166,7 @@ const ViewFullUserProfile = () => {
         {imageFiles?.[3] ? (
           <View className="flex flex-row justify-center mt-1 mb-2">
             <View className="bg-white rounded-xl p-2">
-              <SinglePic
+              <SinglePicCommunity
                 size={250}
                 avatarRadius={10}
                 noAvatarRadius={10}
@@ -189,7 +179,7 @@ const ViewFullUserProfile = () => {
         {imageFiles?.[4] ? (
           <View className="flex flex-row justify-center mt-1 mb-2">
             <View className="bg-white rounded-xl p-2">
-              <SinglePic
+              <SinglePicCommunity
                 size={250}
                 avatarRadius={10}
                 noAvatarRadius={10}
@@ -202,7 +192,7 @@ const ViewFullUserProfile = () => {
         {imageFiles?.[5] ? (
           <View className="flex flex-row justify-center mt-1 mb-2">
             <View className="bg-white rounded-xl p-2">
-              <SinglePic
+              <SinglePicCommunity
                 size={250}
                 avatarRadius={10}
                 noAvatarRadius={10}

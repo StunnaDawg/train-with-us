@@ -33,6 +33,7 @@ import getSingleEvent from "../../../supabaseFunctions/getFuncs/getSingleEvent"
 import EventCard from "../../Events/components/EventCard"
 import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
 import CommunityMessageCard from "./CommunityMessageCard"
+import SinglePicCommunity from "../../../components/SinglePicCommunity"
 
 type UserMessage = {
   message: string | null
@@ -228,7 +229,7 @@ const MessageScreen = () => {
           <BackButton size={32} />
         </View>
         <View className="mb-2">
-          <SinglePic
+          <SinglePicCommunity
             size={55}
             avatarRadius={100}
             noAvatarRadius={100}

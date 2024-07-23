@@ -15,6 +15,9 @@ import { FontAwesome6 } from "@expo/vector-icons"
 import { ChatSession, Profile } from "../../../@types/supabaseTypes"
 import requestConnection from "../../../supabaseFunctions/addFuncs/requestConnection"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
+import supabase from "../../../../lib/supabase"
+import { useNavigation } from "@react-navigation/native"
+import { NavigationType } from "../../../@types/navigation"
 
 type MessageButtonProps = {
   coach: boolean
@@ -31,16 +34,49 @@ const MessageButton = ({
 }: MessageButtonProps) => {
   const [isPressed, setIsPressed] = useState<boolean>(false)
   const [message, setMessageToSend] = useState<string>("")
+  const [session, setSession] = useState<ChatSession | null>(null)
+  const [isAlreadyConnected, setIsAlreadyConnected] = useState<boolean>(true)
   const { user } = useAuth()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const { dismiss } = useBottomSheetModal()
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
+  const navigation = useNavigation<NavigationType>()
 
   const handlePressIn = () => {
     setIsPressed(true)
   }
   const handlePressOut = () => {
     setIsPressed(false)
+  }
+
+  const getChatSession = async (
+    userId: string,
+    user2Id: string,
+    setBooleanState: Dispatch<SetStateAction<boolean>>
+  ) => {
+    try {
+      console.log(`user1.eq.${userId}.user2.eq.${user2Id}`)
+      const { data: chatSessions, error } = await supabase
+        .from("chat_sessions")
+        .select("*")
+        .or(
+          `user1.eq.${userId},user2.eq.${user2Id}` ||
+            `user1.eq.${user2Id},user2.eq.${userId}`
+        )
+
+      if (error) throw error
+      if (!chatSessions || chatSessions.length === 0) {
+        throw new Error("No chat session found")
+      }
+
+      if (chatSessions.length > 0) {
+        setBooleanState(true)
+        setSession(chatSessions[0])
+      }
+    } catch (error) {
+      console.error("Error fetching chat session:", error)
+      return null // Consider returning null or appropriate error handling
+    }
   }
 
   const snapPoints = useMemo(() => ["25%", "50%"], [])
@@ -57,6 +93,11 @@ const MessageButton = ({
     useCurrentUser(user?.id, setCurrentUser)
   }, [user])
 
+  useEffect(() => {
+    if (!user?.id || !profileId) return
+    getChatSession(user.id, profileId, setIsAlreadyConnected)
+  }, [user, profileId])
+
   return (
     <>
       <View className="flex flex-row justify-center m-1">
@@ -66,7 +107,14 @@ const MessageButton = ({
               onPressIn={handlePressIn}
               onPressOut={handlePressOut}
               onPress={() => {
-                handlePresentModalPress()
+                if (!isAlreadyConnected && !session) {
+                  handlePresentModalPress()
+                } else {
+                  if (!session) return
+                  navigation.navigate("MessagingScreen", {
+                    chatSession: session,
+                  })
+                }
               }}
               className={` ${
                 isPressed ? "bg-black" : "bg-white"
@@ -115,6 +163,7 @@ const MessageButton = ({
                 user.id,
                 profileId
               )
+
               setLoading(false)
               dismiss()
             }}

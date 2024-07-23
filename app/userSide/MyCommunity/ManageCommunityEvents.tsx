@@ -165,7 +165,7 @@ const ManageCommunityEvents = () => {
   }, [searchPastEvents])
 
   return (
-    <SafeAreaView className="flex-1 bg-primary-900">
+    <SafeAreaView className="flex-1 bg-primary-900 ">
       <View className="flex flex-row justify-between m-1">
         <BackButton colour="white" />
         <View>
@@ -211,7 +211,7 @@ const ManageCommunityEvents = () => {
             <Text className={"text-center text-white"}>Past</Text>
           </Pressable>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView showsVerticalScrollIndicator={false} className="h-full">
           <View className="flex flex-row flex-wrap justify-center">
             {loading ? (
               <MotiView
