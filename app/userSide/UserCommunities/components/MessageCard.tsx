@@ -32,6 +32,7 @@ const MessageCard = ({
   updatedAt,
 }: MessageCardProps) => {
   const [profile, setProfile] = useState<Profile | null>({} as Profile)
+
   const { user } = useAuth()
 
   useEffect(() => {

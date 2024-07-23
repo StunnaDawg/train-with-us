@@ -52,6 +52,17 @@ const Messages = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const [searchText, setSearchText] = useState<string>("")
   const { user } = useAuth()
+  const [isPressed, setIsPressed] = useState<{
+    [key: string]: boolean
+  }>({})
+
+  const handlePressIn = (key: string) => {
+    setIsPressed((prev) => ({ ...prev, [key]: true }))
+  }
+
+  const handlePressOut = (key: string) => {
+    setIsPressed((prev) => ({ ...prev, [key]: false }))
+  }
 
   const handleSearch = (text: string) => {
     setActiveTab("")
@@ -166,8 +177,15 @@ const Messages = () => {
                 const otherUserId =
                   session.user1 === user?.id ? session.user2 : session.user1
                 return (
-                  <View className="flex-1 w-full" key={session.id}>
+                  <View
+                    className={` ${
+                      isPressed[session.id] ? "opacity-50" : null
+                    } flex-1  border-b-2 mx-2 p-1`}
+                    key={session.id}
+                  >
                     <Pressable
+                      onPressIn={() => handlePressIn(session.id)}
+                      onPressOut={() => handlePressOut(session.id)}
                       onPress={() =>
                         navigation.navigate("MessagingScreen", {
                           chatSession: session,
@@ -193,8 +211,17 @@ const Messages = () => {
           ) : activeTab === "Requests" || activeTab === "Sent Requests" ? (
             connectionRequest?.length ? (
               connectionRequest.map((request, index) => (
-                <View className="flex-1 w-full" key={request.requested}>
-                  <Pressable onPress={() => setModalVisible(true)}>
+                <View
+                  className={` ${
+                    isPressed[request.requested] ? "opacity-50" : null
+                  } flex-1 w-full`}
+                  key={request.requested}
+                >
+                  <Pressable
+                    onPressIn={() => handlePressIn(request.requested)}
+                    onPressOut={() => handlePressOut(request.requested)}
+                    onPress={() => setModalVisible(true)}
+                  >
                     <RequestCard
                       isRequester={activeTab === "Sent Requests"}
                       otherUserId={

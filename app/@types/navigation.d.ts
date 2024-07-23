@@ -201,6 +201,8 @@ export type RootStackParamList = {
     communityId: number
     communityTitle: string
   }
+
+  ViewFullUserProfileFromMessages: { userId: string }
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

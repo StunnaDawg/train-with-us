@@ -42,7 +42,7 @@ const UserMessage = ({ message }: UserMessage) => {
   return (
     <View className="flex flex-row justify-end mt-2 mr-4 mb-1 ml-36">
       <View>
-        <View className="rounded-2xl bg-blue-500/80 p-2">
+        <View className="rounded-xl bg-blue-500/80 p-2">
           <Text className="font-bold text-xs">{message}</Text>
         </View>
       </View>
@@ -57,21 +57,32 @@ type OthersMessageProps = {
 }
 
 const OthersMessage = ({ message, name, id }: OthersMessageProps) => {
+  const [isPressed, setIsPressed] = useState(false)
   const navigation = useNavigation<NavigationType>()
+
+  const handlePressIn = () => {
+    setIsPressed(true)
+  }
+  const handlePressOut = () => {
+    setIsPressed(false)
+  }
 
   return (
     <Pressable
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       onPress={() => {
-        navigation.navigate("ViewRequestProfile", {
+        if (!id) return
+        navigation.navigate("ViewFullUserProfileFromMessages", {
           userId: id,
         })
       }}
-      className="mt-2 mb-1"
+      className={`${isPressed ? "bg-opacity-50" : null} mt-2 mb-1`}
     >
       <Text className="font-bold text-xs mb-1">{name}</Text>
       <View className="flex flex-row justify-start ml-2 mr-36">
         <View>
-          <View className="rounded-2xl bg-slate-400/60 p-2">
+          <View className="rounded-xl bg-slate-400/60 p-2">
             <Text className="font-bold text-xs">{message}</Text>
           </View>
         </View>
@@ -171,7 +182,7 @@ const ChannelMessageScreen = () => {
   return (
     <SafeAreaView className="flex-1">
       <View className="mx-1">
-        <BackButton size={32} />
+        <BackButton size={24} />
       </View>
 
       <Pressable

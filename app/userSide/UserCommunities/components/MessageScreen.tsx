@@ -67,7 +67,7 @@ const UserMessage = ({
     <View className="flex flex-row justify-end mt-2 mr-4 ml-36">
       {isLink && event ? (
         <View>
-          <View className="rounded-2xl bg-blue-500/80 p-2 mb-1">
+          <View className="rounded-xl bg-blue-500/80 p-2 mb-1">
             <Text className="font-bold text-xs">{message}</Text>
           </View>
           <View className="bg-black rounded-xl py-1">
@@ -83,14 +83,14 @@ const UserMessage = ({
         </View>
       ) : isLink && community ? (
         <View>
-          <View className="rounded-2xl bg-blue-500/80 p-2 mb-1">
+          <View className="rounded-xl bg-blue-500/80 p-2 mb-1">
             <Text className="font-bold text-xs">{message}</Text>
           </View>
           <CommunityMessageCard community={community} userId={user?.id} />
         </View>
       ) : (
         <View>
-          <View className="rounded-2xl bg-blue-500/80 p-2">
+          <View className="rounded-xl bg-blue-500/80 p-2">
             <Text className="font-bold text-xs">{message}</Text>
           </View>
         </View>
@@ -130,7 +130,7 @@ const MatchesMessage = ({
   return (
     <View className="flex flex-row justify-start mt-2 ml-4 mr-36">
       <View>
-        <View className="rounded-2xl bg-slate-400/60 p-2">
+        <View className="rounded-xl bg-slate-400/60 p-2">
           {isLink && event ? (
             <EventCard
               title={event?.event_title}
@@ -142,7 +142,7 @@ const MatchesMessage = ({
             />
           ) : isLink && community ? (
             <View>
-              <View className="rounded-2xl bg-blue-500/80 p-2 mb-1">
+              <View className="rounded-xl bg-blue-500/80 p-2 mb-1">
                 <Text className="font-bold text-xs">{message}</Text>
               </View>
               <View className=" rounded-xl py-1">
@@ -226,7 +226,7 @@ const MessageScreen = () => {
     <SafeAreaView className="flex-1 bg-slate-300/05">
       <View className="flex flex-row justify-between">
         <View className="mx-1">
-          <BackButton size={32} />
+          <BackButton size={24} />
         </View>
         <View className="mb-2">
           <SinglePicCommunity

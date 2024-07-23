@@ -30,18 +30,23 @@ export type CommunityNewsProps = {
 
 const CommunityNews = ({ communityNews }: CommunityNewsProps) => {
   return (
-    <View className="flex-1 bg-primary-900">
-      <View>
-        <FlatList
-          className="h-full"
-          data={communityNews}
-          renderItem={({ item }) => (
-            <View className="m-2 border-b-2 border-slate-500">
-              <NewsCard news={item} />
-            </View>
-          )}
-          keyExtractor={(item) => item.id}
-        />
+    <View className=" bg-primary-900">
+      <View className="h-full">
+        {communityNews && communityNews?.length > 0 ? (
+          <FlatList
+            data={communityNews}
+            renderItem={({ item }) => (
+              <View className="m-2 border-b-2 border-slate-500">
+                <NewsCard news={item} />
+              </View>
+            )}
+            keyExtractor={(item) => item.id}
+          />
+        ) : (
+          <View className="flex-1 justify-center items-center">
+            <Text className="text-white">No News!</Text>
+          </View>
+        )}
       </View>
     </View>
   )

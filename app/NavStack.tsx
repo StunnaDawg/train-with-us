@@ -80,6 +80,7 @@ import Messages from "./userSide/UserCommunities/components/Messages"
 import SexualityEdit from "./userSide/Profile/AddInfoComponents/SexualityEdit"
 import EventAttendees from "./userSide/Events/components/EventAttendees"
 import CreateNewsPost from "./userSide/MyCommunity/CreateNewsPost"
+import ViewFullUserProfileFromMessages from "./userSide/UserCommunities/components/ViewUserProfileFromMessage"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -286,6 +287,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="PrimaryGym"
                 component={PrimaryGym}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ViewFullUserProfileFromMessages"
+                component={ViewFullUserProfileFromMessages}
               />
 
               <Stack.Screen
