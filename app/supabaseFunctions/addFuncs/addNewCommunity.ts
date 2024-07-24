@@ -4,6 +4,29 @@ import * as ImagePicker from "expo-image-picker"
 import { decode } from "base64-arraybuffer"
 import * as FileSystem from "expo-file-system"
 
+const addNewCommunityToUser = async (communityId: string, userId: string) => {
+  const { error } = await supabase.from("profiles").upsert({
+    id: userId,
+    community_created: communityId,
+  })
+
+  if (error) throw error
+}
+
+const addOwnerToCommunity = async (communityId: string, userId: string) => {
+  const { error } = await supabase.from("community_members").insert([
+    {
+      community_id: communityId,
+      user_id: userId,
+      role: "owner",
+      joined_at: new Date(),
+      community_owner: userId,
+    },
+  ])
+
+  if (error) throw error
+}
+
 const addNewCommunity = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   imageUri: ImagePicker.ImagePickerAsset,
@@ -35,7 +58,7 @@ const addNewCommunity = async (
           community_style: communityStyle,
           community_photos: [filePath],
           community_profile_pic: filePath,
-          community_public: !isCommunityPrivate,
+          public_community: isCommunityPrivate,
         },
       ])
       .select("id")
@@ -58,7 +81,8 @@ const addNewCommunity = async (
 
     if (channelError) throw channelError
 
-    return communtiyId
+    await addNewCommunityToUser(communtiyId, communityOwner)
+    await addOwnerToCommunity(communtiyId, communityOwner)
   } catch (error) {
     console.log(error)
   } finally {

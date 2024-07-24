@@ -9,9 +9,9 @@ import React, { useEffect, useState } from "react"
 import { RootStackParamList } from "../../@types/navigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import { Profile } from "../../@types/supabaseTypes"
-import getCommunityMembersUUID from "../../supabaseFunctions/getFuncs/getCommunityMembers"
 import getProfiles from "../../supabaseFunctions/getFuncs/getProfiles"
 import MemberCard from "../Communities/components/MemberCard"
+import getCommunityMembersUUIDs from "../../supabaseFunctions/getFuncs/getCommunityMembersUUIDS"
 
 const ViewEventGoers = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -25,7 +25,7 @@ const ViewEventGoers = () => {
   const eventId = route.params.eventId
 
   useEffect(() => {
-    getCommunityMembersUUID(setLoading, eventId, setCommunityMemberUUIDs)
+    getCommunityMembersUUIDs(setLoading, eventId, setCommunityMemberUUIDs)
   }, [])
 
   useEffect(() => {
@@ -36,10 +36,6 @@ const ViewEventGoers = () => {
       getCommunityMembers()
     }
   }, [commmunityMemberUUIDs])
-
-  useEffect(() => {
-    console.log("communityMembers", communityMembers)
-  }, [communityMembers])
 
   return (
     <SafeAreaView className="flex-1">

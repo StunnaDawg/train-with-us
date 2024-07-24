@@ -18,39 +18,25 @@ const CreateCommunity = () => {
   const { user } = useAuth()
   const [communityName, setCommunityName] = useState("")
   const [communityStyle, setCommunityStyle] = useState("")
-  const [privateCommunity, setPrivateCommunity] = useState(true)
+  const [privateCommunity, setPrivateCommunity] = useState<boolean>(true)
+  const navigation = useNavigation<NavigationType>()
 
   const [communityProfilePic, setCommunityProfilePic] =
     useState<ImagePicker.ImagePickerAsset>({} as ImagePicker.ImagePickerAsset)
   const [loading, setLoading] = useState(false)
-  const navigation = useNavigation<NavigationType>()
-
-  const addNewCommunityToUser = async (communityId: string) => {
-    const { error } = await supabase.from("profiles").upsert({
-      id: user?.id,
-      community_created: communityId,
-    })
-
-    if (error) throw error
-  }
-
-  const addOwnerToCommunity = async (communityId: string) => {
-    const { error } = await supabase.from("community_members").insert([
-      {
-        community_id: communityId,
-        user_id: user!.id,
-        role: "owner",
-        joined_at: new Date(),
-        community_owner: user!.id,
-      },
-    ])
-
-    if (error) throw error
-  }
 
   const createCommunity = async () => {
-    if (user === null) return
-    const id = await addNewCommunity(
+    if (user === null) {
+      showAlert({
+        title: "No User Found",
+        message: "Please login to create a community",
+        buttonText: "Understood",
+      })
+      return
+    }
+
+    console.log("Am I null?????", privateCommunity)
+    await addNewCommunity(
       setLoading,
       communityProfilePic,
       communityName,
@@ -58,10 +44,6 @@ const CreateCommunity = () => {
       communityStyle,
       privateCommunity
     )
-
-    await addNewCommunityToUser(id)
-    await addOwnerToCommunity(id)
-    navigation.goBack()
   }
 
   useEffect(() => {
@@ -145,7 +127,7 @@ const CreateCommunity = () => {
             <BasicButton
               text="Create Community"
               buttonFunction={async () => {
-                await createCommunity()
+                await createCommunity(), navigation.goBack()
               }}
             />
           </View>
