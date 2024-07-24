@@ -4,14 +4,25 @@ import { useAuth } from "../../supabaseFunctions/authcontext"
 import getUserEvents from "../../supabaseFunctions/getFuncs/getUsersEvents"
 import { Events, Profile } from "../../@types/supabaseTypes"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
-import { NavigationType } from "../../@types/navigation"
+import { NavigationType, TabNavigationType } from "../../@types/navigation"
 import BackButton from "../../components/BackButton"
 import EventCard from "./components/EventCard"
+import BasicButton from "../../components/BasicButton"
 
 const MyEvents = () => {
+  const [isPressed, setIsPressed] = useState<boolean>(false)
   const [userEvents, setUserEvents] = useState<Events[] | null>(null)
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
+  const tabNavigation = useNavigation<TabNavigationType>()
+
+  const handleOnPressIn = () => {
+    setIsPressed(true)
+  }
+
+  const handleOnPressOut = () => {
+    setIsPressed(false)
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -29,35 +40,50 @@ const MyEvents = () => {
   )
 
   return (
-    <SafeAreaView className="flex-1 ">
-      <View className="flex flex-row justify-between m-3 items-center">
+    <SafeAreaView className="flex-1">
+      <View className="flex flex-row justify-center m-3 items-center">
         <Text className="font-bold text-lg ">Upcoming Events</Text>
-        <View />
       </View>
-      <ScrollView horizontal={true}>
-        <View className="flex flex-row flex-wrap">
-          {userEvents?.map((event) => (
-            <Pressable
-              className="my-1"
-              onPress={() =>
-                navigation.navigate("ViewEvent", {
-                  eventId: event.id,
-                })
-              }
-            >
-              <EventCard
-                eventId={event.id}
-                key={event.id}
-                title={event.event_title}
-                date={event.date}
-                eventCoverPhoto={event.event_cover_photo}
-                eventPrice={event.price}
-                communityId={event.community_host}
-              />
-            </Pressable>
-          ))}
+
+      {userEvents && userEvents.length > 0 ? (
+        <ScrollView horizontal={true}>
+          <View className="flex flex-row flex-wrap">
+            {userEvents?.map((event) => (
+              <Pressable
+                className="my-1"
+                onPress={() =>
+                  navigation.navigate("ViewEvent", {
+                    eventId: event.id,
+                  })
+                }
+              >
+                <EventCard
+                  eventId={event.id}
+                  key={event.id}
+                  title={event.event_title}
+                  date={event.date}
+                  eventCoverPhoto={event.event_cover_photo}
+                  eventPrice={event.price}
+                  communityId={event.community_host}
+                />
+              </Pressable>
+            ))}
+          </View>
+        </ScrollView>
+      ) : (
+        <View className="flex flex-row justify-center">
+          <Pressable
+            onPressIn={handleOnPressIn}
+            onPressOut={handleOnPressOut}
+            onPress={() => tabNavigation.navigate("Events")}
+            className={`${
+              isPressed ? "opacity-50" : null
+            } border p-2 rounded-lg bg-slate-300`}
+          >
+            <Text className="font-semibold">Find Events to join!</Text>
+          </Pressable>
         </View>
-      </ScrollView>
+      )}
     </SafeAreaView>
   )
 }

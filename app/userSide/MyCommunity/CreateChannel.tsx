@@ -108,9 +108,9 @@ const CreateChannel = () => {
       {!loading ? (
         <>
           <View className="flex flex-row justify-between w-full p-3">
-            <View className="flex flex-row items-center">
+            <View className="flex flex-row   items-center">
               <BackButton />
-              <Text className="text-lg font-semibold mx-3">Create Channel</Text>
+              <Text className="text-sm font-semibold mx-3">Create Channel</Text>
             </View>
 
             <Pressable

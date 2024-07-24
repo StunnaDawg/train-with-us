@@ -60,23 +60,6 @@ const UserProfilePic = ({ refresh, profile }: UserProfilePicProps) => {
         />
         <View className="flex flex-row justify-center mt-4 items-center">
           <Text className="font-bold text-xl mx-2">{profile?.first_name}</Text>
-          <Pressable
-            onPress={() => {
-              if (currentUser) {
-                navigation.navigate("UserEditProfile", {
-                  userProfile: currentUser,
-                })
-              }
-            }}
-            onPressIn={handleOnPressIn}
-            onPressOut={handleOnPressOut}
-          >
-            <FontAwesome6
-              name="edit"
-              size={24}
-              color={pressed ? "blue" : "black"}
-            />
-          </Pressable>
         </View>
       </View>
     </View>

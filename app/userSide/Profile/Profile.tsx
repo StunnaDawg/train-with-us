@@ -13,19 +13,20 @@ import { NavBar } from "../../../components"
 
 const ProfileView = () => {
   const { user } = useAuth()
-  const [viewProfilePressed, setViewProfilePressed] = useState<boolean>(false)
+  const [pressedButton, setPressedButton] = useState<{
+    [key: string]: boolean
+  }>({})
   const [loading, setLoading] = useState<boolean>(true)
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const [primaryGymName, setPrimaryGymName] = useState<string>("")
   const navigation = useNavigation<NavigationType>()
 
-  const handleViewProfilePressedIn = () => {
-    setViewProfilePressed(true)
+  const handlePressedButtonIn = (buttonName: string) => {
+    setPressedButton((prev) => ({ ...prev, [buttonName]: true }))
   }
-
-  const handleViewProfilePressedOut = () => {
-    setViewProfilePressed(false)
+  const handlePressedButtonOut = (buttonName: string) => {
+    setPressedButton((prev) => ({ ...prev, [buttonName]: false }))
   }
 
   const onRefresh = useCallback(() => {
@@ -86,15 +87,34 @@ const ProfileView = () => {
       >
         <UserProfilePic profile={currentUser} refresh={refreshing} />
 
-        <View
-          className={`${
-            viewProfilePressed ? " bg-slate-100" : "bg-slate-200"
-          } m-2 rounded-lg p-2`}
-        >
+        <View className={`${"bg-slate-200"} m-2 rounded-lg p-2`}>
           <Pressable
-            onPressIn={handleViewProfilePressedIn}
-            onPressOut={handleViewProfilePressedOut}
-            className={`${viewProfilePressed ? "opacity-50" : null} mx-2 p-2`}
+            onPressIn={() => handlePressedButtonIn("editProfile")}
+            onPressOut={() => handlePressedButtonOut("editProfile")}
+            className={`${
+              pressedButton["editProfile"] ? "opacity-50" : null
+            } mx-2 p-3`}
+            onPress={() => {
+              if (currentUser)
+                navigation.navigate("UserEditProfile", {
+                  userProfile: currentUser,
+                })
+            }}
+          >
+            <View className="flex flex-row justify-between">
+              <View className="flex flex-row items-center">
+                <Text className="font-semibold mx-1">Edit Profile</Text>
+                <FontAwesome6 name="edit" size={18} />
+              </View>
+              <FontAwesome6 name="chevron-right" size={18} />
+            </View>
+          </Pressable>
+          <Pressable
+            onPressIn={() => handlePressedButtonIn("viewProfile")}
+            onPressOut={() => handlePressedButtonOut("viewProfile")}
+            className={`${
+              pressedButton["viewProfile"] ? "opacity-50" : null
+            } mx-2 p-3`}
             onPress={() => {
               if (currentUser)
                 navigation.navigate("ViewFullUserProfile", {

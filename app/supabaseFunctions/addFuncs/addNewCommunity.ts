@@ -40,6 +40,22 @@ const addNewCommunity = async (
 
     if (error) throw error
     const communtiyId = community![0].id
+
+    const { error: channelError } = await supabase
+      .from("community_channels")
+      .insert([
+        {
+          channel_title: "general",
+          channel_type: "Text",
+          community_owner: communityOwner,
+          community: communtiyId,
+          channel_pic: filePath,
+          private: false,
+        },
+      ])
+
+    if (channelError) throw channelError
+
     return communtiyId
   } catch (error) {
     console.log(error)

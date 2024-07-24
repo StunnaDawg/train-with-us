@@ -11,6 +11,8 @@ import supabase from "../../../lib/supabase"
 import Loading from "../../components/Loading"
 import { Switch } from "react-native-gesture-handler"
 import showAlert from "../../utilFunctions/showAlert"
+import { FontAwesome6 } from "@expo/vector-icons"
+import BackButton from "../../components/BackButton"
 
 const CreateCommunity = () => {
   const { user } = useAuth()
@@ -69,14 +71,27 @@ const CreateCommunity = () => {
         buttonText: "Understood",
       })
     }
+
+    if (privateCommunity === true) {
+      showAlert({
+        title: "Private Communities",
+        message: "Users must request to join your community.",
+        buttonText: "Understood",
+      })
+    }
   }, [privateCommunity])
 
   return (
     <SafeAreaView className="flex-1">
       {!loading ? (
         <>
-          <View className="flex flex-row justify-center">
-            <Text className="font-bold text-2xl">Create your Community</Text>
+          <View className="flex flex-row justify-between items-center mx-2">
+            <BackButton size={26} />
+
+            <View>
+              <Text className="font-bold text-xl">Create your Community</Text>
+            </View>
+            <View />
           </View>
 
           <View>
@@ -94,7 +109,13 @@ const CreateCommunity = () => {
               </View>
 
               <Text className="font-medium text-lg">Community Access</Text>
-              <View className="border rounded-lg p-2 w-full">
+              <View className="flex flex-row items-center p-2 w-full">
+                <View className="mx-1">
+                  <FontAwesome6
+                    name={`${privateCommunity ? "lock" : "unlock"}`}
+                    size={24}
+                  />
+                </View>
                 <Switch
                   value={privateCommunity}
                   onValueChange={setPrivateCommunity}
