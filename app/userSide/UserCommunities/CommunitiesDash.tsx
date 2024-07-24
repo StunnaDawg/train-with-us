@@ -1,13 +1,14 @@
 import { View, Text } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import CommunitiesScroll from "./components/CommunitiesScroll"
-import CommunitiesRead from "./components/CommunitiesRead"
+
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { Communities } from "../../@types/supabaseTypes"
 import getAllUsersCommunities from "../../supabaseFunctions/getFuncs/getUsersCommunities"
 import { useFocusEffect } from "@react-navigation/native"
 import { NavBar } from "../../../components"
 import CommunitiesDashSkeleton from "./CommunitiesDashSkeleton"
+import PinnedChannels from "./components/PinnedChannels"
 
 const CommunitiesDash = () => {
   const [loading, setLoadingState] = useState<boolean>(true)
@@ -48,7 +49,7 @@ const CommunitiesDash = () => {
           </View>
           <View>
             <View>
-              <CommunitiesRead />
+              <PinnedChannels />
             </View>
           </View>
         </View>

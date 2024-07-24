@@ -1,11 +1,4 @@
-import {
-  Dimensions,
-  Platform,
-  Pressable,
-  SafeAreaView,
-  Text,
-  View,
-} from "react-native"
+import { Dimensions, Platform, SafeAreaView, View } from "react-native"
 import React, { useEffect, useState } from "react"
 import ConnectionsCard from "./components/ConnectionsCard"
 import { Profile } from "../../@types/supabaseTypes"
@@ -18,9 +11,8 @@ import Animated, {
 } from "react-native-reanimated"
 import { NavigationType } from "../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
-import { FontAwesome6 } from "@expo/vector-icons"
-import CardSkeleton from "./components/CardSkeleton"
 import { NavBar } from "../../../components"
+import CardSkeleton from "./components/CardSkeleton"
 
 const Connections = () => {
   const { user } = useAuth()
@@ -30,7 +22,7 @@ const Connections = () => {
   const [scrollEnabledState, setScrollEnabled] = useState(true)
   const navigation = useNavigation<NavigationType>()
   const screenHeight = Dimensions.get("window").height
-  const cardHeight = Platform.OS == "android" ? screenHeight * 0.75 : 600
+  const cardHeight = screenHeight - 100 // Adjust card height to leave space for navigation bar or any other element
   const scrollEnabled = useSharedValue(scrollEnabledState)
   const translationY = useSharedValue(0)
   const startY = useSharedValue(0)
@@ -38,7 +30,6 @@ const Connections = () => {
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: (event) => {
       startY.value = event.contentOffset.y
-      console.log("startY", startY.value)
     },
     onScroll: (event) => {
       translationY.value = event.contentOffset.y
@@ -47,7 +38,7 @@ const Connections = () => {
       const offsetY = event.contentOffset.y
       const distance = offsetY - startY.value
       const targetIndex =
-        distance < 500
+        distance < cardHeight / 2
           ? Math.floor(offsetY / cardHeight)
           : Math.ceil(offsetY / cardHeight)
       let targetOffset = targetIndex * cardHeight
@@ -87,7 +78,7 @@ const Connections = () => {
   }, [connectionProfiles])
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <NavBar
         title="Connections"
         iconColour="black"
@@ -104,22 +95,35 @@ const Connections = () => {
         snapToInterval={cardHeight} // Optional, native snapping to help with alignment
         decelerationRate="fast"
         snapToAlignment="start"
+        contentContainerStyle={{
+          height: cardHeight * connectionProfiles.length, // Ensure the content container is tall enough
+        }}
       >
-        {loading ? (
-          <CardSkeleton />
-        ) : (
-          connectionProfiles.map((profile, index) => (
-            <View className="mt-2" key={profile.id}>
-              <ConnectionsCard
-                setLoading={setNewConnection}
-                loading={newConnection}
-                profile={profile}
-                isLast={profile.id === "fake"}
-                setScroll={setScrollEnabled}
-              />
-            </View>
-          ))
-        )}
+        <View className="flex flex-row justify-center">
+          <View>
+            {loading ? (
+              <CardSkeleton />
+            ) : (
+              connectionProfiles.map((profile, index) => (
+                <View
+                  key={profile.id}
+                  style={{
+                    height: cardHeight,
+                    justifyContent: "center",
+                  }}
+                >
+                  <ConnectionsCard
+                    setLoading={setNewConnection}
+                    loading={newConnection}
+                    profile={profile}
+                    isLast={index === connectionProfiles.length - 1}
+                    setScroll={setScrollEnabled}
+                  />
+                </View>
+              ))
+            )}
+          </View>
+        </View>
       </Animated.ScrollView>
     </SafeAreaView>
   )

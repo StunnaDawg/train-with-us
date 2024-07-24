@@ -17,7 +17,7 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
   const [currentUserProfile, setCurrentUserProfile] = useState<Profile | null>(
     null
   )
-  const [isDashPressed, setIsDashPressed] = useState(true)
+  const [isDashPressed, setIsDashPressed] = useState<boolean>()
   const [activeCommunity, setActiveCommunity] = useState<number | null>(null)
   const navigation = useNavigation<NavigationType>()
 

@@ -9,8 +9,7 @@ const getChatSession = async (userId: string, user2Id: string) => {
       .from("chat_sessions")
       .select("*")
       .or(
-        `user1.eq.${userId},user2.eq.${user2Id}` ||
-          `user1.eq.${user2Id},user2.eq.${userId}`
+        `and(user1.eq.${userId},user2.eq.${user2Id}),and(user1.eq.${user2Id},user2.eq.${userId})`
       )
 
     if (error) throw error

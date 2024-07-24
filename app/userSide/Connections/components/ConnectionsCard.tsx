@@ -37,7 +37,7 @@ const ConnectionsCard = ({
   const screenHeight = Dimensions.get("window").height
   const cardHeight = Platform.OS == "android" ? screenHeight * 0.75 : 600
   const navigation = useNavigation<NavigationType>()
-  const avatarSize = { height: 100, width: 100 }
+  const avatarSize = { height: 250, width: 250 }
 
   const handlePressIn = () => {
     setIsPressed(true)
@@ -185,14 +185,3 @@ const ConnectionsCard = ({
 }
 
 export default ConnectionsCard
-{
-  /* <Pressable
-              onPress={() =>
-                navigation.navigate("ViewFullUserProfile", {
-                  user: profile,
-                })
-              }
-            >
-              <Text>View Profile</Text>
-            </Pressable> */
-}

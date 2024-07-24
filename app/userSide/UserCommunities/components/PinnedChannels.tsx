@@ -15,9 +15,9 @@ import { NavigationType } from "../../../@types/navigation"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
-import SinglePic from "../../../components/SinglePic"
+import { FontAwesome6 } from "@expo/vector-icons"
 
-const CommunitiesRead = React.memo(() => {
+const PinnedChannels = React.memo(() => {
   const [pressedChannels, setPressedChannels] = useState<{
     [key: string]: boolean
   }>({})
@@ -27,7 +27,16 @@ const CommunitiesRead = React.memo(() => {
   const [communityChannels, setCommunityChannels] = useState<
     CommunityChannel[] | null
   >([])
+  const [isDashPressed, setIsDashPressed] = useState<boolean>()
   const navigation = useNavigation<NavigationType>()
+
+  const handleOnPressIn = useCallback(() => {
+    setIsDashPressed(true)
+  }, [])
+
+  const handleOnPressOut = useCallback(() => {
+    setIsDashPressed(false)
+  }, [])
 
   const handlePressIn = (channelId: string) => {
     setPressedChannels((prev) => ({ ...prev, [channelId]: true }))
@@ -159,7 +168,7 @@ const CommunitiesRead = React.memo(() => {
   return (
     <View>
       <View>
-        <Text className="font-bold text-lg text-white p-4">
+        <Text className="font-bold text-lg underline text-white p-4">
           Pinned Channels
         </Text>
       </View>
@@ -169,12 +178,31 @@ const CommunitiesRead = React.memo(() => {
         ) : communityChannels?.length && communityChannels.length > 0 ? (
           <ActivityIndicator />
         ) : (
-          <View className="flex-1 flex justify-center items-center">
-            <View className="flex flex-row justify-center items-center">
-              <Text className="text-white font-bold text-center p-2">
-                Join a Community to pin your favourite channels!
+          <View className="flex flex-row justify-end items-center p-1 ">
+            <View>
+              <Text className="text-white font-bold text-center">
+                Join a Community to pin
+              </Text>
+              <Text className="text-white font-bold text-center">
+                favourite channels!
               </Text>
             </View>
+            <Pressable
+              onPressIn={handleOnPressIn}
+              onPressOut={handleOnPressOut}
+              onPress={() => {
+                navigation.navigate("SearchCommunities")
+              }}
+              className={`m-2 ${
+                isDashPressed ? "bg-black" : "bg-white"
+              } rounded-full p-2 items-center`}
+            >
+              <FontAwesome6
+                name="magnifying-glass"
+                size={36}
+                color={isDashPressed ? "white" : "black"}
+              />
+            </Pressable>
           </View>
         )}
       </ScrollView>
@@ -182,4 +210,4 @@ const CommunitiesRead = React.memo(() => {
   )
 })
 
-export default CommunitiesRead
+export default PinnedChannels
