@@ -11,14 +11,17 @@ type ViewCommunityTitleProps = {
   communityId: number
   communityTitle: string | undefined | null
   publicCommunity: boolean
+  setJoinedState: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const JoinFooter = ({
   communityId,
   communityTitle,
   publicCommunity,
+  setJoinedState,
 }: ViewCommunityTitleProps) => {
   const [requestSent, setRequestSent] = useState<boolean>(false)
+
   const [isPressed, setIsPressed] = useState(false)
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null)
   const { user } = useAuth()
@@ -49,34 +52,59 @@ const JoinFooter = ({
     }
 
     if (publicCommunity) {
-      const { error } = await supabase.from("community_members").insert({
-        community_id: communityId,
-        user_id: user?.id,
-        role: "member",
-        joined_at: new Date(),
-      })
+      const { data: existingMember, error: fetchError } = await supabase
+        .from("community_members")
+        .select()
+        .eq("community_id", communityId)
+        .eq("user_id", user.id)
+        .single()
 
-      if (error) {
+      if (fetchError && fetchError.code !== "PGRST116") {
         showAlert("Error Joining Community", "Please try again.")
-        throw error
+        throw fetchError
+      }
+
+      if (existingMember) {
+        showAlert(
+          "Already a Member",
+          "You are already a member of this community."
+        )
+        return
+      }
+
+      const { error: joinError } = await supabase
+        .from("community_members")
+        .insert({
+          community_id: communityId,
+          user_id: user?.id,
+          role: "member",
+          joined_at: new Date(),
+        })
+
+      if (joinError) {
+        showAlert("Error Joining Community", "Please try again.")
+        throw joinError
       }
 
       showAlert(
         "Community Joined",
         "You have successfully joined the community"
       )
+
+      setJoinedState(true)
+      return
+    } else {
+      await requestToJoin(
+        communityId,
+        title,
+        user?.id,
+        currentProfile?.first_name,
+        currentProfile?.expo_push_token,
+        showAlert
+      )
+
+      setRequestSent(true)
     }
-
-    await requestToJoin(
-      communityId,
-      title,
-      user?.id,
-      currentProfile?.first_name,
-      currentProfile?.expo_push_token,
-      showAlert
-    )
-
-    setRequestSent(true)
   }
 
   useEffect(() => {
@@ -94,7 +122,7 @@ const JoinFooter = ({
               ? `bg-slate-400 border-2 border-solid border-slate-400`
               : `bg-white border-2 border-solid border-slate-400`
           } flex justify-center items-center rounded-xl`}
-          onPress={() => requestFunc()}
+          onPress={async () => await requestFunc()}
           onPressIn={handleOnPressIn}
           onPressOut={handleOnPressOut}
         >

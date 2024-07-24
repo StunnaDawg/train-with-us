@@ -19,6 +19,7 @@ const ViewCommunities = () => {
   const { user } = useAuth()
   const [joined, setJoined] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
+
   const [community, setCommunities] = useState<Communities | null>(null)
   const [profiles, setProfiles] = useState<string[] | null>(null)
 
@@ -72,6 +73,7 @@ const ViewCommunities = () => {
           </ScrollView>
           {!joined && community ? (
             <JoinFooter
+              setJoinedState={setJoined}
               publicCommunity={community.public_community}
               communityId={communityId}
               communityTitle={community?.community_title}
