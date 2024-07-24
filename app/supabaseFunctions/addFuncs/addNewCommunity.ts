@@ -9,7 +9,8 @@ const addNewCommunity = async (
   imageUri: ImagePicker.ImagePickerAsset,
   communityName: string,
   communityOwner: string,
-  communityStyle: string
+  communityStyle: string,
+  isCommunityPrivate: boolean
 ) => {
   try {
     setLoading(true)
@@ -34,6 +35,7 @@ const addNewCommunity = async (
           community_style: communityStyle,
           community_photos: [filePath],
           community_profile_pic: filePath,
+          community_public: !isCommunityPrivate,
         },
       ])
       .select("id")

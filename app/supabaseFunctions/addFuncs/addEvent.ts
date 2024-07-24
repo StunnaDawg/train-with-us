@@ -3,6 +3,55 @@ import supabase from "../../../lib/supabase"
 import * as FileSystem from "expo-file-system"
 import * as ImagePicker from "expo-image-picker"
 import { decode } from "base64-arraybuffer"
+import { FunctionsHttpError } from "@supabase/supabase-js"
+
+const sendNotification = async (
+  token: string,
+  title: string,
+  body: string,
+  eventId: number
+) => {
+  console.log("Sending notification to", token)
+  const { data, error } = await supabase.functions.invoke("push", {
+    body: {
+      token,
+      titleWords: title,
+      bodyWords: body,
+      data: { eventId, type: "new_event" },
+    },
+  })
+
+  if (error && error instanceof FunctionsHttpError) {
+    const errorMessage = await error.context.json()
+    console.log("Function returned an error", errorMessage)
+  }
+
+  console.log("Notification sent:", data)
+}
+
+const sendEventNotification = async (
+  communityId: number,
+  titleWords: string,
+  bodyWords: string,
+  eventId: number
+) => {
+  const { data, error } = await supabase
+    .from("community_members")
+    .select("expo_push_token")
+    .eq("community_id", communityId)
+
+  if (error) throw error
+
+  const tokens = data
+    .filter((member) => member.expo_push_token !== null)
+    .map((member) => member.expo_push_token)
+
+  console.log("Sending notification to", tokens)
+
+  tokens.forEach(async (token) => {
+    await sendNotification(token, titleWords, bodyWords, eventId)
+  })
+}
 
 const addNewEvent = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
@@ -39,24 +88,40 @@ const addNewEvent = async (
       contentType: contentType,
     })
 
-    const { error } = await supabase.from("events").insert([
-      {
-        event_title: eventName,
-        community_host: communityId,
-        event_host: user_id,
-        created_at: new Date(),
-        date: eventDate,
-        event_cover_photo: filePath,
-        price: price,
-        event_description: event_description,
-        location: location,
-        community_host_name: community![0].community_title,
-        event_style: eventStyle,
-        event_limit: eventLimit,
-      },
-    ])
+    const { data, error } = await supabase
+      .from("events")
+      .insert([
+        {
+          event_title: eventName,
+          community_host: communityId,
+          event_host: user_id,
+          created_at: new Date(),
+          date: eventDate,
+          event_cover_photo: filePath,
+          price: price,
+          event_description: event_description,
+          location: location,
+          community_host_name: community![0].community_title,
+          event_style: eventStyle,
+          event_limit: eventLimit,
+        },
+      ])
+      .select()
 
     if (error) throw error
+
+    if (!data || data.length === 0)
+      throw new Error("No data returned from insert")
+
+    const eventId = data[0].id
+
+    console.log("Event created:", data)
+    await sendEventNotification(
+      communityId,
+      `New Event ${eventName}`,
+      `From ${community![0].community_title}`,
+      eventId
+    )
   } catch (error) {
     console.log(error)
   } finally {

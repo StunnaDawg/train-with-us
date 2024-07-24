@@ -72,6 +72,7 @@ const ViewCommunities = () => {
           </ScrollView>
           {!joined && community ? (
             <JoinFooter
+              publicCommunity={community.public_community}
               communityId={communityId}
               communityTitle={community?.community_title}
             />

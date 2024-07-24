@@ -5,15 +5,18 @@ import { Profile } from "../../../@types/supabaseTypes"
 import requestToJoin from "../../../supabaseFunctions/addFuncs/requestToJoin"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
+import supabase from "../../../../lib/supabase"
 
 type ViewCommunityTitleProps = {
   communityId: number
   communityTitle: string | undefined | null
+  publicCommunity: boolean
 }
 
 const JoinFooter = ({
   communityId,
   communityTitle,
+  publicCommunity,
 }: ViewCommunityTitleProps) => {
   const [requestSent, setRequestSent] = useState<boolean>(false)
   const [isPressed, setIsPressed] = useState(false)
@@ -43,6 +46,25 @@ const JoinFooter = ({
     if (user?.id === undefined || !currentProfile?.first_name) {
       showErrorAlert()
       return
+    }
+
+    if (publicCommunity) {
+      const { error } = await supabase.from("community_members").insert({
+        community_id: communityId,
+        user_id: user?.id,
+        role: "member",
+        joined_at: new Date(),
+      })
+
+      if (error) {
+        showAlert("Error Joining Community", "Please try again.")
+        throw error
+      }
+
+      showAlert(
+        "Community Joined",
+        "You have successfully joined the community"
+      )
     }
 
     await requestToJoin(

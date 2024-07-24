@@ -55,7 +55,8 @@ const CreateCommunity = () => {
       communityProfilePic,
       communityName,
       user!.id,
-      communityStyle
+      communityStyle,
+      privateCommunity
     )
 
     await addNewCommunityToUser(id)
