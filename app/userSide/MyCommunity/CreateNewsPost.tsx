@@ -8,39 +8,64 @@ import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import showAlertFunc from "../../utilFunctions/showAlertFunc"
 import { FunctionsHttpError } from "@supabase/supabase-js"
-import { CommunityMember } from "../../@types/supabaseTypes"
+import { Communities, CommunityMember } from "../../@types/supabaseTypes"
 import getCommunityMembersType from "../../supabaseFunctions/getFuncs/getCommunityMemberArrayType"
 
-const sendNewsNotification = async (
-  communityId: number,
-  communityTitle: string,
+const sendNotification = async (
+  token: string,
   title: string,
   body: string,
-  tokens: string[]
+  community: Communities
 ) => {
+  console.log("Sending notification to", token)
+  const { data, error } = await supabase.functions.invoke("push", {
+    body: {
+      token,
+      titleWords: title,
+      bodyWords: `${community.community_title} says ${body}`,
+      data: { type: "news", community: community },
+    },
+  })
+
+  if (error && error instanceof FunctionsHttpError) {
+    const errorMessage = await error.context.json()
+    console.log("Function returned an error", errorMessage)
+  }
+
+  console.log("Notification sent:", data)
+}
+
+const sendChannelNotification = async (
+  communityId: number,
+  titleWords: string,
+  bodyWords: string
+) => {
+  const { data, error } = await supabase
+    .from("community_members")
+    .select("expo_push_token")
+    .eq("community_id", communityId)
+
+  if (error) throw error
+
+  const tokens = data
+    .filter((member) => member.expo_push_token !== null)
+    .map((member) => member.expo_push_token)
+
+  const { data: communityData, error: fetchError } = await supabase
+    .from("communities")
+    .select("*")
+    .eq("id", communityId)
+    .select()
+
+  if (fetchError) throw fetchError
+
+  const community = communityData[0]
+
   console.log("Sending notification to", tokens)
 
-  const sendNotification = async (token: string) => {
-    const { data, error } = await supabase.functions.invoke("push", {
-      body: {
-        token,
-        titleWords: title,
-        bodyWords: body,
-        data: { communityId, communityTitle, type: "community_news" },
-      },
-    })
-
-    if (error && error instanceof FunctionsHttpError) {
-      const errorMessage = await error.context.json()
-      console.log("Function returned an error", errorMessage)
-    } else {
-      console.log("Notification sent:", data)
-    }
-  }
-
-  for (const token of tokens!.filter((token) => token !== null)) {
-    await sendNotification(token as string)
-  }
+  tokens.forEach(async (token) => {
+    await sendNotification(token, titleWords, bodyWords, community)
+  })
 }
 
 const CreateNewsPost = () => {
@@ -112,13 +137,7 @@ const CreateNewsPost = () => {
     })
 
     if (tokens !== null) {
-      await sendNewsNotification(
-        communityId,
-        communityTitle,
-        title,
-        content,
-        tokens
-      )
+      await sendChannelNotification(communityId, communityTitle, title)
     }
 
     navigation.goBack()

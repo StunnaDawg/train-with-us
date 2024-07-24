@@ -166,6 +166,10 @@ const NavStack = () => {
           navigation.navigate("ViewEvent", { eventId: data.eventId })
         } else if (data.type === "connection_request") {
           navigation.navigate("DirectMessageTab")
+        } else if (data.type === "news") {
+          navigation.navigate("CommunityPage", {
+            community: data.community,
+          })
         } else if (data.type === "connection_accepted") {
           navigation.navigate("MessagingScreen", {
             chatSession: data.chatSession,
