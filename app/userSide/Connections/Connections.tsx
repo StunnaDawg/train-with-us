@@ -113,6 +113,7 @@ const Connections = () => {
                   }}
                 >
                   <ConnectionsCard
+                    key={profile.id}
                     setLoading={setNewConnection}
                     loading={newConnection}
                     profile={profile}

@@ -1,4 +1,10 @@
-import { View, Text, Pressable, TextInput } from "react-native"
+import {
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  KeyboardAvoidingView,
+} from "react-native"
 import React, {
   Dispatch,
   SetStateAction,
@@ -101,37 +107,33 @@ const MessageButton = ({
   return (
     <>
       <View className="flex flex-row justify-center m-1">
-        {!coach ? (
-          <View className="flex flex-row">
-            <Pressable
-              onPressIn={handlePressIn}
-              onPressOut={handlePressOut}
-              onPress={() => {
-                if (!isAlreadyConnected && !session) {
-                  handlePresentModalPress()
-                } else {
-                  if (!session) return
-                  navigation.navigate("MessagingScreen", {
-                    chatSession: session,
-                  })
-                }
-              }}
-              className={` ${
-                isPressed ? "bg-black" : "bg-white"
-              } border-2 rounded-full px-5 py-1 mx-1`}
-            >
-              <FontAwesome6
-                name="message"
-                size={24}
-                color={`${isPressed ? "white" : "black"}`}
-              />
-            </Pressable>
-          </View>
-        ) : (
-          <Pressable className="border-2 rounded-full p-3">
-            <Text className="text-2xl font-bold">Coach</Text>
+        <View className="flex flex-row">
+          <Pressable
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            onPress={() => {
+              console.log("Pressed message button PLEASE WORK")
+              if (!isAlreadyConnected || !session) {
+                handlePresentModalPress()
+              } else {
+                console.log("Navigating to chat session")
+                if (!session) return
+                navigation.navigate("MessagingScreen", {
+                  chatSession: session,
+                })
+              }
+            }}
+            className={` ${
+              isPressed ? "bg-black" : "bg-white"
+            } border-2 rounded-full px-5 py-1 mx-1`}
+          >
+            <FontAwesome6
+              name="message"
+              size={24}
+              color={`${isPressed ? "white" : "black"}`}
+            />
           </Pressable>
-        )}
+        </View>
       </View>
 
       <BottomSheetModal
@@ -140,8 +142,11 @@ const MessageButton = ({
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
       >
-        <View className="flex flex-row justify-center my-2 pt-2 border-t">
+        <KeyboardAvoidingView className="flex flex-row justify-center my-2 pt-2 border-t">
           <TextInput
+            onSubmitEditing={async () => {
+              dismiss()
+            }}
             autoFocus={true}
             placeholder={loading ? "sending..." : "Send a Message"}
             className=" flex-1 border rounded-xl h-8 w-64 p-2 "
@@ -170,7 +175,7 @@ const MessageButton = ({
           >
             <Text className="font-bold">Send</Text>
           </Pressable>
-        </View>
+        </KeyboardAvoidingView>
       </BottomSheetModal>
     </>
   )
