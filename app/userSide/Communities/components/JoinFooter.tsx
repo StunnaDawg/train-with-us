@@ -9,6 +9,7 @@ import supabase from "../../../../lib/supabase"
 
 type ViewCommunityTitleProps = {
   communityId: number
+  communityOwner: string | null
   communityTitle: string | undefined | null
   publicCommunity: boolean
   setJoinedState: React.Dispatch<React.SetStateAction<boolean>>
@@ -16,6 +17,7 @@ type ViewCommunityTitleProps = {
 
 const JoinFooter = ({
   communityId,
+  communityOwner,
   communityTitle,
   publicCommunity,
   setJoinedState,
@@ -96,6 +98,7 @@ const JoinFooter = ({
     } else {
       await requestToJoin(
         communityId,
+        communityOwner,
         title,
         user?.id,
         currentProfile?.first_name,

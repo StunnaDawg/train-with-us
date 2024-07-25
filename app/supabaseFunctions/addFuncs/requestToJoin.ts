@@ -29,6 +29,7 @@ const sendNotification = async (
 
 const requestToJoin = async (
   community_id: number,
+  community_owner_id: string | null,
   community_title: string,
   userId: string,
   first_name: string,
@@ -68,9 +69,17 @@ const requestToJoin = async (
 
   showAlert("Request Sent", "Your request to join has been sent.")
 
+  const { error: getOwnerError, data: ownerData } = await supabase
+    .from("profiles")
+    .select("expo_push_token")
+    .eq("id", community_owner_id)
+    .single()
+
+  if (getOwnerError) throw getOwnerError
+
   if (expo_push_token)
     await sendNotification(
-      expo_push_token,
+      ownerData?.expo_push_token,
       "Request to Join",
       first_name + " has requested to join your community.",
       community_id,

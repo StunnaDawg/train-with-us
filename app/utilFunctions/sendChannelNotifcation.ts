@@ -6,7 +6,7 @@ const sendNotification = async (
   token: string,
   title: string,
   body: string,
-  channel: CommunityChannel | null
+  channel: CommunityChannel
 ) => {
   console.log("Sending notification to", token)
   const { data, error } = await supabase.functions.invoke("push", {
@@ -14,7 +14,7 @@ const sendNotification = async (
       token,
       titleWords: title,
       bodyWords: body,
-      data: { channel },
+      data: { type: "channel", channel: channel },
     },
   })
 

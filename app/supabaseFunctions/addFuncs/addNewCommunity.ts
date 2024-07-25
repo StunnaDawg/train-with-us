@@ -58,7 +58,7 @@ const addNewCommunity = async (
           community_style: communityStyle,
           community_photos: [filePath],
           community_profile_pic: filePath,
-          public_community: isCommunityPrivate,
+          public_community: !isCommunityPrivate,
         },
       ])
       .select("id")

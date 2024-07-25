@@ -1,89 +1,78 @@
 {
-  "name": "train-with-us",
-  "slug": "train-with-us",
-  "version": "0.0.15",
-  "orientation": "portrait",
-  "icon": "./assets/images/icon.png",
-  "userInterfaceStyle": "light",
-  "splash": {
-    "image": "./assets/images/splash.png",
-    "resizeMode": "contain",
-    "backgroundColor": "#071C38"
-  },
-  "assetBundlePatterns": ["**/*"],
-  "plugins": [
-    "expo-apple-authentication",
-    [
-      "expo-image-picker",
-      {
-        "photosPermission": "The app accesses your photos to let you share them with your friends."
-      }
-    ],
-    [
-      "expo-calendar",
-      {
-        "calendarPermission": "The app needs to access your calendar."
-      }
-    ],
-    [
-      "expo-notifications",
-      {
-        "defaultChannel": "default"
-      }
-    ]
-  ],
-  "ios": {
-    "supportsTablet": true,
-    "bundleIdentifier": "com.stunnacat.trainwithus",
-    "buildNumber": "1",
-    "usesAppleSignIn": true,
-    "infoPlist": {
-      "LSApplicationQueriesSchemes": ["tel", "telprompt"],
-      "NSContactsUsageDescription": "This app uses your contacts to send email."
-    }
-  },
-  "android": {
-    "package": "com.stunnacat.trainwithus",
-    "adaptiveIcon": {
-      "backgroundColor": "#071C38",
-      "foregroundImage": "./assets/images/adaptive-icon.png"
-    },
-    "intentFilters": [
-      {
-        "action": "VIEW",
-        "autoVerify": true,
-        "data": [
-          {
-            "scheme": "https",
-            "host": "*.myapp.io",
-            "pathPrefix": "/notifications"
-          }
-        ],
-        "category": ["BROWSABLE", "DEFAULT"]
-      }
-    ]
-  },
-  "web": {
-    "favicon": "./assets/images/favicon.png"
-  },
-  "extra": {
-    "eas": {
-      "projectId": "a551e684-d06e-4bb1-bd40-d83456f2c2fe"
-    }
-  },
   "expo": {
+    "name": "train-with-us",
+    "slug": "train-with-us",
+    "version": "0.0.16",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#071C38"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "plugins": [
+      "expo-apple-authentication",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "The app needs to access your calendar."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "defaultChannel": "default"
+        }
+      ]
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.stunnacat.trainwithus",
+      "buildNumber": "1",
+      "usesAppleSignIn": true,
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": ["tel", "telprompt"],
+        "NSContactsUsageDescription": "This app uses your contacts to send email."
+      }
+    },
     "android": {
       "permissions": ["READ_CALENDAR", "WRITE_CALENDAR"],
-      "package": "com.stunnacat.trainwithus"
+
+      "package": "com.stunnacat.trainwithus",
+      "adaptiveIcon": {
+        "backgroundColor": "#071C38",
+        "foregroundImage": "./assets/images/adaptive-icon.png"
+      },
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "*.myapp.io",
+              "pathPrefix": "/notifications"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png"
     },
     "extra": {
       "eas": {
         "projectId": "a551e684-d06e-4bb1-bd40-d83456f2c2fe"
       }
-    },
-    "ios": {
-      "bundleIdentifier": "com.stunnacat.trainwithus",
-      "associatedDomains": ["applinks:trainwithus.app"]
     }
   }
 }
