@@ -7,24 +7,28 @@ import { Profile } from "../../../@types/supabaseTypes"
 import { useFocusEffect } from "@react-navigation/native"
 
 type ImageGridProps = {
-  currentUser: Profile | null
+  currentUser: Profile
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ImageGrid = ({ currentUser, setLoading }: ImageGridProps) => {
-  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
+  const [imageFiles, setImageFiles] = useState<string[]>([])
 
   useEffect(() => {
-    if (currentUser?.photos_url) {
+    if (currentUser.photos_url && Array.isArray(currentUser.photos_url)) {
       setImageFiles(currentUser.photos_url)
+    } else {
+      setImageFiles([]) // Or handle this case as needed
     }
   }, [currentUser])
 
   useFocusEffect(
     useCallback(() => {
       const getSetPhotos = async () => {
-        if (currentUser?.photos_url) {
+        if (currentUser?.photos_url && Array.isArray(currentUser.photos_url)) {
           setImageFiles(currentUser.photos_url)
+        } else {
+          setImageFiles([]) // Or handle this case as needed
         }
       }
 
@@ -44,7 +48,7 @@ const ImageGrid = ({ currentUser, setLoading }: ImageGridProps) => {
             size={110}
             imageUrl={imageFiles?.[index]}
             listIndex={index}
-            imageUrls={currentUser?.photos_url}
+            imageUrls={currentUser.photos_url}
             setImageUrls={setImageFiles}
           />
         </View>

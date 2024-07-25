@@ -39,24 +39,22 @@ const Checkout = ({ ticketPrice, event }: CheckoutProps) => {
   }
 
   const handleCheckout = async () => {
-    if (!event || !user || !currentUser?.first_name || !currentUser?.last_name)
-      return
-
-    if (ticketPrice === 0) {
-      await addEventUser(
-        event?.id,
-        eventHostState?.expo_push_token,
-        user?.id,
-        currentUser?.first_name,
-        currentUser?.last_name
-      )
-      navigation.navigate("PurchaseScreen")
-    } else {
-      navigation.navigate("EventCheckout", {
-        event: event,
-        ticketPrice: ticketPrice,
+    if (!event || !user) {
+      showAlertFunc({
+        title: "Error",
+        message: "Please check your connection and try again.",
       })
+      return
     }
+
+    await addEventUser(
+      event?.id,
+      eventHostState?.expo_push_token,
+      user?.id,
+      currentUser?.first_name || "",
+      currentUser?.last_name || ""
+    )
+    navigation.navigate("PurchaseScreen")
   }
 
   useEffect(() => {

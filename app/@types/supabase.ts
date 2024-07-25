@@ -628,7 +628,7 @@ export type Database = {
           music_pref: string | null
           new_update_modal: boolean
           onboard: boolean
-          photos_url: string[] | null
+          photos_url: string[]
           pinned_channels: string[] | null
           primary_gym: number | null
           profile_pic: string | null
@@ -663,7 +663,7 @@ export type Database = {
           music_pref?: string | null
           new_update_modal?: boolean
           onboard?: boolean
-          photos_url?: string[] | null
+          photos_url: string[]
           pinned_channels?: string[] | null
           primary_gym?: number | null
           profile_pic?: string | null
@@ -697,7 +697,7 @@ export type Database = {
           music_pref?: string | null
           new_update_modal?: boolean
           onboard?: boolean
-          photos_url?: string[] | null
+          photos_url?: string[]
           pinned_channels?: string[] | null
           primary_gym?: number | null
           profile_pic?: string | null
@@ -795,7 +795,7 @@ export type Database = {
           music_pref: string | null
           new_update_modal: boolean
           onboard: boolean
-          photos_url: string[] | null
+          photos_url: string[]
           pinned_channels: string[] | null
           primary_gym: number | null
           profile_pic: string | null

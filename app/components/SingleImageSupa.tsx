@@ -19,10 +19,8 @@ import { MotiView } from "moti"
 type SingleImageProp = {
   imageUrl: string | null | undefined
   listIndex: number
-  imageUrls: string[] | null | undefined
-  setImageUrls: React.Dispatch<
-    React.SetStateAction<string[] | null | undefined>
-  >
+  imageUrls: string[]
+  setImageUrls: React.Dispatch<React.SetStateAction<string[]>>
   size?: number
 }
 
@@ -121,7 +119,7 @@ const SingleImageSupa = ({
 
     setImage("")
 
-    const newFiles = [...imageUrls]
+    const newFiles = imageUrls.filter((_, index) => index !== listIndex)
     newFiles.splice(listIndex, 1)
     setImageUrls(newFiles)
 

@@ -13,7 +13,7 @@ import { NavigationType } from "../../@types/navigation"
 import { FontAwesome6 } from "@expo/vector-icons"
 
 const EditProfile = () => {
-  const { user } = useAuth()
+  const { user, userProfile } = useAuth()
   const [settingsPressed, setSettingsPressed] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
@@ -52,7 +52,7 @@ const EditProfile = () => {
         <View />
       </View>
 
-      {!loading ? (
+      {!loading && currentUser ? (
         <ScrollView className="flex-1">
           <View>
             <ProfilePicture currentUser={currentUser} setLoading={setLoading} />

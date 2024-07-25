@@ -18,7 +18,9 @@ const insertProfilePhoto = async (
 
     if (currentArrayError) throw currentArrayError
 
-    const currentArray = data.photos_url
+    const currentArray = data.photos_url || []
+
+    console.log("currentArray", currentArray)
 
     const { data: photoPath } = supabase.storage
       .from("photos")
@@ -26,10 +28,18 @@ const insertProfilePhoto = async (
 
     console.log("photoPath", photoPath)
 
-    const newArray = [...(currentArray || []), photoUrl]
+    if (!photoUrl) {
+      throw new Error("Invalid photoUrl")
+    }
 
-    console.log("id in insert", userId)
+    const filteredArray = currentArray.filter(
+      (url) => url !== null && url !== undefined
+    )
 
+    // Add the new photo URL to the filtered array
+    const newArray = [...filteredArray, photoUrl]
+
+    console.log("newArray", newArray)
     const { error } = await supabase
       .from("profiles")
       .upsert({ id: userId, ["photos_url"]: newArray })
