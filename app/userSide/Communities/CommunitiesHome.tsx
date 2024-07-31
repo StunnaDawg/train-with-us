@@ -64,6 +64,18 @@ const CommunitiesHome = () => {
     fetchCommunities(page)
   }, [])
 
+  useEffect(() => {
+    if (searchText) {
+      searchCommunitiesFunction(
+        searchText,
+        setCommunities,
+        setLoading,
+        page,
+        limit
+      )
+    }
+  }, [searchText])
+
   const renderItem = ({ item }: { item: Communities }) => (
     <View className="m-2">
       <CommunityCard community={item} userId={user?.id} />
@@ -82,12 +94,12 @@ const CommunitiesHome = () => {
     <>
       <SafeAreaView className="flex-1 bg-primary-900">
         <NavBar
-          title="Communities"
+          title="Find Communities"
           bgColour="bg-primary-900"
           textColour="text-white"
           showFriends={false}
           showSettings={false}
-          showSearchCommunities={true}
+          showSearchCommunities={false}
           searchUsers={false}
         />
         <View>
