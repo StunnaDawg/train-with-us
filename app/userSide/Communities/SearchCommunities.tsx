@@ -9,50 +9,49 @@ import BackButton from "../../components/BackButton"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 
 const SearchCommunities = () => {
-  const { user } = useAuth()
-  const [searchText, setSearchText] = useState<string>("")
-  const [communities, setCommunities] = useState<Communities[] | null>([])
-  const [loading, setLoadingState] = useState<boolean>(false)
-
-  const handleSearch = (text: string) => {
-    setSearchText(text)
-    searchCommuntiesFunction(text, setCommunities, setLoadingState)
-  }
-  return (
-    <SafeAreaView className="flex-1 bg-primary-900">
-      <View className="flex flex-row items-center ">
-        <View className="mx-1">
-          <BackButton colour="white" size={28} />
-        </View>
-        <View className="flex-grow">
-          <SearchBar
-            value={searchText}
-            onChange={(text) => handleSearch(text)}
-            placeholder="Search for events"
-          />
-        </View>
-      </View>
-      <ScrollView>
-        {!loading ? (
-          communities && communities.length > 0 ? (
-            communities.map((community) => (
-              <View key={community.id} className="m-2">
-                <CommunityCard community={community} userId={user!.id} />
-              </View>
-            ))
-          ) : (
-            <>
-              <View className="flex-row justify-center m-2">
-                <Text className="text-white text-xl font-bold">
-                  Search for Communtiies
-                </Text>
-              </View>
-            </>
-          )
-        ) : null}
-      </ScrollView>
-    </SafeAreaView>
-  )
+  //   const { user } = useAuth()
+  //   const [searchText, setSearchText] = useState<string>("")
+  //   const [communities, setCommunities] = useState<Communities[] | null>([])
+  //   const [loading, setLoadingState] = useState<boolean>(false)
+  //   const handleSearch = (text: string) => {
+  //     setSearchText(text)
+  //     searchCommuntiesFunction(text, setCommunities, setLoadingState)
+  //   }
+  //   return (
+  //     <SafeAreaView className="flex-1 bg-primary-900">
+  //       <View className="flex flex-row items-center ">
+  //         <View className="mx-1">
+  //           <BackButton colour="white" size={28} />
+  //         </View>
+  //         <View className="flex-grow">
+  //           <SearchBar
+  //             value={searchText}
+  //             onChange={(text) => handleSearch(text)}
+  //             placeholder="Search for events"
+  //           />
+  //         </View>
+  //       </View>
+  //       <ScrollView>
+  //         {!loading ? (
+  //           communities && communities.length > 0 ? (
+  //             communities.map((community) => (
+  //               <View key={community.id} className="m-2">
+  //                 <CommunityCard community={community} userId={user!.id} />
+  //               </View>
+  //             ))
+  //           ) : (
+  //             <>
+  //               <View className="flex-row justify-center m-2">
+  //                 <Text className="text-white text-xl font-bold">
+  //                   Search for Communtiies
+  //                 </Text>
+  //               </View>
+  //             </>
+  //           )
+  //         ) : null}
+  //       </ScrollView>
+  //     </SafeAreaView>
+  //   )
 }
 
 export default SearchCommunities

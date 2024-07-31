@@ -1,22 +1,31 @@
-import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
+import { Dispatch, SetStateAction } from "react"
 import { Communities } from "../../@types/supabaseTypes"
 
-const searchCommuntiesFunction = async (
-  search: string,
+const searchCommunitiesFunction = async (
+  searchText: string,
   setCommunities: Dispatch<SetStateAction<Communities[] | null>>,
-  setLoading: Dispatch<SetStateAction<boolean>>
+  setLoading: Dispatch<SetStateAction<boolean>>,
+  page: number,
+  limit: number
 ) => {
   try {
     setLoading(true)
-    const { data, error } = await supabase
+    const offset = (page - 1) * limit
+
+    const { data: communities, error } = await supabase
       .from("communities")
       .select()
-      .ilike("community_title", `%${search}%`)
+      .ilike("community_title", `%${searchText}%`) // Assuming you are searching by community name
+      .range(offset, offset + limit - 1)
 
     if (error) throw error
 
-    setCommunities(data)
+    const communitiesArray = communities ?? null
+
+    console.log("communities:", communitiesArray)
+
+    setCommunities(communitiesArray)
   } catch (error) {
     console.log(error)
   } finally {
@@ -24,4 +33,4 @@ const searchCommuntiesFunction = async (
   }
 }
 
-export default searchCommuntiesFunction
+export default searchCommunitiesFunction

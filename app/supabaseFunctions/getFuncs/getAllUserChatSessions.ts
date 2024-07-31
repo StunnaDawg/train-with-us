@@ -5,7 +5,7 @@ import { ChatSession } from "../../@types/supabaseTypes"
 const getAllUserChatSessions = async (
   userId: string,
   setChatSessions: Dispatch<SetStateAction<ChatSession[] | null>>
-) => {
+): Promise<void> => {
   try {
     const { data: chatSessions, error } = await supabase
       .from("chat_sessions")
@@ -14,9 +14,7 @@ const getAllUserChatSessions = async (
       .order("updated_at", { ascending: false })
 
     if (error) throw error
-    if (!chatSessions || chatSessions.length === 0) {
-      throw new Error("No chat session found")
-    }
+
     const chatSession: ChatSession[] = chatSessions
 
     if (!chatSession) {
@@ -26,7 +24,7 @@ const getAllUserChatSessions = async (
     setChatSessions(chatSession)
   } catch (error) {
     console.error("Error fetching chat session:", error)
-    return null // Consider returning null or appropriate error handling
+    setChatSessions(null)
   }
 }
 

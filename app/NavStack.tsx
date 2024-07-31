@@ -97,8 +97,6 @@ const UserFooter = () => {
 
           if (route.name === "Events") {
             iconName = "calendar-day"
-          } else if (route.name === "Communities") {
-            iconName = "user-group"
           } else if (route.name === "Profile") {
             iconName = "user-large"
           } else if (route.name === "Connections") {
@@ -116,7 +114,7 @@ const UserFooter = () => {
       })}
     >
       <Tab.Screen name="Events" component={Events} />
-      <Tab.Screen name="Communities" component={CommunitiesHome} />
+
       <Tab.Screen name="Connections" component={Connections} />
 
       <Tab.Screen name="Community" component={CommunitiesDash} />
@@ -408,6 +406,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="ViewRequestProfile"
                 component={ViewRequestProfile}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="Communities"
+                component={CommunitiesHome}
               />
 
               <Stack.Screen

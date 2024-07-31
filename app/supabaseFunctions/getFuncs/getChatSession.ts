@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { ChatSession } from "../../@types/supabaseTypes"
 
@@ -13,9 +12,6 @@ const getChatSession = async (userId: string, user2Id: string) => {
       )
 
     if (error) throw error
-    if (!chatSessions || chatSessions.length === 0) {
-      throw new Error("No chat session found")
-    }
 
     const chatSession: ChatSession = chatSessions[0] // Assuming you want the first matching session
     console.log("chatSession", chatSession)

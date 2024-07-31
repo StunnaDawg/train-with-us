@@ -64,7 +64,7 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
             onPressIn={handleOnPressIn}
             onPressOut={handleOnPressOut}
             onPress={() => {
-              navigation.navigate("SearchCommunities")
+              navigation.navigate("Communities")
               setActiveCommunity(null)
             }}
             className={`m-2 ${

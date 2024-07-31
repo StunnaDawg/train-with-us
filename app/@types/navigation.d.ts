@@ -201,7 +201,7 @@ export type RootStackParamList = {
     communityId: number
     communityTitle: string
   }
-
+  Communities: undefined
   ViewFullUserProfileFromMessages: { userId: string }
 }
 
@@ -213,7 +213,7 @@ export type TabParamList = {
   Profile: undefined
   Connections: undefined
   Messages: undefined
-  Communities: undefined
+
   Requests: undefined
   CommunitiesEvents: undefined
   Events: undefined
