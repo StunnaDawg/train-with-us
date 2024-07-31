@@ -1,6 +1,6 @@
 import { View, Text, Pressable, Alert } from "react-native"
 import React, { useEffect, useState } from "react"
-import { Communities, Profile } from "../../../@types/supabaseTypes"
+import { Communities } from "../../../@types/supabaseTypes"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import { Image } from "expo-image"
@@ -48,23 +48,23 @@ const ViewCommunityTitle = ({
       <View className="flex flex-row justify-between items-center">
         <View className="flex flex-row items-center">
           <View className="ml-1">
-            <BackButton colour="white" />
+            <BackButton colour="white" size={28} />
           </View>
-          <View className="m-4">
+          {/* <View className="m-4">
             <Pressable onPress={() => navigation.goBack()}>
               <Image
                 className="m-1 relative overflow-hidden max-w-full rounded-full bg-gray-800 border-1 border-solid border-gray-200 border-r-10"
                 source={
                   image
-                    ? image
+                    ? { uri: image }
                     : require("../../../../assets/images/TWU-Logo.png")
                 }
                 style={{ width: 55, height: 55 }}
               />
             </Pressable>
-          </View>
-          <View className="items-center">
-            <Text className="text-white text-xl font-bold">
+          </View> */}
+          <View className="flex-1 items-center">
+            <Text className="text-white text-xl font-bold  text-center flex-wrap">
               {community?.community_title
                 ? community.community_title
                 : "Community"}
@@ -77,7 +77,7 @@ const ViewCommunityTitle = ({
                 })
               }
             >
-              <Text className="mr-1 font-bold text-xs text-slate-500">
+              <Text className="font-bold text-xs text-slate-500">
                 {community?.member_count} Members
               </Text>
             </Pressable>

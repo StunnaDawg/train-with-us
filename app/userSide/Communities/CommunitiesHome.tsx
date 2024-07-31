@@ -39,6 +39,7 @@ const CommunitiesHome = () => {
       limit,
       setLoading,
       setCommunities,
+      communities,
       isRefreshing,
       query
     )
@@ -61,7 +62,7 @@ const CommunitiesHome = () => {
   }
 
   useEffect(() => {
-    fetchCommunities(page)
+    if (!searchText) fetchCommunities(1)
   }, [])
 
   useEffect(() => {
@@ -94,6 +95,7 @@ const CommunitiesHome = () => {
     <>
       <SafeAreaView className="flex-1 bg-primary-900">
         <NavBar
+          navBar={true}
           title="Find Communities"
           bgColour="bg-primary-900"
           textColour="text-white"
@@ -102,6 +104,7 @@ const CommunitiesHome = () => {
           showSearchCommunities={false}
           searchUsers={false}
         />
+
         <View>
           <View className="flex-grow">
             <SearchBar

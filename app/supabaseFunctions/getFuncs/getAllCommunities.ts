@@ -7,6 +7,7 @@ const getAllCommunities = async (
   limit: number,
   setLoading: Dispatch<SetStateAction<boolean>>,
   setCommunities: Dispatch<SetStateAction<Communities[] | null>>,
+  currentCommunities: Communities[] | null,
   isRefreshing = false,
   searchText: string = ""
 ) => {
@@ -20,7 +21,7 @@ const getAllCommunities = async (
       .range(offset, offset + limit - 1)
 
     if (searchText) {
-      query.ilike("community_title", `%${searchText}%`) // Assuming you are searching by community name
+      query.ilike("community_title", `%${searchText}%`)
     }
 
     const { data: communities, error } = await query
@@ -34,9 +35,9 @@ const getAllCommunities = async (
     if (isRefreshing) {
       setCommunities(communitiesArray)
     } else {
-      setCommunities((prevCommunities) =>
-        prevCommunities
-          ? [...prevCommunities, ...communitiesArray]
+      setCommunities(
+        currentCommunities
+          ? [...currentCommunities, ...communitiesArray]
           : communitiesArray
       )
     }

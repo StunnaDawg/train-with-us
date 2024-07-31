@@ -8,6 +8,7 @@ import { Profile } from "../app/@types/supabaseTypes"
 import { useLoading } from "../app/context/LoadingContext"
 
 type NavBarProps = {
+  navBar?: boolean
   title: string
   userProp?: Profile
   bgColour?: string
@@ -20,6 +21,7 @@ type NavBarProps = {
 }
 
 const NavBar = ({
+  navBar = false,
   title,
   userProp,
   bgColour,
