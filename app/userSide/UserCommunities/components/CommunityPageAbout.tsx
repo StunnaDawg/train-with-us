@@ -11,9 +11,7 @@ const CommunityPageAbout = ({ community }: CommunityPageAboutProps) => {
     <View className="flex-1 bg-primary-900">
       <View className="m-5">
         <Text className="font-bold text-2xl text-white">Details</Text>
-        <Text className="text-white">
-          {community.about}We are a strong community filled with sense of DREAD
-        </Text>
+        <Text className="text-white">{community.about}</Text>
       </View>
 
       <View className="mx-5 my-1">

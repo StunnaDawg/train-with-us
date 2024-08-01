@@ -124,6 +124,7 @@ const ChannelMessageScreen = () => {
     if (!channel.private) {
       await sendChannelMessage(
         messageToSend,
+        currentUser?.expo_push_token,
         user?.id,
         channel.id,
         currentUser?.first_name,

@@ -13,7 +13,7 @@ import { NavigationType } from "../../@types/navigation"
 import { FontAwesome6 } from "@expo/vector-icons"
 
 const EditProfile = () => {
-  const { user, userProfile } = useAuth()
+  const { user } = useAuth()
   const [settingsPressed, setSettingsPressed] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
@@ -57,7 +57,7 @@ const EditProfile = () => {
           <View>
             <ProfilePicture currentUser={currentUser} setLoading={setLoading} />
           </View>
-          <View className="m-5">
+          <View>
             <Text className="text-lg font-bold text-center mt-4">
               My Pictures
             </Text>

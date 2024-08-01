@@ -1,10 +1,10 @@
-import { id } from "date-fns/locale"
 import supabase from "../../../lib/supabase"
 import sendChannelNotification from "../../utilFunctions/sendChannelNotifcation"
 import { CommunityChannel } from "../../@types/supabaseTypes"
 
 const sendChannelMessage = async (
   message: string,
+  sendersToken: string | null,
   userId: string,
   channelId: string,
   name: string,
@@ -45,7 +45,13 @@ const sendChannelMessage = async (
       throw error
     }
 
-    sendChannelNotification(communityId, notificationTtle, message, channel)
+    sendChannelNotification(
+      communityId,
+      sendersToken,
+      notificationTtle,
+      message,
+      channel
+    )
   } catch (error) {
     console.log(error)
   }

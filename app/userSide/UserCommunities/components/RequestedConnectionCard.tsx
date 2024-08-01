@@ -47,8 +47,14 @@ const RequestCard = ({
 
   const acceptRequest = async () => {
     try {
-      if (!user || !otherUserId || !recentMessage) return
-      await sendNewMessage(recentMessage, user?.id, otherUserId)
+      if (!user || !otherUserId || !recentMessage || !profile?.first_name)
+        return
+      await sendNewMessage(
+        recentMessage,
+        profile?.first_name,
+        user?.id,
+        otherUserId
+      )
       setModalVisible(!modalVisible)
       declineRequest(false)
     } catch (error) {

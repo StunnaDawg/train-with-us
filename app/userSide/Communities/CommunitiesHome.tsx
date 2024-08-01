@@ -40,8 +40,7 @@ const CommunitiesHome = () => {
       setLoading,
       setCommunities,
       communities,
-      isRefreshing,
-      query
+      isRefreshing
     )
     setLoadingMore(false)
   }

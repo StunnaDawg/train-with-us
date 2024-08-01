@@ -28,6 +28,7 @@ const sendNotification = async (
 
 const sendChannelNotification = async (
   communityId: number,
+  sendersToken: string | null,
   titleWords: string,
   bodyWords: string,
   channel: CommunityChannel
@@ -40,7 +41,11 @@ const sendChannelNotification = async (
   if (error) throw error
 
   const tokens = data
-    .filter((member) => member.expo_push_token !== null)
+    .filter(
+      (member) =>
+        member.expo_push_token !== null &&
+        member.expo_push_token !== sendersToken
+    )
     .map((member) => member.expo_push_token)
 
   console.log("Sending notification to", tokens)

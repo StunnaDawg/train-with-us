@@ -30,6 +30,7 @@ const sendNotification = async (
 
 const sendNewMessage = async (
   message: string,
+  myName: string,
   userId: string,
   user2Id: string
 ) => {
@@ -94,7 +95,7 @@ const sendNewMessage = async (
     }
     await sendNotification(
       userExpotoken,
-      "Connection Accepted",
+      `Connection Accepted from ${myName}`,
       message,
       chatSession
     )

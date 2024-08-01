@@ -336,12 +336,6 @@ const NavStack = () => {
 
               <Stack.Screen
                 options={{ headerShown: false }}
-                name="SearchCommunities"
-                component={SearchCommunities}
-              />
-
-              <Stack.Screen
-                options={{ headerShown: false }}
                 name="AllEventsPage"
                 component={ViewAllEvents}
               />

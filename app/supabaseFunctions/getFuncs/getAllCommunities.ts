@@ -8,21 +8,13 @@ const getAllCommunities = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   setCommunities: Dispatch<SetStateAction<Communities[] | null>>,
   currentCommunities: Communities[] | null,
-  isRefreshing = false,
-  searchText: string = ""
+  isRefreshing = false
 ) => {
   try {
     setLoading(true)
     const offset = (page - 1) * limit
 
-    const query = supabase
-      .from("communities")
-      .select()
-      .range(offset, offset + limit - 1)
-
-    if (searchText) {
-      query.ilike("community_title", `%${searchText}%`)
-    }
+    const query = supabase.from("communities").select()
 
     const { data: communities, error } = await query
 
@@ -32,15 +24,7 @@ const getAllCommunities = async (
 
     console.log("communities:", communitiesArray)
 
-    if (isRefreshing) {
-      setCommunities(communitiesArray)
-    } else {
-      setCommunities(
-        currentCommunities
-          ? [...currentCommunities, ...communitiesArray]
-          : communitiesArray
-      )
-    }
+    setCommunities(communitiesArray)
   } catch (error) {
     console.log(error)
   } finally {
