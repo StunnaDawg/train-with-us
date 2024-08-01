@@ -41,7 +41,7 @@ const sendNewMessage = async (
       {
         message: message,
         sent_at: new Date(),
-        sender: userId,
+        sender: user2Id,
         chat_session: chatSession?.id,
       },
     ])
