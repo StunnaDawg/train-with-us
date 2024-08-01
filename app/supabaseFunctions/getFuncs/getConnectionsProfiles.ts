@@ -28,6 +28,8 @@ const getConnectionProfiles = async (
     setLoading(true)
     const connections = await getConnectedIgnoredProfiles(userId)
 
+    console.log("Connections", connections)
+
     const { data: profiles, error: rpcError } = await supabase.rpc(
       "get_profiles_with_min_urls",
       {
@@ -45,8 +47,9 @@ const getConnectionProfiles = async (
     )
 
     if (connections) {
-      const { connected_users } = connections
-      const excludeIds = new Set([...(connected_users || [])])
+      const excludeIds = new Set(connections)
+      console.log("Exclude ids", excludeIds)
+
       filteredProfiles = filteredProfiles.filter(
         (profile: Profile) => !excludeIds.has(profile.id)
       )
@@ -67,7 +70,7 @@ const getConnectionProfiles = async (
       city: "Halifax",
       community_created: null,
       community_preference: null,
-      connected_users: null,
+
       created_at: null,
       expo_push_token: null,
       fitness_goals: null,

@@ -45,10 +45,14 @@ const RequestCard = ({
   const [profile, setProfile] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
 
+  // Accept the request
+
   const acceptRequest = async () => {
     try {
       if (!user || !otherUserId || !recentMessage || !profile?.first_name)
         return
+
+      // creates a new chat session with the other user
       await sendNewMessage(
         recentMessage,
         profile?.first_name,
@@ -61,6 +65,8 @@ const RequestCard = ({
       console.error("Error accepting request", error)
     }
   }
+
+  // Decline the request
 
   const declineRequest = async (showAlertBoolean: boolean) => {
     if (!user || !otherUserId) {
@@ -78,10 +84,10 @@ const RequestCard = ({
 
       if (error) {
         showAlert({
-          title: "Error leaving channel",
-          message: "There was an error leaving the channel. Please try again.",
+          title: "Error deleting request",
+          message: "There was an error deleting the request. Please try again.",
         })
-        console.error("Error leaving channel:", error)
+        console.error("Error deelting request:", error)
         return
       }
 
@@ -119,10 +125,10 @@ const RequestCard = ({
 
       if (error) {
         showAlert({
-          title: "Error leaving channel",
-          message: "There was an error leaving the channel. Please try again.",
+          title: "Error deleting request",
+          message: "There was an error deleting the request. Please try again.",
         })
-        console.error("Error leaving channel:", error)
+        console.error("Error deelting request:", error)
         return
       }
 

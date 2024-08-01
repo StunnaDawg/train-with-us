@@ -612,7 +612,6 @@ export type Database = {
           city: string
           community_created: number | null
           community_preference: string[] | null
-          connected_users: string[] | null
           created_at: string | null
           expo_push_token: string | null
           first_name: string | null
@@ -628,7 +627,7 @@ export type Database = {
           music_pref: string | null
           new_update_modal: boolean
           onboard: boolean
-          photos_url: string[]
+          photos_url: string[] | null
           pinned_channels: string[] | null
           primary_gym: number | null
           profile_pic: string | null
@@ -647,7 +646,6 @@ export type Database = {
           city?: string
           community_created?: number | null
           community_preference?: string[] | null
-          connected_users?: string[] | null
           created_at?: string | null
           expo_push_token?: string | null
           first_name?: string | null
@@ -663,7 +661,7 @@ export type Database = {
           music_pref?: string | null
           new_update_modal?: boolean
           onboard?: boolean
-          photos_url: string[]
+          photos_url?: string[] | null
           pinned_channels?: string[] | null
           primary_gym?: number | null
           profile_pic?: string | null
@@ -681,7 +679,6 @@ export type Database = {
           city?: string
           community_created?: number | null
           community_preference?: string[] | null
-          connected_users?: string[] | null
           created_at?: string | null
           expo_push_token?: string | null
           first_name?: string | null
@@ -697,7 +694,7 @@ export type Database = {
           music_pref?: string | null
           new_update_modal?: boolean
           onboard?: boolean
-          photos_url?: string[]
+          photos_url?: string[] | null
           pinned_channels?: string[] | null
           primary_gym?: number | null
           profile_pic?: string | null
@@ -779,7 +776,6 @@ export type Database = {
           city: string
           community_created: number | null
           community_preference: string[] | null
-          connected_users: string[] | null
           created_at: string | null
           expo_push_token: string | null
           first_name: string | null
@@ -795,7 +791,7 @@ export type Database = {
           music_pref: string | null
           new_update_modal: boolean
           onboard: boolean
-          photos_url: string[]
+          photos_url: string[] | null
           pinned_channels: string[] | null
           primary_gym: number | null
           profile_pic: string | null

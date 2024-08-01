@@ -12,7 +12,6 @@ import {
   ActivityIndicator,
   SafeAreaView,
 } from "react-native"
-import SinglePic from "../../../components/SinglePic"
 import { RootStackParamList } from "../../../@types/navigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import {

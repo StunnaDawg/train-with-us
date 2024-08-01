@@ -51,51 +51,13 @@ const sendNewMessage = async (
       throw error
     }
 
-    const updateConnection = async (
-      userIdToUpdate: string,
-      otherUserId: string
-    ) => {
-      const { data, error: fetchError } = await supabase
-        .from("profiles")
-        .select("connected_users")
-        .eq("id", userIdToUpdate)
-        .single()
-
-      if (fetchError) {
-        console.error("Error fetching user profile:", fetchError)
-        return
-      }
-
-      // Prevent duplicate entries
-
-      const { error: updateError } = await supabase
-        .from("profiles")
-        .update({
-          connected_users: data.connected_users
-            ? [...data.connected_users, otherUserId]
-            : [otherUserId],
-        })
-        .eq("id", userIdToUpdate)
-
-      if (updateError) {
-        console.error("Failed to update connected users", updateError)
-        return
-      }
-    }
-
-    // Update connections for both users
-    await Promise.all([
-      updateConnection(userId, user2Id),
-      updateConnection(user2Id, userId),
-    ])
-
     if (!chatSession) {
       console.error("No chat session found")
       return
     }
     await sendNotification(
       userExpotoken,
-      `Connection Accepted from ${myName}`,
+      `Connection Accepted from ${myName}, Chat Now!`,
       message,
       chatSession
     )
