@@ -1,6 +1,7 @@
 import {
   NavigationType,
   RootStackParamList,
+  TabNavigationType,
   TabParamList,
 } from "./@types/navigation"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
@@ -86,13 +87,22 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
 
 const UserFooter = () => {
+  const navigation = useNavigation<TabNavigationType>()
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("state", (e: any) => {
+      console.log("Navigation state changed:", e.data.state)
+    })
+
+    return unsubscribe
+  }, [navigation])
   return (
     <Tab.Navigator
-      initialRouteName="Events"
+      initialRouteName="Connections"
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarIcon: ({ focused, color }) => {
+        tabBarIcon: ({ color }) => {
           let iconName
 
           if (route.name === "Events") {
@@ -114,7 +124,6 @@ const UserFooter = () => {
       })}
     >
       <Tab.Screen name="Events" component={Events} />
-
       <Tab.Screen name="Connections" component={Connections} />
 
       <Tab.Screen name="Community" component={CommunitiesDash} />
