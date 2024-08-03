@@ -1,5 +1,13 @@
-import { View, Text, SafeAreaView, ScrollView, FlatList } from "react-native"
-import React, { useEffect, useState } from "react"
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  FlatList,
+  Dimensions,
+  Animated,
+} from "react-native"
+import React, { useEffect, useRef, useState } from "react"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import { RootStackParamList } from "../../@types/navigation"
 import MessageButton from "./components/MessageButton"
@@ -21,6 +29,18 @@ const ViewFullUserProfile = () => {
   const profile = route.params.user
   const imageWidth = 363
   const itemMargin = 0
+
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
+    if (viewableItems.length > 0) {
+      setCurrentIndex(viewableItems[0].index)
+    }
+  }).current
+
+  const viewabilityConfig = {
+    itemVisiblePercentThreshold: 50,
+  }
 
   useEffect(() => {
     const getPrimaryGymName = async () => {
@@ -45,6 +65,7 @@ const ViewFullUserProfile = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="bg-white p-2 rounded-xl">
           <FlatList
+            showsHorizontalScrollIndicator={false}
             initialNumToRender={3}
             disableIntervalMomentum={true}
             snapToAlignment="center"
@@ -53,7 +74,7 @@ const ViewFullUserProfile = () => {
             decelerationRate="fast"
             snapToInterval={imageWidth + itemMargin}
             data={imageFiles}
-            keyExtractor={(item) => item}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <View style={{ width: imageWidth, alignItems: "center" }}>
                 <SinglePicCommunity
@@ -64,8 +85,24 @@ const ViewFullUserProfile = () => {
                 />
               </View>
             )}
+            onViewableItemsChanged={onViewableItemsChanged}
+            viewabilityConfig={viewabilityConfig}
           />
-          <View className="flex flex-row justify-between items-center">
+          <View className="flex flex-row justify-center mt-2">
+            {imageFiles?.map((_, index) => (
+              <View
+                key={index}
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 5,
+                  backgroundColor: index === currentIndex ? "blue" : "gray",
+                  margin: 5,
+                }}
+              />
+            ))}
+          </View>
+          <View className="flex flex-row justify-between items-center mt-4">
             <Text className="text-2xl font-bold">
               {profile?.first_name} {profile?.last_name}
             </Text>
