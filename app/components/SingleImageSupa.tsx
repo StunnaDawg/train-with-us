@@ -1,4 +1,4 @@
-import { View, Text, Button, Pressable, ActivityIndicator } from "react-native"
+import { View, Pressable, ActivityIndicator } from "react-native"
 import { Image } from "expo-image"
 import * as FileSystem from "expo-file-system"
 import React, { useEffect, useState } from "react"
@@ -7,19 +7,15 @@ import { FontAwesome6 } from "@expo/vector-icons"
 import supabase from "../../lib/supabase"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import { decode } from "base64-arraybuffer"
-import { Profile } from "../@types/supabaseTypes"
-import useCurrentUser from "../supabaseFunctions/getFuncs/useCurrentUser"
 import removePhoto from "../supabaseFunctions/deleteFuncs/removePhoto"
 import insertProfilePhoto from "../supabaseFunctions/updateFuncs/insertProfilePhotos"
 import { Skeleton } from "moti/skeleton"
-import { set } from "mongoose"
-import { se } from "date-fns/locale"
 import { MotiView } from "moti"
 
 type SingleImageProp = {
   imageUrl: string | null | undefined
   listIndex: number
-  imageUrls: string[]
+  imageUrls: string[] | null
   setImageUrls: React.Dispatch<React.SetStateAction<string[]>>
   size?: number
 }
@@ -32,22 +28,23 @@ const SingleImageSupa = ({
   size = 150,
 }: SingleImageProp) => {
   const [loading, setLoading] = useState(false)
-  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
   const avatarSize = { height: size, width: size }
   const userId = user?.id
-  let profileType: Profile
   const [image, setImage] = useState<string>("")
+  const [isPressed, setIsPressed] = useState<boolean>(false)
+
+  const handlePressIn = () => {
+    setIsPressed(true)
+  }
+  const handlePressOut = () => {
+    setIsPressed(false)
+  }
 
   useEffect(() => {
     readImage()
     setLoading(false)
   }, [imageUrl])
-
-  useEffect(() => {
-    if (userId === undefined) return
-    useCurrentUser(userId, setCurrentUser)
-  }, [])
 
   const readImage = () => {
     setLoading(true)
@@ -147,7 +144,11 @@ const SingleImageSupa = ({
           />
           {loading ? <ActivityIndicator /> : null}
           <Pressable
-            className="absolute bottom-0 right-0 bg-white text-white p-2 rounded-full hover:bg-blue-800 m-2"
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            className={`absolute bottom-0 right-0 ${
+              isPressed ? "opacity-50" : "bg-white"
+            } text-white p-2 rounded-full m-2`}
             onPress={async () => {
               onRemoveImage(imageUrl, listIndex)
             }}
@@ -162,11 +163,15 @@ const SingleImageSupa = ({
         >
           {loading ? <ActivityIndicator /> : null}
           <Pressable
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
             onPress={async () => {
               await pickImage()
               //   await uploadImage(image, "image", image + id, submitNewUserPhotos)
             }}
-            className="absolute bottom-0 right-0 bg-white text-white p-2 rounded-full hover:bg-blue-800 m-2"
+            className={`absolute bottom-0 right-0 ${
+              isPressed ? "opacity-50" : "bg-white"
+            } text-white p-2 rounded-full m-2`}
           >
             <FontAwesome6 name="plus" size={20} color="black" />
           </Pressable>

@@ -43,6 +43,7 @@ const RequestCard = ({
   isRequester,
 }: RequestCardProps) => {
   const [profile, setProfile] = useState<Profile | null>({} as Profile)
+  const [disableButton, setDisableButton] = useState<boolean>(false)
   const { user } = useAuth()
 
   // Accept the request
@@ -51,8 +52,7 @@ const RequestCard = ({
     try {
       if (!user || !otherUserId || !recentMessage || !profile?.first_name)
         return
-
-      // creates a new chat session with the other user
+      setDisableButton(true)
       await sendNewMessage(
         recentMessage,
         profile?.first_name,
@@ -63,6 +63,8 @@ const RequestCard = ({
       declineRequest(false)
     } catch (error) {
       console.error("Error accepting request", error)
+    } finally {
+      setDisableButton(false)
     }
   }
 
@@ -77,6 +79,7 @@ const RequestCard = ({
     console.log("Requester:", otherUserId, "Requested:", user.id)
 
     try {
+      setDisableButton(true)
       const { error } = await supabase
         .from("connection_requests")
         .delete()
@@ -106,6 +109,8 @@ const RequestCard = ({
         "Error",
         "An unexpected error occurred. Please try again later."
       )
+    } finally {
+      setDisableButton(false)
     }
   }
 
@@ -214,6 +219,7 @@ const RequestCard = ({
             <View className="flex flex-row justify-center items-center">
               {!isRequester ? (
                 <Pressable
+                  disabled={disableButton}
                   className="mt-4 mx-1 bg-green-500 px-3 py-2 rounded-md"
                   onPress={() => acceptRequest()}
                 >

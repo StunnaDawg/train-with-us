@@ -11,7 +11,6 @@ import removeProfilePic from "../supabaseFunctions/deleteFuncs/removeProfilePic"
 import updateProfilePic from "../supabaseFunctions/imageFuncs/addProiflePic"
 import { MotiView } from "moti"
 import { Skeleton } from "moti/skeleton"
-import { se } from "date-fns/locale"
 
 type SingleImageProp = {
   imageUrl: string | null | undefined
@@ -27,11 +26,19 @@ const ProfilePicSupa = ({
   setImageUrl,
 }: SingleImageProp) => {
   const [loading, setLoading] = useState(false)
+  const [isPressed, setIsPressed] = useState<boolean>(false)
   const { user } = useAuth()
   const avatarSize = { height: size, width: size }
   const userId = user?.id
 
   const [image, setImage] = useState<string>("")
+
+  const handlePressIn = () => {
+    setIsPressed(true)
+  }
+  const handlePressOut = () => {
+    setIsPressed(false)
+  }
 
   useEffect(() => {
     readImage()
@@ -125,7 +132,11 @@ const ProfilePicSupa = ({
           />
           {loading ? <ActivityIndicator /> : null}
           <Pressable
-            className="absolute bottom-0 right-0 bg-white  text-white p-2 rounded-full hover:bg-blue-800 m-2"
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            className={`absolute bottom-0 right-0 ${
+              isPressed ? "opacity-50" : "bg-white"
+            } text-white p-2 rounded-full m-2`}
             onPress={async () => {
               onRemoveImage(imageUrl)
             }}
@@ -142,9 +153,12 @@ const ProfilePicSupa = ({
           <Pressable
             onPress={async () => {
               await pickImage()
-              //   await uploadImage(image, "image", image + id, submitNewUserPhotos)
             }}
-            className="absolute bottom-0 right-0 bg-white text-white p-2 rounded-full hover:bg-blue-800 m-2"
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            className={`absolute bottom-0 right-0 ${
+              isPressed ? "opacity-50" : "bg-white"
+            } text-white p-2 rounded-full m-2`}
           >
             <FontAwesome6 name="plus" size={20} color="black" />
           </Pressable>

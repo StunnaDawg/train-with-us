@@ -4,9 +4,8 @@ import UserProfilePic from "./components/UserProfilePic"
 import { Profile } from "../../@types/supabaseTypes"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { useAuth } from "../../supabaseFunctions/authcontext"
-import { useFocusEffect, useNavigation } from "@react-navigation/native"
+import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../@types/navigation"
-import returnCommunityName from "../../utilFunctions/returnCommunityName"
 import { FontAwesome6 } from "@expo/vector-icons"
 import MyEvents from "../Events/MyEvents"
 import { NavBar } from "../../../components"
@@ -16,10 +15,8 @@ const ProfileView = () => {
   const [pressedButton, setPressedButton] = useState<{
     [key: string]: boolean
   }>({})
-  const [loading, setLoading] = useState<boolean>(true)
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
-  const [primaryGymName, setPrimaryGymName] = useState<string>("")
   const navigation = useNavigation<NavigationType>()
 
   const handlePressedButtonIn = (buttonName: string) => {
@@ -29,47 +26,10 @@ const ProfileView = () => {
     setPressedButton((prev) => ({ ...prev, [buttonName]: false }))
   }
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true)
-    setTimeout(() => {
-      setRefreshing(false)
-    }, 2000)
-  }, [])
-
   useEffect(() => {
     if (!user) return
     useCurrentUser(user?.id, setCurrentUser)
-  }, [])
-
-  useEffect(() => {
-    const getPrimaryGymName = async () => {
-      if (currentUser?.primary_gym === null) {
-        setPrimaryGymName("No Primary Gym")
-        return
-      }
-      const PrimaryGymName = await returnCommunityName(currentUser?.primary_gym)
-      setPrimaryGymName(PrimaryGymName)
-    }
-
-    getPrimaryGymName()
-  }, [currentUser])
-
-  useFocusEffect(
-    useCallback(() => {
-      const getUser = async () => {
-        setLoading(true)
-        if (!user) return
-        useCurrentUser(user?.id, setCurrentUser)
-        setLoading(false)
-      }
-
-      getUser()
-
-      return () => {
-        // Optional cleanup actions
-      }
-    }, [user, setCurrentUser])
-  )
+  }, [user])
 
   return (
     <>
@@ -80,11 +40,7 @@ const ProfileView = () => {
         showSearchCommunities={false}
         searchUsers={false}
       />
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
+      <ScrollView>
         <UserProfilePic profile={currentUser} refresh={refreshing} />
 
         <View className={`${"bg-slate-200"} m-2 rounded-lg p-2`}>

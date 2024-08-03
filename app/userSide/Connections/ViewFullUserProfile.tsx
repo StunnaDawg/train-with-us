@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, ScrollView } from "react-native"
+import { View, Text, SafeAreaView, ScrollView, FlatList } from "react-native"
 import React, { useEffect, useState } from "react"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import { RootStackParamList } from "../../@types/navigation"
@@ -19,6 +19,8 @@ const ViewFullUserProfile = () => {
   const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const route = useRoute<RouteProp<RootStackParamList, "ViewFullUserProfile">>()
   const profile = route.params.user
+  const imageWidth = 363
+  const itemMargin = 0
 
   useEffect(() => {
     const getPrimaryGymName = async () => {
@@ -41,24 +43,37 @@ const ViewFullUserProfile = () => {
     <SafeAreaView className="flex-1 mx-2">
       <BackButton />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="flex flex-row justify-center mt-1 mb-2 ">
-          <View className="bg-white rounded-xl p-2">
-            <SinglePicCommunity
-              size={250}
-              avatarRadius={10}
-              noAvatarRadius={10}
-              item={imageFiles?.[0]}
-            />
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-2xl font-bold">
-                {profile?.first_name} {profile?.last_name}
-              </Text>
-              <View>
-                <Text className="text-2xl font-bold">
-                  {calculateAge(profile.birthday)}
-                </Text>
-                <Text>{profile.gender}</Text>
+        <View className="bg-white p-2 rounded-xl">
+          <FlatList
+            initialNumToRender={3}
+            disableIntervalMomentum={true}
+            snapToAlignment="center"
+            pagingEnabled={true}
+            horizontal={true}
+            decelerationRate="fast"
+            snapToInterval={imageWidth + itemMargin}
+            data={imageFiles}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
+              <View style={{ width: imageWidth, alignItems: "center" }}>
+                <SinglePicCommunity
+                  size={imageWidth}
+                  avatarRadius={10}
+                  noAvatarRadius={10}
+                  item={item}
+                />
               </View>
+            )}
+          />
+          <View className="flex flex-row justify-between items-center">
+            <Text className="text-2xl font-bold">
+              {profile?.first_name} {profile?.last_name}
+            </Text>
+            <View>
+              <Text className="text-2xl font-bold">
+                {calculateAge(profile.birthday)}
+              </Text>
+              <Text>{profile.gender}</Text>
             </View>
           </View>
         </View>
@@ -79,19 +94,6 @@ const ViewFullUserProfile = () => {
                   <ActivityTags key={activity} activity={activity} />
                 ))}
               </View>
-            </View>
-          </View>
-        ) : null}
-
-        {imageFiles?.[1] ? (
-          <View className="flex flex-row justify-center mt-1 mb-2">
-            <View className="bg-white rounded-xl p-2">
-              <SinglePicCommunity
-                size={250}
-                avatarRadius={10}
-                noAvatarRadius={10}
-                item={imageFiles?.[1]}
-              />
             </View>
           </View>
         ) : null}
@@ -122,18 +124,6 @@ const ViewFullUserProfile = () => {
           </View>
         ) : null}
 
-        {imageFiles?.[2] ? (
-          <View className="flex flex-row justify-center mt-1 mb-2">
-            <View className="bg-white rounded-xl p-2">
-              <SinglePicCommunity
-                size={250}
-                avatarRadius={10}
-                noAvatarRadius={10}
-                item={imageFiles?.[2]}
-              />
-            </View>
-          </View>
-        ) : null}
         {profile.bucket_list ? (
           <View className="flex flex-row mt-1 mb-2 justify-start items-center">
             <View className="bg-white rounded-xl p-2 w-full">
@@ -161,45 +151,6 @@ const ViewFullUserProfile = () => {
                 During my workout I love to listen to
               </Text>
               <Text className="font-semibold">{profile.music_pref}</Text>
-            </View>
-          </View>
-        ) : null}
-
-        {imageFiles?.[3] ? (
-          <View className="flex flex-row justify-center mt-1 mb-2">
-            <View className="bg-white rounded-xl p-2">
-              <SinglePicCommunity
-                size={250}
-                avatarRadius={10}
-                noAvatarRadius={10}
-                item={imageFiles?.[2]}
-              />
-            </View>
-          </View>
-        ) : null}
-
-        {imageFiles?.[4] ? (
-          <View className="flex flex-row justify-center mt-1 mb-2">
-            <View className="bg-white rounded-xl p-2">
-              <SinglePicCommunity
-                size={250}
-                avatarRadius={10}
-                noAvatarRadius={10}
-                item={imageFiles?.[2]}
-              />
-            </View>
-          </View>
-        ) : null}
-
-        {imageFiles?.[5] ? (
-          <View className="flex flex-row justify-center mt-1 mb-2">
-            <View className="bg-white rounded-xl p-2">
-              <SinglePicCommunity
-                size={250}
-                avatarRadius={10}
-                noAvatarRadius={10}
-                item={imageFiles?.[2]}
-              />
             </View>
           </View>
         ) : null}
