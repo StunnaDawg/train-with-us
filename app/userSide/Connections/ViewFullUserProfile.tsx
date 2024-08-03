@@ -60,8 +60,10 @@ const ViewFullUserProfile = () => {
   }, [profile])
 
   return (
-    <SafeAreaView className="flex-1 mx-2">
-      <BackButton />
+    <SafeAreaView className="flex-1 bg-primary-900">
+      <View className="p-2">
+        <BackButton colour="white" />
+      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="bg-white p-2 rounded-xl">
           <FlatList
@@ -93,10 +95,10 @@ const ViewFullUserProfile = () => {
               <View
                 key={index}
                 style={{
-                  width: 10,
+                  width: 50,
                   height: 10,
                   borderRadius: 5,
-                  backgroundColor: index === currentIndex ? "blue" : "gray",
+                  backgroundColor: index === currentIndex ? "black" : "gray",
                   margin: 5,
                 }}
               />
@@ -113,92 +115,85 @@ const ViewFullUserProfile = () => {
               <Text>{profile.gender}</Text>
             </View>
           </View>
-        </View>
-
-        <View className="flex flex-row justify-center mt-1 mb-2">
-          <View className="bg-white rounded-xl p-2">
-            <Text className="text-lg font-bold">About me</Text>
-            <Text className="font-semibold">{profile.about}</Text>
-          </View>
-        </View>
-
-        {profile?.activities && profile.activities.length > 0 ? (
           <View className="flex flex-row justify-center mt-1 mb-2">
             <View className="bg-white rounded-xl p-2">
-              <Text className="text-lg font-bold">My Interests</Text>
-              <View className="flex flex-row flex-wrap mt-3 ml-2 mr-7">
+              <Text className="font-semibold">About me</Text>
+              <Text>{profile.about}</Text>
+            </View>
+          </View>
+          {profile?.activities && profile.activities.length > 0 ? (
+            <ScrollView horizontal={true}>
+              <View className="flex flex-row flex-wrap  ">
                 {profile.activities.map((activity) => (
                   <ActivityTags key={activity} activity={activity} />
                 ))}
               </View>
+            </ScrollView>
+          ) : null}
+          {primaryGym ? (
+            <View className="bg-white border-2 rounded-xl mt-2 mb-2 p-3">
+              <View className="border-b">
+                <Text className="font-semibold">My Primary Gym</Text>
+              </View>
+              <View className="mx-1">
+                <PrimaryGymCard
+                  community={primaryGym}
+                  addPrimary={false}
+                  userId={user!.id}
+                />
+              </View>
             </View>
-          </View>
-        ) : null}
+          ) : null}
+          {profile.actvitiy_time ? (
+            <View className="flex flex-row justify-start mt-1 mb-2">
+              <View className="bg-white rounded-xl p-2 w-full">
+                <Text className="font-semibold">My preferred workout time</Text>
+                <Text>{profile.actvitiy_time}</Text>
+              </View>
+            </View>
+          ) : null}
 
-        {primaryGym ? (
-          <View className="bg-white rounded-xl mt-1 mb-2 p-3">
-            <View className="border-b">
-              <Text className="text-lg font-bold">My Primary Gym</Text>
+          {profile.bucket_list ? (
+            <View className="flex flex-row mt-1 mb-2 justify-start items-center">
+              <View className="bg-white rounded-xl p-2 w-full">
+                <Text className="font-semibold">My Fitness bucket list</Text>
+                <Text>{profile.bucket_list}</Text>
+              </View>
             </View>
-            <View className="mx-1">
-              <PrimaryGymCard
-                community={primaryGym}
-                addPrimary={false}
-                userId={user!.id}
-              />
-            </View>
-          </View>
-        ) : null}
+          ) : null}
 
-        {profile.actvitiy_time ? (
-          <View className="flex flex-row justify-start mt-1 mb-2">
-            <View className="bg-white rounded-xl p-2 w-full">
-              <Text className="text-lg font-bold">
-                My preferred workout time
-              </Text>
-              <Text className="font-semibold">{profile.actvitiy_time}</Text>
+          {profile.hobbies ? (
+            <View className="flex flex-row mt-1 mb-2 justify-start items-center">
+              <View className="bg-white rounded-xl p-2 w-full">
+                <Text className="font-semibold">
+                  Outside of the gym I enjoy
+                </Text>
+                <Text>{profile.hobbies}</Text>
+              </View>
             </View>
-          </View>
-        ) : null}
+          ) : null}
 
-        {profile.bucket_list ? (
-          <View className="flex flex-row mt-1 mb-2 justify-start items-center">
-            <View className="bg-white rounded-xl p-2 w-full">
-              <Text className="text-lg font-bold">My Fitness bucket list</Text>
-              <Text className="font-semibold">{profile.bucket_list}</Text>
+          {profile.music_pref ? (
+            <View className="flex flex-row mt-1 mb-2 justify-start items-center">
+              <View className="bg-white rounded-xl p-2 w-full">
+                <Text className="font-semibold">
+                  During my workout I love to listen to
+                </Text>
+                <Text>{profile.music_pref}</Text>
+              </View>
             </View>
-          </View>
-        ) : null}
-
-        {profile.hobbies ? (
-          <View className="flex flex-row mt-1 mb-2 justify-start items-center">
-            <View className="bg-white rounded-xl p-2 w-full">
-              <Text className="text-lg font-bold">
-                Outside of the gym I enjoy
-              </Text>
-              <Text className="font-semibold">{profile.hobbies}</Text>
-            </View>
-          </View>
-        ) : null}
-
-        {profile.music_pref ? (
-          <View className="flex flex-row mt-1 mb-2 justify-start items-center">
-            <View className="bg-white rounded-xl p-2 w-full">
-              <Text className="text-lg font-bold">
-                During my workout I love to listen to
-              </Text>
-              <Text className="font-semibold">{profile.music_pref}</Text>
-            </View>
-          </View>
-        ) : null}
+          ) : null}
+        </View>
       </ScrollView>
       <View>
-        <MessageButton
-          setLoading={setLoading}
-          loading={loading}
-          profileId={profile?.id}
-          coach={false}
-        />
+        {profile.id !== user?.id ? (
+          <MessageButton
+            setLoading={setLoading}
+            loading={loading}
+            profileId={profile?.id}
+            coach={false}
+          />
+        ) : null}
       </View>
     </SafeAreaView>
   )

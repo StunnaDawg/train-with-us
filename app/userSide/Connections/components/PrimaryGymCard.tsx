@@ -21,7 +21,15 @@ const PrimaryGymCard = ({
   const [loading, setLoading] = useState<boolean>(false)
   const [joined, setJoined] = useState<boolean>(false)
   const [userUUIDS, setUserUUIDS] = useState<string[] | null>([])
+  const [isPressed, setIsPressed] = useState<boolean>(false)
   const navigation = useNavigation<NavigationType>()
+
+  const handlePressIn = () => {
+    setIsPressed(true)
+  }
+  const handlePressOut = () => {
+    setIsPressed(false)
+  }
 
   useEffect(() => {
     if (userId) {
@@ -42,6 +50,8 @@ const PrimaryGymCard = ({
 
   return (
     <Pressable
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       onPress={() => {
         addPrimary
           ? null
@@ -49,6 +59,7 @@ const PrimaryGymCard = ({
               communityId: community.id,
             })
       }}
+      className={`${isPressed ? "opacity-50" : null} `}
     >
       <View className="flex flex-row items-center">
         <View className="m-2">
