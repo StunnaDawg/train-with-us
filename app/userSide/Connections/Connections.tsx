@@ -17,8 +17,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated"
-import { NavigationType } from "../../@types/navigation"
-import { useNavigation } from "@react-navigation/native"
+
 import { NavBar } from "../../../components"
 import CardSkeleton from "./components/CardSkeleton"
 
@@ -28,11 +27,11 @@ const Connections = () => {
   const [newConnection, setNewConnection] = useState<boolean>(false)
   const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
   const [scrollEnabledState, setScrollEnabled] = useState(true)
-  const [page, setPage] = useState(1) // Track the current page
+  const [page, setPage] = useState(0) // Track the current page
   const [loadingMore, setLoadingMore] = useState(false) // Track loading more data
-
+  // Track if more data can be fetched
   const screenHeight = Dimensions.get("window").height
-  const cardHeight = screenHeight - 100 // Adjust card height to leave space for navigation bar or any other element
+  const cardHeight = screenHeight - 50 // Adjust card height to leave space for navigation bar or any other element
   const scrollEnabled = useSharedValue(scrollEnabledState)
   const translationY = useSharedValue(0)
   const startY = useSharedValue(0)
@@ -60,8 +59,7 @@ const Connections = () => {
         event.contentOffset.y + screenHeight >=
         connectionProfiles.length * cardHeight - 200
       ) {
-        // Call fetchMoreProfiles from ref
-        runOnJS(fetchMoreProfiles)()
+        runOnJS(fetchMoreProfilesRef.current)()
       }
     },
     onEndDrag: (event) => {
@@ -123,46 +121,63 @@ const Connections = () => {
         showSearchCommunities={false}
         searchUsers={true}
       />
-      <Animated.ScrollView
-        showsVerticalScrollIndicator={false}
-        onScroll={scrollHandler}
-        scrollEnabled={scrollEnabledState}
-        scrollEventThrottle={16}
-        snapToInterval={cardHeight} // Optional, native snapping to help with alignment
-        decelerationRate="fast"
-        snapToAlignment="start"
-        contentContainerStyle={{
-          height: cardHeight * connectionProfiles.length, // Ensure the content container is tall enough
-        }}
-      >
-        <View className="flex flex-row justify-center">
-          <View>
-            {loading ? (
-              <CardSkeleton />
-            ) : (
-              connectionProfiles.map((profile, index) => (
-                <View
-                  key={profile.id}
-                  style={{
-                    height: cardHeight,
-                    justifyContent: "center",
-                  }}
-                >
-                  <ConnectionsCard
-                    key={profile.id}
-                    setLoading={setNewConnection}
-                    loading={newConnection}
-                    profile={profile}
-                    isLast={index === connectionProfiles.length - 1}
-                    setScroll={setScrollEnabled}
-                  />
-                </View>
-              ))
-            )}
-          </View>
+      {loadingMore && (
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(255, 255, 255, 0.8)", // Optional: Adds a semi-transparent background
+          }}
+        >
+          <ActivityIndicator size="large" color="#0000ff" />
         </View>
-      </Animated.ScrollView>
-      {loadingMore && <ActivityIndicator size="large" color="#0000ff" />}
+      )}
+      <View style={{ flex: 1 }}>
+        <Animated.ScrollView
+          showsVerticalScrollIndicator={false}
+          onScroll={scrollHandler}
+          scrollEnabled={scrollEnabledState}
+          scrollEventThrottle={16}
+          snapToInterval={cardHeight} // Optional, native snapping to help with alignment
+          decelerationRate="fast"
+          snapToAlignment="start"
+          contentContainerStyle={{
+            minHeight: cardHeight * connectionProfiles.length, // Ensure the content container is tall enough
+          }}
+        >
+          <View className="flex flex-row justify-center">
+            <View>
+              {loading ? (
+                <CardSkeleton />
+              ) : (
+                connectionProfiles.map((profile, index) => (
+                  <View
+                    key={profile.id}
+                    style={{
+                      height: cardHeight,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <ConnectionsCard
+                      key={profile.id}
+                      setLoading={setNewConnection}
+                      loading={newConnection}
+                      profile={profile}
+                      isLast={false}
+                      setScroll={setScrollEnabled}
+                    />
+                  </View>
+                ))
+              )}
+            </View>
+          </View>
+        </Animated.ScrollView>
+      </View>
     </SafeAreaView>
   )
 }

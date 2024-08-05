@@ -64,6 +64,14 @@ const ConnectionsCard = ({
       borderRadius: 10,
     },
   })
+
+  // useEffect(() => {
+  //   if (isLast && !loading && !profile) {
+  //     setScroll(false)
+  //     setAllowFetchMore(false)
+  //   }
+  // }, [isLast])
+
   return (
     <View className="flex-1 mx-5" style={{ height: cardHeight }}>
       {!isLast && profile ? (
@@ -175,7 +183,7 @@ const ConnectionsCard = ({
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
-            <Text className="font-bold text-lg">No New Users left!</Text>
+            <Text className="font-bold text-lg">That's it for today</Text>
             <Text className="font-semibold text-sm">Come back later</Text>
           </View>
         </>
