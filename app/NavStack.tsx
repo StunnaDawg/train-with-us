@@ -98,7 +98,6 @@ const UserFooter = () => {
   }, [navigation])
   return (
     <Tab.Navigator
-      initialRouteName="Connections"
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarShowLabel: false,
@@ -111,8 +110,6 @@ const UserFooter = () => {
             iconName = "user-large"
           } else if (route.name === "Connections") {
             iconName = "people-group"
-          } else if (route.name === "Messages") {
-            iconName = "message"
           } else if (route.name === "Community") {
             iconName = "house"
           }
@@ -125,7 +122,6 @@ const UserFooter = () => {
     >
       <Tab.Screen name="Events" component={Events} />
       <Tab.Screen name="Connections" component={Connections} />
-
       <Tab.Screen name="Community" component={CommunitiesDash} />
       <Tab.Screen name="Profile" component={ProfileView} />
     </Tab.Navigator>
@@ -230,7 +226,6 @@ const NavStack = () => {
           {userProfile?.onboard ? (
             <Stack.Group>
               <Stack.Screen name="Footer" component={UserFooter} />
-
               <Stack.Screen
                 options={{ headerShown: false }}
                 name="MyCommunityHome"

@@ -1,5 +1,13 @@
-import { Dimensions, Platform, SafeAreaView, View } from "react-native"
-import React, { useEffect, useState } from "react"
+import {
+  Dimensions,
+  Platform,
+  SafeAreaView,
+  View,
+  ActivityIndicator,
+} from "react-native"
+import { runOnJS } from "react-native-reanimated"
+
+import React, { useEffect, useState, useRef } from "react"
 import ConnectionsCard from "./components/ConnectionsCard"
 import { Profile } from "../../@types/supabaseTypes"
 import getConnectionProfiles from "../../supabaseFunctions/getFuncs/getConnectionsProfiles"
@@ -20,19 +28,41 @@ const Connections = () => {
   const [newConnection, setNewConnection] = useState<boolean>(false)
   const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
   const [scrollEnabledState, setScrollEnabled] = useState(true)
-  const navigation = useNavigation<NavigationType>()
+  const [page, setPage] = useState(1) // Track the current page
+  const [loadingMore, setLoadingMore] = useState(false) // Track loading more data
+
   const screenHeight = Dimensions.get("window").height
   const cardHeight = screenHeight - 100 // Adjust card height to leave space for navigation bar or any other element
   const scrollEnabled = useSharedValue(scrollEnabledState)
   const translationY = useSharedValue(0)
   const startY = useSharedValue(0)
 
+  const fetchMoreProfiles = async () => {
+    if (loadingMore || loading || !user) return // Prevent multiple fetches
+    setLoadingMore(true)
+    await getConnectionProfiles(setLoading, user.id, appendProfiles, page)
+    setPage((prevPage) => prevPage + 1)
+    setLoadingMore(false)
+  }
+
+  const appendProfiles = (newProfiles: Profile[]) => {
+    setConnectionProfiles((prevProfiles) => [...prevProfiles, ...newProfiles])
+  }
+
+  // Create a ref for fetchMoreProfiles
+  const fetchMoreProfilesRef = useRef(fetchMoreProfiles)
+  fetchMoreProfilesRef.current = fetchMoreProfiles
+
   const scrollHandler = useAnimatedScrollHandler({
-    onBeginDrag: (event) => {
-      startY.value = event.contentOffset.y
-    },
     onScroll: (event) => {
       translationY.value = event.contentOffset.y
+      if (
+        event.contentOffset.y + screenHeight >=
+        connectionProfiles.length * cardHeight - 200
+      ) {
+        // Call fetchMoreProfiles from ref
+        runOnJS(fetchMoreProfiles)()
+      }
     },
     onEndDrag: (event) => {
       const offsetY = event.contentOffset.y
@@ -56,7 +86,13 @@ const Connections = () => {
   const fetchConnectionProfiles = async () => {
     if (user) {
       setLoading(true)
-      await getConnectionProfiles(setLoading, user.id, setConnectionProfiles)
+      await getConnectionProfiles(
+        setLoading,
+        user.id,
+        setConnectionProfiles,
+        0 // Initial page
+      )
+      setPage(1) // Set initial page to 1
       setLoading(false)
     }
   }
@@ -126,6 +162,7 @@ const Connections = () => {
           </View>
         </View>
       </Animated.ScrollView>
+      {loadingMore && <ActivityIndicator size="large" color="#0000ff" />}
     </SafeAreaView>
   )
 }

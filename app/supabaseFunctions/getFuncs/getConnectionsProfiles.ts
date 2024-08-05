@@ -22,23 +22,31 @@ function shuffleArray(array: any[]) {
 const getConnectionProfiles = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   userId: string,
-  setProfiles: Dispatch<SetStateAction<Profile[]>>
+  appendProfiles: (newProfiles: Profile[]) => void,
+  offSet: number
 ) => {
   try {
+    const PAGE_COUNT = 10
+    const from = offSet * PAGE_COUNT
+    const to = from + PAGE_COUNT - 1
     setLoading(true)
     const connections = await getConnectedIgnoredProfiles(userId)
 
     console.log("Connections", connections)
+    const { data: profiles, error: rpcError } = await supabase
+      .from("profiles")
+      .select("*")
+      .neq("id", userId)
+      .range(from, to)
 
-    const { data: profiles, error: rpcError } = await supabase.rpc(
-      "get_profiles_with_min_urls",
-      {
-        user_id: userId,
-      }
-    )
+    // const { data: profiles, error: rpcError } = await supabase.rpc(
+    //   "get_profiles_with_min_urls",
+    //   {
+    //     user_id: userId,
+    //   }
+    // )
 
     if (rpcError) {
-      setProfiles([])
       throw rpcError
     }
 
@@ -91,8 +99,7 @@ const getConnectionProfiles = async (
       new_update_modal: false,
     }
     const shuffledProfiles = shuffleArray(filteredProfiles || [])
-    setProfiles(shuffledProfiles)
-    setProfiles((prev) => [...prev, fakeProfile])
+    appendProfiles([...shuffledProfiles])
   } catch (error) {
     console.error("Error in getting profiles:", error)
   } finally {
