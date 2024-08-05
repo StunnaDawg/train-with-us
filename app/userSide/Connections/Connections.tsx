@@ -168,7 +168,7 @@ const Connections = () => {
                       setLoading={setNewConnection}
                       loading={newConnection}
                       profile={profile}
-                      isLast={false}
+                      isLast={index === connectionProfiles.length - 1}
                       setScroll={setScrollEnabled}
                     />
                   </View>
