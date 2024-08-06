@@ -17,7 +17,8 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated"
-
+import { NavigationType } from "../../@types/navigation"
+import { useNavigation } from "@react-navigation/native"
 import { NavBar } from "../../../components"
 import CardSkeleton from "./components/CardSkeleton"
 
@@ -27,11 +28,11 @@ const Connections = () => {
   const [newConnection, setNewConnection] = useState<boolean>(false)
   const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
   const [scrollEnabledState, setScrollEnabled] = useState(true)
-  const [page, setPage] = useState(0) // Track the current page
+  const [page, setPage] = useState(1) // Track the current page
   const [loadingMore, setLoadingMore] = useState(false) // Track loading more data
-  // Track if more data can be fetched
+
   const screenHeight = Dimensions.get("window").height
-  const cardHeight = screenHeight - 50 // Adjust card height to leave space for navigation bar or any other element
+  const cardHeight = screenHeight - 40 // Adjust card height to leave space for navigation bar or any other element
   const scrollEnabled = useSharedValue(scrollEnabledState)
   const translationY = useSharedValue(0)
   const startY = useSharedValue(0)
@@ -59,7 +60,8 @@ const Connections = () => {
         event.contentOffset.y + screenHeight >=
         connectionProfiles.length * cardHeight - 200
       ) {
-        runOnJS(fetchMoreProfilesRef.current)()
+        // Call fetchMoreProfiles from ref
+        runOnJS(fetchMoreProfiles)()
       }
     },
     onEndDrag: (event) => {
@@ -147,7 +149,7 @@ const Connections = () => {
           decelerationRate="fast"
           snapToAlignment="start"
           contentContainerStyle={{
-            minHeight: cardHeight * connectionProfiles.length, // Ensure the content container is tall enough
+            height: cardHeight * connectionProfiles.length, // Ensure the content container is tall enough
           }}
         >
           <View className="flex flex-row justify-center">

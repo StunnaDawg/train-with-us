@@ -64,7 +64,7 @@ const getConnectionProfiles = async (
     }
 
     const shuffledProfiles = shuffleArray(filteredProfiles || [])
-    console.log("Shuffled profiles", shuffledProfiles)
+
     appendProfiles([...shuffledProfiles])
   } catch (error) {
     console.error("Error in getting profiles:", error)
