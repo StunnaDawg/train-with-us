@@ -125,7 +125,7 @@ const EventCard = ({
         >
           <View className="m-1">
             <Text className="" style={styles.price}>
-              {eventPrice ? eventPrice.toString() : "Free"}
+              {eventPrice ? `$${eventPrice.toString()}` : "Free"}
             </Text>
           </View>
           <View style={[{ flex: 1, justifyContent: "flex-end" }]}>

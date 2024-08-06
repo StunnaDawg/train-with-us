@@ -23,7 +23,7 @@ type ConnectionsCardProps = {
   loading: boolean
   setLoading: Dispatch<SetStateAction<boolean>>
   isLast: boolean
-  setScroll: Dispatch<SetStateAction<boolean>>
+  setEndOfData: Dispatch<SetStateAction<boolean>>
 }
 
 const ConnectionsCard = ({
@@ -31,7 +31,7 @@ const ConnectionsCard = ({
   loading,
   setLoading,
   isLast,
-  setScroll,
+  setEndOfData,
 }: ConnectionsCardProps) => {
   const [isPressed, setIsPressed] = useState<boolean>(false)
   const screenHeight = Dimensions.get("window").height
@@ -65,12 +65,11 @@ const ConnectionsCard = ({
     },
   })
 
-  // useEffect(() => {
-  //   if (isLast && !loading && !profile) {
-  //     setScroll(false)
-  //     setAllowFetchMore(false)
-  //   }
-  // }, [isLast])
+  useEffect(() => {
+    if (isLast && !profile && !loading) {
+      setEndOfData(true)
+    }
+  }, [isLast])
 
   return (
     <View className="flex-1 mx-5" style={{ height: cardHeight }}>

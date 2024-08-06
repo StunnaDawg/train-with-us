@@ -17,8 +17,6 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated"
-import { NavigationType } from "../../@types/navigation"
-import { useNavigation } from "@react-navigation/native"
 import { NavBar } from "../../../components"
 import CardSkeleton from "./components/CardSkeleton"
 
@@ -30,15 +28,15 @@ const Connections = () => {
   const [scrollEnabledState, setScrollEnabled] = useState(true)
   const [page, setPage] = useState(1) // Track the current page
   const [loadingMore, setLoadingMore] = useState(false) // Track loading more data
-
+  const [endOfData, setEndOfData] = useState(false) // Track if there is more data to fetch
   const screenHeight = Dimensions.get("window").height
-  const cardHeight = screenHeight - 40 // Adjust card height to leave space for navigation bar or any other element
+  const cardHeight = screenHeight - 20 // Adjust card height to leave space for navigation bar or any other element
   const scrollEnabled = useSharedValue(scrollEnabledState)
   const translationY = useSharedValue(0)
   const startY = useSharedValue(0)
 
   const fetchMoreProfiles = async () => {
-    if (loadingMore || loading || !user) return // Prevent multiple fetches
+    if (loadingMore || loading || !user || endOfData) return // Prevent multiple fetches
     setLoadingMore(true)
     await getConnectionProfiles(setLoading, user.id, appendProfiles, page)
     setPage((prevPage) => prevPage + 1)
@@ -49,22 +47,23 @@ const Connections = () => {
     setConnectionProfiles((prevProfiles) => [...prevProfiles, ...newProfiles])
   }
 
-  // Create a ref for fetchMoreProfiles
   const fetchMoreProfilesRef = useRef(fetchMoreProfiles)
   fetchMoreProfilesRef.current = fetchMoreProfiles
 
+  //handles the scroll event and the end drag event to snap the scrollview to the nearest card and fetch more profiles
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
+      if (endOfData) return
       translationY.value = event.contentOffset.y
       if (
         event.contentOffset.y + screenHeight >=
         connectionProfiles.length * cardHeight - 200
       ) {
-        // Call fetchMoreProfiles from ref
         runOnJS(fetchMoreProfiles)()
       }
     },
     onEndDrag: (event) => {
+      if (endOfData) return
       const offsetY = event.contentOffset.y
       const distance = offsetY - startY.value
       const targetIndex =
@@ -110,7 +109,13 @@ const Connections = () => {
   }, [newConnection])
 
   useEffect(() => {
-    scrollEnabled.value = true // Re-enable scrolling when the data changes (new fetch etc.)
+    if (endOfData === false) {
+      scrollEnabled.value = true
+      setScrollEnabled(true)
+    } else {
+      scrollEnabled.value = false
+      setScrollEnabled(false)
+    }
   }, [connectionProfiles])
 
   return (
@@ -133,7 +138,7 @@ const Connections = () => {
             right: 0,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "rgba(255, 255, 255, 0.8)", // Optional: Adds a semi-transparent background
+            backgroundColor: "rgba(255, 255, 255, 0.8)",
           }}
         >
           <ActivityIndicator size="large" color="#0000ff" />
@@ -171,7 +176,7 @@ const Connections = () => {
                       loading={newConnection}
                       profile={profile}
                       isLast={index === connectionProfiles.length - 1}
-                      setScroll={setScrollEnabled}
+                      setEndOfData={setEndOfData}
                     />
                   </View>
                 ))
