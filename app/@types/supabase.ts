@@ -188,6 +188,7 @@ export type Database = {
         Row: {
           channel_id: string | null
           id: string
+          image: string | null
           mesage: string | null
           sender_id: string | null
           sender_name: string | null
@@ -196,6 +197,7 @@ export type Database = {
         Insert: {
           channel_id?: string | null
           id?: string
+          image?: string | null
           mesage?: string | null
           sender_id?: string | null
           sender_name?: string | null
@@ -204,6 +206,7 @@ export type Database = {
         Update: {
           channel_id?: string | null
           id?: string
+          image?: string | null
           mesage?: string | null
           sender_id?: string | null
           sender_name?: string | null
@@ -507,6 +510,7 @@ export type Database = {
           community_or_event_link: boolean
           eventId: number | null
           id: string
+          image: string | null
           message: string | null
           read: boolean
           sender: string | null
@@ -518,6 +522,7 @@ export type Database = {
           community_or_event_link?: boolean
           eventId?: number | null
           id?: string
+          image?: string | null
           message?: string | null
           read?: boolean
           sender?: string | null
@@ -529,6 +534,7 @@ export type Database = {
           community_or_event_link?: boolean
           eventId?: number | null
           id?: string
+          image?: string | null
           message?: string | null
           read?: boolean
           sender?: string | null

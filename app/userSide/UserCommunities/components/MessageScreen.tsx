@@ -35,12 +35,14 @@ import CommunityMessageCard from "./CommunityMessageCard"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import { FontAwesome6 } from "@expo/vector-icons"
 import MessageInput from "../../../components/MessageInput"
+import { Image } from "expo-image"
 
 type UserMessage = {
   message: string | null
   isLink: boolean
   eventId: number | null
   communityId: number | null
+  imageUrl: string | null
 }
 
 const UserMessage = ({
@@ -48,6 +50,7 @@ const UserMessage = ({
   isLink,
   eventId,
   communityId,
+  imageUrl,
 }: UserMessage) => {
   const [event, setEvent] = useState<Events | null>(null)
   const [community, setCommunity] = useState<Communities | null>(null)
@@ -89,11 +92,23 @@ const UserMessage = ({
           </View>
           <CommunityMessageCard community={community} userId={user?.id} />
         </View>
-      ) : (
+      ) : imageUrl ? (
         <View>
-          <View className="rounded-xl bg-blue-500/80 p-2">
-            <Text className="font-bold text-xs">{message}</Text>
-          </View>
+          <SinglePicCommunity
+            size={150}
+            item={imageUrl}
+            avatarRadius={10}
+            noAvatarRadius={10}
+          />
+          {message !== "" ? (
+            <View className="rounded-xl bg-blue-500/80 p-2 mt-2">
+              <Text className="font-bold text-xs">{message}</Text>
+            </View>
+          ) : null}
+        </View>
+      ) : (
+        <View className="rounded-xl bg-blue-500/80 p-2 mt-2">
+          <Text className="font-bold text-xs">{message}</Text>
         </View>
       )}
     </View>
@@ -106,6 +121,7 @@ type MatchesMessageProps = {
   isLink: boolean
   eventId: number | null
   communityId: number | null
+  imageUrl: string | null
 }
 
 const MatchesMessage = ({
@@ -114,6 +130,7 @@ const MatchesMessage = ({
   isLink,
   eventId,
   communityId,
+  imageUrl,
 }: MatchesMessageProps) => {
   const [event, setEvent] = useState<Events | null>({} as Events)
   const [loading, setLoading] = useState<boolean>(false)
@@ -149,6 +166,18 @@ const MatchesMessage = ({
               <View className=" rounded-xl py-1">
                 <Text>{community.community_title}</Text>
               </View>
+            </View>
+          ) : imageUrl ? (
+            <View>
+              <SinglePicCommunity
+                size={150}
+                item={imageUrl}
+                avatarRadius={10}
+                noAvatarRadius={10}
+              />
+              {message !== "" ? (
+                <Text className=" text-xs text-black font-bold">{message}</Text>
+              ) : null}
             </View>
           ) : (
             <Text className=" text-xs text-black font-bold">{message}</Text>
@@ -205,11 +234,11 @@ const MessageScreen = () => {
     }
   }, [chatSession])
 
-  const sendMessageAction = async () => {
-    if (messageToSend.trim().length === 0 || !user?.id) {
+  const sendMessageAction = async (image: string | null) => {
+    if ((messageToSend.trim().length === 0 && image === null) || !user?.id) {
       return
     }
-    await sendMessage(messageToSend, user?.id, chatSession.id)
+    await sendMessage(messageToSend, image, user?.id, chatSession.id)
     setMessageToSend("")
     await upsertChatSession(chatSession.id, messageToSend)
     getChatSessionMessages(chatSession.id, setServerMessages)
@@ -268,6 +297,7 @@ const MessageScreen = () => {
                   isLink={item.community_or_event_link}
                   eventId={item.eventId}
                   communityId={item.community_id}
+                  imageUrl={item.image}
                 />
               ) : (
                 <MatchesMessage
@@ -276,6 +306,7 @@ const MessageScreen = () => {
                   isLink={item.community_or_event_link}
                   eventId={item.eventId}
                   communityId={item.community_id}
+                  imageUrl={item.image}
                 />
               )
             }
@@ -286,6 +317,7 @@ const MessageScreen = () => {
         messageToSend={messageToSend}
         setMessageToSend={setMessageToSend}
         sendMessageAction={sendMessageAction}
+        chatSessionId={chatSession.id}
       />
     </SafeAreaView>
   )

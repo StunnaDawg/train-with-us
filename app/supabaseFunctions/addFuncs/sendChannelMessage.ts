@@ -4,6 +4,7 @@ import { CommunityChannel } from "../../@types/supabaseTypes"
 
 const sendChannelMessage = async (
   message: string,
+  image: string | null,
   sendersToken: string | null,
   userId: string,
   channelId: string,
@@ -23,6 +24,7 @@ const sendChannelMessage = async (
         sender_id: userId,
         channel_id: channelId,
         sender_name: name,
+        image: image,
       },
     ])
 

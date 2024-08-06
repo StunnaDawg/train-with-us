@@ -37,15 +37,32 @@ import MessageInput from "../../../components/MessageInput"
 
 type UserMessage = {
   message: string | null
+  imageUrl: string | null
 }
 
-const UserMessage = ({ message }: UserMessage) => {
+const UserMessage = ({ message, imageUrl }: UserMessage) => {
   return (
     <View className="flex flex-row justify-end mt-2 mr-4 mb-1 ml-36">
       <View>
-        <View className="rounded-xl bg-blue-500/80 p-2">
-          <Text className="font-bold text-xs">{message}</Text>
-        </View>
+        {imageUrl ? (
+          <View>
+            <SinglePicCommunity
+              size={150}
+              item={imageUrl}
+              avatarRadius={10}
+              noAvatarRadius={10}
+            />
+            {message !== "" ? (
+              <View className="rounded-xl bg-blue-500/80 p-2 mt-2">
+                <Text className="font-bold text-xs">{message}</Text>
+              </View>
+            ) : null}
+          </View>
+        ) : (
+          <View className="rounded-xl bg-blue-500/80 p-2 mt-2">
+            <Text className="font-bold text-xs">{message}</Text>
+          </View>
+        )}
       </View>
     </View>
   )
@@ -55,9 +72,10 @@ type OthersMessageProps = {
   message: string | null
   name: string | null | undefined
   id: string | null
+  imageUrl: string | null
 }
 
-const OthersMessage = ({ message, name, id }: OthersMessageProps) => {
+const OthersMessage = ({ message, name, id, imageUrl }: OthersMessageProps) => {
   const [isPressed, setIsPressed] = useState(false)
   const navigation = useNavigation<NavigationType>()
 
@@ -69,26 +87,44 @@ const OthersMessage = ({ message, name, id }: OthersMessageProps) => {
   }
 
   return (
-    <Pressable
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      onPress={() => {
-        if (!id) return
-        navigation.navigate("ViewFullUserProfileFromMessages", {
-          userId: id,
-        })
-      }}
-      className={`${isPressed ? "bg-opacity-50" : null} mt-2 mb-1`}
-    >
-      <Text className="font-bold text-xs mb-1">{name}</Text>
-      <View className="flex flex-row justify-start ml-2 mr-36">
+    <>
+      {imageUrl ? (
         <View>
-          <View className="rounded-xl bg-slate-400/60 p-2">
-            <Text className="font-bold text-xs">{message}</Text>
-          </View>
+          <SinglePicCommunity
+            size={150}
+            item={imageUrl}
+            avatarRadius={10}
+            noAvatarRadius={10}
+          />
+          {message !== "" ? (
+            <View className="flex flex-row justify-start ml-2 mr-36 mt-2">
+              <View className="rounded-xl bg-slate-400/60 p-2">
+                <Text className="font-bold text-xs">{message}</Text>
+              </View>
+            </View>
+          ) : null}
         </View>
-      </View>
-    </Pressable>
+      ) : (
+        <Pressable
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          onPress={() => {
+            if (!id) return
+            navigation.navigate("ViewFullUserProfileFromMessages", {
+              userId: id,
+            })
+          }}
+          className={`${isPressed ? "bg-opacity-50" : ""} mt-2 mb-1`}
+        >
+          <Text className="font-bold text-xs mb-1">{name}</Text>
+          <View className="flex flex-row justify-start ml-2 mr-36">
+            <View className="rounded-xl bg-slate-400/60 p-2">
+              <Text className="font-bold text-xs">{message}</Text>
+            </View>
+          </View>
+        </Pressable>
+      )}
+    </>
   )
 }
 
@@ -113,7 +149,7 @@ const ChannelMessageScreen = () => {
     console.log("handleSheetChanges", index)
   }, [])
 
-  const sendMessageAction = async () => {
+  const sendMessageAction = async (image: string | null) => {
     if (
       messageToSend.trim().length === 0 ||
       !user?.id ||
@@ -125,6 +161,7 @@ const ChannelMessageScreen = () => {
     if (!channel.private) {
       await sendChannelMessage(
         messageToSend,
+        image,
         currentUser?.expo_push_token,
         user?.id,
         channel.id,
@@ -136,6 +173,7 @@ const ChannelMessageScreen = () => {
     } else {
       await sendPrivateChannelMessage(
         messageToSend,
+        image,
         user?.id,
         channel.id,
         currentUser?.first_name,
@@ -220,12 +258,13 @@ const ChannelMessageScreen = () => {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) =>
               item.sender_id === user?.id ? (
-                <UserMessage message={item.mesage} />
+                <UserMessage message={item.mesage} imageUrl={item.image} />
               ) : (
                 <OthersMessage
                   message={item.mesage}
                   id={item.sender_id}
                   name={item.sender_name}
+                  imageUrl={item.image}
                 />
               )
             }
@@ -236,6 +275,7 @@ const ChannelMessageScreen = () => {
         messageToSend={messageToSend}
         setMessageToSend={setMessageToSend}
         sendMessageAction={sendMessageAction}
+        chatSessionId={channel.id}
       />
       <BottomSheetModal
         enablePanDownToClose={true}

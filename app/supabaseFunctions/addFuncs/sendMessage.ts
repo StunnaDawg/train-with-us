@@ -2,6 +2,7 @@ import supabase from "../../../lib/supabase"
 
 const sendMessage = async (
   message: string,
+  image: string | null,
   userId: string,
   chatSessionId: string
 ) => {
@@ -13,6 +14,7 @@ const sendMessage = async (
         sent_at: new Date(),
         sender: userId,
         chat_session: chatSessionId,
+        image: image,
       },
     ])
 

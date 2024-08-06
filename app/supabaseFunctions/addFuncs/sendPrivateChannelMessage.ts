@@ -4,6 +4,7 @@ import sendPrivateChannelNotification from "../../utilFunctions/sendPrivateChann
 
 const sendPrivateChannelMessage = async (
   message: string,
+  image: string | null,
   userId: string,
   channelId: string,
   name: string,
@@ -22,6 +23,7 @@ const sendPrivateChannelMessage = async (
         sender_id: userId,
         channel_id: channelId,
         sender_name: name,
+        image: image,
       },
     ])
 
