@@ -38,7 +38,6 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          messages: string[] | null
           recent_message: string | null
           updated_at: string | null
           user1: string | null
@@ -49,7 +48,6 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
-          messages?: string[] | null
           recent_message?: string | null
           updated_at?: string | null
           user1?: string | null
@@ -60,7 +58,6 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
-          messages?: string[] | null
           recent_message?: string | null
           updated_at?: string | null
           user1?: string | null
@@ -233,12 +230,14 @@ export type Database = {
           channel_title: string | null
           channel_type: string
           community: number
+          community_name: string
           community_owner: string | null
           created_at: string
           id: string
           members_of_channel: string[] | null
           private: boolean
           recent_message: string | null
+          recent_message_sender: string | null
           updated_at: string | null
         }
         Insert: {
@@ -246,12 +245,14 @@ export type Database = {
           channel_title?: string | null
           channel_type?: string
           community: number
+          community_name?: string
           community_owner?: string | null
           created_at?: string
           id?: string
           members_of_channel?: string[] | null
           private?: boolean
           recent_message?: string | null
+          recent_message_sender?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -259,12 +260,14 @@ export type Database = {
           channel_title?: string | null
           channel_type?: string
           community?: number
+          community_name?: string
           community_owner?: string | null
           created_at?: string
           id?: string
           members_of_channel?: string[] | null
           private?: boolean
           recent_message?: string | null
+          recent_message_sender?: string | null
           updated_at?: string | null
         }
         Relationships: [

@@ -12,7 +12,6 @@ import { CommunityChannel, Profile } from "../../../@types/supabaseTypes"
 import getUserPinnedChannels from "../../../supabaseFunctions/getFuncs/getUserPinnedChannels"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
-import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import { FontAwesome6 } from "@expo/vector-icons"
@@ -146,11 +145,20 @@ const PinnedChannels = React.memo(() => {
               navigation.navigate("ChannelScreen", { channelId: c })
             }
           }}
-          className={`${pressedChannels[c.id] ? "bg-slate-500" : null}`}
+          className={`${pressedChannels[c.id] ? "opacity-50" : null}`}
         >
           <View>
-            <Text className="font-bold text-base text-white">
-              #{c.channel_title || "Error loading channel title"}
+            <View>
+              <Text className="text-xs font-semibold text-white">
+                {c.community_name}
+              </Text>
+              <Text className="font-bold text-base text-white">
+                #{c.channel_title || "Error loading channel title"}
+              </Text>
+            </View>
+            <Text className="text-xs text-white">
+              <Text>{`${c.recent_message_sender} said ` || null}</Text>
+              {c.recent_message || "No Messages yet!"}
             </Text>
           </View>
         </Pressable>

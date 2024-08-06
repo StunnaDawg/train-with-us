@@ -36,6 +36,7 @@ const sendPrivateChannelMessage = async (
       .update({
         recent_message: message, // Only the fields to update
         updated_at: new Date(),
+        recent_message_sender: name,
       })
       .eq("id", channelId)
 

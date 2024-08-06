@@ -4,7 +4,8 @@ import { useNavigation } from "@react-navigation/native"
 import { Communities } from "../../../@types/supabaseTypes"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import { useEffect, useState } from "react"
-import getCommunityMembersUUID from "../../../supabaseFunctions/getFuncs/getCommunityMembers"
+
+import getCommunityMembersUUIDs from "../../../supabaseFunctions/getFuncs/getCommunityMembersUUIDS"
 
 type CommunityCardProps = {
   community: Communities
@@ -17,22 +18,19 @@ const CommunityMessageCard = ({
   addPrimary,
   userId,
 }: CommunityCardProps) => {
-  const [loading, setLoading] = useState<boolean>(false)
-  const [joined, setJoined] = useState<boolean>(false)
-  const [userUUIDS, setUserUUIDS] = useState<string[] | null>([])
   const navigation = useNavigation<NavigationType>()
 
-  useEffect(() => {
-    if (userId) {
-      getCommunityMembersUUID(setLoading, community.id, setUserUUIDS)
-    }
-  }, [userId])
+  // useEffect(() => {
+  //   if (userId) {
+  //     getCommunityMembersUUIDs(setLoading, community.id, setUserUUIDS)
+  //   }
+  // }, [userId])
 
-  useEffect(() => {
-    if (userUUIDS) {
-      setJoined(userUUIDS.includes(userId!))
-    }
-  }, [userUUIDS])
+  // useEffect(() => {
+  //   if (userUUIDS) {
+  //     setJoined(userUUIDS.includes(userId!))
+  //   }
+  // }, [userUUIDS])
 
   return (
     <Pressable

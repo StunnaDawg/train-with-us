@@ -168,6 +168,12 @@ const CommunityPageChannels = ({
                       <Text className="text-sm text-white font-bold mb-1">
                         #{c.channel_title || "error loading channel title"}
                       </Text>
+                      <Text className="text-xs text-white">
+                        <Text>
+                          {`${c.recent_message_sender} said ` || null}
+                        </Text>
+                        {c.recent_message || "No Messages yet!"}
+                      </Text>
                     </View>
                   </Pressable>
                   {c.private && !isMember && (
