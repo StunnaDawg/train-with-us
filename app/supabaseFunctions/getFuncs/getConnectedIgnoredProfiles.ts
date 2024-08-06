@@ -7,8 +7,6 @@ const getConnectedIgnoredProfiles = async (userId: string) => {
       .select("*")
       .or(`user1.eq.${userId},user2.eq.${userId}`)
 
-    console.log("Connected and Ignored data", data)
-
     if (error) {
       console.error("Error fetching user connections:", error.message)
       return null

@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TextInput } from "react-native"
+import { View, Text, SafeAreaView, TextInput, Pressable } from "react-native"
 import React, { useEffect, useState } from "react"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
@@ -100,51 +100,28 @@ const EditChannel = () => {
   }, [communityChannel])
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-between mx-1">
-        <BackButton size={32} />
-        <Text className="text-2xl font-bold">Edit Channel</Text>
-        <View />
+      <View className="flex flex-row justify-between w-full p-3 items-center">
+        <BackButton />
+
+        <View>
+          <Text className="text-sm font-bold">Edit Channel</Text>
+        </View>
+
+        <Pressable
+          onPress={async () => {
+            await updateChannel()
+            navigation.goBack()
+          }}
+        >
+          <Text className="text-sm font-semibold underline">Update</Text>
+        </Pressable>
       </View>
 
-      <EditChannelProfilePic
-        channelId={channelId}
-        imageUrl={singleImageFile}
-        imageUrlToRead={singleImageFile}
-        setImageUrl={setSingleImageFile}
-      />
-
-      <View className="border w-full rounded-none p-3">
+      <View className="border mx-2 rounded-lg p-3">
         <TextInput
           value={channelName}
           onChangeText={(text: string) => setChannelName(text)}
           placeholder="new-channel"
-        />
-      </View>
-
-      <View className="w-full rounded-none p-3 mt-5">
-        <Text className="text-lg font-bold">Channel Type</Text>
-
-        {channelOptions.map((type, index) => (
-          <View key={index} className="flex flex-row justify-between m-2">
-            <Text className="text-lg font-bold">#{type}</Text>
-            <BouncyCheckbox
-              isChecked={selectedChannelType === type}
-              onPress={() => handleSelectType(type)}
-            />
-          </View>
-        ))}
-      </View>
-
-      <View className="flex flex-row justify-center">
-        <GenericButton
-          textSize="text-xl"
-          text="Update"
-          roundness="rounded-lg"
-          colourDefault="bg-blue-500"
-          colourPressed="bg-white"
-          borderColourDefault="border-black"
-          borderColourPressed="border-blue-500"
-          buttonFunction={() => updateChannel()}
         />
       </View>
     </SafeAreaView>

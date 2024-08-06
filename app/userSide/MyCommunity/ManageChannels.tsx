@@ -110,7 +110,7 @@ const ManageChannels = () => {
     <SafeAreaView className="flex-1">
       <View className="flex flex-row justify-between mx-1">
         <BackButton size={24} />
-        <Text className="text-lg font-bold">My Channels</Text>
+        <Text className="text-lg font-bold">Mange Channels</Text>
         <View />
       </View>
 
@@ -120,15 +120,12 @@ const ManageChannels = () => {
             communityChannels.map((c) => (
               <View
                 key={c.id}
-                className="flex-row justify-between items-center m-2 "
+                className="flex-row justify-between items-center m-2 border-b "
               >
-                <View className="flex flex-row items-center">
+                <View className="flex flex-row items-center ">
                   <View>
-                    <Text className="text-lg font-bold mb-1">
-                      {c.channel_title || "error loading channel title"}{" "}
-                      {c.channel_type === "Announcement"
-                        ? `#${c.channel_type}`
-                        : null}
+                    <Text className="text-lg font-semibold mb-1">
+                      #{c.channel_title || "error loading channel title"}{" "}
                     </Text>
                   </View>
                 </View>
