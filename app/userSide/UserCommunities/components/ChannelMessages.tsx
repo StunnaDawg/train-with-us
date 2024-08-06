@@ -47,6 +47,7 @@ const UserMessage = ({ message, imageUrl }: UserMessage) => {
         {imageUrl ? (
           <View>
             <SinglePicCommunity
+              skeletonRadius={10}
               size={150}
               item={imageUrl}
               avatarRadius={10}
@@ -91,6 +92,7 @@ const OthersMessage = ({ message, name, id, imageUrl }: OthersMessageProps) => {
       {imageUrl ? (
         <View>
           <SinglePicCommunity
+            skeletonRadius={10}
             size={150}
             item={imageUrl}
             avatarRadius={10}
@@ -151,7 +153,7 @@ const ChannelMessageScreen = () => {
 
   const sendMessageAction = async (image: string | null) => {
     if (
-      messageToSend.trim().length === 0 ||
+      (messageToSend.trim().length === 0 && image === null) ||
       !user?.id ||
       currentUser?.first_name === null ||
       currentUser?.first_name === undefined

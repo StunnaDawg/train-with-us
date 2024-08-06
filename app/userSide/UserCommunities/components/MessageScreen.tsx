@@ -95,6 +95,7 @@ const UserMessage = ({
       ) : imageUrl ? (
         <View>
           <SinglePicCommunity
+            skeletonRadius={10}
             size={150}
             item={imageUrl}
             avatarRadius={10}
@@ -170,6 +171,7 @@ const MatchesMessage = ({
           ) : imageUrl ? (
             <View>
               <SinglePicCommunity
+                skeletonRadius={10}
                 size={150}
                 item={imageUrl}
                 avatarRadius={10}
