@@ -111,7 +111,7 @@ const UserFooter = () => {
           } else if (route.name === "Connections") {
             iconName = "people-group"
           } else if (route.name === "Community") {
-            iconName = "house"
+            iconName = "link"
           }
 
           return <FontAwesome6 name={iconName} size={20} color={color} />

@@ -33,6 +33,8 @@ import EventCard from "../../Events/components/EventCard"
 import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
 import CommunityMessageCard from "./CommunityMessageCard"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
+import { FontAwesome6 } from "@expo/vector-icons"
+import MessageInput from "../../../components/MessageInput"
 
 type UserMessage = {
   message: string | null
@@ -280,24 +282,11 @@ const MessageScreen = () => {
           />
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
-      >
-        <View className="flex flex-row mx-1 p-2 bg-slate-300/05 items-center">
-          <TextInput
-            lineBreakStrategyIOS="hangul-word"
-            multiline={true}
-            placeholder="Send a Message"
-            className="flex-1 border bg-white rounded-xl w-64 p-2 max-h-64"
-            value={messageToSend}
-            onChangeText={setMessageToSend}
-          />
-          <Pressable className="mx-2" onPress={() => sendMessageAction()}>
-            <Text className="text-lg font-bold">Send</Text>
-          </Pressable>
-        </View>
-      </KeyboardAvoidingView>
+      <MessageInput
+        messageToSend={messageToSend}
+        setMessageToSend={setMessageToSend}
+        sendMessageAction={sendMessageAction}
+      />
     </SafeAreaView>
   )
 }

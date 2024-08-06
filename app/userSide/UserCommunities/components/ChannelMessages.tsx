@@ -33,6 +33,7 @@ import BackButton from "../../../components/BackButton"
 import { BottomSheetModal } from "@gorhom/bottom-sheet"
 import ChannelBottomModal from "./ChannelBottomModal"
 import sendPrivateChannelMessage from "../../../supabaseFunctions/addFuncs/sendPrivateChannelMessage"
+import MessageInput from "../../../components/MessageInput"
 
 type UserMessage = {
   message: string | null
@@ -231,24 +232,11 @@ const ChannelMessageScreen = () => {
           />
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
-      >
-        <View className="flex flex-row mx-1 p-2 bg-slate-300/05 items-center">
-          <TextInput
-            lineBreakStrategyIOS="hangul-word"
-            multiline={true}
-            placeholder="Send a Message"
-            className="flex-1 border bg-white rounded-xl w-64 p-2 max-h-64"
-            value={messageToSend}
-            onChangeText={setMessageToSend}
-          />
-          <Pressable className="mx-2" onPress={() => sendMessageAction()}>
-            <Text className="text-xl font-bold">Send</Text>
-          </Pressable>
-        </View>
-      </KeyboardAvoidingView>
+      <MessageInput
+        messageToSend={messageToSend}
+        setMessageToSend={setMessageToSend}
+        sendMessageAction={sendMessageAction}
+      />
       <BottomSheetModal
         enablePanDownToClose={true}
         ref={bottomSheetModalRef}
