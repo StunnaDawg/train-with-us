@@ -10,6 +10,7 @@ import {
 } from "react-native"
 import supabase from "../../lib/supabase"
 import { Skeleton } from "moti/skeleton"
+import { fi, se } from "date-fns/locale"
 
 type SinglePicProps = {
   size: number
@@ -17,18 +18,17 @@ type SinglePicProps = {
   avatarRadius: number
   noAvatarRadius: number
   skeletonRadius?: any
-  showPlaceholder?: boolean
 }
 
 export default function SinglePicCommunity({
   size = 150,
   skeletonRadius = "round",
-  showPlaceholder = true,
   item,
   avatarRadius,
   noAvatarRadius,
 }: SinglePicProps) {
-  const [loading, setLoading] = useState<boolean>(false)
+  const [showPlaceholder, setPlaceholder] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const [avatarUrl, setAvatarUrl] = useState<string>("")
   const [modalVisible, setModalVisible] = useState<boolean>(false)
   const [scale] = useState(new Animated.Value(1))
@@ -38,11 +38,11 @@ export default function SinglePicCommunity({
 
   useEffect(() => {
     isMounted.current = true
-    if (item) {
-      readImage()
-    } else {
-      setLoading(false)
+    if (!item) {
+      setPlaceholder(true)
+      return
     }
+    readImage()
 
     return () => {
       isMounted.current = false
@@ -55,8 +55,13 @@ export default function SinglePicCommunity({
       const { data, error } = await supabase.storage
         .from("photos")
         .download(`${item}`)
-      if (error) throw error
-
+      if (error) {
+        setPlaceholder(true)
+        console.error("Error downloading image:", error)
+        if (isMounted.current) {
+          setLoading(false)
+        }
+      }
       const fr = new FileReader()
       fr.readAsDataURL(data!)
       fr.onload = () => {
@@ -66,10 +71,12 @@ export default function SinglePicCommunity({
         }
       }
     } catch (error) {
+      setPlaceholder(true)
       console.error("Error downloading image:", error)
-      if (isMounted.current) {
-        setLoading(false)
-      }
+
+      setLoading(false)
+    } finally {
+      setLoading(false)
     }
   }
 

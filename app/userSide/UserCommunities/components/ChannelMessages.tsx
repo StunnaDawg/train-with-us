@@ -86,8 +86,7 @@ const ChannelMessageScreen = () => {
         currentUser?.profile_pic
       )
     }
-
-    await upsertCommunitySession(channel.id, messageToSend)
+    await upsertCommunitySession(channel.id, messageToSend || "Sent an Image")
     setMessageToSend("")
     getChannelSessionMessages(channel.id, setServerMessages)
   }

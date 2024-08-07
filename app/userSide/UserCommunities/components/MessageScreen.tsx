@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native"
 import { RootStackParamList } from "../../../@types/navigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
@@ -28,7 +29,9 @@ import MessageComponent from "../../../components/MessageCard"
 const MessageScreen = () => {
   const route = useRoute<RouteProp<RootStackParamList, "MessagingScreen">>()
   const chatSession = route.params.chatSession
-
+  const [page, setPage] = useState(0)
+  const [endOfData, setEndOfData] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [serverMessages, setServerMessages] = useState<Messages[] | null>([])
   const [messageToSend, setMessageToSend] = useState("")
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
@@ -43,7 +46,12 @@ const MessageScreen = () => {
   }, [user, otherUserId])
 
   useEffect(() => {
-    getChatSessionMessages(chatSession.id, setServerMessages)
+    getChatSessionMessages(
+      chatSession.id,
+      setServerMessages,
+      page,
+      setEndOfData
+    )
     const channelSubscription = supabase
       .channel("schema-db-changes")
       .on(
@@ -56,7 +64,12 @@ const MessageScreen = () => {
         },
         (payload) => {
           console.log("Message received: ", payload)
-          getChatSessionMessages(chatSession.id, setServerMessages)
+          getChatSessionMessages(
+            chatSession.id,
+            setServerMessages,
+            page,
+            setEndOfData
+          )
         }
       )
       .subscribe((status, error) => {
@@ -71,6 +84,12 @@ const MessageScreen = () => {
     }
   }, [chatSession])
 
+  const handleLoadMore = () => {
+    if (!loading && !endOfData) {
+      setPage((prevPage) => prevPage + 1)
+    }
+  }
+
   const sendMessageAction = async (image: string | null) => {
     if ((messageToSend.trim().length === 0 && image === null) || !user?.id) {
       return
@@ -83,9 +102,14 @@ const MessageScreen = () => {
       userProfile!.profile_pic,
       userProfile!.first_name + " " + userProfile!.last_name
     )
-    setMessageToSend("")
-    await upsertChatSession(chatSession.id, messageToSend)
-    getChatSessionMessages(chatSession.id, setServerMessages)
+
+    await upsertChatSession(chatSession.id, messageToSend || "Sent an image")
+    getChatSessionMessages(
+      chatSession.id,
+      setServerMessages,
+      page,
+      setEndOfData
+    )
 
     if (currentUser?.expo_push_token) {
       sendNotification(
@@ -95,7 +119,19 @@ const MessageScreen = () => {
         chatSession
       )
     }
+    setMessageToSend("")
   }
+
+  useEffect(() => {
+    if (page > 0) {
+      getChatSessionMessages(
+        chatSession.id,
+        setServerMessages,
+        page,
+        setEndOfData
+      )
+    }
+  }, [page])
   return (
     <SafeAreaView className="flex-1 bg-slate-300/05">
       <View className="flex flex-row justify-between">
@@ -133,6 +169,11 @@ const MessageScreen = () => {
             inverted={true}
             className="mx-1"
             data={serverMessages}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.1}
+            ListFooterComponent={
+              loading && !endOfData ? <ActivityIndicator size="small" /> : null
+            }
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <MessageComponent
