@@ -192,6 +192,7 @@ export type Database = {
           mesage: string | null
           sender_id: string | null
           sender_name: string | null
+          sender_profile_pic: string | null
           sent_at: string
         }
         Insert: {
@@ -201,6 +202,7 @@ export type Database = {
           mesage?: string | null
           sender_id?: string | null
           sender_name?: string | null
+          sender_profile_pic?: string | null
           sent_at?: string
         }
         Update: {
@@ -210,6 +212,7 @@ export type Database = {
           mesage?: string | null
           sender_id?: string | null
           sender_name?: string | null
+          sender_profile_pic?: string | null
           sent_at?: string
         }
         Relationships: [
@@ -514,6 +517,7 @@ export type Database = {
           message: string | null
           read: boolean
           sender: string | null
+          sender_profile_pic: string | null
           sent_at: string
         }
         Insert: {
@@ -526,6 +530,7 @@ export type Database = {
           message?: string | null
           read?: boolean
           sender?: string | null
+          sender_profile_pic?: string | null
           sent_at?: string
         }
         Update: {
@@ -538,6 +543,7 @@ export type Database = {
           message?: string | null
           read?: boolean
           sender?: string | null
+          sender_profile_pic?: string | null
           sent_at?: string
         }
         Relationships: [

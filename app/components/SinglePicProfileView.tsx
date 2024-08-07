@@ -1,7 +1,6 @@
 import { Image } from "expo-image"
 import { useState, useEffect } from "react"
 import { StyleSheet, View } from "react-native"
-import { FileObject } from "@supabase/storage-js"
 import supabase from "../../lib/supabase"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import { StatusBar } from "expo-status-bar"

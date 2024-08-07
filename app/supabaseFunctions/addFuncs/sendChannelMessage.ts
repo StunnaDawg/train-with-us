@@ -11,7 +11,8 @@ const sendChannelMessage = async (
   name: string,
   communityId: number,
   title: string | null,
-  channel: CommunityChannel
+  channel: CommunityChannel,
+  senderProfilePic: string | null
 ) => {
   try {
     const notificationTtle =
@@ -25,6 +26,7 @@ const sendChannelMessage = async (
         channel_id: channelId,
         sender_name: name,
         image: image,
+        sender_profile_pic: senderProfilePic,
       },
     ])
 

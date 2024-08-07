@@ -197,7 +197,7 @@ const MessageScreen = () => {
   const [serverMessages, setServerMessages] = useState<Messages[] | null>([])
   const [messageToSend, setMessageToSend] = useState("")
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
-  const { user } = useAuth()
+  const { user, userProfile } = useAuth()
 
   const otherUserId =
     chatSession.user1 === user?.id ? chatSession.user2 : chatSession.user1
@@ -240,7 +240,13 @@ const MessageScreen = () => {
     if ((messageToSend.trim().length === 0 && image === null) || !user?.id) {
       return
     }
-    await sendMessage(messageToSend, image, user?.id, chatSession.id)
+    await sendMessage(
+      messageToSend,
+      image,
+      user?.id,
+      chatSession.id,
+      userProfile!.profile_pic
+    )
     setMessageToSend("")
     await upsertChatSession(chatSession.id, messageToSend)
     getChatSessionMessages(chatSession.id, setServerMessages)
