@@ -45,15 +45,13 @@ const MessageComponent = ({
       <View className="flex-1 ml-3">
         <View className="flex flex-row items-center">
           <Text className="font-bold text-sm text-blue-900">{name}</Text>
-          <Text className="text-xs text-gray-400 ml-2">
+          <Text className="text-xs text-gray-400 ml-1">
             {formatTimestamp(sentAt)}
           </Text>
         </View>
         {imageUrl ? (
-          <View className="mt-2">
-            {message !== "" && (
-              <Text className="font-bold text-sm mb-2">{message}</Text>
-            )}
+          <View className="">
+            {message !== "" && <Text className="text-sm mb-2">{message}</Text>}
             <SinglePicCommunity
               skeletonRadius={10}
               size={150}
@@ -72,9 +70,9 @@ const MessageComponent = ({
                 userId: id,
               })
             }}
-            className={`${isPressed ? "bg-opacity-50" : ""} mt-2 mb-1`}
+            className={`${isPressed ? "bg-opacity-50" : ""} mb-1`}
           >
-            <Text className="font-bold text-sm">{message}</Text>
+            <Text className="text-sm">{message}</Text>
           </Pressable>
         )}
       </View>

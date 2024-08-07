@@ -26,6 +26,11 @@ const MessageInput = ({
   const [loading, setLoading] = useState<boolean>(false)
   const [isPressed, setIsPressed] = useState<boolean>(false)
   const [isImagePressed, setIsImagePressed] = useState<boolean>(false)
+  const [inputHeight, setInputHeight] = useState(40) // Initial height
+
+  const handleContentSizeChange = (event: any) => {
+    setInputHeight(event.nativeEvent.contentSize.height)
+  }
 
   const handlePressIn = () => {
     setIsPressed(true)
@@ -94,9 +99,11 @@ const MessageInput = ({
             lineBreakStrategyIOS="hangul-word"
             multiline={true}
             placeholder="Send a Message"
-            className="flex-1 border bg-white rounded-xl w-64 p-2 max-h-64"
+            className="border bg-white rounded-xl w-64 p-3 text-sm"
+            style={{ height: Math.min(inputHeight, 256) }}
             value={messageToSend}
             onChangeText={setMessageToSend}
+            onContentSizeChange={handleContentSizeChange}
           />
         </View>
         <Pressable
