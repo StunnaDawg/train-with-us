@@ -1,6 +1,13 @@
 import { Image } from "expo-image"
 import { useState, useEffect, useRef } from "react"
-import { StyleSheet, View } from "react-native"
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Animated,
+  Dimensions,
+  Modal,
+} from "react-native"
 import supabase from "../../lib/supabase"
 import { Skeleton } from "moti/skeleton"
 
@@ -23,6 +30,8 @@ export default function SinglePicCommunity({
 }: SinglePicProps) {
   const [loading, setLoading] = useState<boolean>(false)
   const [avatarUrl, setAvatarUrl] = useState<string>("")
+  const [modalVisible, setModalVisible] = useState<boolean>(false)
+  const [scale] = useState(new Animated.Value(1))
   const avatarSize = { height: size, width: size }
 
   const isMounted = useRef(true)
@@ -64,6 +73,21 @@ export default function SinglePicCommunity({
     }
   }
 
+  const openModal = () => {
+    Animated.spring(scale, {
+      toValue: 1.5,
+      useNativeDriver: true,
+    }).start(() => setModalVisible(true))
+  }
+
+  const closeModal = () => {
+    setModalVisible(false)
+    Animated.spring(scale, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start()
+  }
+
   const styles = StyleSheet.create({
     avatar: {
       borderRadius: avatarRadius,
@@ -81,27 +105,50 @@ export default function SinglePicCommunity({
       borderColor: "rgb(200, 200, 200)",
       borderRadius: noAvatarRadius,
     },
+    modalContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    modalImage: {
+      width: 350,
+      height: 350,
+    },
   })
 
   return (
     <View>
-      {loading ? (
-        <Skeleton radius={skeletonRadius} height={size} width={size} />
-      ) : avatarUrl !== "" ? (
-        <Image
-          source={{ uri: avatarUrl }}
-          accessibilityLabel="Avatar"
-          style={[avatarSize, styles.avatar, styles.image]}
-          cachePolicy="memory-disk"
-        />
-      ) : showPlaceholder ? (
-        <Image
-          source={require("../../assets/images/TWU-Logo.png")}
-          accessibilityLabel="Avatar"
-          style={[avatarSize, styles.avatar, styles.image]}
-          cachePolicy="memory-disk"
-        />
-      ) : null}
+      <TouchableOpacity onPress={openModal}>
+        {loading ? (
+          <Skeleton radius={skeletonRadius} height={size} width={size} />
+        ) : avatarUrl !== "" ? (
+          <Image
+            source={{ uri: avatarUrl }}
+            accessibilityLabel="Avatar"
+            style={[avatarSize, styles.avatar, styles.image]}
+            cachePolicy="memory-disk"
+          />
+        ) : showPlaceholder ? (
+          <Image
+            source={require("../../assets/images/TWU-Logo.png")}
+            accessibilityLabel="Avatar"
+            style={[avatarSize, styles.avatar, styles.image]}
+            cachePolicy="memory-disk"
+          />
+        ) : null}
+        <Modal
+          visible={modalVisible}
+          transparent={true}
+          onRequestClose={closeModal}
+        >
+          <View style={styles.modalContainer}>
+            <TouchableOpacity onPress={closeModal}>
+              <Image source={{ uri: avatarUrl }} style={styles.modalImage} />
+            </TouchableOpacity>
+          </View>
+        </Modal>
+      </TouchableOpacity>
     </View>
   )
 }
