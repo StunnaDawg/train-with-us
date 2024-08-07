@@ -1,10 +1,15 @@
 import { useNavigation } from "@react-navigation/native"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { NavigationType } from "../@types/navigation"
 import { View } from "moti"
 import SinglePicCommunity from "./SinglePicCommunity"
 import { Pressable, Text } from "react-native"
 import formatTimestamp from "../utilFunctions/formatTimeStamp"
+import { Communities, Events } from "../@types/supabaseTypes"
+import getSingleEvent from "../supabaseFunctions/getFuncs/getSingleEvent"
+import getSingleCommunity from "../supabaseFunctions/getFuncs/getSingleCommunity"
+import CommunityMessageCard from "../userSide/UserCommunities/components/CommunityMessageCard"
+import EventCard from "../userSide/Events/components/EventCard"
 
 type MessageProps = {
   message: string | null
@@ -13,6 +18,9 @@ type MessageProps = {
   imageUrl: string | null
   sentAt: string | null
   senderProfilePic: string | null
+  isLink: boolean
+  eventId: number | null
+  communityId: number | null
 }
 
 const MessageComponent = ({
@@ -22,10 +30,15 @@ const MessageComponent = ({
   imageUrl,
   sentAt,
   senderProfilePic,
+  isLink,
+  eventId,
+  communityId,
 }: MessageProps) => {
   const [isPressed, setIsPressed] = useState(false)
   const navigation = useNavigation<NavigationType>()
-
+  const [event, setEvent] = useState<Events | null>({} as Events)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [community, setCommunity] = useState<Communities | null>(null)
   const handlePressIn = () => {
     setIsPressed(true)
   }
@@ -33,6 +46,15 @@ const MessageComponent = ({
     setIsPressed(false)
   }
 
+  useEffect(() => {
+    if (!eventId || isLink === false) return
+    getSingleEvent(setLoading, eventId, setEvent)
+  }, [eventId])
+
+  useEffect(() => {
+    if (!communityId || isLink === false) return
+    getSingleCommunity(setLoading, communityId, setCommunity)
+  }, [communityId])
   return (
     <View className="flex flex-row p-2 items-center">
       <SinglePicCommunity
@@ -50,7 +72,7 @@ const MessageComponent = ({
           </Text>
         </View>
         {imageUrl ? (
-          <View className="">
+          <View>
             {message !== "" && <Text className="text-sm mb-2">{message}</Text>}
             <SinglePicCommunity
               skeletonRadius={10}
@@ -58,6 +80,23 @@ const MessageComponent = ({
               item={imageUrl}
               avatarRadius={10}
               noAvatarRadius={10}
+            />
+          </View>
+        ) : isLink && community ? (
+          <View>
+            {message !== "" && <Text className="text-sm mb-2">{message}</Text>}
+            <CommunityMessageCard community={community} />
+          </View>
+        ) : isLink && event ? (
+          <View>
+            {message !== "" && <Text className="text-sm mb-2">{message}</Text>}
+            <EventCard
+              title={event?.event_title}
+              eventCoverPhoto={event.event_cover_photo}
+              eventId={event.id}
+              eventPrice={event.price}
+              date={event.date}
+              communityId={event.community_host}
             />
           </View>
         ) : (

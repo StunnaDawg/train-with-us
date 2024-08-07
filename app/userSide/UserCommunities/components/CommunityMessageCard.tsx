@@ -3,44 +3,21 @@ import { NavigationType } from "../../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import { Communities } from "../../../@types/supabaseTypes"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
-import { useEffect, useState } from "react"
-
-import getCommunityMembersUUIDs from "../../../supabaseFunctions/getFuncs/getCommunityMembersUUIDS"
 
 type CommunityCardProps = {
   community: Communities
-  addPrimary?: boolean
-  userId: string | undefined
 }
 
-const CommunityMessageCard = ({
-  community,
-  addPrimary,
-  userId,
-}: CommunityCardProps) => {
+const CommunityMessageCard = ({ community }: CommunityCardProps) => {
   const navigation = useNavigation<NavigationType>()
-
-  // useEffect(() => {
-  //   if (userId) {
-  //     getCommunityMembersUUIDs(setLoading, community.id, setUserUUIDS)
-  //   }
-  // }, [userId])
-
-  // useEffect(() => {
-  //   if (userUUIDS) {
-  //     setJoined(userUUIDS.includes(userId!))
-  //   }
-  // }, [userUUIDS])
 
   return (
     <Pressable
       className=""
       onPress={() => {
-        addPrimary
-          ? null
-          : navigation.navigate("ViewCommunitiesScreen", {
-              communityId: community.id,
-            })
+        navigation.navigate("ViewCommunitiesScreen", {
+          communityId: community.id,
+        })
       }}
     >
       <View className="flex border-4 rounded-lg items-center p-5">

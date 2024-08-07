@@ -1,5 +1,5 @@
 import { View, Text, Platform, KeyboardAvoidingView } from "react-native"
-import React, { Dispatch, SetStateAction, useState } from "react"
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { TextInput, Pressable } from "react-native"
 import * as ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system"
@@ -7,6 +7,8 @@ import { FontAwesome6 } from "@expo/vector-icons"
 import supabase from "../../lib/supabase"
 import { decode } from "base64-arraybuffer"
 import { Image } from "expo-image"
+import getSingleEvent from "../supabaseFunctions/getFuncs/getSingleEvent"
+import getSingleCommunity from "../supabaseFunctions/getFuncs/getSingleCommunity"
 
 type MessageInputProps = {
   messageToSend: string
@@ -76,6 +78,7 @@ const MessageInput = ({
       setLoading(false)
     }
   }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}

@@ -67,7 +67,7 @@ const ChannelMessageScreen = () => {
         currentUser?.expo_push_token,
         user?.id,
         channel.id,
-        currentUser?.first_name,
+        currentUser?.first_name + " " + currentUser?.last_name,
         channel.community,
         channel.channel_title,
         channel,
@@ -79,7 +79,7 @@ const ChannelMessageScreen = () => {
         image,
         user?.id,
         channel.id,
-        currentUser?.first_name,
+        currentUser?.first_name + " " + currentUser?.last_name,
         channel.community,
         channel.channel_title,
         channel,
@@ -162,6 +162,9 @@ const ChannelMessageScreen = () => {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <MessageComponent
+                eventId={item.eventId}
+                communityId={item.community_id}
+                isLink={item.community_or_event_link}
                 sentAt={item.sent_at}
                 message={item.mesage}
                 id={item.sender_id}

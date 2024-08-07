@@ -5,7 +5,8 @@ const sendMessage = async (
   image: string | null,
   userId: string,
   chatSessionId: string,
-  senderProfilePic: string | null
+  senderProfilePic: string | null,
+  senderName: string
 ) => {
   try {
     console.log("sending message", message, userId)
@@ -17,6 +18,7 @@ const sendMessage = async (
         chat_session: chatSessionId,
         image: image,
         sender_profile_pic: senderProfilePic,
+        sender_name: senderName,
       },
     ])
 

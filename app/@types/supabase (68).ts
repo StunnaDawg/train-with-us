@@ -77,7 +77,7 @@ export type Database = {
             columns: ["user2"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       communities: {
@@ -138,7 +138,7 @@ export type Database = {
             columns: ["community_owner"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       community_channel_membership: {
@@ -181,7 +181,7 @@ export type Database = {
             columns: ["user_id"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       community_channel_messages: {
@@ -248,7 +248,7 @@ export type Database = {
             columns: ["sender_id"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       community_channels: {
@@ -309,7 +309,7 @@ export type Database = {
             columns: ["community_owner"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       community_members: {
@@ -349,7 +349,7 @@ export type Database = {
             columns: ["user_id"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       community_requests: {
@@ -389,7 +389,7 @@ export type Database = {
             columns: ["user_id"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       connection_requests: {
@@ -423,7 +423,7 @@ export type Database = {
             columns: ["requester"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       events: {
@@ -490,7 +490,7 @@ export type Database = {
             columns: ["event_host"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       events_users: {
@@ -524,7 +524,7 @@ export type Database = {
             columns: ["user_id"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       messages: {
@@ -594,7 +594,7 @@ export type Database = {
             columns: ["eventId"]
             referencedRelation: "events"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       news_posts: {
@@ -637,7 +637,7 @@ export type Database = {
             columns: ["community_id"]
             referencedRelation: "communities"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       profiles: {
@@ -765,7 +765,7 @@ export type Database = {
             columns: ["secondary_gym"]
             referencedRelation: "communities"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       user_tokens: {
@@ -787,7 +787,7 @@ export type Database = {
             columns: ["id"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
     }
@@ -955,7 +955,7 @@ export type Database = {
             columns: ["bucket_id"]
             referencedRelation: "buckets"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       s3_multipart_uploads: {
@@ -995,7 +995,7 @@ export type Database = {
             columns: ["bucket_id"]
             referencedRelation: "buckets"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       s3_multipart_uploads_parts: {
@@ -1047,7 +1047,7 @@ export type Database = {
             columns: ["upload_id"]
             referencedRelation: "s3_multipart_uploads"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
     }
@@ -1163,7 +1163,7 @@ export type Tables<
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
         Database[PublicTableNameOrOptions["schema"]]["Views"])
-    : never = never
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
@@ -1172,14 +1172,14 @@ export type Tables<
     ? R
     : never
   : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-      PublicSchema["Views"])
-  ? (PublicSchema["Tables"] &
-      PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-      Row: infer R
-    }
-    ? R
+        PublicSchema["Views"])
+    ? (PublicSchema["Tables"] &
+        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
     : never
-  : never
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
@@ -1187,7 +1187,7 @@ export type TablesInsert<
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
@@ -1195,12 +1195,12 @@ export type TablesInsert<
     ? I
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-      Insert: infer I
-    }
-    ? I
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
     : never
-  : never
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
@@ -1208,7 +1208,7 @@ export type TablesUpdate<
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
@@ -1216,12 +1216,12 @@ export type TablesUpdate<
     ? U
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-      Update: infer U
-    }
-    ? U
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
     : never
-  : never
 
 export type Enums<
   PublicEnumNameOrOptions extends
@@ -1229,9 +1229,9 @@ export type Enums<
     | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
-    : never = never
+    : never = never,
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
-  ? PublicSchema["Enums"][PublicEnumNameOrOptions]
-  : never
+    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never

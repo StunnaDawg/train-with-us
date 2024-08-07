@@ -22,8 +22,11 @@ const CommunitiesDash = () => {
 
   useFocusEffect(
     useCallback(() => {
+      setLoadingState(true)
       fetchUserCommunities()
-      return () => {}
+      return () => {
+        setLoadingState(false)
+      }
     }, [fetchUserCommunities])
   )
 
