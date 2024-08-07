@@ -60,7 +60,7 @@ const SingleEditPic = ({
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       aspect: [9, 16],
-      quality: 1,
+      quality: 0,
       allowsMultipleSelection: true,
       selectionLimit: 6,
     })

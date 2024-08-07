@@ -1,10 +1,10 @@
-import { View, Text, ScrollView, RefreshControl, Pressable } from "react-native"
-import React, { useCallback, useEffect, useState } from "react"
+import { View, Text, ScrollView, Pressable } from "react-native"
+import React, { useCallback, useState } from "react"
 import UserProfilePic from "./components/UserProfilePic"
 import { Profile } from "../../@types/supabaseTypes"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { useAuth } from "../../supabaseFunctions/authcontext"
-import { useIsFocused, useNavigation } from "@react-navigation/native"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../@types/navigation"
 import { FontAwesome6 } from "@expo/vector-icons"
 import MyEvents from "../Events/MyEvents"
@@ -15,7 +15,6 @@ const ProfileView = () => {
   const [pressedButton, setPressedButton] = useState<{
     [key: string]: boolean
   }>({})
-  const [refreshing, setRefreshing] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const navigation = useNavigation<NavigationType>()
 
@@ -25,11 +24,18 @@ const ProfileView = () => {
   const handlePressedButtonOut = (buttonName: string) => {
     setPressedButton((prev) => ({ ...prev, [buttonName]: false }))
   }
-
-  useEffect(() => {
+  const fetchCurrentUser = async () => {
     if (!user) return
-    useCurrentUser(user?.id, setCurrentUser)
-  }, [user])
+    setCurrentUser(null)
+    await useCurrentUser(user?.id, setCurrentUser)
+  }
+  useFocusEffect(
+    useCallback(() => {
+      console.log("useFocusEffect")
+      fetchCurrentUser()
+      return () => {}
+    }, [user])
+  )
 
   return (
     <>
@@ -41,7 +47,7 @@ const ProfileView = () => {
         searchUsers={false}
       />
       <ScrollView>
-        <UserProfilePic profile={currentUser} refresh={refreshing} />
+        <UserProfilePic profile={currentUser} />
 
         <View className={`${"bg-slate-200"} m-2 rounded-lg p-2`}>
           <Pressable
