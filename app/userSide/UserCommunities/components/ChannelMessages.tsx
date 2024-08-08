@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native"
 import { RootStackParamList } from "../../../@types/navigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
@@ -29,6 +30,7 @@ import ChannelBottomModal from "./ChannelBottomModal"
 import sendPrivateChannelMessage from "../../../supabaseFunctions/addFuncs/sendPrivateChannelMessage"
 import MessageInput from "../../../components/MessageInput"
 import MessageComponent from "../../../components/MessageCard"
+import { se } from "date-fns/locale"
 
 const ChannelMessageScreen = () => {
   const [loading, setLoading] = useState(false)
@@ -40,6 +42,8 @@ const ChannelMessageScreen = () => {
   >([])
   const [messageToSend, setMessageToSend] = useState("")
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
+  const [page, setPage] = useState(0)
+  const [endOfData, setEndOfData] = useState(false)
   const { user } = useAuth()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const snapPoints = useMemo(() => ["1%", "99%"], [])
@@ -88,7 +92,7 @@ const ChannelMessageScreen = () => {
     }
     await upsertCommunitySession(channel.id, messageToSend || "Sent an Image")
     setMessageToSend("")
-    getChannelSessionMessages(channel.id, setServerMessages)
+    getChannelSessionMessages(channel.id, setServerMessages, page, setEndOfData)
   }
 
   useEffect(() => {
@@ -97,8 +101,13 @@ const ChannelMessageScreen = () => {
   }, [user])
 
   useEffect(() => {
-    console.log("Channel id: ", `channel_id=eq.${channel.id}`)
-    getChannelSessionMessages(channel.id, setServerMessages)
+    getChannelSessionMessages(
+      channel.id,
+      setServerMessages,
+      page,
+      setEndOfData,
+      false
+    )
     const channelSubscription = supabase
       .channel("schema-db-changes")
       .on(
@@ -110,7 +119,11 @@ const ChannelMessageScreen = () => {
           filter: `channel_id=eq.${channel.id}`,
         },
         (payload) => {
-          getChannelSessionMessages(channel.id, setServerMessages)
+          setServerMessages((prevMessages: CommunityChannelMessages[] | null) =>
+            prevMessages
+              ? [payload.new as CommunityChannelMessages, ...prevMessages]
+              : [payload.new as CommunityChannelMessages]
+          )
         }
       )
       .subscribe((status, error) => {
@@ -121,6 +134,23 @@ const ChannelMessageScreen = () => {
       supabase.removeChannel(channelSubscription)
     }
   }, [channel])
+
+  const handleLoadMore = () => {
+    if (!loading && !endOfData) {
+      setPage((prevPage) => prevPage + 1)
+    }
+  }
+
+  useEffect(() => {
+    if (page > 0) {
+      getChannelSessionMessages(
+        channel.id,
+        setServerMessages,
+        page,
+        setEndOfData
+      )
+    }
+  }, [page])
 
   return (
     <SafeAreaView className="flex-1">
@@ -157,8 +187,13 @@ const ChannelMessageScreen = () => {
             }}
             className="mx-1"
             data={serverMessages}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
             inverted={true}
-            keyExtractor={(item) => item.id}
+            ListFooterComponent={
+              loading && !endOfData ? <ActivityIndicator size="large" /> : null
+            }
+            keyExtractor={(item, index) => item.id + index.toString()}
             renderItem={({ item }) => (
               <MessageComponent
                 eventId={item.eventId}

@@ -8,12 +8,13 @@ const getChatSessionMessages = async (
   chatSessionId: string,
   setMessages: Dispatch<SetStateAction<Messages[] | null>>,
   page: number,
-  setEndOfMessages: Dispatch<SetStateAction<boolean>>
+  setEndOfMessages: Dispatch<SetStateAction<boolean>>,
+  append: boolean = true
 ) => {
   try {
     const from = page * PAGE_SIZE
     const to = from + PAGE_SIZE - 1
-    console.log("chatSessionId", chatSessionId)
+
     const { data: messages, error } = await supabase
       .from("messages")
       .select("*")
@@ -29,9 +30,13 @@ const getChatSessionMessages = async (
         setEndOfMessages(true)
       }
 
-      setMessages((prevItems: Messages[] | null) =>
-        prevItems ? [...prevItems, ...messages] : messages
-      )
+      if (append) {
+        setMessages((prevItems: Messages[] | null) =>
+          prevItems ? [...prevItems, ...messages] : messages
+        )
+      } else {
+        setMessages(messages)
+      }
     }
   } catch (error) {
     console.log(error)

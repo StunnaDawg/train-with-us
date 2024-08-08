@@ -26,6 +26,8 @@ import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import MessageInput from "../../../components/MessageInput"
 import MessageComponent from "../../../components/MessageCard"
 
+type MessageStateUpdater = (prevMessages: Messages[] | null) => Messages[]
+
 const MessageScreen = () => {
   const route = useRoute<RouteProp<RootStackParamList, "MessagingScreen">>()
   const chatSession = route.params.chatSession
@@ -50,7 +52,8 @@ const MessageScreen = () => {
       chatSession.id,
       setServerMessages,
       page,
-      setEndOfData
+      setEndOfData,
+      false
     )
     const channelSubscription = supabase
       .channel("schema-db-changes")
@@ -63,12 +66,10 @@ const MessageScreen = () => {
           filter: `chat_session=eq.${chatSession.id}`,
         },
         (payload) => {
-          console.log("Message received: ", payload)
-          getChatSessionMessages(
-            chatSession.id,
-            setServerMessages,
-            page,
-            setEndOfData
+          setServerMessages((prevMessages: Messages[] | null) =>
+            prevMessages
+              ? [payload.new as Messages, ...prevMessages]
+              : [payload.new as Messages]
           )
         }
       )
@@ -104,12 +105,6 @@ const MessageScreen = () => {
     )
 
     await upsertChatSession(chatSession.id, messageToSend || "Sent an image")
-    getChatSessionMessages(
-      chatSession.id,
-      setServerMessages,
-      page,
-      setEndOfData
-    )
 
     if (currentUser?.expo_push_token) {
       sendNotification(
@@ -170,11 +165,11 @@ const MessageScreen = () => {
             className="mx-1"
             data={serverMessages}
             onEndReached={handleLoadMore}
-            onEndReachedThreshold={0.1}
+            onEndReachedThreshold={0.5}
             ListFooterComponent={
-              loading && !endOfData ? <ActivityIndicator size="small" /> : null
+              loading && !endOfData ? <ActivityIndicator size="large" /> : null
             }
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item, index) => item.id + index.toString()}
             renderItem={({ item }) => (
               <MessageComponent
                 eventId={item.eventId}
