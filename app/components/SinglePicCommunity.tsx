@@ -40,6 +40,7 @@ export default function SinglePicCommunity({
     isMounted.current = true
     if (!item) {
       setPlaceholder(true)
+      setLoading(false)
       return
     }
     readImage()
@@ -67,7 +68,6 @@ export default function SinglePicCommunity({
       fr.onload = () => {
         if (isMounted.current) {
           setAvatarUrl(fr.result as string)
-          setLoading(false)
         }
       }
     } catch (error) {
