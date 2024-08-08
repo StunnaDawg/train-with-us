@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { CommunityChannelMessages, Messages } from "../../@types/supabaseTypes"
+import { cacheStorage } from "../../utilFunctions/mmkvStorage"
 
 const PAGE_SIZE = 10
 
@@ -12,6 +13,20 @@ const getChannelSessionMessages = async (
   append: boolean = true
 ) => {
   try {
+    const cacheKey = `channl:${channelId}:page:${page}`
+    const cachedMessages = cacheStorage.getString(cacheKey)
+
+    if (cachedMessages) {
+      const messages: CommunityChannelMessages[] = JSON.parse(cachedMessages)
+      setMessages((prevItems: CommunityChannelMessages[] | null) =>
+        append ? [...(prevItems || []), ...messages] : messages
+      )
+      if (messages.length < PAGE_SIZE) {
+        setEndOfMessages(true)
+      }
+      return
+    }
+
     const from = page * PAGE_SIZE
     const to = from + PAGE_SIZE - 1
 
@@ -29,6 +44,8 @@ const getChannelSessionMessages = async (
       if (messages.length < PAGE_SIZE) {
         setEndOfMessages(true)
       }
+
+      cacheStorage.set(cacheKey, JSON.stringify(messages))
 
       if (append) {
         setMessages((prevItems: CommunityChannelMessages[] | null) =>

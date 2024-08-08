@@ -11,6 +11,7 @@ import {
 import supabase from "../../lib/supabase"
 import { Skeleton } from "moti/skeleton"
 import { fi, se } from "date-fns/locale"
+import { cacheStorage } from "../utilFunctions/mmkvStorage"
 
 type SinglePicProps = {
   size: number
@@ -52,6 +53,15 @@ export default function SinglePicCommunity({
 
   const readImage = async () => {
     setLoading(true)
+
+    const cacheKey = `image:${item}`
+    const cachedImage = cacheStorage.getString(cacheKey)
+
+    if (cachedImage) {
+      setAvatarUrl(cachedImage)
+      setLoading(false)
+      return
+    }
     try {
       const { data, error } = await supabase.storage
         .from("photos")
@@ -67,7 +77,10 @@ export default function SinglePicCommunity({
       fr.readAsDataURL(data!)
       fr.onload = () => {
         if (isMounted.current) {
-          setAvatarUrl(fr.result as string)
+          const imageDataUrl = fr.result as string
+          setAvatarUrl(imageDataUrl)
+
+          cacheStorage.set(cacheKey, imageDataUrl)
         }
       }
     } catch (error) {
