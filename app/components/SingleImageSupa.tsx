@@ -11,20 +11,18 @@ import removePhoto from "../supabaseFunctions/deleteFuncs/removePhoto"
 import insertProfilePhoto from "../supabaseFunctions/updateFuncs/insertProfilePhotos"
 import { Skeleton } from "moti/skeleton"
 import { MotiView } from "moti"
+import { ca } from "date-fns/locale"
+import { cacheStorage } from "../utilFunctions/mmkvStorage"
 
 type SingleImageProp = {
-  imageUrl: string | null | undefined
+  imageUrl: string | null
   listIndex: number
-  imageUrls: string[] | null
-  setImageUrls: React.Dispatch<React.SetStateAction<string[]>>
   size?: number
 }
 
 const SingleImageSupa = ({
   imageUrl,
   listIndex,
-  imageUrls,
-  setImageUrls,
   size = 150,
 }: SingleImageProp) => {
   const [loading, setLoading] = useState(false)
@@ -46,20 +44,36 @@ const SingleImageSupa = ({
     setLoading(false)
   }, [imageUrl])
 
-  const readImage = () => {
+  const readImage = async () => {
     setLoading(true)
     if (imageUrl === "") return
-    console.log("reading", `${imageUrl}`)
-    supabase.storage
-      .from("photos")
-      .download(`${imageUrl}`)
-      .then(({ data }) => {
-        const fr = new FileReader()
-        fr.readAsDataURL(data!)
-        fr.onload = () => {
-          setImage(fr.result as string)
-        }
-      })
+    const cacheKey = `image:${imageUrl}`
+    const cachedImage = cacheStorage.getString(cacheKey)
+
+    if (cachedImage) {
+      setImage(cachedImage)
+      setLoading(false)
+      return
+    }
+
+    try {
+      supabase.storage
+        .from("photos")
+        .download(`${imageUrl}`)
+        .then(({ data }) => {
+          const fr = new FileReader()
+          fr.readAsDataURL(data!)
+          fr.onload = () => {
+            const img = fr.result as string
+            setImage(img)
+            cacheStorage.set(cacheKey, img)
+          }
+        })
+    } catch (error) {
+      console.log("Error reading image", error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const pickImage = async () => {
@@ -95,13 +109,7 @@ const SingleImageSupa = ({
     itemUrl: string | null | undefined,
     listIndex: number
   ) => {
-    if (
-      itemUrl === "" ||
-      !imageUrls ||
-      itemUrl === null ||
-      itemUrl === undefined
-    )
-      return
+    if (itemUrl === "" || itemUrl === null || itemUrl === undefined) return
     console.log(`${itemUrl}`)
     const { error } = await supabase.storage
       .from("photos")
@@ -115,13 +123,6 @@ const SingleImageSupa = ({
     }
 
     setImage("")
-
-    const newFiles = imageUrls.filter((_, index) => index !== listIndex)
-    newFiles.splice(listIndex, 1)
-    setImageUrls(newFiles)
-
-    console.log(newFiles)
-    console.log("Removed Image")
   }
 
   return (
