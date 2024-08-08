@@ -156,6 +156,9 @@ const MessageScreen = () => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <FlatList
+            initialNumToRender={10}
+            maxToRenderPerBatch={5}
+            windowSize={5}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
               flexGrow: 1,

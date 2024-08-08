@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { NavigationType } from "../@types/navigation"
 import { View } from "moti"
 import SinglePicCommunity from "./SinglePicCommunity"
@@ -119,4 +119,4 @@ const MessageComponent = ({
   )
 }
 
-export default MessageComponent
+export default React.memo(MessageComponent)

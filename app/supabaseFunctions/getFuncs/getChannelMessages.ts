@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { CommunityChannelMessages, Messages } from "../../@types/supabaseTypes"
 
-const PAGE_SIZE = 5
+const PAGE_SIZE = 10
 
 const getChannelSessionMessages = async (
   channelId: string,

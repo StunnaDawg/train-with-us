@@ -1,8 +1,9 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { Messages } from "../../@types/supabaseTypes"
+import { cacheStorage } from "../../utilFunctions/mmkvStorage"
 
-const PAGE_SIZE = 5
+const PAGE_SIZE = 10
 
 const getChatSessionMessages = async (
   chatSessionId: string,
@@ -12,6 +13,19 @@ const getChatSessionMessages = async (
   append: boolean = true
 ) => {
   try {
+    const cacheKey = `chatSession:${chatSessionId}:page:${page}`
+    const cachedMessages = cacheStorage.getString(cacheKey)
+
+    if (cachedMessages) {
+      const messages: Messages[] = JSON.parse(cachedMessages)
+      setMessages((prevItems: Messages[] | null) =>
+        append ? [...(prevItems || []), ...messages] : messages
+      )
+      if (messages.length < PAGE_SIZE) {
+        setEndOfMessages(true)
+      }
+      return
+    }
     const from = page * PAGE_SIZE
     const to = from + PAGE_SIZE - 1
 
@@ -29,6 +43,8 @@ const getChatSessionMessages = async (
       if (messages.length < PAGE_SIZE) {
         setEndOfMessages(true)
       }
+
+      cacheStorage.set(cacheKey, JSON.stringify(messages))
 
       if (append) {
         setMessages((prevItems: Messages[] | null) =>
