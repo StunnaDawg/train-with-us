@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { StyleSheet, View, ActivityIndicator, Dimensions } from "react-native"
 import supabase from "../../../../lib/supabase"
 import { Skeleton } from "moti/skeleton"
+import { cacheStorage } from "../../../utilFunctions/mmkvStorage"
 
 type SinglePicProps = {
   height: number
@@ -28,24 +29,41 @@ export default function EventCoverPic({
     readImage()
   }, [item])
 
-  const readImage = () => {
+  const readImage = async () => {
     if (item === undefined) return
     setLoading(true)
-    supabase.storage
-      .from("photos")
-      .download(`${item}`)
-      .then(({ data }) => {
-        const fr = new FileReader()
-        fr.readAsDataURL(data!)
-        fr.onload = () => {
-          setAvatarUrl(fr.result as string)
+    const cacheKey = `image:${item}`
+    const cachedImage = cacheStorage.getString(cacheKey)
+
+    if (cachedImage) {
+      setAvatarUrl(cachedImage)
+      setLoading(false)
+      return
+    }
+
+    try {
+      supabase.storage
+        .from("photos")
+        .download(`${item}`)
+        .then(({ data }) => {
+          const fr = new FileReader()
+          fr.readAsDataURL(data!)
+          fr.onload = () => {
+            const base64 = fr.result as string
+            setAvatarUrl(base64)
+            cacheStorage.set(cacheKey, base64)
+          }
+        })
+        .catch((error) => {
+          console.error("Error downloading image:", error)
           setLoading(false)
-        }
-      })
-      .catch((error) => {
-        console.error("Error downloading image:", error)
-        setLoading(false)
-      })
+        })
+    } catch (error) {
+      console.error("Error downloading image:", error)
+      setLoading(false)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const styles = StyleSheet.create({

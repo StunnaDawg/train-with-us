@@ -19,6 +19,7 @@ type SinglePicProps = {
   avatarRadius: number
   noAvatarRadius: number
   skeletonRadius?: any
+  allowExpand?: boolean
 }
 
 export default function SinglePicCommunity({
@@ -27,6 +28,7 @@ export default function SinglePicCommunity({
   item,
   avatarRadius,
   noAvatarRadius,
+  allowExpand = false,
 }: SinglePicProps) {
   const [showPlaceholder, setPlaceholder] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
@@ -139,7 +141,10 @@ export default function SinglePicCommunity({
 
   return (
     <View>
-      <TouchableOpacity onPress={openModal}>
+      <TouchableOpacity
+        disabled={allowExpand ? false : true}
+        onPress={openModal}
+      >
         {loading ? (
           <Skeleton radius={skeletonRadius} height={size} width={size} />
         ) : avatarUrl !== "" ? (

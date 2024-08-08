@@ -65,7 +65,7 @@ const EditProfile = () => {
                 <Text className="text-lg font-bold text-center ">Pictures</Text>
               </View>
               <View>
-                <ImageGrid currentUser={currentUser} setLoading={setLoading} />
+                <ImageGrid currentUser={currentUser} />
               </View>
             </View>
             <View className="flex flex-row justify-center">
@@ -77,10 +77,7 @@ const EditProfile = () => {
                 </View>
 
                 <View>
-                  <ProfilePicture
-                    currentUser={currentUser}
-                    setLoading={setLoading}
-                  />
+                  <ProfilePicture currentUser={currentUser} />
                 </View>
               </View>
             </View>

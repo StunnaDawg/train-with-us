@@ -63,6 +63,7 @@ const MessageComponent = ({
         item={senderProfilePic}
         avatarRadius={100}
         noAvatarRadius={100}
+        allowExpand={true}
       />
       <View className="flex-1 ml-3">
         <View className="flex flex-row items-center">
@@ -80,6 +81,7 @@ const MessageComponent = ({
               item={imageUrl}
               avatarRadius={10}
               noAvatarRadius={10}
+              allowExpand={true}
             />
           </View>
         ) : isLink && community ? (

@@ -5,10 +5,9 @@ import { Profile } from "../../../@types/supabaseTypes"
 
 type ProfilePictureProps = {
   currentUser: Profile | null
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ProfilePicture = ({ currentUser, setLoading }: ProfilePictureProps) => {
+const ProfilePicture = ({ currentUser }: ProfilePictureProps) => {
   const [profilePic, setProfilePic] = useState<string | null | undefined>()
 
   useEffect(() => {
