@@ -24,7 +24,6 @@ const ViewFullUserProfile = () => {
   const { user } = useAuth()
   const [primaryGym, setPrimaryGym] = useState<Communities | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
-  const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
   const route = useRoute<RouteProp<RootStackParamList, "ViewFullUserProfile">>()
   const profile = route.params.user
   const imageWidth = 363
@@ -54,11 +53,6 @@ const ViewFullUserProfile = () => {
     getPrimaryGymName()
   }, [profile])
 
-  useEffect(() => {
-    if (profile?.photos_url === null || undefined) return
-    setImageFiles(profile?.photos_url)
-  }, [profile])
-
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
       <View className="p-2">
@@ -75,7 +69,7 @@ const ViewFullUserProfile = () => {
             horizontal={true}
             decelerationRate="fast"
             snapToInterval={imageWidth + itemMargin}
-            data={imageFiles}
+            data={profile?.photos_url}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <View style={{ width: imageWidth, alignItems: "center" }}>
@@ -84,6 +78,7 @@ const ViewFullUserProfile = () => {
                   avatarRadius={10}
                   noAvatarRadius={10}
                   item={item}
+                  skeletonRadius={10}
                 />
               </View>
             )}
@@ -91,7 +86,7 @@ const ViewFullUserProfile = () => {
             viewabilityConfig={viewabilityConfig}
           />
           <View className="flex flex-row justify-center mt-2">
-            {imageFiles?.map((_, index) => (
+            {profile?.photos_url?.map((_, index) => (
               <View
                 key={index}
                 style={{
