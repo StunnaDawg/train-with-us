@@ -11,11 +11,12 @@ import removeProfilePic from "../supabaseFunctions/deleteFuncs/removeProfilePic"
 import updateProfilePic from "../supabaseFunctions/imageFuncs/addProiflePic"
 import { MotiView } from "moti"
 import { Skeleton } from "moti/skeleton"
+import { ca } from "date-fns/locale"
+import { cacheStorage } from "../utilFunctions/mmkvStorage"
 
 type SingleImageProp = {
   imageUrl: string | null | undefined
   imageUrlToRead: string | null | undefined
-  setImageUrl: React.Dispatch<React.SetStateAction<string | null | undefined>>
   size?: number
 }
 
@@ -23,7 +24,6 @@ const ProfilePicSupa = ({
   size = 120,
   imageUrl,
   imageUrlToRead,
-  setImageUrl,
 }: SingleImageProp) => {
   const [loading, setLoading] = useState(false)
   const [isPressed, setIsPressed] = useState<boolean>(false)
@@ -44,19 +44,37 @@ const ProfilePicSupa = ({
     readImage()
   }, [imageUrl])
 
-  const readImage = () => {
+  const readImage = async () => {
+    setLoading(true)
     if (imageUrl === "") return
-    console.log("reading", `${imageUrl}`)
-    supabase.storage
-      .from("photos")
-      .download(`${imageUrl}`)
-      .then(({ data }) => {
-        const fr = new FileReader()
-        fr.readAsDataURL(data!)
-        fr.onload = () => {
-          setImage(fr.result as string)
-        }
-      })
+
+    const cacheKey = `image:${imageUrl}`
+    const cachedImage = cacheStorage.getString(cacheKey)
+
+    if (cachedImage) {
+      setImage(cachedImage)
+      setLoading(false)
+      return
+    }
+
+    try {
+      supabase.storage
+        .from("photos")
+        .download(`${imageUrl}`)
+        .then(({ data }) => {
+          const fr = new FileReader()
+          fr.readAsDataURL(data!)
+          fr.onload = () => {
+            const img = fr.result as string
+            setImage(img)
+            cacheStorage.set(cacheKey, img)
+          }
+        })
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const pickImage = async () => {
@@ -83,7 +101,6 @@ const ProfilePicSupa = ({
 
       if (userId === undefined) return
       updateProfilePic(userId, filePath)
-      setImageUrl(filePath)
       setImage(img.uri)
       setLoading(false)
     }

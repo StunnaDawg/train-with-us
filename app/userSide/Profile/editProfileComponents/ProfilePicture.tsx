@@ -8,25 +8,13 @@ type ProfilePictureProps = {
 }
 
 const ProfilePicture = ({ currentUser }: ProfilePictureProps) => {
-  const [profilePic, setProfilePic] = useState<string | null | undefined>()
-
-  useEffect(() => {
-    if (
-      currentUser?.profile_pic === null ||
-      currentUser?.profile_pic === undefined
-    )
-      return
-    setProfilePic(currentUser?.profile_pic)
-  }, [currentUser])
-
   return (
     <View>
       <View>
         <ProfilePicSupa
           size={120}
-          imageUrl={profilePic}
-          imageUrlToRead={profilePic}
-          setImageUrl={setProfilePic}
+          imageUrl={currentUser?.profile_pic || null}
+          imageUrlToRead={currentUser?.profile_pic || null}
         />
       </View>
     </View>
