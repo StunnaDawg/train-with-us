@@ -30,7 +30,6 @@ import ChannelBottomModal from "./ChannelBottomModal"
 import sendPrivateChannelMessage from "../../../supabaseFunctions/addFuncs/sendPrivateChannelMessage"
 import MessageInput from "../../../components/MessageInput"
 import MessageComponent from "../../../components/MessageCard"
-import { se } from "date-fns/locale"
 
 const ChannelMessageScreen = () => {
   const [loading, setLoading] = useState(false)

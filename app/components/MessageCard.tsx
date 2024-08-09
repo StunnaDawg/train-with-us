@@ -64,6 +64,7 @@ const MessageComponent = ({
         avatarRadius={100}
         noAvatarRadius={100}
         allowExpand={true}
+        allowCacheImage={false}
       />
       <View className="flex-1 ml-3">
         <View className="flex flex-row items-center">

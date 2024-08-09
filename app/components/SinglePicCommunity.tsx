@@ -20,6 +20,7 @@ type SinglePicProps = {
   noAvatarRadius: number
   skeletonRadius?: any
   allowExpand?: boolean
+  allowCacheImage?: boolean
 }
 
 export default function SinglePicCommunity({
@@ -29,6 +30,7 @@ export default function SinglePicCommunity({
   avatarRadius,
   noAvatarRadius,
   allowExpand = false,
+  allowCacheImage = true,
 }: SinglePicProps) {
   const [showPlaceholder, setPlaceholder] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
@@ -59,7 +61,7 @@ export default function SinglePicCommunity({
     const cacheKey = `image:${item}`
     const cachedImage = cacheStorage.getString(cacheKey)
 
-    if (cachedImage) {
+    if (cachedImage && allowCacheImage) {
       setAvatarUrl(cachedImage)
       setLoading(false)
       return
@@ -82,7 +84,9 @@ export default function SinglePicCommunity({
           const imageDataUrl = fr.result as string
           setAvatarUrl(imageDataUrl)
 
-          cacheStorage.set(cacheKey, imageDataUrl)
+          if (allowCacheImage) {
+            cacheStorage.set(cacheKey, imageDataUrl)
+          }
         }
       }
     } catch (error) {
