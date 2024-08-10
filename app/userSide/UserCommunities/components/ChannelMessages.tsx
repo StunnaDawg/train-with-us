@@ -30,8 +30,11 @@ import ChannelBottomModal from "./ChannelBottomModal"
 import sendPrivateChannelMessage from "../../../supabaseFunctions/addFuncs/sendPrivateChannelMessage"
 import MessageInput from "../../../components/MessageInput"
 import MessageComponent from "../../../components/MessageCard"
+import { set } from "mongoose"
+import MessageSkeleton from "./MessagesSkeleton"
 
 const ChannelMessageScreen = () => {
+  const [initialLoading, setInitialLoading] = useState(true)
   const [loading, setLoading] = useState(false)
   const route = useRoute<RouteProp<RootStackParamList, "ChannelScreen">>()
   const channel = route.params.channelId
@@ -91,7 +94,14 @@ const ChannelMessageScreen = () => {
     }
     await upsertCommunitySession(channel.id, messageToSend || "Sent an Image")
     setMessageToSend("")
-    getChannelSessionMessages(channel.id, setServerMessages, page, setEndOfData)
+    getChannelSessionMessages(
+      channel.id,
+      setServerMessages,
+      page,
+      setEndOfData,
+      true,
+      setLoading
+    )
   }
 
   useEffect(() => {
@@ -100,38 +110,45 @@ const ChannelMessageScreen = () => {
   }, [user])
 
   useEffect(() => {
-    getChannelSessionMessages(
-      channel.id,
-      setServerMessages,
-      page,
-      setEndOfData,
-      false
-    )
-    const channelSubscription = supabase
-      .channel("schema-db-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "community_channel_messages",
-          filter: `channel_id=eq.${channel.id}`,
-        },
-        (payload) => {
-          setServerMessages((prevMessages: CommunityChannelMessages[] | null) =>
-            prevMessages
-              ? [payload.new as CommunityChannelMessages, ...prevMessages]
-              : [payload.new as CommunityChannelMessages]
-          )
-        }
+    const getChannelSessionMessagesFunc = async () => {
+      setInitialLoading(true)
+      await getChannelSessionMessages(
+        channel.id,
+        setServerMessages,
+        page,
+        setEndOfData,
+        false,
+        setLoading
       )
-      .subscribe((status, error) => {
-        console.log("Subscription status:", status, error)
-      })
+      const channelSubscription = supabase
+        .channel("schema-db-changes")
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "community_channel_messages",
+            filter: `channel_id=eq.${channel.id}`,
+          },
+          (payload) => {
+            setServerMessages(
+              (prevMessages: CommunityChannelMessages[] | null) =>
+                prevMessages
+                  ? [payload.new as CommunityChannelMessages, ...prevMessages]
+                  : [payload.new as CommunityChannelMessages]
+            )
+          }
+        )
+        .subscribe((status, error) => {
+          console.log("Subscription status:", status, error)
+        })
 
-    return () => {
-      supabase.removeChannel(channelSubscription)
+      return () => {
+        supabase.removeChannel(channelSubscription)
+      }
     }
+    getChannelSessionMessagesFunc()
+    setInitialLoading(false)
   }, [channel])
 
   const handleLoadMore = () => {
@@ -146,10 +163,37 @@ const ChannelMessageScreen = () => {
         channel.id,
         setServerMessages,
         page,
-        setEndOfData
+        setEndOfData,
+        true,
+        setLoading
       )
     }
   }, [page])
+
+  const renderMessage = useCallback(
+    ({ item }: { item: CommunityChannelMessages }) => {
+      return (
+        <MessageComponent
+          eventId={item.eventId}
+          communityId={item.community_id}
+          isLink={item.community_or_event_link}
+          sentAt={item.sent_at}
+          message={item.mesage}
+          id={item.sender_id}
+          name={item.sender_name}
+          imageUrl={item.image}
+          senderProfilePic={item.sender_profile_pic}
+        />
+      )
+    },
+    []
+  )
+
+  const messageKeyExtractor = useCallback(
+    (item: CommunityChannelMessages, index: number) =>
+      item.id + index.toString(),
+    []
+  )
 
   return (
     <SafeAreaView className="flex-1">
@@ -172,43 +216,38 @@ const ChannelMessageScreen = () => {
         </View>
       </Pressable>
 
-      <KeyboardAvoidingView
-        className="flex-1 border-transparent bg-white rounded-3xl mx-2"
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: "flex-end",
-            }}
-            className="mx-1"
-            data={serverMessages}
-            onEndReached={handleLoadMore}
-            onEndReachedThreshold={0.5}
-            inverted={true}
-            ListFooterComponent={
-              loading && !endOfData ? <ActivityIndicator size="large" /> : null
-            }
-            keyExtractor={(item, index) => item.id + index.toString()}
-            renderItem={({ item }) => (
-              <MessageComponent
-                eventId={item.eventId}
-                communityId={item.community_id}
-                isLink={item.community_or_event_link}
-                sentAt={item.sent_at}
-                message={item.mesage}
-                id={item.sender_id}
-                name={item.sender_name}
-                imageUrl={item.image}
-                senderProfilePic={item.sender_profile_pic}
-              />
-            )}
-          />
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+      {initialLoading ? (
+        <MessageSkeleton />
+      ) : (
+        <KeyboardAvoidingView
+          className="flex-1 border-transparent bg-white rounded-3xl mx-2"
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                flexGrow: 1,
+                justifyContent: "flex-end",
+              }}
+              className="mx-1"
+              data={serverMessages}
+              onEndReached={handleLoadMore}
+              onEndReachedThreshold={0.5}
+              initialNumToRender={10}
+              inverted={true}
+              ListFooterComponent={
+                loading && !endOfData ? (
+                  <ActivityIndicator size="large" />
+                ) : null
+              }
+              keyExtractor={messageKeyExtractor}
+              renderItem={renderMessage}
+            />
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      )}
       <MessageInput
         messageToSend={messageToSend}
         setMessageToSend={setMessageToSend}

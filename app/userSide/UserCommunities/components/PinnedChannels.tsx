@@ -135,6 +135,9 @@ const PinnedChannels = React.memo(() => {
         className={` mx-2 w-72 border-b-slate-400 p-4 flex flex-row justify-between  flex-grow items-center border-b-2 `}
       >
         <Pressable
+          onLongPress={() => {
+            removePinChannel(c.id)
+          }}
           onPressIn={() => handlePressIn(c.id)}
           onPressOut={() => handlePressOut(c.id)}
           key={c.id}

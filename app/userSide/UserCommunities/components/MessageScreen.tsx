@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import {
   View,
   Text,
@@ -25,12 +25,14 @@ import BackButton from "../../../components/BackButton"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import MessageInput from "../../../components/MessageInput"
 import MessageComponent from "../../../components/MessageCard"
+import MessageSkeleton from "./MessagesSkeleton"
 
 type MessageStateUpdater = (prevMessages: Messages[] | null) => Messages[]
 
 const MessageScreen = () => {
   const route = useRoute<RouteProp<RootStackParamList, "MessagingScreen">>()
   const chatSession = route.params.chatSession
+  const [initialLoading, setInitialLoading] = useState(true)
   const [page, setPage] = useState(0)
   const [endOfData, setEndOfData] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -48,41 +50,47 @@ const MessageScreen = () => {
   }, [user, otherUserId])
 
   useEffect(() => {
-    getChatSessionMessages(
-      chatSession.id,
-      setServerMessages,
-      page,
-      setEndOfData,
-      false
-    )
-    const channelSubscription = supabase
-      .channel("schema-db-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "messages",
-          filter: `chat_session=eq.${chatSession.id}`,
-        },
-        (payload) => {
-          setServerMessages((prevMessages: Messages[] | null) =>
-            prevMessages
-              ? [payload.new as Messages, ...prevMessages]
-              : [payload.new as Messages]
-          )
-        }
+    const fetchMessages = async () => {
+      setInitialLoading(true)
+      await getChatSessionMessages(
+        chatSession.id,
+        setServerMessages,
+        page,
+        setEndOfData,
+        false,
+        setLoading
       )
-      .subscribe((status, error) => {
-        console.log("Subscription status:", status)
-        if (error) {
-          console.error("Subscription error:", error)
-        }
-      })
+      const channelSubscription = supabase
+        .channel("schema-db-changes")
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "messages",
+            filter: `chat_session=eq.${chatSession.id}`,
+          },
+          (payload) => {
+            setServerMessages((prevMessages: Messages[] | null) =>
+              prevMessages
+                ? [payload.new as Messages, ...prevMessages]
+                : [payload.new as Messages]
+            )
+          }
+        )
+        .subscribe((status, error) => {
+          console.log("Subscription status:", status)
+          if (error) {
+            console.error("Subscription error:", error)
+          }
+        })
 
-    return () => {
-      supabase.removeChannel(channelSubscription)
+      return () => {
+        supabase.removeChannel(channelSubscription)
+      }
     }
+    fetchMessages()
+    setInitialLoading(false)
   }, [chatSession])
 
   const handleLoadMore = () => {
@@ -123,10 +131,33 @@ const MessageScreen = () => {
         chatSession.id,
         setServerMessages,
         page,
-        setEndOfData
+        setEndOfData,
+        true,
+        setLoading
       )
     }
   }, [page])
+
+  const renderMessage = useCallback(({ item }: { item: Messages }) => {
+    return (
+      <MessageComponent
+        eventId={item.eventId}
+        communityId={item.community_id}
+        isLink={item.community_or_event_link}
+        sentAt={item.sent_at}
+        message={item.message}
+        id={item.sender}
+        name={item.sender_name}
+        imageUrl={item.image}
+        senderProfilePic={item.sender_profile_pic}
+      />
+    )
+  }, [])
+
+  const messageKeyExtractor = useCallback((item: Messages, index: number) => {
+    return item.id + index.toString()
+  }, [])
+
   return (
     <SafeAreaView className="flex-1 bg-slate-300/05">
       <View className="flex flex-row justify-between">
@@ -149,46 +180,42 @@ const MessageScreen = () => {
         <View />
       </View>
 
-      <KeyboardAvoidingView
-        className="flex-1 border-transparent bg-white rounded-3xl mx-2"
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <FlatList
-            initialNumToRender={10}
-            maxToRenderPerBatch={5}
-            windowSize={5}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: "flex-end",
-            }}
-            inverted={true}
-            className="mx-1"
-            data={serverMessages}
-            onEndReached={handleLoadMore}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={
-              loading && !endOfData ? <ActivityIndicator size="large" /> : null
-            }
-            keyExtractor={(item, index) => item.id + index.toString()}
-            renderItem={({ item }) => (
-              <MessageComponent
-                eventId={item.eventId}
-                communityId={item.community_id}
-                isLink={item.community_or_event_link}
-                sentAt={item.sent_at}
-                message={item.message}
-                id={item.sender}
-                name={item.sender_name}
-                imageUrl={item.image}
-                senderProfilePic={item.sender_profile_pic}
-              />
-            )}
-          />
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+      {initialLoading ? (
+        <MessageSkeleton />
+      ) : (
+        <KeyboardAvoidingView
+          className="flex-1 border-transparent bg-white rounded-3xl mx-2"
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <FlatList
+              scrollEnabled={!loading}
+              initialNumToRender={10}
+              maxToRenderPerBatch={5}
+              windowSize={5}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                flexGrow: 1,
+                justifyContent: "flex-end",
+              }}
+              inverted={true}
+              className="mx-1"
+              data={serverMessages}
+              ListHeaderComponent={<View className="h-2" />}
+              onEndReached={handleLoadMore}
+              onEndReachedThreshold={10}
+              ListFooterComponent={
+                loading && !endOfData ? (
+                  <ActivityIndicator size="large" />
+                ) : null
+              }
+              keyExtractor={messageKeyExtractor}
+              renderItem={renderMessage}
+            />
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      )}
       <MessageInput
         messageToSend={messageToSend}
         setMessageToSend={setMessageToSend}

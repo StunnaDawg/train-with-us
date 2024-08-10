@@ -10,9 +10,11 @@ const getChannelSessionMessages = async (
   setMessages: Dispatch<SetStateAction<CommunityChannelMessages[] | null>>,
   page: number,
   setEndOfMessages: Dispatch<SetStateAction<boolean>>,
-  append: boolean = true
+  append: boolean = true,
+  setLoading: Dispatch<SetStateAction<boolean>>
 ) => {
   try {
+    setLoading(true)
     const cacheKey = `channl:${channelId}:page:${page}`
     const cachedMessages = cacheStorage.getString(cacheKey)
 
@@ -58,6 +60,8 @@ const getChannelSessionMessages = async (
     return messages
   } catch (error) {
     console.log(error)
+  } finally {
+    setLoading(false)
   }
 }
 

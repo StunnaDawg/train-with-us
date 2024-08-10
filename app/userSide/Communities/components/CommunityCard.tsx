@@ -69,6 +69,8 @@ const CommunityCard = ({
             item={community.community_profile_pic}
             avatarRadius={100}
             noAvatarRadius={100}
+            allowExpand={false}
+            allowCacheImage={false}
           />
         </View>
 

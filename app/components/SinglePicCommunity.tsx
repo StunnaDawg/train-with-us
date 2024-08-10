@@ -10,7 +10,7 @@ import {
 } from "react-native"
 import supabase from "../../lib/supabase"
 import { Skeleton } from "moti/skeleton"
-import { fi, se } from "date-fns/locale"
+
 import { cacheStorage } from "../utilFunctions/mmkvStorage"
 
 type SinglePicProps = {
@@ -66,6 +66,7 @@ export default function SinglePicCommunity({
       setLoading(false)
       return
     }
+    console.log("tying", item)
     try {
       const { data, error } = await supabase.storage
         .from("photos")

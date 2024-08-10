@@ -10,9 +10,11 @@ const getChatSessionMessages = async (
   setMessages: Dispatch<SetStateAction<Messages[] | null>>,
   page: number,
   setEndOfMessages: Dispatch<SetStateAction<boolean>>,
-  append: boolean = true
+  append: boolean = true,
+  setLoading: Dispatch<SetStateAction<boolean>>
 ) => {
   try {
+    setLoading(true)
     const cacheKey = `chatSession:${chatSessionId}:page:${page}`
     const cachedMessages = cacheStorage.getString(cacheKey)
 
@@ -56,6 +58,8 @@ const getChatSessionMessages = async (
     }
   } catch (error) {
     console.log(error)
+  } finally {
+    setLoading(false)
   }
 }
 
