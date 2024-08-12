@@ -20,7 +20,7 @@ const sendNotification = async (
 
   if (error && error instanceof FunctionsHttpError) {
     const errorMessage = await error.context.json()
-    console.log("Function returned an error", errorMessage)
+    console.log("Sending notifivation Function returned an error", errorMessage)
   }
 
   console.log("Notification sent:", data)

@@ -2,20 +2,22 @@ import supabase from "../../../lib/supabase"
 
 const upsertCommunitySession = async (
   channelId: string,
-  recentMessage: string
+  name: string,
+  message: string
 ) => {
   try {
-    const { error } = await supabase.from("community_channels").upsert([
-      {
-        id: channelId,
-        recent_message: recentMessage,
+    const { error: updateError } = await supabase
+      .from("community_channels")
+      .update({
+        recent_message: message, // Only the fields to update
         updated_at: new Date(),
-      },
-    ])
+        recent_message_sender: name,
+      })
+      .eq("id", channelId)
 
-    if (error) {
-      console.log("upsertChatSession error", error)
-      throw error
+    if (updateError) {
+      console.error("community session error", updateError)
+      throw updateError
     }
   } catch (error) {
     console.log(error)

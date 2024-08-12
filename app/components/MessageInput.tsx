@@ -7,22 +7,17 @@ import { FontAwesome6 } from "@expo/vector-icons"
 import supabase from "../../lib/supabase"
 import { decode } from "base64-arraybuffer"
 import { Image } from "expo-image"
-import getSingleEvent from "../supabaseFunctions/getFuncs/getSingleEvent"
-import getSingleCommunity from "../supabaseFunctions/getFuncs/getSingleCommunity"
 
 type MessageInputProps = {
-  messageToSend: string
-  setMessageToSend: Dispatch<SetStateAction<string>>
-  sendMessageAction: (image: string | null) => void
+  sendMessageAction: (image: string | null, message: string) => void
   chatSessionId: string
 }
 
 const MessageInput = ({
-  messageToSend,
-  setMessageToSend,
   sendMessageAction,
   chatSessionId,
 }: MessageInputProps) => {
+  const [messageToSend, setMessageToSend] = useState<string>("")
   const [image, setImage] = useState<string>("")
   const [imageUrl, setImageUrl] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
@@ -53,7 +48,8 @@ const MessageInput = ({
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      aspect: [9, 16],
+      aspect: [4, 6],
+
       quality: 0,
       allowsEditing: true,
     })
@@ -113,9 +109,10 @@ const MessageInput = ({
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
           className={`${isPressed ? "opacity-40" : null} mx-2`}
-          onPress={() => {
-            sendMessageAction(imageUrl)
+          onPress={async () => {
+            await sendMessageAction(imageUrl, messageToSend)
             setImage("")
+            setMessageToSend("")
           }}
         >
           <Text className="text-lg font-bold">Send</Text>

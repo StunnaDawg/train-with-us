@@ -37,7 +37,6 @@ const MessageScreen = () => {
   const [endOfData, setEndOfData] = useState(false)
   const [loading, setLoading] = useState(false)
   const [serverMessages, setServerMessages] = useState<Messages[] | null>([])
-  const [messageToSend, setMessageToSend] = useState("")
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const { user, userProfile } = useAuth()
 
@@ -99,12 +98,12 @@ const MessageScreen = () => {
     }
   }
 
-  const sendMessageAction = async (image: string | null) => {
-    if ((messageToSend.trim().length === 0 && image === null) || !user?.id) {
+  const sendMessageAction = async (image: string | null, message: string) => {
+    if ((message.trim().length === 0 && image === null) || !user?.id) {
       return
     }
     await sendMessage(
-      messageToSend,
+      message,
       image,
       user?.id,
       chatSession.id,
@@ -112,17 +111,16 @@ const MessageScreen = () => {
       userProfile!.first_name + " " + userProfile!.last_name
     )
 
-    await upsertChatSession(chatSession.id, messageToSend || "Sent an image")
+    await upsertChatSession(chatSession.id, message || "Sent an image")
 
     if (currentUser?.expo_push_token) {
       sendNotification(
         currentUser?.expo_push_token,
         `Message from ${currentUser?.first_name}`,
-        messageToSend,
+        message,
         chatSession
       )
     }
-    setMessageToSend("")
   }
 
   useEffect(() => {
@@ -217,8 +215,6 @@ const MessageScreen = () => {
         </KeyboardAvoidingView>
       )}
       <MessageInput
-        messageToSend={messageToSend}
-        setMessageToSend={setMessageToSend}
         sendMessageAction={sendMessageAction}
         chatSessionId={chatSession.id}
       />

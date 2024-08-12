@@ -70,10 +70,14 @@ export default function SinglePicCommunity({
     try {
       const { data, error } = await supabase.storage
         .from("photos")
-        .download(`${item}`)
+        .download(`${item}`, {
+          transform: {
+            quality: 20,
+          },
+        })
       if (error) {
         setPlaceholder(true)
-        console.error("Error downloading image:", error)
+
         if (isMounted.current) {
           setLoading(false)
         }
@@ -92,7 +96,6 @@ export default function SinglePicCommunity({
       }
     } catch (error) {
       setPlaceholder(true)
-      console.error("Error downloading image:", error)
 
       setLoading(false)
     } finally {

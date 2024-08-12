@@ -8,8 +8,8 @@ const sendNotification = async (
   body: string,
   channel: CommunityChannel
 ) => {
-  console.log("Sending notification to", token)
-  const { data, error } = await supabase.functions.invoke("push", {
+  console.log("Sending notification in private channel to", token)
+  const { error } = await supabase.functions.invoke("push", {
     body: {
       token,
       titleWords: title,
@@ -20,13 +20,14 @@ const sendNotification = async (
 
   if (error && error instanceof FunctionsHttpError) {
     const errorMessage = await error.context.json()
-    console.log("Function returned an error", errorMessage)
+    console.log(
+      "private channel notification Function returned an error",
+      errorMessage
+    )
   }
-
-  console.log("Notification sent:", data)
 }
 
-const sendPrivateChannelNotification = async (
+const gettingPrivateChannelMembers = async (
   communityId: number,
   titleWords: string,
   bodyWords: string,
@@ -38,17 +39,18 @@ const sendPrivateChannelNotification = async (
     .eq("community_id", communityId)
     .eq("channel_id", channel.id)
 
-  if (error) throw error
+  if (error) {
+    console.error("Failed to fetch members:", error.message)
+    throw error
+  }
 
   const tokens = data
     .filter((member) => member.expo_push_token !== null)
     .map((member) => member.expo_push_token)
-
-  console.log("Sending notification to", tokens)
 
   tokens.forEach(async (token) => {
     await sendNotification(token, titleWords, bodyWords, channel)
   })
 }
 
-export default sendPrivateChannelNotification
+export default gettingPrivateChannelMembers

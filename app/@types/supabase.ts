@@ -192,7 +192,7 @@ export type Database = {
           eventId: number | null
           id: string
           image: string | null
-          mesage: string | null
+          message: string | null
           sender_id: string | null
           sender_name: string | null
           sender_profile_pic: string | null
@@ -205,7 +205,7 @@ export type Database = {
           eventId?: number | null
           id?: string
           image?: string | null
-          mesage?: string | null
+          message?: string | null
           sender_id?: string | null
           sender_name?: string | null
           sender_profile_pic?: string | null
@@ -218,7 +218,7 @@ export type Database = {
           eventId?: number | null
           id?: string
           image?: string | null
-          mesage?: string | null
+          message?: string | null
           sender_id?: string | null
           sender_name?: string | null
           sender_profile_pic?: string | null
@@ -261,7 +261,6 @@ export type Database = {
           community_owner: string | null
           created_at: string
           id: string
-          members_of_channel: string[] | null
           private: boolean
           recent_message: string | null
           recent_message_sender: string | null
@@ -276,7 +275,6 @@ export type Database = {
           community_owner?: string | null
           created_at?: string
           id?: string
-          members_of_channel?: string[] | null
           private?: boolean
           recent_message?: string | null
           recent_message_sender?: string | null
@@ -291,7 +289,6 @@ export type Database = {
           community_owner?: string | null
           created_at?: string
           id?: string
-          members_of_channel?: string[] | null
           private?: boolean
           recent_message?: string | null
           recent_message_sender?: string | null

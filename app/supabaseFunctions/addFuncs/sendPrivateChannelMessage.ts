@@ -1,62 +1,35 @@
 import supabase from "../../../lib/supabase"
-import { CommunityChannel } from "../../@types/supabaseTypes"
-import sendPrivateChannelNotification from "../../utilFunctions/sendPrivateChannelNotification"
-
 const sendPrivateChannelMessage = async (
   message: string,
   image: string | null,
   userId: string,
   channelId: string,
   name: string,
-  communityId: number,
-  title: string | null,
-  channel: CommunityChannel,
   senderProfilePic: string | null
 ) => {
   try {
-    const notificationTtle =
-      `New Message in ${title}` || "New Message in Channel"
-    console.log("sending message", message, userId)
-    const { error } = await supabase.from("community_channel_messages").insert([
-      {
-        mesage: message,
-        sent_at: new Date(),
-        sender_id: userId,
-        channel_id: channelId,
-        sender_name: name,
-        image: image,
-        sender_profile_pic: senderProfilePic,
-      },
-    ])
+    console.log("trying to sending message", message, userId)
+    const { data, error } = await supabase
+      .from("community_channel_messages")
+      .insert([
+        {
+          channel_id: channelId,
+          message: message,
+          sent_at: new Date(),
+          sender_id: userId,
+          sender_name: name,
+          image: image,
+          sender_profile_pic: senderProfilePic,
+        },
+      ])
+    console.log("Insert Response:", data, error)
 
     if (error) {
-      console.log("message error", error)
+      console.log("private message sending error", error)
       throw error
     }
-
-    console.log("sending message", message, userId)
-    const { error: updateError } = await supabase
-      .from("community_channels")
-      .update({
-        recent_message: message, // Only the fields to update
-        updated_at: new Date(),
-        recent_message_sender: name,
-      })
-      .eq("id", channelId)
-
-    if (updateError) {
-      console.error("message error", updateError)
-      throw error
-    }
-
-    await sendPrivateChannelNotification(
-      communityId,
-      notificationTtle,
-      message,
-      channel
-    )
   } catch (error) {
-    console.log(error)
+    console.log("sending private channel message error", error)
   }
 }
 

@@ -32,6 +32,7 @@ import MessageInput from "../../../components/MessageInput"
 import MessageComponent from "../../../components/MessageCard"
 import { set } from "mongoose"
 import MessageSkeleton from "./MessagesSkeleton"
+import gettingPrivateChannelMembers from "../../../utilFunctions/sendPrivateChannelNotification"
 
 const ChannelMessageScreen = () => {
   const [initialLoading, setInitialLoading] = useState(true)
@@ -42,7 +43,6 @@ const ChannelMessageScreen = () => {
   const [serverMessages, setServerMessages] = useState<
     CommunityChannelMessages[] | null
   >([])
-  const [messageToSend, setMessageToSend] = useState("")
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const [page, setPage] = useState(0)
   const [endOfData, setEndOfData] = useState(false)
@@ -57,9 +57,9 @@ const ChannelMessageScreen = () => {
     console.log("handleSheetChanges", index)
   }, [])
 
-  const sendMessageAction = async (image: string | null) => {
+  const sendMessageAction = async (image: string | null, message: string) => {
     if (
-      (messageToSend.trim().length === 0 && image === null) ||
+      (message.trim().length === 0 && image === null) ||
       !user?.id ||
       currentUser?.first_name === null ||
       currentUser?.first_name === undefined
@@ -67,8 +67,9 @@ const ChannelMessageScreen = () => {
       return
     }
     if (!channel.private) {
+      console.log("sending message", message)
       await sendChannelMessage(
-        messageToSend,
+        message,
         image,
         currentUser?.expo_push_token,
         user?.id,
@@ -80,27 +81,27 @@ const ChannelMessageScreen = () => {
         currentUser?.profile_pic
       )
     } else {
+      console.log("sending message", message)
       await sendPrivateChannelMessage(
-        messageToSend,
+        message,
         image,
         user?.id,
         channel.id,
         currentUser?.first_name + " " + currentUser?.last_name,
-        channel.community,
-        channel.channel_title,
-        channel,
         currentUser?.profile_pic
       )
+
+      // await gettingPrivateChannelMembers(
+      //   channel.community,
+      //   `New Message in ${channel.channel_title}` || "New Message in Channel",
+      //   message,
+      //   channel
+      // )
     }
-    await upsertCommunitySession(channel.id, messageToSend || "Sent an Image")
-    setMessageToSend("")
-    getChannelSessionMessages(
+    await upsertCommunitySession(
       channel.id,
-      setServerMessages,
-      page,
-      setEndOfData,
-      true,
-      setLoading
+      currentUser?.first_name + " " + currentUser?.last_name,
+      message || "Sent an Image"
     )
   }
 
@@ -178,7 +179,7 @@ const ChannelMessageScreen = () => {
           communityId={item.community_id}
           isLink={item.community_or_event_link}
           sentAt={item.sent_at}
-          message={item.mesage}
+          message={item.message}
           id={item.sender_id}
           name={item.sender_name}
           imageUrl={item.image}
@@ -249,8 +250,6 @@ const ChannelMessageScreen = () => {
         </KeyboardAvoidingView>
       )}
       <MessageInput
-        messageToSend={messageToSend}
-        setMessageToSend={setMessageToSend}
         sendMessageAction={sendMessageAction}
         chatSessionId={channel.id}
       />

@@ -87,15 +87,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
 
 const UserFooter = () => {
-  const navigation = useNavigation<TabNavigationType>()
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("state", (e: any) => {
-      console.log("Navigation state changed:", e.data.state)
-    })
-
-    return unsubscribe
-  }, [navigation])
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

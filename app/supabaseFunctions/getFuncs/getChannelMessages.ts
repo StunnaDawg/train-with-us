@@ -15,19 +15,19 @@ const getChannelSessionMessages = async (
 ) => {
   try {
     setLoading(true)
-    const cacheKey = `channl:${channelId}:page:${page}`
-    const cachedMessages = cacheStorage.getString(cacheKey)
+    // const cacheKey = `channel:${channelId}:page:${page}`
+    // const cachedMessages = cacheStorage.getString(cacheKey)
 
-    if (cachedMessages) {
-      const messages: CommunityChannelMessages[] = JSON.parse(cachedMessages)
-      setMessages((prevItems: CommunityChannelMessages[] | null) =>
-        append ? [...(prevItems || []), ...messages] : messages
-      )
-      if (messages.length < PAGE_SIZE) {
-        setEndOfMessages(true)
-      }
-      return
-    }
+    // if (cachedMessages) {
+    //   const messages: CommunityChannelMessages[] = JSON.parse(cachedMessages)
+    //   setMessages((prevItems: CommunityChannelMessages[] | null) =>
+    //     append ? [...(prevItems || []), ...messages] : messages
+    //   )
+    //   if (messages.length < PAGE_SIZE) {
+    //     setEndOfMessages(true)
+    //   }
+    //   return
+    // }
 
     const from = page * PAGE_SIZE
     const to = from + PAGE_SIZE - 1
@@ -47,7 +47,7 @@ const getChannelSessionMessages = async (
         setEndOfMessages(true)
       }
 
-      cacheStorage.set(cacheKey, JSON.stringify(messages))
+      // cacheStorage.set(cacheKey, JSON.stringify(messages))
 
       if (append) {
         setMessages((prevItems: CommunityChannelMessages[] | null) =>
