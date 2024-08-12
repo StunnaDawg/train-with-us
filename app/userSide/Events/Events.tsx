@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Pressable } from "react-native"
+import { View, Text, ScrollView, Pressable, SafeAreaView } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import AllEvents from "./components/AllEvents"
 import { RefreshControl } from "react-native-gesture-handler"
@@ -12,9 +12,8 @@ const Events = () => {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true)
-    setTimeout(() => {
-      setRefreshing(false)
-    }, 2000)
+
+    setRefreshing(false)
   }, [])
 
   return (
@@ -55,7 +54,7 @@ const Events = () => {
           <EventTypes refreshing={refreshing} type="Yoga" />
         </View> */}
 
-        <View>
+        <View className="pb-20">
           <EventTypes refreshing={refreshing} type="Hyrox" />
         </View>
 

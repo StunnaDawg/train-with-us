@@ -5,9 +5,7 @@ import getUserEvents from "../../supabaseFunctions/getFuncs/getUsersEvents"
 import { Events, Profile } from "../../@types/supabaseTypes"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { NavigationType, TabNavigationType } from "../../@types/navigation"
-import BackButton from "../../components/BackButton"
 import EventCard from "./components/EventCard"
-import BasicButton from "../../components/BasicButton"
 
 const MyEvents = () => {
   const [isPressed, setIsPressed] = useState<boolean>(false)

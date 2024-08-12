@@ -90,6 +90,21 @@ const UserFooter = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        tabBarStyle: {
+          marginHorizontal: 20,
+          height: 60,
+          borderRadius: 30,
+          position: "absolute",
+          bottom: 20,
+          left: 20,
+          right: 20,
+          backgroundColor: "white",
+          elevation: 10,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 5 },
+          shadowOpacity: 0.3,
+          shadowRadius: 10,
+        },
         headerShown: false,
         tabBarShowLabel: false,
         tabBarIcon: ({ color }) => {
