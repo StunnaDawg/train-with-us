@@ -5,15 +5,13 @@ const upsertChatSession = async (
   recentMessage: string
 ) => {
   try {
-    const { data, error } = await supabase
-      .from("chat_sessions")
-      .upsert([
-        {
-          id: chatSessionId,
-          recent_message: recentMessage,
-          updated_at: new Date(),
-        },
-      ])
+    const { error } = await supabase.from("chat_sessions").upsert([
+      {
+        id: chatSessionId,
+        recent_message: recentMessage,
+        updated_at: new Date(),
+      },
+    ])
 
     if (error) {
       console.log("upsertChatSession error", error)

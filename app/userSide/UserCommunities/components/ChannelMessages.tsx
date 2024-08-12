@@ -27,12 +27,11 @@ import upsertCommunitySession from "../../../supabaseFunctions/updateFuncs/updat
 import BackButton from "../../../components/BackButton"
 import { BottomSheetModal } from "@gorhom/bottom-sheet"
 import ChannelBottomModal from "./ChannelBottomModal"
-import sendPrivateChannelMessage from "../../../supabaseFunctions/addFuncs/sendPrivateChannelMessage"
+
 import MessageInput from "../../../components/MessageInput"
 import MessageComponent from "../../../components/MessageCard"
-import { set } from "mongoose"
 import MessageSkeleton from "./MessagesSkeleton"
-import gettingPrivateChannelMembers from "../../../utilFunctions/sendPrivateChannelNotification"
+import sendChannelNotification from "../../../utilFunctions/sendChannelNotifcation"
 
 const ChannelMessageScreen = () => {
   const [initialLoading, setInitialLoading] = useState(true)
@@ -66,43 +65,40 @@ const ChannelMessageScreen = () => {
     ) {
       return
     }
-    if (!channel.private) {
-      console.log("sending message", message)
-      await sendChannelMessage(
-        message,
-        image,
-        currentUser?.expo_push_token,
-        user?.id,
-        channel.id,
-        currentUser?.first_name + " " + currentUser?.last_name,
-        channel.community,
-        channel.channel_title,
-        channel,
-        currentUser?.profile_pic
-      )
-    } else {
-      console.log("sending message", message)
-      await sendPrivateChannelMessage(
-        message,
-        image,
-        user?.id,
-        channel.id,
-        currentUser?.first_name + " " + currentUser?.last_name,
-        currentUser?.profile_pic
-      )
+    await sendChannelMessage(
+      message,
+      image,
+      user?.id,
+      channel.id,
+      currentUser?.first_name + " " + currentUser?.last_name,
+      currentUser?.profile_pic
+    )
 
-      // await gettingPrivateChannelMembers(
-      //   channel.community,
-      //   `New Message in ${channel.channel_title}` || "New Message in Channel",
-      //   message,
-      //   channel
-      // )
-    }
     await upsertCommunitySession(
       channel.id,
       currentUser?.first_name + " " + currentUser?.last_name,
       message || "Sent an Image"
     )
+
+    if (!channel.private) {
+      sendChannelNotification(
+        channel.community,
+        currentUser.expo_push_token,
+        `New Message in ${channel.channel_title}` || "New Message in Channel",
+        message,
+        channel,
+        false
+      )
+    } else {
+      sendChannelNotification(
+        channel.community,
+        currentUser.expo_push_token,
+        `New Message in ${channel.channel_title}` || "New Message in Channel",
+        message,
+        channel,
+        true
+      )
+    }
   }
 
   useEffect(() => {

@@ -66,7 +66,7 @@ export default function SinglePicCommunity({
       setLoading(false)
       return
     }
-    console.log("tying", item)
+
     try {
       const { data, error } = await supabase.storage
         .from("photos")

@@ -143,7 +143,7 @@ const NavStack = () => {
           navigation.navigate("MessagingScreen", {
             chatSession: data.chatSession,
           })
-        } else if (data.channel) {
+        } else if (data.channel === "channel_message") {
           navigation.navigate("ChannelScreen", { channelId: data.channel })
         } else if (data.type === "community_request_sent") {
           navigation.navigate("MyCommunityRequests", {

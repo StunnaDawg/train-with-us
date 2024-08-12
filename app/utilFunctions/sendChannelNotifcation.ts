@@ -14,7 +14,7 @@ const sendNotification = async (
       token,
       titleWords: title,
       bodyWords: body,
-      data: { type: "channel", channel: channel },
+      data: { type: "channel_message", channel: channel },
     },
   })
 
@@ -31,28 +31,62 @@ const sendChannelNotification = async (
   sendersToken: string | null,
   titleWords: string,
   bodyWords: string,
-  channel: CommunityChannel
+  channel: CommunityChannel,
+  privateChannel: boolean
 ) => {
-  const { data, error } = await supabase
-    .from("community_members")
-    .select("expo_push_token")
-    .eq("community_id", communityId)
+  try {
+    if (privateChannel) {
+      const { data: privateChannelData, error: privateChannelError } =
+        await supabase
+          .from("community_channel_membership")
+          .select("expo_push_token")
+          .eq("community_id", communityId)
+          .eq("channel_id", channel.id)
 
-  if (error) throw error
+      if (privateChannelError) {
+        console.error("Failed to fetch members:", privateChannelError.message)
+        throw privateChannelError
+      }
 
-  const tokens = data
-    .filter(
-      (member) =>
-        member.expo_push_token !== null &&
-        member.expo_push_token !== sendersToken
-    )
-    .map((member) => member.expo_push_token)
+      const tokens = privateChannelData
+        .filter(
+          (member) =>
+            member.expo_push_token !== null &&
+            member.expo_push_token !== sendersToken
+        )
+        .map((member) => member.expo_push_token)
 
-  console.log("Sending notification to", tokens)
+      tokens.forEach(async (token) => {
+        await sendNotification(token, titleWords, bodyWords, channel)
+      })
+    } else {
+      const { data: channelData, error: channelError } = await supabase
+        .from("community_members")
+        .select("expo_push_token")
+        .eq("community_id", communityId)
 
-  tokens.forEach(async (token) => {
-    await sendNotification(token, titleWords, bodyWords, channel)
-  })
+      if (channelError) {
+        console.error("Failed to fetch members:", channelError.message)
+        throw channelError
+      }
+
+      const tokens = channelData
+        .filter(
+          (member) =>
+            member.expo_push_token !== null &&
+            member.expo_push_token !== sendersToken
+        )
+        .map((member) => member.expo_push_token)
+
+      console.log("Sending notification to", tokens)
+
+      tokens.forEach(async (token) => {
+        await sendNotification(token, titleWords, bodyWords, channel)
+      })
+    }
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export default sendChannelNotification
