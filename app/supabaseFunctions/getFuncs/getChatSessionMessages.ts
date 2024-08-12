@@ -15,19 +15,19 @@ const getChatSessionMessages = async (
 ) => {
   try {
     setLoading(true)
-    const cacheKey = `chatSession:${chatSessionId}:page:${page}`
-    const cachedMessages = cacheStorage.getString(cacheKey)
+    // const cacheKey = `chatSession:${chatSessionId}:page:${page}`
+    // const cachedMessages = cacheStorage.getString(cacheKey)
 
-    if (cachedMessages) {
-      const messages: Messages[] = JSON.parse(cachedMessages)
-      setMessages((prevItems: Messages[] | null) =>
-        append ? [...(prevItems || []), ...messages] : messages
-      )
-      if (messages.length < PAGE_SIZE) {
-        setEndOfMessages(true)
-      }
-      return
-    }
+    // if (cachedMessages) {
+    //   const messages: Messages[] = JSON.parse(cachedMessages)
+    //   setMessages((prevItems: Messages[] | null) =>
+    //     append ? [...(prevItems || []), ...messages] : messages
+    //   )
+    //   if (messages.length < PAGE_SIZE) {
+    //     setEndOfMessages(true)
+    //   }
+    //   return
+    // }
     const from = page * PAGE_SIZE
     const to = from + PAGE_SIZE - 1
 
@@ -46,7 +46,7 @@ const getChatSessionMessages = async (
         setEndOfMessages(true)
       }
 
-      cacheStorage.set(cacheKey, JSON.stringify(messages))
+      // cacheStorage.set(cacheKey, JSON.stringify(messages))
 
       if (append) {
         setMessages((prevItems: Messages[] | null) =>

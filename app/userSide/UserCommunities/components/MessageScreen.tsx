@@ -26,8 +26,7 @@ import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import MessageInput from "../../../components/MessageInput"
 import MessageComponent from "../../../components/MessageCard"
 import MessageSkeleton from "./MessagesSkeleton"
-
-type MessageStateUpdater = (prevMessages: Messages[] | null) => Messages[]
+import { cacheStorage } from "../../../utilFunctions/mmkvStorage"
 
 const MessageScreen = () => {
   const route = useRoute<RouteProp<RootStackParamList, "MessagingScreen">>()
@@ -39,6 +38,7 @@ const MessageScreen = () => {
   const [serverMessages, setServerMessages] = useState<Messages[] | null>([])
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const { user, userProfile } = useAuth()
+  // const cacheKey = `chatSession:${chatSession.id}:page:${page}`
 
   const otherUserId =
     chatSession.user1 === user?.id ? chatSession.user2 : chatSession.user1
@@ -75,6 +75,7 @@ const MessageScreen = () => {
                 ? [payload.new as Messages, ...prevMessages]
                 : [payload.new as Messages]
             )
+            // cacheStorage.set(cacheKey, JSON.stringify(serverMessages))
           }
         )
         .subscribe((status, error) => {
@@ -158,11 +159,11 @@ const MessageScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-slate-300/05">
-      <View className="flex flex-row justify-between">
-        <View className="mx-1">
+      <View className="flex flex-row justify-between mx-1">
+        <View>
           <BackButton size={24} />
         </View>
-        <View className="mb-2">
+        <View className=" items-center mb-2">
           <SinglePicCommunity
             size={55}
             avatarRadius={100}
@@ -188,7 +189,6 @@ const MessageScreen = () => {
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <FlatList
-              scrollEnabled={!loading}
               initialNumToRender={10}
               maxToRenderPerBatch={5}
               windowSize={5}
@@ -202,7 +202,7 @@ const MessageScreen = () => {
               data={serverMessages}
               ListHeaderComponent={<View className="h-2" />}
               onEndReached={handleLoadMore}
-              onEndReachedThreshold={10}
+              onEndReachedThreshold={0.5}
               ListFooterComponent={
                 loading && !endOfData ? (
                   <ActivityIndicator size="large" />
@@ -214,6 +214,7 @@ const MessageScreen = () => {
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
       )}
+
       <MessageInput
         sendMessageAction={sendMessageAction}
         chatSessionId={chatSession.id}
