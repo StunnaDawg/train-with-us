@@ -82,6 +82,7 @@ import SexualityEdit from "./userSide/Profile/AddInfoComponents/SexualityEdit"
 import EventAttendees from "./userSide/Events/components/EventAttendees"
 import CreateNewsPost from "./userSide/MyCommunity/CreateNewsPost"
 import ViewFullUserProfileFromMessages from "./userSide/UserCommunities/components/ViewUserProfileFromMessage"
+import Welcome from "./UserOnBoard/Welcome"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -537,6 +538,11 @@ const NavStack = () => {
             </Stack.Group>
           ) : (
             <Stack.Group>
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="Welcome"
+                component={Welcome}
+              />
               <Stack.Screen
                 options={{ headerShown: false }}
                 name="QuestionOne"

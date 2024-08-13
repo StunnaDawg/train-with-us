@@ -14,6 +14,7 @@ type GenericButtonProps = {
   fontbold?: string | null
   textCenter?: boolean | null
   height?: string | null
+  padding?: string | null
 }
 
 const GenericButton = ({
@@ -29,6 +30,7 @@ const GenericButton = ({
   fontbold,
   textCenter,
   height,
+  padding,
 }: GenericButtonProps) => {
   const [isPressed, setIsPressed] = useState(false)
 
@@ -46,7 +48,7 @@ const GenericButton = ({
       onPress={() => buttonFunction()}
       onPressIn={handleOnPressIn}
       onPressOut={handleOnPressOut}
-      className={` ${roundness} border p-1 items-center ${
+      className={` ${roundness} border p-1 items-center ${padding} ${
         isPressed
           ? `${colourPressed} ${borderColourPressed}`
           : `${colourDefault} ${borderColourDefault}`

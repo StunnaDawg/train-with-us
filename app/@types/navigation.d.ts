@@ -36,6 +36,7 @@ export type RootStackParamList = {
   ViewUserProfile: {
     userProfile: Profile
   }
+  Welcome: undefined
   QuestionOne: undefined
   QuestionTwo: undefined
   QuestionThree: undefined
