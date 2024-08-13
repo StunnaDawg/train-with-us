@@ -9,56 +9,34 @@ import {
 import React, { useState } from "react"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import { RootStackParamList } from "../../@types/navigation"
-import BouncyCheckbox from "react-native-bouncy-checkbox"
 import supabase from "../../../lib/supabase"
-import { useAuth } from "../../supabaseFunctions/authcontext"
 import { useNavigation } from "@react-navigation/native"
-import NewPhoto from "../../components/NewPhoto"
-import * as ImagePicker from "expo-image-picker"
-import * as FileSystem from "expo-file-system"
-import { decode } from "base64-arraybuffer"
 import BackButton from "../../components/BackButton"
 import Loading from "../../components/Loading"
 import { FontAwesome6 } from "@expo/vector-icons"
 import showAlert from "../../utilFunctions/showAlert"
 
 const CreateChannel = () => {
-  const { user } = useAuth()
   const [loading, setLoading] = useState<boolean>(false)
-  const [channelPic, setChannelPic] = useState<ImagePicker.ImagePickerAsset>(
-    {} as ImagePicker.ImagePickerAsset
-  )
   const [privateChannel, setPrivateChannel] = useState<boolean>(false)
-
   const [channelName, setChannelName] = useState<string>("")
   const route = useRoute<RouteProp<RootStackParamList, "CreateChannel">>()
-  const communityId = route.params.communityId
+  const community = route.params.community
   const navigation = useNavigation()
 
   const handleChannelCreation = async () => {
     try {
       setLoading(true)
-      if (communityId === null) throw new Error("Community ID is null")
-
-      const base64 = await FileSystem.readAsStringAsync(channelPic.uri, {
-        encoding: "base64",
-      })
-      const filePath = `${user?.id}/channels/${new Date().getTime()}.${
-        channelPic.type === "image"
-      }`
-      const contentType = "image/png"
-      await supabase.storage.from("photos").upload(filePath, decode(base64), {
-        contentType: contentType,
-      })
+      if (community === null) throw new Error("Community ID is null")
 
       if (privateChannel === true) {
         const { error } = await supabase.from("community_channels").insert([
           {
             channel_title: channelName,
             channel_type: "Text",
-            community_owner: user?.id,
-            community: communityId,
-            channel_pic: filePath,
+            community_owner: community.community_owner,
+            community: community.id,
+            community_name: community.community_title,
             private: privateChannel,
           },
         ])
@@ -82,9 +60,9 @@ const CreateChannel = () => {
           {
             channel_title: channelName,
             channel_type: "Text",
-            community_owner: user?.id,
-            community: communityId,
-            channel_pic: filePath,
+            community_owner: community.community_owner,
+            community: community.id,
+            community_name: community.community_title,
             private: privateChannel,
           },
         ])

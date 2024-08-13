@@ -56,7 +56,7 @@ const MessageComponent = ({
     getSingleCommunity(setLoading, communityId, setCommunity)
   }, [communityId])
   return (
-    <View className="flex flex-row p-2 items-center">
+    <View className="flex flex-row p-2 items-center my-1">
       <SinglePicCommunity
         skeletonRadius={10}
         size={45}

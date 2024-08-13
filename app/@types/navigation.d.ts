@@ -96,7 +96,7 @@ export type RootStackParamList = {
     communityId: number
   }
   CreateChannel: {
-    communityId: number
+    community: Communities
   }
   MyCommunitySettings: {
     community: Communities

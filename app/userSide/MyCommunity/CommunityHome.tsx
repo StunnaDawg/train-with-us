@@ -54,8 +54,9 @@ const CommunityHome = () => {
           >
             <Pressable
               onPress={() => {
+                if (!currentCommunity) return
                 navigation.navigate("CreateChannel", {
-                  communityId: communityId,
+                  community: currentCommunity,
                 })
               }}
               onPressIn={() => setPressed("createChannel")}

@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Pressable, Alert } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { Entypo } from "@expo/vector-icons"
 import {
   Communities,
@@ -12,7 +12,7 @@ import getCommunityMemberShips from "../../../supabaseFunctions/getFuncs/getComm
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import supabase from "../../../../lib/supabase"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
-import { useNavigation } from "@react-navigation/native"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import joinChannel from "../../../supabaseFunctions/addFuncs/joinChannel"
 
@@ -73,9 +73,15 @@ const CommunityPageChannels = ({
     }
   }
 
-  useEffect(() => {
-    fetchData()
-  }, [community])
+  useFocusEffect(
+    useCallback(() => {
+      let isMounted = true
+      fetchData()
+      return () => {
+        isMounted = false
+      }
+    }, [community])
+  )
 
   const showAlertConfirm = (onConfirm: () => void) =>
     Alert.alert(

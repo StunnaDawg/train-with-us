@@ -122,7 +122,7 @@ const UserFooter = () => {
 
           return <FontAwesome6 name={iconName} size={20} color={color} />
         },
-        tabBarActiveTintColor: "red",
+        tabBarActiveTintColor: "#07182d",
         tabBarInactiveTintColor: "gray",
       })}
     >
