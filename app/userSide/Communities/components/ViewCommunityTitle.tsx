@@ -5,6 +5,8 @@ import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import CommunityContact from "./CommunityContact"
 import BackButton from "../../../components/BackButton"
+import fetchCommunityMemberCount from "../../../utilFunctions/fetchCommunityMemberCount"
+import supabase from "../../../../lib/supabase"
 
 type ViewCommunityTitleProps = {
   community: Communities | null
@@ -18,6 +20,24 @@ const ViewCommunityTitle = ({
   userId,
 }: ViewCommunityTitleProps) => {
   const navigation = useNavigation<NavigationType>()
+  const [memberCount, setMemberCount] = useState<number>(0)
+
+  useEffect(() => {
+    const fetchMemberCount = async () => {
+      const { data, error } = await supabase
+        .from("community_members")
+        .select("*")
+        .eq("community_id", communityId)
+
+      if (error) {
+        console.log(error)
+        return
+      }
+      setMemberCount(data.length)
+    }
+
+    fetchMemberCount()
+  }, [communityId])
 
   return (
     <View>
@@ -42,7 +62,7 @@ const ViewCommunityTitle = ({
               }
             >
               <Text className="font-bold text-xs text-slate-500">
-                {community?.member_count} Members
+                {memberCount} Members
               </Text>
             </Pressable>
           </View>

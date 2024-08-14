@@ -202,7 +202,7 @@ const PinnedChannels = React.memo(() => {
               onPressIn={handleOnPressIn}
               onPressOut={handleOnPressOut}
               onPress={() => {
-                navigation.navigate("SearchCommunities")
+                navigation.navigate("Communities")
               }}
               className={`m-2 ${
                 isDashPressed ? "bg-black" : "bg-white"

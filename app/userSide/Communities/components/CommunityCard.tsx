@@ -7,6 +7,7 @@ import { FontAwesome6 } from "@expo/vector-icons"
 import { useEffect, useState } from "react"
 
 import getCommunityMembersUUIDs from "../../../supabaseFunctions/getFuncs/getCommunityMembersUUIDS"
+import supabase from "../../../../lib/supabase"
 
 type CommunityCardProps = {
   community: Communities
@@ -23,6 +24,7 @@ const CommunityCard = ({
   const [joined, setJoined] = useState<boolean>(false)
   const [userUUIDS, setUserUUIDS] = useState<string[] | null>([])
   const [isPressed, setIsPressed] = useState<boolean>(false)
+  const [memberCount, setMemberCount] = useState<number>(0)
   const navigation = useNavigation<NavigationType>()
 
   const handlePressIn = () => {
@@ -31,6 +33,23 @@ const CommunityCard = ({
   const handlePressOut = () => {
     setIsPressed(false)
   }
+
+  useEffect(() => {
+    const fetchMemberCount = async () => {
+      const { data, error } = await supabase
+        .from("community_members")
+        .select("*")
+        .eq("community_id", community.id)
+
+      if (error) {
+        console.log(error)
+        return
+      }
+      setMemberCount(data.length)
+    }
+
+    fetchMemberCount()
+  }, [community])
 
   useEffect(() => {
     if (userId) {
@@ -81,7 +100,7 @@ const CommunityCard = ({
           <View className="flex flex-row justify-between items-center">
             <View className="flex flex-row ">
               <Text className=" text-white font-bold text-sm">
-                {community.member_count} Members
+                {memberCount} Members
               </Text>
               <View className="mx-1">
                 <FontAwesome6 name="people-group" size={16} color="white" />
