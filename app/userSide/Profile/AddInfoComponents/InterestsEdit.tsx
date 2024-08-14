@@ -89,7 +89,7 @@ const InterestsEdit = ({ currentUserId }: InterestsEditProps) => {
         <Pressable
           onPress={() => {
             if (currentUserState) {
-              navigation.navigate("FitnessInterests", {
+              navigation.navigate("EditFitnessInterests", {
                 userProfile: currentUserState,
               })
             }

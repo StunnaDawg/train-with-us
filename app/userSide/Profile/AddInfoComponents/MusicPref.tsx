@@ -9,6 +9,7 @@ import NextButton from "../../../components/NextButton"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import EnhancedTextInput from "../../../components/TextInput"
 import BackButton from "../../../components/BackButton"
+import EditProfileTopBar from "./EditProfileTopBar"
 
 type MusicOptions =
   | "Pop"
@@ -120,33 +121,23 @@ const MusicPref = () => {
   ]
 
   return (
-    <SafeAreaView className="flex-1">
-      <ScrollView>
-        <View className="flex justify-center ">
-          <View>
-            <View className="flex flex-row justify-between items-center">
-              <View className="ml-2">
-                <BackButton />
-              </View>
-              <Text className="font-bold text-lg text-center">
-                Music Preferences While Working Out?
-              </Text>
-              <View />
-            </View>
+    <SafeAreaView className="flex-1 bg-primary-900">
+      <View>
+        <View>
+          <EditProfileTopBar
+            text="Music Taste"
+            functionProp={async () => await handleUserUpdate()}
+          />
 
-            <View className="flex flex-row justify-center">
-              <EnhancedTextInput
-                text={musicPref}
-                setText={setMusicPref}
-                placeholder="Anything with Latino flare!"
-              />
-            </View>
-          </View>
-          <View className="mt-4 flex flex-row justify-end">
-            <NextButton onPress={() => handleUserUpdate()} />
+          <View className="flex flex-row justify-center">
+            <EnhancedTextInput
+              text={musicPref}
+              setText={setMusicPref}
+              placeholder="I love old school hip-hop when working out!"
+            />
           </View>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   )
 }

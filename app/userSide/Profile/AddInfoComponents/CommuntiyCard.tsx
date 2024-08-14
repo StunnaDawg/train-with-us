@@ -1,14 +1,7 @@
-import { View, Text, Pressable } from "react-native"
-import React, { useEffect, useState } from "react"
-import { NavigationType } from "../../../@types/navigation"
-import { useNavigation } from "@react-navigation/native"
-import SinglePic from "../../../components/SinglePic"
-import { useAuth } from "../../../supabaseFunctions/authcontext"
-import supabase from "../../../../lib/supabase"
-import { FileObject } from "@supabase/storage-js"
-import { Communities, Profile } from "../../../@types/supabaseTypes"
-import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
-import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
+import { View, Text } from "react-native"
+import { Communities } from "../../../@types/supabaseTypes"
+import SinglePicCommunity from "../../../components/SinglePicCommunity"
+import { FontAwesome6 } from "@expo/vector-icons"
 
 type CommunityCardProps = {
   community: Communities
@@ -16,19 +9,26 @@ type CommunityCardProps = {
 
 const CommunityCardAboutMe = ({ community }: CommunityCardProps) => {
   return (
-    <View className="flex flex-row items-center">
+    <View className="flex flex-row items-center border-b border-b-slate-300 mx-2">
       <View className="m-2">
-        <SinglePic
-          size={50}
+        <SinglePicCommunity
+          size={75}
           item={community.community_profile_pic}
           avatarRadius={100}
           noAvatarRadius={100}
+          allowExpand={false}
+          allowCacheImage={false}
         />
       </View>
 
       <View className="flex-col flex-1">
-        <Text className="font-bold text-lg">{community.community_title}</Text>
-        <View className="border-b p-3" />
+        <Text className=" text-white font-bold text-lg">
+          {community.community_title}
+        </Text>
+      </View>
+
+      <View>
+        <FontAwesome6 name="plus" size={16} color="white" />
       </View>
     </View>
   )

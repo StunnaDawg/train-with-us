@@ -206,6 +206,10 @@ export type RootStackParamList = {
   ViewFullUserProfileFromMessages: { userId: string }
 
   EndOnBoarding: undefined
+  EditGender: undefined
+  EditFitnessInterests: {
+    userProfile: Profile
+  }
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

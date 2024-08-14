@@ -6,8 +6,6 @@ import { FontAwesome6 } from "@expo/vector-icons"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
-import returnCommunityName from "../../../utilFunctions/returnCommunityName"
-
 type AboutMeEditProps = {
   currentUserId: string
 }
@@ -15,7 +13,6 @@ type AboutMeEditProps = {
 const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
   const [loading, setLoading] = useState<boolean>(true)
   const [currentUserState, setCurrentUserState] = useState<Profile | null>(null)
-  const [PrimaryGymName, setPrimaryGymName] = useState<string>("")
   const navigation = useNavigation<NavigationType>()
 
   useFocusEffect(
@@ -67,7 +64,7 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
 
       <View className="border-b border-black/45 p-2 py-3">
         <Pressable
-          onPress={() => navigation.navigate("QuestionThree")}
+          onPress={() => navigation.navigate("EditGender")}
           className="flex flex-row justify-between items-center"
         >
           <Text className=" font-bold text-xs">

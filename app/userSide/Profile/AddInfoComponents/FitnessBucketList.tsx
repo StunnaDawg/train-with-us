@@ -9,6 +9,7 @@ import NextButton from "../../../components/NextButton"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import EnhancedTextInput from "../../../components/TextInput"
 import BackButton from "../../../components/BackButton"
+import EditProfileTopBar from "./EditProfileTopBar"
 
 type FitnessBucketListOptions =
   | "Run a 5K"
@@ -101,44 +102,22 @@ const FitnessBucketList = () => {
   // ]
 
   return (
-    <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-center">
+    <SafeAreaView className="flex-1 bg-primary-900">
+      <View>
         <View>
-          <View className="flex flex-row justify-between items-center">
-            <View className="mr-5">
-              <BackButton />
-            </View>
+          <EditProfileTopBar
+            text="Your fitness bucket list"
+            functionProp={async () => await handleUserUpdate()}
+          />
 
-            <Text className="font-bold text-lg text-center">
-              What's on your Fitness Bucket List?
-            </Text>
-            <View />
-          </View>
-
-          <View className="flex flex-row justify-center my-2">
+          <View className="flex flex-row justify-center">
             <EnhancedTextInput
               text={bucketList}
               setText={setBucketList}
-              placeholder="I cannot wait to run a marathon!"
+              placeholder="Looking for a great community!"
             />
           </View>
-
-          {/* {FitnessBucketOptions.map((BucketList, index) => (
-              <View
-                key={index}
-                className="w-full border-b flex flex-row justify-between items-center p-2"
-              >
-                <Text className="text-sm font-semibold">{BucketList}</Text>
-                <BouncyCheckbox
-                  isChecked={selectedBucketList.includes(BucketList)}
-                  onPress={() => handleBucketList(BucketList)}
-                />
-              </View>
-            ))} */}
         </View>
-      </View>
-      <View className="mt-4 mx-3 flex flex-row justify-end">
-        <NextButton onPress={() => handleUserUpdate()} />
       </View>
     </SafeAreaView>
   )

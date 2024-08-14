@@ -30,7 +30,7 @@ import ViewCommunities from "./userSide/Communities/ViewCommunities"
 import Sexuality from "./UserOnBoard/Sexuality"
 import FitnessInterests from "./UserOnBoard/FitnessInterests"
 import CommunityPreference from "./UserOnBoard/CommunitiesPref"
-import ActivityTimePreference from "./UserOnBoard/ActvityTimePreference"
+import ActivityTimePreference from "./userSide/Profile/AddInfoComponents/ActvityTimePreference"
 import EditProfile from "./userSide/Profile/EditProfile"
 import CreateCommunity from "./userSide/CreateCommunity/CreateCommunity"
 import CreateEvent from "./userSide/Events/CreateEvent"
@@ -84,6 +84,8 @@ import CreateNewsPost from "./userSide/MyCommunity/CreateNewsPost"
 import ViewFullUserProfileFromMessages from "./userSide/UserCommunities/components/ViewUserProfileFromMessage"
 import Welcome from "./UserOnBoard/Welcome"
 import EndOnBoard from "./UserOnBoard/EndOnBoard"
+import EditGender from "./userSide/Profile/AddInfoComponents/EditGender"
+import EditFitnessInterests from "./userSide/Profile/AddInfoComponents/EditFitnessInterests"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -287,6 +289,13 @@ const NavStack = () => {
                 name="EditEvent"
                 component={EditEvent}
               />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="EditGender"
+                component={EditGender}
+              />
+
               <Stack.Screen
                 options={{ headerShown: false }}
                 name="CreateNewsPost"
@@ -350,6 +359,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="AllEventsPage"
                 component={ViewAllEvents}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="EditFitnessInterests"
+                component={EditFitnessInterests}
               />
 
               <Stack.Screen

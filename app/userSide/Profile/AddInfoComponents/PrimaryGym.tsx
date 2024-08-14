@@ -11,20 +11,37 @@ import { Communities, Profile } from "../../../@types/supabaseTypes"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import getAllUsersCommunities from "../../../supabaseFunctions/getFuncs/getUsersCommunities"
-import CommunityBubble from "../../UserCommunities/components/CommunityBubble"
-import CommunityCard from "../../Communities/components/CommunityCard"
+
 import supabase from "../../../../lib/supabase"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import CommunityCardAboutMe from "./CommuntiyCard"
-import BackButton from "../../../components/BackButton"
+
+import EditProfileTopBar from "./EditProfileTopBar"
 
 const PrimaryGym = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const [communities, setCommunities] = useState<Communities[] | null>([])
+  const [pressedStates, setPressedStates] = useState<{
+    [key: number]: boolean
+  }>({})
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
+
+  const handlePressIn = (community_id: number) => {
+    setPressedStates((prevState) => ({
+      ...prevState,
+      [community_id]: true,
+    }))
+  }
+
+  const handlePressOut = (community_id: number) => {
+    setPressedStates((prevState) => ({
+      ...prevState,
+      [community_id]: false,
+    }))
+  }
 
   const showAlert = (community_id: number) => {
     Alert.alert(
@@ -67,24 +84,21 @@ const PrimaryGym = () => {
     getAllUsersCommunities(user?.id, setLoading, setCommunities)
   }, [currentUser])
   return (
-    <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-between items-center">
-        <View className="ml-1">
-          <BackButton />
-        </View>
-
-        <Text className="font-bold text-lg text-center mx-2">
-          Select your primary gym from the list below
-        </Text>
-        <View />
-      </View>
+    <SafeAreaView className="flex-1 bg-primary-900">
+      <EditProfileTopBar
+        text="Primary Gym"
+        functionProp={() => console.log}
+        doneButton={false}
+      />
       <ScrollView>
         {communities &&
           communities?.map((community) => (
             <Pressable
+              onPressIn={() => handlePressIn(community.id)}
+              onPressOut={() => handlePressOut(community.id)}
               onPress={() => showAlert(community.id)}
               key={community.id}
-              className="m-2"
+              className={`${pressedStates[community.id] ? "opacity-50" : null}`}
             >
               <CommunityCardAboutMe community={community} />
             </Pressable>

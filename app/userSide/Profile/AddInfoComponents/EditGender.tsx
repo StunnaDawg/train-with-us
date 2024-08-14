@@ -1,40 +1,30 @@
 import {
   View,
   Text,
-  TextInput,
+  Pressable,
   SafeAreaView,
+  TextInput,
   Alert,
   StyleSheet,
 } from "react-native"
-import React from "react"
-import { useState } from "react"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
-
-import { useAuth } from "../../../supabaseFunctions/authcontext"
-import Sexuality from "../../../UserOnBoard/Sexuality"
-import NextButton from "../../../components/NextButton"
-import supabase from "../../../../lib/supabase"
 import { useNavigation } from "@react-navigation/native"
+import React, { useState } from "react"
 import { NavigationType } from "../../../@types/navigation"
+import { useAuth } from "../../../supabaseFunctions/authcontext"
+import supabase from "../../../../lib/supabase"
+import GenericButton from "../../../components/GenericButton"
 import EditProfileTopBar from "./EditProfileTopBar"
 
-type SexualityOption =
-  | "Prefer not to say"
-  | "Straight"
-  | "Gay"
-  | "Lesbian"
-  | "Bisexual"
-  | null
+type GenderOption = "Male" | "Female" | "Non-Binary" | "Specify other..." | null
 
-const SexualityEdit = () => {
+const EditGender = () => {
   const navigation = useNavigation<NavigationType>()
-  const [selectedSexuality, setSelectedSexuality] =
-    useState<SexualityOption>("Prefer not to say")
 
-  const handleSelectSexuality = (Sexuality: SexualityOption) => {
-    setSelectedSexuality(selectedSexuality === Sexuality ? null : Sexuality)
-  }
-  const { user } = useAuth()
+  const [selectedGender, setSelectedGender] = useState<GenderOption>("Male")
+  const [specifyInput, setSpecifyInput] = useState<string>("")
+
+  const { user, userProfile } = useAuth()
 
   const showAlert = () =>
     Alert.alert(
@@ -52,7 +42,7 @@ const SexualityEdit = () => {
     )
 
   const handleUserUpdate = async () => {
-    if (selectedSexuality === null) {
+    if (selectedGender === null || userProfile === null) {
       showAlert()
       return
     }
@@ -60,40 +50,46 @@ const SexualityEdit = () => {
       const { error } = await supabase
         .from("profiles")
         .update({
-          sexuality: selectedSexuality,
+          gender: selectedGender,
         })
         .eq("id", user?.id)
 
       if (error) throw error
 
-      navigation.goBack()
+      navigation.navigate("FitnessInterests", {
+        userProfile: null,
+      })
     } catch (error) {
       console.log(error)
     }
   }
-  const SexualityOptions: SexualityOption[] = [
-    "Prefer not to say",
-    "Straight",
-    "Gay",
-    "Lesbian",
+
+  const handleSelectGender = (gender: GenderOption) => {
+    setSelectedGender(selectedGender === gender ? null : gender)
+  }
+  const genderOptions: GenderOption[] = [
+    "Male",
+    "Female",
+    "Non-Binary",
+    "Specify other...",
   ]
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
       <View className="flex-1 justify-between">
         <View>
-          <EditProfileTopBar text="Sexuality" functionProp={handleUserUpdate} />
+          <EditProfileTopBar text="Gender" functionProp={handleUserUpdate} />
 
           <View>
-            {SexualityOptions.map((option, index) => (
+            {genderOptions.map((gender, index) => (
               <View key={index} style={styles.optionContainer}>
-                <Text style={styles.optionText}>{option}</Text>
+                <Text style={styles.optionText}>{gender}</Text>
                 <BouncyCheckbox
                   fillColor="blue"
                   unFillColor="#FFFFFF"
-                  isChecked={selectedSexuality === option}
-                  onPress={() => handleSelectSexuality(option)}
+                  isChecked={selectedGender === gender}
+                  onPress={() => handleSelectGender(gender)}
                 />
-                {/* {option === "Specify other..." &&
+                {gender === "Specify other..." &&
                   selectedGender === "Specify other..." && (
                     <TextInput
                       value={specifyInput}
@@ -101,7 +97,7 @@ const SexualityEdit = () => {
                       placeholder="Specify your gender here..."
                       className="h-9 border-2 w-48 rounded p-1"
                     />
-                  )} */}
+                  )}
               </View>
             ))}
           </View>
@@ -149,4 +145,4 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 })
-export default SexualityEdit
+export default EditGender

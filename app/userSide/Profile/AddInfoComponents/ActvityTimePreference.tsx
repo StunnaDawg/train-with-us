@@ -1,40 +1,38 @@
-import { View, Text, ScrollView, StyleSheet } from "react-native"
-import React, { useEffect, useState } from "react"
-import { NavigationType, RootStackParamList } from "../../../@types/navigation"
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
-import { SafeAreaView } from "react-native-safe-area-context"
-import { useAuth } from "../../../supabaseFunctions/authcontext"
-import supabase from "../../../../lib/supabase"
+import { View, Text, TextInput, SafeAreaView, StyleSheet } from "react-native"
+import React from "react"
 import NextButton from "../../../components/NextButton"
+import { useNavigation } from "@react-navigation/native"
+import { useState } from "react"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
+import { NavigationType } from "../../../@types/navigation"
+import supabase from "../../../../lib/supabase"
+import { useAuth } from "../../../supabaseFunctions/authcontext"
 import BackButton from "../../../components/BackButton"
 import EditProfileTopBar from "./EditProfileTopBar"
 
-type LvlOptions =
-  | "Beginner"
-  | "Intermediate"
-  | "Advanced"
-  | "Expert"
-  | "Professional"
+type TimeOption =
+  | "Morning"
+  | "Afternoon"
+  | "Evening"
+  | "Weekday Preferred"
+  | "Weekends Preferred"
+  | null
 
-const FitnessLevel = () => {
-  const route = useRoute<RouteProp<RootStackParamList, "FitnessLevel">>()
-  const userProfile = route.params.userProfile
-
+const ActivityTimePreference = () => {
   const navigation = useNavigation<NavigationType>()
 
-  const [selectedLvl, setSelectedLvl] = useState<LvlOptions | string>("")
+  const [selectedTime, setSelectedTime] = useState<TimeOption>("Morning")
   const { user } = useAuth()
 
-  const handleSelectLvl = (lvl: LvlOptions) => {
-    setSelectedLvl(selectedLvl === lvl ? "Beginner" : lvl)
+  const handleSelectTime = (Time: TimeOption) => {
+    setSelectedTime(selectedTime === Time ? null : Time)
   }
 
   const handleUserUpdate = async () => {
     try {
       const { error } = await supabase
         .from("profiles")
-        .update({ fitness_lvl: selectedLvl })
+        .update({ actvitiy_time: selectedTime })
         .eq("id", user?.id)
 
       if (error) throw error
@@ -45,39 +43,31 @@ const FitnessLevel = () => {
       console.error("Failed to update community preferences:", error)
     }
   }
-
-  useEffect(() => {
-    if (userProfile?.fitness_lvl) {
-      setSelectedLvl(userProfile.fitness_lvl)
-    }
-  }, [userProfile])
-
-  const LvlOptions: LvlOptions[] = [
-    "Beginner",
-    "Intermediate",
-    "Advanced",
-    "Expert",
-    "Professional",
+  const TimeOptions: TimeOption[] = [
+    "Morning",
+    "Afternoon",
+    "Evening",
+    "Weekday Preferred",
+    "Weekends Preferred",
   ]
-
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
       <View className="flex-1 justify-between">
         <View>
           <EditProfileTopBar
-            text="Experience Level"
+            text="Workout Time"
             functionProp={handleUserUpdate}
           />
 
           <View>
-            {LvlOptions.map((option, index) => (
+            {TimeOptions.map((time, index) => (
               <View key={index} style={styles.optionContainer}>
-                <Text style={styles.optionText}>{option}</Text>
+                <Text style={styles.optionText}>{time}</Text>
                 <BouncyCheckbox
                   fillColor="blue"
                   unFillColor="#FFFFFF"
-                  isChecked={selectedLvl === option}
-                  onPress={() => handleSelectLvl(option)}
+                  isChecked={selectedTime === time}
+                  onPress={() => handleSelectTime(time)}
                 />
               </View>
             ))}
@@ -117,7 +107,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   optionText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
     color: "#FFFFFF",
   },
@@ -126,4 +116,5 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 })
-export default FitnessLevel
+
+export default ActivityTimePreference

@@ -7,9 +7,14 @@ import { useState } from "react"
 type EditProfileTopBarProps = {
   text: string
   functionProp: () => void
+  doneButton?: boolean
 }
 
-const EditProfileTopBar = ({ text, functionProp }: EditProfileTopBarProps) => {
+const EditProfileTopBar = ({
+  text,
+  functionProp,
+  doneButton = true,
+}: EditProfileTopBarProps) => {
   const navigation = useNavigation<NavigationType>()
   const [isCancelPressed, setIsCancelPressed] = useState(false)
   const [isDonePressed, setIsDonePressed] = useState(false)
@@ -38,17 +43,21 @@ const EditProfileTopBar = ({ text, functionProp }: EditProfileTopBarProps) => {
         onPress={() => navigation.goBack()}
         className={`${isCancelPressed ? "opacity-50" : null}`}
       >
-        <Text className=" text-xs font-semibold">Cancel</Text>
+        <Text className=" text-xs font-semibold text-white">Cancel</Text>
       </Pressable>
-      <Text className="font-bold text-lg text-center">{text}</Text>
-      <Pressable
-        onPressIn={handleOnPressInDone}
-        onPressOut={handleOnPressOutDone}
-        onPress={functionProp}
-        className={`${isDonePressed ? "opacity-50" : null}`}
-      >
-        <Text className="text-xs font-semibold">Done</Text>
-      </Pressable>
+      <Text className="font-bold text-lg text-center text-white">{text}</Text>
+      {doneButton ? (
+        <Pressable
+          onPressIn={handleOnPressInDone}
+          onPressOut={handleOnPressOutDone}
+          onPress={functionProp}
+          className={`${isDonePressed ? "opacity-50" : null}`}
+        >
+          <Text className="text-xs font-semibold text-white">Done</Text>
+        </Pressable>
+      ) : (
+        <View />
+      )}
     </View>
   )
 }

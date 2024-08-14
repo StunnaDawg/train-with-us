@@ -13,16 +13,16 @@ const EnhancedTextInput = ({
   placeholder,
 }: EnhancedTextInputProps) => {
   return (
-    <View className="w-80">
+    <View className="w-80 ">
       <TextInput
         multiline={true}
-        className=" border border-slate-200 rounded-xl p-3 h-32 text-base text-gray-700"
+        className="bg-white border border-slate-200 rounded-xl p-3 h-32 text-base text-gray-700"
         placeholder={placeholder}
         maxLength={100}
         value={text}
         onChangeText={setText}
       />
-      <Text className="text-right mt-1 text-xs text-gray-500">
+      <Text className="text-right mt-1 text-xs text-gray-400">
         {text ? text.length : "0"}/100
       </Text>
     </View>
