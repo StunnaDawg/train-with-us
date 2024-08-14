@@ -1,35 +1,54 @@
 import { View, Text, SafeAreaView } from "react-native"
 import React from "react"
 import GenericButton from "../components/GenericButton"
-import { useNavigation } from "@react-navigation/native"
-import { NavigationType } from "../@types/navigation"
+import supabase from "../../lib/supabase"
+import { useAuth } from "../supabaseFunctions/authcontext"
+import * as Updates from "expo-updates"
 
-const Welcome = () => {
-  const navigation = useNavigation<NavigationType>()
+const EndOnBoard = () => {
+  const { user } = useAuth()
+
+  const finishOnBoard = async () => {
+    if (!user?.id) return
+    const { error } = await supabase
+      .from("profiles")
+      .update({ onboard: true })
+      .eq("id", user?.id)
+
+    if (error) throw error
+    await Updates.reloadAsync()
+  }
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
       <View className="flex-1">
         <View className="flex flex-row  m-9">
-          <Text className="text-xl font-bold text-white">Welcome!</Text>
+          <Text className="text-xl font-bold text-white">
+            You're all ready!
+          </Text>
         </View>
         <View className="flex flex-row mb-9 mx-9">
           <Text className="text-lg font-semibold text-white">
-            We're excited to have you join our Community!
+            Browse Event in your area and join the fun.
           </Text>
         </View>
 
         <View className="flex flex-row mb-9 mx-9">
           <Text className="text-lg font-semibold text-white">
-            Let's get started by answering a few questions to help us set up
-            your profile.
+            Connect with your community and stay up to date with events.
+          </Text>
+        </View>
+
+        <View className="flex flex-row mb-9 mx-9">
+          <Text className="text-lg font-semibold text-white">
+            Connect with like-minded people and make new fitness friends.
           </Text>
         </View>
       </View>
 
       <View className="flex flex-row justify-center m-4">
         <GenericButton
-          text="Get Started"
-          buttonFunction={() => navigation.navigate("QuestionOne")}
+          text="Jump In!"
+          buttonFunction={() => finishOnBoard()}
           colourDefault="bg-white"
           colourPressed="bg-yellow-300"
           borderColourDefault="border-black"
@@ -44,4 +63,4 @@ const Welcome = () => {
   )
 }
 
-export default Welcome
+export default EndOnBoard

@@ -83,6 +83,7 @@ import EventAttendees from "./userSide/Events/components/EventAttendees"
 import CreateNewsPost from "./userSide/MyCommunity/CreateNewsPost"
 import ViewFullUserProfileFromMessages from "./userSide/UserCommunities/components/ViewUserProfileFromMessage"
 import Welcome from "./UserOnBoard/Welcome"
+import EndOnBoard from "./UserOnBoard/EndOnBoard"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -97,8 +98,8 @@ const UserFooter = () => {
           borderRadius: 30,
           position: "absolute",
           bottom: 20,
-          left: 20,
-          right: 20,
+          left: 40,
+          right: 40,
           backgroundColor: "white",
           elevation: 10,
           shadowColor: "#000",
@@ -588,6 +589,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="FitnessInterests"
                 component={FitnessInterests}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="EndOnBoarding"
+                component={EndOnBoard}
               />
             </Stack.Group>
           )}

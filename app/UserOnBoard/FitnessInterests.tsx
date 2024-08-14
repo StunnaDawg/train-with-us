@@ -53,6 +53,8 @@ const FitnessInterests = () => {
       })
 
       if (error) throw error
+
+      navigation.navigate("EndOnBoarding")
     } catch (error) {
       console.log(error)
     }
