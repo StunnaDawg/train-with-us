@@ -119,10 +119,10 @@ const Connections = () => {
   }, [connectionProfiles])
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView className="bg-primary-900" style={{ flex: 1 }}>
       <NavBar
+        textColour="text-white"
         title="Connections"
-        iconColour="black"
         showFriends={true}
         showSettings={false}
         showSearchCommunities={false}

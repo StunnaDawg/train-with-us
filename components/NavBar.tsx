@@ -79,7 +79,7 @@ const NavBar = ({
               <FontAwesome6
                 name="magnifying-glass"
                 size={24}
-                color={searchUsersColour}
+                color={getColor("searchothers")}
               />
             </Pressable>
           ) : null}
