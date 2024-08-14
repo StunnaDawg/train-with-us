@@ -40,7 +40,9 @@ const MyEvents = () => {
   return (
     <SafeAreaView className="flex-1">
       <View className="flex flex-row justify-center m-3 items-center">
-        <Text className="font-bold text-lg ">Upcoming Events</Text>
+        <Text className="font-bold text-lg text-white ">
+          My Upcoming Events
+        </Text>
       </View>
 
       {userEvents && userEvents.length > 0 ? (

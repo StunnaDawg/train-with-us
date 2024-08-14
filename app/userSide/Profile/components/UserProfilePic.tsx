@@ -18,7 +18,9 @@ const UserProfilePic = ({ profile }: UserProfilePicProps) => {
           noAvatarRadius={230}
         />
         <View className="flex flex-row justify-center mt-4 items-center">
-          <Text className="font-bold text-xl mx-2">{profile?.first_name}</Text>
+          <Text className="font-bold text-white  text-xl mx-2">
+            {profile?.first_name}
+          </Text>
         </View>
       </View>
     </View>

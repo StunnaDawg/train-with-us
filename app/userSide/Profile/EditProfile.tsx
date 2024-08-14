@@ -82,25 +82,6 @@ const EditProfile = () => {
               </View>
             </View>
             <AddMoreInfo />
-            <View className="bg-slate-200 m-2 rounded-lg p-2">
-              <View className="">
-                <Text className="font-bold text-lg text-center">Account</Text>
-              </View>
-              <Pressable
-                onPressIn={handleSettingsPressedIn}
-                onPressOut={handleSettingsPressedOut}
-                className={`${settingsPressed ? "opacity-50" : null} mx-2 p-2`}
-                onPress={() => navigation.navigate("UserSettings")}
-              >
-                <View className="flex flex-row justify-between">
-                  <View className="flex flex-row items-center">
-                    <FontAwesome6 name="gear" size={18} />
-                    <Text className="font-semibold mx-1">Account Settings</Text>
-                  </View>
-                  <FontAwesome6 name="chevron-right" size={18} />
-                </View>
-              </Pressable>
-            </View>
           </ScrollView>
         </>
       ) : (

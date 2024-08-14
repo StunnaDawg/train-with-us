@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Pressable } from "react-native"
+import { View, Text, ScrollView, Pressable, SafeAreaView } from "react-native"
 import React, { useCallback, useState } from "react"
 import UserProfilePic from "./components/UserProfilePic"
 import { Profile } from "../../@types/supabaseTypes"
@@ -9,13 +9,13 @@ import { NavigationType } from "../../@types/navigation"
 import { FontAwesome6 } from "@expo/vector-icons"
 import MyEvents from "../Events/MyEvents"
 import { NavBar } from "../../../components"
+import { is } from "date-fns/locale"
 
 const ProfileView = () => {
-  const { user } = useAuth()
+  const { userProfile } = useAuth()
   const [pressedButton, setPressedButton] = useState<{
     [key: string]: boolean
   }>({})
-  const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const navigation = useNavigation<NavigationType>()
 
   const handlePressedButtonIn = (buttonName: string) => {
@@ -24,48 +24,53 @@ const ProfileView = () => {
   const handlePressedButtonOut = (buttonName: string) => {
     setPressedButton((prev) => ({ ...prev, [buttonName]: false }))
   }
-  const fetchCurrentUser = async () => {
-    if (!user) return
-    setCurrentUser(null)
-    await useCurrentUser(user?.id, setCurrentUser)
-  }
-  useFocusEffect(
-    useCallback(() => {
-      console.log("useFocusEffect")
-      fetchCurrentUser()
-      return () => {}
-    }, [user])
-  )
+  // const fetchCurrentUser = async () => {
+  //   if (!user) return
+  //   setCurrentUser(null)
+  //   await useCurrentUser(user?.id, setCurrentUser)
+  // }
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     let isMounted = true
+  //     fetchCurrentUser()
+  //     return () => {
+  //       isMounted = false
+  //     }
+  //   }, [user])
+  // )
 
   return (
-    <>
+    <SafeAreaView className="flex-1 bg-primary-900">
       <NavBar
+        textColour="text-white"
         title="My Profile"
-        iconColour="black"
         showFriends={true}
         showSearchCommunities={false}
         searchUsers={false}
       />
       <ScrollView>
-        <UserProfilePic profile={currentUser} />
-
-        <View className={`${"bg-slate-200"} m-2 rounded-lg p-2`}>
+        <View className="flex flex-row justify-center">
+          <Text className="text-white text-xl font-bold">
+            {userProfile?.first_name}
+          </Text>
+        </View>
+        <View className={`${"bg-white"} m-2 mx-10 rounded-lg p-2`}>
           <Pressable
             onPressIn={() => handlePressedButtonIn("editProfile")}
             onPressOut={() => handlePressedButtonOut("editProfile")}
-            className={`${
+            className={`border-b ${
               pressedButton["editProfile"] ? "opacity-50" : null
             } mx-2 p-3`}
             onPress={() => {
-              if (currentUser)
+              if (userProfile)
                 navigation.navigate("UserEditProfile", {
-                  userProfile: currentUser,
+                  userProfile: userProfile,
                 })
             }}
           >
             <View className="flex flex-row justify-between">
               <View className="flex flex-row items-center">
-                <Text className="font-semibold mx-1">Edit Profile</Text>
+                <Text className="font-semibold  mx-1">Edit Profile</Text>
                 <FontAwesome6 name="edit" size={18} />
               </View>
               <FontAwesome6 name="chevron-right" size={18} />
@@ -74,13 +79,13 @@ const ProfileView = () => {
           <Pressable
             onPressIn={() => handlePressedButtonIn("viewProfile")}
             onPressOut={() => handlePressedButtonOut("viewProfile")}
-            className={`${
+            className={` border-b ${
               pressedButton["viewProfile"] ? "opacity-50" : null
             } mx-2 p-3`}
             onPress={() => {
-              if (currentUser)
+              if (userProfile)
                 navigation.navigate("ViewFullUserProfile", {
-                  user: currentUser,
+                  user: userProfile,
                 })
             }}
           >
@@ -91,11 +96,27 @@ const ProfileView = () => {
               <FontAwesome6 name="chevron-right" size={18} />
             </View>
           </Pressable>
+          <Pressable
+            onPressIn={() => handlePressedButtonIn("accountSettings")}
+            onPressOut={() => handlePressedButtonOut("accountSettings")}
+            className={`${
+              pressedButton["accountSettings"] ? "opacity-50" : null
+            } mx-2 p-3`}
+            onPress={() => navigation.navigate("UserSettings")}
+          >
+            <View className="flex flex-row justify-between">
+              <View className="flex flex-row items-center">
+                <Text className="font-semibold  mx-1">Account Settings</Text>
+                <FontAwesome6 name="gear" size={18} />
+              </View>
+              <FontAwesome6 name="chevron-right" size={18} />
+            </View>
+          </Pressable>
         </View>
 
         <MyEvents />
       </ScrollView>
-    </>
+    </SafeAreaView>
   )
 }
 

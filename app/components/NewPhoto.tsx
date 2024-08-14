@@ -20,7 +20,7 @@ const NewPhoto = ({ setProfilePic }: NewPhotoProps) => {
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
+      quality: 0,
       allowsEditing: true,
       selectionLimit: 1,
     })

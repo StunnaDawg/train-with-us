@@ -120,30 +120,32 @@ const Connections = () => {
 
   return (
     <SafeAreaView className="bg-primary-900" style={{ flex: 1 }}>
-      <NavBar
-        textColour="text-white"
-        title="Connections"
-        showFriends={true}
-        showSettings={false}
-        showSearchCommunities={false}
-        searchUsers={true}
-      />
-      {loadingMore && (
-        <View
-          style={{
-            position: "absolute",
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "rgba(255, 255, 255, 0.8)",
-          }}
-        >
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-      )}
+      <View className="mb-1">
+        <NavBar
+          textColour="text-white"
+          title="Connections"
+          showFriends={true}
+          showSettings={false}
+          showSearchCommunities={false}
+          searchUsers={true}
+        />
+        {loadingMore && (
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+            }}
+          >
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        )}
+      </View>
       <View style={{ flex: 1 }}>
         <Animated.ScrollView
           showsVerticalScrollIndicator={false}

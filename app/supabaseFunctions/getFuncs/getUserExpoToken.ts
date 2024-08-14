@@ -4,7 +4,7 @@ const getUserToken = async (userId: string) => {
   const { data, error } = await supabase
     .from("profiles")
     .select("expo_push_token")
-    .eq("user_id", userId)
+    .eq("id", userId)
 
   if (error) {
     console.error("Error fetching user token:", error.message)
