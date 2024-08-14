@@ -34,10 +34,10 @@ const Welcome = () => {
           colourPressed="bg-yellow-300"
           borderColourDefault="border-black"
           borderColourPressed="border-black"
-          textSize="text-xl"
+          textSize="text-lg"
           roundness="rounded-lg"
           width={300}
-          padding="p-3"
+          padding="p-2"
         />
       </View>
     </SafeAreaView>

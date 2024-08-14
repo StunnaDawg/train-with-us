@@ -12,6 +12,7 @@ import { NavigationType } from "../@types/navigation"
 import NextButton from "../components/NextButton"
 import supabase from "../../lib/supabase"
 import { useAuth } from "../supabaseFunctions/authcontext"
+import GenericButton from "../components/GenericButton"
 
 const Question1 = () => {
   const [first_name, setFirstName] = useState<string>("")
@@ -56,15 +57,17 @@ const Question1 = () => {
     }
   }
   return (
-    <SafeAreaView className="flex-1">
-      <View className="flex justify-center mx-12">
+    <SafeAreaView className="flex-1 bg-primary-900">
+      <View className="flex-1 justify-center mx-8">
         <View className="items-start w-full">
-          <View className="my-5">
-            <Text className="font-bold text-lg">What's Your Name?</Text>
+          <View className="mt-5">
+            <Text className="font-bold text-xl text-white">
+              What's your name?
+            </Text>
           </View>
 
           <View className="w-full">
-            <View className="border-b py-2">
+            <View className="border py-2 rounded-lg bg-white my-2">
               <TextInput
                 className="w-full text-lg font-bold px-2"
                 placeholder="First Name (Required)"
@@ -73,9 +76,9 @@ const Question1 = () => {
               />
             </View>
 
-            <View className="border-b py-2">
+            <View className="border py-2 rounded-lg bg-white">
               <TextInput
-                className="w-full text-lg font-bold px-2"
+                className="w-full  text-lg font-bold px-2"
                 placeholder="Last Name"
                 onChangeText={(text) => setLastName(text)}
                 value={last_name}
@@ -83,9 +86,20 @@ const Question1 = () => {
             </View>
           </View>
         </View>
-        <View className="mt-4 flex flex-row justify-end">
-          <NextButton onPress={() => handleUserUpdate()} />
-        </View>
+      </View>
+      <View className="flex flex-row justify-center m-4">
+        <GenericButton
+          text="Continue"
+          buttonFunction={() => handleUserUpdate()}
+          colourDefault="bg-white"
+          colourPressed="bg-yellow-300"
+          borderColourDefault="border-black"
+          borderColourPressed="border-black"
+          textSize="text-lg"
+          roundness="rounded-lg"
+          width={300}
+          padding="p-2"
+        />
       </View>
     </SafeAreaView>
   )

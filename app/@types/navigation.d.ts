@@ -53,7 +53,7 @@ export type RootStackParamList = {
   CommunitiesEditProfile: undefined
   CommunitiesModerateMembers: undefined
   FitnessInterests: {
-    userProfile: Profile
+    userProfile: Profile | null
   }
   CommunitiesPreferences: undefined
   ActivityTimePreference: undefined

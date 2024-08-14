@@ -9,12 +9,11 @@ import {
 import React, { useEffect, useState } from "react"
 import { NavigationType } from "../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
-import NextButton from "../components/NextButton"
-import DateTimePicker from "@react-native-community/datetimepicker"
 import DOBPicker from "../components/DOBPicker"
 import supabase from "../../lib/supabase"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import calculateAge from "../utilFunctions/calculateAge"
+import GenericButton from "../components/GenericButton"
 
 const Question2 = () => {
   const [date, setDate] = useState(new Date())
@@ -69,24 +68,35 @@ const Question2 = () => {
     console.log("ageState", ageState)
   }, [ageState])
   return (
-    <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-center mx-12">
+    <SafeAreaView className="flex-1 bg-primary-900">
+      <View className="flex-1 flex flex-row justify-center ">
         <View>
-          <View className="items-start w-full">
-            <View className="my-5">
-              <Text className="font-bold text-lg">
+          <View className="w-full">
+            <View className="flex flex-row justify-center my-5">
+              <Text className="font-bold text-white text-xl">
                 What's your date of birth?
               </Text>
             </View>
 
-            <View>
+            <View className="bg-white rounded-xl">
               <DOBPicker date={date} setDate={setDate} />
             </View>
           </View>
-          <View className="mt-4 flex flex-row justify-end">
-            <NextButton onPress={() => handleUserUpdate()} />
-          </View>
         </View>
+      </View>
+      <View className="flex flex-row justify-center m-4">
+        <GenericButton
+          text="Continue"
+          buttonFunction={() => handleUserUpdate()}
+          colourDefault="bg-white"
+          colourPressed="bg-yellow-300"
+          borderColourDefault="border-black"
+          borderColourPressed="border-black"
+          textSize="text-lg"
+          roundness="rounded-lg"
+          width={300}
+          padding="p-2"
+        />
       </View>
     </SafeAreaView>
   )

@@ -1,5 +1,4 @@
 import { View, Text, SafeAreaView, Alert } from "react-native"
-import React, { useEffect, useState } from "react"
 import GenericButton from "../components/GenericButton"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../@types/navigation"
@@ -99,38 +98,42 @@ const EnableNotifcations = () => {
     navigation.navigate("Location")
   }
   return (
-    <SafeAreaView className="flex-1 justify-center items-center">
+    <SafeAreaView className="flex-1 justify-center items-center bg-primary-900 ">
       <View className="flex flex-col justify-center items-center">
         <View className="m-2">
-          <Text className="text-lg font-bold text-center">
+          <Text className="text-xl text-white font-bold text-center">
             Enable notifications to stay up to date with your community
           </Text>
         </View>
         <View>
           <View className="mb-3">
             <GenericButton
-              roundness="rounded-xl"
-              text="Enable Notifications"
+              text="Enable notifications"
               buttonFunction={() => handleEnableNotifications()}
-              textSize="text-sm"
-              width={200}
-              colourPressed="bg-blue-200"
-              colourDefault="bg-blue-500"
-              borderColourPressed="border-gray-200"
+              colourDefault="bg-white"
+              colourPressed="bg-yellow-300"
               borderColourDefault="border-black"
+              borderColourPressed="border-black"
+              textSize="text-lg"
+              roundness="rounded-lg"
+              width={300}
+              padding="p-2"
             />
           </View>
           <View className="mb-3">
             <GenericButton
-              roundness="rounded-xl"
-              text="Skip"
+              text="skip for now"
+              textColour={"text-white"}
               buttonFunction={() => skip()}
-              textSize="text-sm"
-              width={200}
-              colourPressed="bg-gray-200"
-              colourDefault="bg-white"
-              borderColourPressed="border-gray-200"
-              borderColourDefault="border-black"
+              colourDefault="bg-opacity-0"
+              colourPressed="bg-opacity-0"
+              borderColourDefault="border-transparent"
+              borderColourPressed="border-transparent"
+              textSize="text-lg"
+              roundness="rounded-lg"
+              width={300}
+              padding="p-2"
+              textColourPressed={"text-black"}
             />
           </View>
         </View>

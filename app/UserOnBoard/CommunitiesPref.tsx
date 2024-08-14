@@ -27,13 +27,12 @@ const CommunityPreference = () => {
     try {
       const { error } = await supabase
         .from("profiles")
-        .update({ community_preference: [selectedCommunities] })
-        .eq("id", user?.id)
+        .upsert({ id: user?.id, community_preference: [selectedCommunities] })
 
       if (error) throw error
 
       // Navigate to the next preference page
-      navigation.navigate("ActivityTimePreference")
+      // navigation.navigate("ActivityTimePreference")
     } catch (error) {
       console.error("Failed to update community preferences:", error)
     }

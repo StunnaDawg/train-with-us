@@ -584,6 +584,11 @@ const NavStack = () => {
                 name="QuestionFour"
                 component={Question4}
               />
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="FitnessInterests"
+                component={FitnessInterests}
+              />
             </Stack.Group>
           )}
         </>

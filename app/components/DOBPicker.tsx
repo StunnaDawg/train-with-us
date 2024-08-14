@@ -20,7 +20,7 @@ const DOBPicker = ({ setDate, date }: DOBPickerProps) => {
       testID="dateTimePicker"
       value={date}
       mode="date"
-      display="default"
+      display="spinner"
       onChange={onChange}
       maximumDate={new Date()} // Users can't select a date in the future
     />

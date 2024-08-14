@@ -15,6 +15,8 @@ type GenericButtonProps = {
   textCenter?: boolean | null
   height?: string | null
   padding?: string | null
+  textColour?: string | null
+  textColourPressed?: string | null
 }
 
 const GenericButton = ({
@@ -31,6 +33,8 @@ const GenericButton = ({
   textCenter,
   height,
   padding,
+  textColour,
+  textColourPressed,
 }: GenericButtonProps) => {
   const [isPressed, setIsPressed] = useState(false)
 
@@ -57,7 +61,7 @@ const GenericButton = ({
       <Text
         className={` ${textCenter ? "text-center" : "text-center"} ${
           fontbold ? fontbold : "font-bold"
-        } ${textSize} `}
+        } ${textSize} ${textColour} ${isPressed ? textColourPressed : ""} `}
       >
         {text}
       </Text>
