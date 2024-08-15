@@ -323,7 +323,7 @@ const ManageCommunityEvents = () => {
                   </View>
                 ))
               ) : (
-                <Text className="font-semibold text-white">
+                <Text className="text-xl font-semibold text-white">
                   No past events!
                 </Text>
               )

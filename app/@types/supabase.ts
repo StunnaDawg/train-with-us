@@ -637,6 +637,43 @@ export type Database = {
           }
         ]
       }
+      notifications: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_read: boolean | null
+          navigation_path: string | null
+          title: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_read?: boolean | null
+          navigation_path?: string | null
+          title?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_read?: boolean | null
+          navigation_path?: string | null
+          title?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_notifications_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       profiles: {
         Row: {
           about: string | null

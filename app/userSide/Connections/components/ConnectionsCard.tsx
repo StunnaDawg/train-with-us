@@ -117,8 +117,8 @@ const ConnectionsCard = ({
                 <ScrollView horizontal={true} className="mt-1">
                   {profile?.activities && profile.activities.length > 0
                     ? profile.activities.map((tag) => (
-                        <View className="mb-1">
-                          <ActivityTags key={tag} activity={`${tag}`} />
+                        <View key={tag} className="mb-1">
+                          <ActivityTags activity={`${tag}`} />
                         </View>
                       ))
                     : null}

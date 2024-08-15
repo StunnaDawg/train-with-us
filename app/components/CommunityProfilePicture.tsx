@@ -17,14 +17,12 @@ import removeCommunityOrEventProfilePic from "../supabaseFunctions/deleteFuncs/r
 type SingleImageProp = {
   imageUrl: string | null | undefined
   imageUrlToRead: string | null | undefined
-  setImageUrl: React.Dispatch<React.SetStateAction<string | null | undefined>>
   communityId: number
 }
 
 const CommunityProfilePicSupa = ({
   imageUrl,
   imageUrlToRead,
-  setImageUrl,
   communityId,
 }: SingleImageProp) => {
   const [loading, setLoading] = useState(false)
@@ -87,7 +85,6 @@ const CommunityProfilePicSupa = ({
         "communities",
         "community_profile_pic"
       )
-      setImageUrl(filePath)
       setImage(img.uri)
     }
   }

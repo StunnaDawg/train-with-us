@@ -36,7 +36,7 @@ const EditProfileTopBar = ({
   }
 
   return (
-    <View className="flex flex-row justify-between items-center border-b border-slate-300 p-2 mb-8">
+    <View className="flex flex-row justify-between items-center border-b border-slate-300 p-2">
       <Pressable
         onPressIn={handleOnPressIn}
         onPressOut={handleOnPressOut}
