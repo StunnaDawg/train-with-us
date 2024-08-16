@@ -122,4 +122,4 @@ const MessageComponent = ({
   )
 }
 
-export default MessageComponent
+export default React.memo(MessageComponent)

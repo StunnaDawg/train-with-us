@@ -12,7 +12,6 @@ type NotificationsTabProps = {
   createdAt: string
   data: any
   description: string
-  navigationPath: string
   notificationType: string
   title: string
   image: string | null
@@ -22,7 +21,7 @@ const NotificationsCard = ({
   createdAt,
   data,
   description,
-  navigationPath,
+
   notificationType,
   title,
   image,
@@ -52,7 +51,7 @@ const NotificationsCard = ({
           })
         }
 
-        if (notificationType === "ChannelMessage") {
+        if (notificationType === "ChannelNotifcation") {
           navigation.navigate("ChannelScreen", {
             channelId: data.channel_id,
           })
@@ -137,7 +136,6 @@ const NotificationsTab = () => {
               createdAt={notification.created_at}
               data={notification.data}
               description={notification.description}
-              navigationPath={notification.navigation_path}
               notificationType={notification.notification_type}
               title={notification.title}
               image={notification.image}

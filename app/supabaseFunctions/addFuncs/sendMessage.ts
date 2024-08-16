@@ -29,12 +29,10 @@ const sendMessage = async (
       console.log("message error", error)
       throw error
     }
-    const navigation_path = `MessagingScreen`
     const title = `New Message from ${senderName}`
 
     await addNotification(
       message,
-      navigation_path,
       title,
       recieverId,
       "MessageNotification",

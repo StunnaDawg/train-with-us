@@ -254,7 +254,7 @@ export type Database = {
       community_channels: {
         Row: {
           channel_pic: string | null
-          channel_title: string | null
+          channel_title: string
           channel_type: string
           community: number
           community_name: string
@@ -268,7 +268,7 @@ export type Database = {
         }
         Insert: {
           channel_pic?: string | null
-          channel_title?: string | null
+          channel_title?: string
           channel_type?: string
           community: number
           community_name?: string
@@ -282,7 +282,7 @@ export type Database = {
         }
         Update: {
           channel_pic?: string | null
-          channel_title?: string | null
+          channel_title?: string
           channel_type?: string
           community?: number
           community_name?: string
@@ -645,7 +645,6 @@ export type Database = {
           id: string
           image: string | null
           is_read: boolean
-          navigation_path: string
           notification_type: string
           title: string
           user_id: string
@@ -657,7 +656,6 @@ export type Database = {
           id?: string
           image?: string | null
           is_read: boolean
-          navigation_path: string
           notification_type?: string
           title: string
           user_id?: string
@@ -669,7 +667,6 @@ export type Database = {
           id?: string
           image?: string | null
           is_read?: boolean
-          navigation_path?: string
           notification_type?: string
           title?: string
           user_id?: string

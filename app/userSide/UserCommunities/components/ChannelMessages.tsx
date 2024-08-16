@@ -61,7 +61,8 @@ const ChannelMessageScreen = () => {
       (message.trim().length === 0 && image === null) ||
       !user?.id ||
       currentUser?.first_name === null ||
-      currentUser?.first_name === undefined
+      currentUser?.first_name === undefined ||
+      !channel
     ) {
       return
     }
@@ -83,7 +84,8 @@ const ChannelMessageScreen = () => {
     if (!channel.private) {
       sendChannelNotification(
         channel.community,
-        currentUser.expo_push_token,
+
+        currentUser.id,
         `New Message in ${channel.channel_title}` || "New Message in Channel",
         message,
         channel,
@@ -92,7 +94,7 @@ const ChannelMessageScreen = () => {
     } else {
       sendChannelNotification(
         channel.community,
-        currentUser.expo_push_token,
+        currentUser.id,
         `New Message in ${channel.channel_title}` || "New Message in Channel",
         message,
         channel,
