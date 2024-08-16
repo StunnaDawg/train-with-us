@@ -50,6 +50,7 @@ const MyEvents = () => {
           <View className="flex flex-row flex-wrap">
             {userEvents?.map((event) => (
               <Pressable
+                key={event.id}
                 className="my-1"
                 onPress={() =>
                   navigation.navigate("ViewEvent", {
@@ -59,7 +60,6 @@ const MyEvents = () => {
               >
                 <EventCard
                   eventId={event.id}
-                  key={event.id}
                   title={event.event_title}
                   date={event.date}
                   eventCoverPhoto={event.event_cover_photo}
