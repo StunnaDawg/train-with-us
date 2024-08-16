@@ -107,16 +107,15 @@ const requestToJoin = async (
 
   if (getOwnerError) throw getOwnerError
 
-  if (expo_push_token)
-    await sendNotification(
-      ownerData?.expo_push_token,
-      "Request to Join",
-      first_name + " has requested to join your community.",
-      community_id,
-      community_title,
-      community_owner_id,
-      userPicture
-    )
+  await sendNotification(
+    ownerData?.expo_push_token,
+    "Request to Join",
+    first_name + " has requested to join your community.",
+    community_id,
+    community_title,
+    community_owner_id,
+    userPicture
+  )
 }
 
 export default requestToJoin

@@ -65,6 +65,12 @@ const NotificationsCard = ({
           })
         }
 
+        if (notificationType === "CommunityRequestAccepted") {
+          navigation.navigate("CommunityPage", {
+            community: data,
+          })
+        }
+
         if (notificationType === "ConnectionRequest") {
           navigation.navigate("DirectMessageTab")
         }

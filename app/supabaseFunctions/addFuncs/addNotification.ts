@@ -1,5 +1,9 @@
 import supabase from "../../../lib/supabase"
-import { ChatSession, CommunityChannel } from "../../@types/supabaseTypes"
+import {
+  ChatSession,
+  Communities,
+  CommunityChannel,
+} from "../../@types/supabaseTypes"
 
 const addNotification = async (
   description: string,
@@ -9,6 +13,7 @@ const addNotification = async (
   notificationData:
     | ChatSession
     | CommunityChannel
+    | Communities
     | { community_id: number; community_title: string }
     | null,
   image: string | null

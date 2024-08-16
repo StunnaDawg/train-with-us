@@ -2,29 +2,48 @@ import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { FunctionsHttpError } from "@supabase/supabase-js"
 import { Communities } from "../../@types/supabaseTypes"
+import addNotification from "./addNotification"
 
 const sendNotification = async (
   token: string,
   title: string,
   body: string,
-  community: Communities
+  community: Communities,
+  userId: string | null
 ) => {
-  console.log("Sending notification to", token)
-  const { data, error } = await supabase.functions.invoke("push", {
-    body: {
-      token,
-      titleWords: title,
-      bodyWords: body,
-      data: { community, type: "request_accepted" },
-    },
-  })
+  try {
+    if (!userId) {
+      console.log("No user found for notification")
+    } else {
+      await addNotification(
+        body,
+        title,
+        userId,
+        "CommunityRequestAccepted",
+        community,
+        null
+      )
+    }
 
-  if (error && error instanceof FunctionsHttpError) {
-    const errorMessage = await error.context.json()
-    console.log("Function returned an error", errorMessage)
+    console.log("Sending notification to", token)
+    const { data, error } = await supabase.functions.invoke("push", {
+      body: {
+        token,
+        titleWords: title,
+        bodyWords: body,
+        data: { community, type: "request_accepted" },
+      },
+    })
+
+    if (error && error instanceof FunctionsHttpError) {
+      const errorMessage = await error.context.json()
+      console.log("Function returned an error", errorMessage)
+    }
+
+    console.log("Notification sent:", data)
+  } catch (error) {
+    console.error("Failed to send notification:", error)
   }
-
-  console.log("Notification sent:", data)
 }
 
 const acceptRequest = async (
@@ -83,7 +102,8 @@ const acceptRequest = async (
           "Request Accepted",
           "Your request to join has been accepted by " +
             community.community_title,
-          community
+          community,
+          userId
         )
     }
   } catch (error) {
