@@ -101,6 +101,7 @@ const JoinFooter = ({
         communityOwner,
         title,
         user?.id,
+        currentProfile?.profile_pic,
         currentProfile?.first_name,
         currentProfile?.expo_push_token,
         showAlert

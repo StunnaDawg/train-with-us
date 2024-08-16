@@ -1,30 +1,59 @@
 import supabase from "../../../lib/supabase"
 
 import { FunctionsHttpError } from "@supabase/supabase-js"
+import addNotification from "./addNotification"
 
 const sendNotification = async (
   token: string,
   title: string,
   body: string,
   communityId: number,
-  communityTitle: string
+  communityTitle: string,
+  userId: string | null,
+  userPicture: string | null
 ) => {
-  console.log("Sending notification to", token)
-  const { data, error } = await supabase.functions.invoke("push", {
-    body: {
-      token,
-      titleWords: title,
-      bodyWords: body,
-      data: { communityId, communityTitle, type: "community_request_sent" },
-    },
-  })
+  try {
+    if (!userId) {
+      console.log("No user found for notification")
+    } else {
+      const notificationData = {
+        community_id: communityId,
+        community_title: communityTitle,
+      }
 
-  if (error && error instanceof FunctionsHttpError) {
-    const errorMessage = await error.context.json()
-    console.log("Function returned an error", errorMessage)
+      addNotification(
+        body,
+        title,
+        userId,
+        "CommunityRequest",
+        notificationData,
+        userPicture
+      )
+    }
+
+    if (!token) {
+      console.log("No token found for user")
+      return
+    }
+    console.log("Sending notification to", token)
+    const { data, error } = await supabase.functions.invoke("push", {
+      body: {
+        token,
+        titleWords: title,
+        bodyWords: body,
+        data: { communityId, communityTitle, type: "community_request_sent" },
+      },
+    })
+
+    if (error && error instanceof FunctionsHttpError) {
+      const errorMessage = await error.context.json()
+      console.log("Function returned an error", errorMessage)
+    }
+
+    console.log("Notification sent:", data)
+  } catch (error) {
+    console.error("Failed to send notification:", error)
   }
-
-  console.log("Notification sent:", data)
 }
 
 const requestToJoin = async (
@@ -32,6 +61,7 @@ const requestToJoin = async (
   community_owner_id: string | null,
   community_title: string,
   userId: string,
+  userPicture: string | null,
   first_name: string,
   expo_push_token: string | null,
   showAlert: (title: string, message: string) => void
@@ -83,7 +113,9 @@ const requestToJoin = async (
       "Request to Join",
       first_name + " has requested to join your community.",
       community_id,
-      community_title
+      community_title,
+      community_owner_id,
+      userPicture
     )
 }
 
