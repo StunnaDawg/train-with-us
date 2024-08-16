@@ -51,9 +51,9 @@ const NotificationsCard = ({
           })
         }
 
-        if (notificationType === "ChannelNotifcation") {
+        if (notificationType === "ChannelNotification") {
           navigation.navigate("ChannelScreen", {
-            channelId: data.channel_id,
+            channelId: data,
           })
         }
 

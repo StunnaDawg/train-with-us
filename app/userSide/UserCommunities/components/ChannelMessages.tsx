@@ -82,9 +82,14 @@ const ChannelMessageScreen = () => {
     )
 
     if (!channel.private) {
+      if (!channel) {
+        console.log("no channel data")
+        return
+      }
+
+      console.log("sending notification from channel", channel)
       sendChannelNotification(
         channel.community,
-
         currentUser.id,
         `New Message in ${channel.channel_title}` || "New Message in Channel",
         message,
@@ -92,6 +97,11 @@ const ChannelMessageScreen = () => {
         false
       )
     } else {
+      if (!channel) {
+        console.log("no channel data")
+        return
+      }
+      console.log("sending notification from channel", channel)
       sendChannelNotification(
         channel.community,
         currentUser.id,
@@ -208,7 +218,7 @@ const ChannelMessageScreen = () => {
         <View className="flex flex-row justify-center items-center">
           <View className="flex flex-row items-center">
             <Text className="font-bold text-lg mb-1 underline mx-1">
-              {channel.channel_title}
+              {channel?.channel_title || "Channel"}
             </Text>
             <FontAwesome6 name="chevron-right" size={20} color="black" />
           </View>

@@ -1,11 +1,12 @@
 import supabase from "../../../lib/supabase"
+import { ChatSession, CommunityChannel } from "../../@types/supabaseTypes"
 
 const addNotification = async (
   description: string,
   title: string,
   userId: string,
   notificationType: string,
-  notificationData: any,
+  notificationData: ChatSession | CommunityChannel,
   image: string | null
 ) => {
   try {

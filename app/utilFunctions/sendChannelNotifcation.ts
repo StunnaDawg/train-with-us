@@ -11,7 +11,7 @@ const sendNotification = async (
   channel: CommunityChannel
 ) => {
   try {
-    console.log("Sending notification to", token, userId)
+    console.log("Sending channel notification", channel)
     await addNotification(
       body,
       title,
