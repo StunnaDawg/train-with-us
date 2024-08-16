@@ -100,16 +100,22 @@ const MessageScreen = () => {
   }
 
   const sendMessageAction = async (image: string | null, message: string) => {
-    if ((message.trim().length === 0 && image === null) || !user?.id) {
+    if (
+      (message.trim().length === 0 && image === null) ||
+      !user?.id ||
+      !chatSession.id ||
+      !otherUserId
+    ) {
       return
     }
     await sendMessage(
       message,
       image,
       user?.id,
-      chatSession.id,
+      chatSession,
       userProfile!.profile_pic,
-      userProfile!.first_name + " " + userProfile!.last_name
+      userProfile!.first_name + " " + userProfile!.last_name,
+      otherUserId
     )
 
     await upsertChatSession(chatSession.id, message || "Sent an image")

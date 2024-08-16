@@ -210,6 +210,7 @@ export type RootStackParamList = {
   EditFitnessInterests: {
     userProfile: Profile
   }
+  NotificationsTab: undefined
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

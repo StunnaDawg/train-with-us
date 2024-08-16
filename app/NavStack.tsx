@@ -6,7 +6,6 @@ import {
 } from "./@types/navigation"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { NavBar } from "../components"
 import Login from "./UserAuth/Login"
 import SignUp from "./UserAuth/SignUp"
 import { useAuth } from "./supabaseFunctions/authcontext"
@@ -86,6 +85,7 @@ import Welcome from "./UserOnBoard/Welcome"
 import EndOnBoard from "./UserOnBoard/EndOnBoard"
 import EditGender from "./userSide/Profile/AddInfoComponents/EditGender"
 import EditFitnessInterests from "./userSide/Profile/AddInfoComponents/EditFitnessInterests"
+import NotificationsTab from "./userSide/NotificationsTab"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -258,6 +258,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="UserSettings"
                 component={Settings}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="NotificationsTab"
+                component={NotificationsTab}
               />
 
               <Stack.Screen

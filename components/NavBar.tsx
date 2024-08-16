@@ -149,6 +149,22 @@ const NavBar = ({
               />
             </Pressable>
           ) : null}
+
+          <Pressable
+            className="mx-2"
+            onPressIn={() => handlePressIn("settings")}
+            onPressOut={() => handlePressOut("settings")}
+            onPress={() => {
+              setLoading(true)
+              navigation.navigate("NotificationsTab")
+            }}
+          >
+            <FontAwesome6
+              name="bell"
+              size={24}
+              color={iconColour ? iconColour : getColor("settings")}
+            />
+          </Pressable>
         </View>
       </SafeAreaView>
     </>

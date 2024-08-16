@@ -17,7 +17,6 @@ const getAllEvents = async (
     if (error) throw error
 
     const eventsArray = events ?? null
-    console.log("events:", eventsArray)
 
     setEvents(eventsArray)
   } catch (error) {

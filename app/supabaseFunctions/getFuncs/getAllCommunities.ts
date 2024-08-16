@@ -22,8 +22,6 @@ const getAllCommunities = async (
 
     const communitiesArray = communities ?? null
 
-    console.log("communities:", communitiesArray)
-
     setCommunities(communitiesArray)
   } catch (error) {
     console.log(error)

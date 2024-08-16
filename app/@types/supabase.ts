@@ -640,30 +640,39 @@ export type Database = {
       notifications: {
         Row: {
           created_at: string
-          description: string | null
+          data: Json | null
+          description: string
           id: string
-          is_read: boolean | null
-          navigation_path: string | null
-          title: string | null
-          user_id: string | null
+          image: string | null
+          is_read: boolean
+          navigation_path: string
+          notification_type: string
+          title: string
+          user_id: string
         }
         Insert: {
           created_at?: string
-          description?: string | null
+          data?: Json | null
+          description: string
           id?: string
-          is_read?: boolean | null
-          navigation_path?: string | null
-          title?: string | null
-          user_id?: string | null
+          image?: string | null
+          is_read: boolean
+          navigation_path: string
+          notification_type?: string
+          title: string
+          user_id?: string
         }
         Update: {
           created_at?: string
-          description?: string | null
+          data?: Json | null
+          description?: string
           id?: string
-          is_read?: boolean | null
-          navigation_path?: string | null
-          title?: string | null
-          user_id?: string | null
+          image?: string | null
+          is_read?: boolean
+          navigation_path?: string
+          notification_type?: string
+          title?: string
+          user_id?: string
         }
         Relationships: [
           {

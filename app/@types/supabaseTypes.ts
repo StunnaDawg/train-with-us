@@ -52,3 +52,6 @@ export type ConnectionRequest =
   Database["public"]["Tables"]["connection_requests"]["Row"]
 
 export type News = Database["public"]["Tables"]["news_posts"]["Row"]
+
+export type SupaNotification =
+  Database["public"]["Tables"]["notifications"]["Row"]
