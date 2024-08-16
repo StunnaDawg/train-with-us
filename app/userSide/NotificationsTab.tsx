@@ -45,6 +45,7 @@ const NotificationsCard = ({
         isPressed ? "opacity-50" : null
       } bg-white border rounded-lg p-2 m-2`}
       onPress={() => {
+        console.log("notificationType", notificationType)
         if (notificationType === "MessageNotification") {
           navigation.navigate("MessagingScreen", {
             chatSession: data,
@@ -67,7 +68,7 @@ const NotificationsCard = ({
         if (notificationType === "ConnectionRequest") {
           navigation.navigate("DirectMessageTab")
         }
-        if (notificationType === "AcceptedConnectionRequest") {
+        if (notificationType === "ConnectionAccepted") {
           navigation.navigate("MessagingScreen", {
             chatSession: data,
           })
