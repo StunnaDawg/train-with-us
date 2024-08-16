@@ -51,6 +51,33 @@ const NotificationsCard = ({
             chatSession: data,
           })
         }
+
+        if (notificationType === "ChannelMessage") {
+          navigation.navigate("ChannelScreen", {
+            channelId: data.channel_id,
+          })
+        }
+
+        if (notificationType === "CommunityRequest") {
+          navigation.navigate("MyCommunityRequests", {
+            communityId: data.community_id,
+            communityTitle: data.community_title,
+          })
+        }
+
+        if (notificationType === "ConnectionRequest") {
+          navigation.navigate("DirectMessageTab")
+        }
+        if (notificationType === "AcceptedConnectionRequest") {
+          navigation.navigate("MessagingScreen", {
+            chatSession: data,
+          })
+        }
+        if (notificationType === "NewEvent") {
+          navigation.navigate("ViewEvent", {
+            eventId: data.event_id,
+          })
+        }
       }}
     >
       <View className="flex flex-row items-center">
