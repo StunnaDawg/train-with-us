@@ -30,6 +30,7 @@ type MessageButtonProps = {
   profileId: string | undefined
   loading: boolean
   setLoading: Dispatch<SetStateAction<boolean>>
+  profilePic: string
 }
 
 const MessageButton = ({
@@ -37,6 +38,7 @@ const MessageButton = ({
   profileId,
   setLoading,
   loading,
+  profilePic,
 }: MessageButtonProps) => {
   const [isPressed, setIsPressed] = useState<boolean>(false)
   const [message, setMessageToSend] = useState<string>("")
@@ -166,7 +168,8 @@ const MessageButton = ({
                 currentUser?.first_name,
                 message,
                 user.id,
-                profileId
+                profileId,
+                profilePic
               )
 
               setLoading(false)

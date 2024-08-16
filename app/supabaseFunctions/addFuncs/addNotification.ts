@@ -6,7 +6,7 @@ const addNotification = async (
   title: string,
   userId: string,
   notificationType: string,
-  notificationData: ChatSession | CommunityChannel,
+  notificationData: ChatSession | CommunityChannel | null,
   image: string | null
 ) => {
   try {

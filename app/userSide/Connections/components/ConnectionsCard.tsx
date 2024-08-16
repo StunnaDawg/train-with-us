@@ -153,6 +153,7 @@ const ConnectionsCard = ({
                   loading={loading}
                   profileId={profile?.id}
                   coach={false}
+                  profilePic={profile?.profile_pic || ""}
                 />
               </View>
 

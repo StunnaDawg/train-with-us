@@ -2,31 +2,55 @@ import { FunctionsHttpError } from "@supabase/supabase-js"
 import supabase from "../../../lib/supabase"
 import showAlert from "../../utilFunctions/showAlert"
 import getUserToken from "../getFuncs/getUserExpoToken"
+import addNotification from "./addNotification"
 
-const sendNotification = async (token: string, title: string, body: string) => {
-  console.log("Sending notification to", token)
-  const { data, error } = await supabase.functions.invoke("push", {
-    body: {
-      token,
-      titleWords: title,
-      bodyWords: body,
-      data: { type: "connection_request" },
-    },
-  })
+const sendNotification = async (
+  token: string,
+  title: string,
+  body: string,
+  userId: string,
+  senderProfilePic: string | null
+) => {
+  try {
+    await addNotification(
+      body,
+      title,
+      userId,
+      "ConnectionRequest",
+      null,
+      senderProfilePic
+    )
+    if (!token) {
+      console.log("No token found for user")
+      return
+    }
+    console.log("Sending notification to", token)
+    const { data, error } = await supabase.functions.invoke("push", {
+      body: {
+        token,
+        titleWords: title,
+        bodyWords: body,
+        data: { type: "connection_request" },
+      },
+    })
 
-  if (error && error instanceof FunctionsHttpError) {
-    const errorMessage = await error.context.json()
-    console.log("Function returned an error", errorMessage)
+    if (error && error instanceof FunctionsHttpError) {
+      const errorMessage = await error.context.json()
+      console.log("Function returned an error", errorMessage)
+    }
+
+    console.log("Notification sent:", data)
+  } catch (error) {
+    console.error("Failed to send notification:", error)
   }
-
-  console.log("Notification sent:", data)
 }
 
 const requestConnection = async (
   myName: string | null | undefined,
   message: string,
   userId: string,
-  user2Id: string
+  user2Id: string,
+  user2ProfilePic: string | null
 ) => {
   try {
     const { error } = await supabase.from("connection_requests").insert([
@@ -53,7 +77,9 @@ const requestConnection = async (
     await sendNotification(
       expoPushToken,
       `Connection Request form ${myName || "Someone"}`,
-      message
+      message,
+      user2Id,
+      user2ProfilePic
     )
   } catch (error) {
     console.log(error)
