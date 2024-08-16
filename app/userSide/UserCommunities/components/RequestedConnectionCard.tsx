@@ -44,20 +44,26 @@ const RequestCard = ({
 }: RequestCardProps) => {
   const [profile, setProfile] = useState<Profile | null>({} as Profile)
   const [disableButton, setDisableButton] = useState<boolean>(false)
-  const { user } = useAuth()
+  const { userProfile } = useAuth()
 
   // Accept the request
 
   const acceptRequest = async () => {
     try {
-      if (!user || !otherUserId || !recentMessage || !profile?.first_name)
+      if (
+        !userProfile ||
+        !otherUserId ||
+        !recentMessage ||
+        !profile?.first_name
+      )
         return
       setDisableButton(true)
       await sendNewMessage(
         recentMessage,
         profile?.first_name,
-        user?.id,
-        otherUserId
+        userProfile?.id,
+        otherUserId,
+        userProfile?.profile_pic
       )
       setModalVisible(!modalVisible)
       declineRequest(false)
@@ -71,19 +77,19 @@ const RequestCard = ({
   // Decline the request
 
   const declineRequest = async (showAlertBoolean: boolean) => {
-    if (!user || !otherUserId) {
+    if (!userProfile || !otherUserId) {
       console.error("Missing user or otherUserId data.")
       return
     }
 
-    console.log("Requester:", otherUserId, "Requested:", user.id)
+    console.log("Requester:", otherUserId, "Requested:", userProfile.id)
 
     try {
       setDisableButton(true)
       const { error } = await supabase
         .from("connection_requests")
         .delete()
-        .match({ requester: otherUserId, requested: user.id })
+        .match({ requester: otherUserId, requested: userProfile.id })
 
       if (error) {
         showAlert({
@@ -115,18 +121,18 @@ const RequestCard = ({
   }
 
   const deleteRequest = async (showAlertBoolean: boolean) => {
-    if (!user || !otherUserId) {
+    if (!userProfile || !otherUserId) {
       console.error("Missing user or otherUserId data.")
       return
     }
 
-    console.log("Requester:", otherUserId, "Requested:", user.id)
+    console.log("Requester:", otherUserId, "Requested:", userProfile.id)
 
     try {
       const { error } = await supabase
         .from("connection_requests")
         .delete()
-        .match({ requester: user.id, requested: otherUserId })
+        .match({ requester: userProfile.id, requested: otherUserId })
 
       if (error) {
         showAlert({
@@ -156,12 +162,12 @@ const RequestCard = ({
   }
 
   useEffect(() => {
-    if (!user || !otherUserId) return
+    if (!userProfile || !otherUserId) return
 
     console.log("otherUserId", otherUserId)
 
     useCurrentUser(otherUserId, setProfile)
-  }, [user])
+  }, [userProfile])
 
   return (
     <>

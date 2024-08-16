@@ -3,36 +3,56 @@ import supabase from "../../../lib/supabase"
 import createNewChatSession from "./newChatSession"
 import { ChatSession } from "../../@types/supabaseTypes"
 import getUserToken from "../getFuncs/getUserExpoToken"
+import addNotification from "./addNotification"
 
 const sendNotification = async (
   token: string,
   title: string,
   body: string,
-  chatSession: ChatSession
+  chatSession: ChatSession,
+  userId: string,
+  userImage: string | null
 ) => {
-  console.log("Sending notification to", token)
-  const { data, error } = await supabase.functions.invoke("push", {
-    body: {
-      token,
-      titleWords: title,
-      bodyWords: body,
-      data: { chatSession, type: "connection_accepted" },
-    },
-  })
+  try {
+    await addNotification(
+      body,
+      title,
+      userId,
+      "ConnectionAccepted",
+      chatSession,
+      userImage
+    )
+    if (!token) {
+      console.log("No token found for user")
+      return
+    }
+    console.log("Sending notification to", token)
+    const { data, error } = await supabase.functions.invoke("push", {
+      body: {
+        token,
+        titleWords: title,
+        bodyWords: body,
+        data: { chatSession, type: "connection_accepted" },
+      },
+    })
 
-  if (error && error instanceof FunctionsHttpError) {
-    const errorMessage = await error.context.json()
-    console.log("Function returned an error", errorMessage)
+    if (error && error instanceof FunctionsHttpError) {
+      const errorMessage = await error.context.json()
+      console.log("Function returned an error", errorMessage)
+    }
+
+    console.log("Notification sent:", data)
+  } catch (error) {
+    console.error("Failed to send notification:", error)
   }
-
-  console.log("Notification sent:", data)
 }
 
 const sendNewMessage = async (
   message: string,
   myName: string,
   userId: string,
-  user2Id: string
+  user2Id: string,
+  user2Photo: string | null
 ) => {
   try {
     const userExpotoken = await getUserToken(user2Id)
@@ -59,7 +79,9 @@ const sendNewMessage = async (
       userExpotoken,
       `Connection Accepted from ${myName}, Chat Now!`,
       message,
-      chatSession
+      chatSession,
+      user2Id,
+      user2Photo
     )
   } catch (error) {
     console.error("sendNewMessage error:", error)
