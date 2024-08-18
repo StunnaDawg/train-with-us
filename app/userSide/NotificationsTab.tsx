@@ -151,6 +151,17 @@ const NotificationsTab = () => {
       setNotifications((prevNotifications) =>
         prevNotifications ? [...prevNotifications, ...data] : data
       )
+
+      const unreadNotificationIds = data
+        .filter((notification) => !notification.is_read)
+        .map((notification) => notification.id)
+
+      if (unreadNotificationIds.length > 0) {
+        await supabase
+          .from("notifications")
+          .update({ is_read: true })
+          .in("id", unreadNotificationIds)
+      }
     }
   }
 

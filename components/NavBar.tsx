@@ -8,6 +8,8 @@ import { Profile } from "../app/@types/supabaseTypes"
 import { useLoading } from "../app/context/LoadingContext"
 import { useNewNotification } from "../app/context/NewNotification"
 import { useNewMessage } from "../app/context/NewMessage"
+import supabase from "../lib/supabase"
+import { useAuth } from "../app/supabaseFunctions/authcontext"
 
 type NavBarProps = {
   navBar?: boolean
@@ -35,6 +37,7 @@ const NavBar = ({
   searchUsers,
 }: NavBarProps) => {
   const { isNewNotification, setNewNotification } = useNewNotification()
+  const { user } = useAuth()
   const { isNewMessage, setNewMessage } = useNewMessage()
   const navigationTab = useNavigation<TabNavigationType>()
   const navigation = useNavigation<NavigationType>()
@@ -50,6 +53,23 @@ const NavBar = ({
   }
 
   const getColor = (key: string) => (isPressed[key] ? "black" : "white")
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", async () => {
+      if (!user) return
+      const { data, error } = await supabase
+        .from("notifications")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("is_read", false)
+
+      if (data && data.length > 0) {
+        setNewNotification(true)
+      }
+    })
+
+    return unsubscribe
+  }, [navigation])
 
   return (
     <>
