@@ -6,6 +6,8 @@ import { NavigationType, TabNavigationType } from "../app/@types/navigation"
 import { Image } from "expo-image"
 import { Profile } from "../app/@types/supabaseTypes"
 import { useLoading } from "../app/context/LoadingContext"
+import { useNewNotification } from "../app/context/NewNotification"
+import { useNewMessage } from "../app/context/NewMessage"
 
 type NavBarProps = {
   navBar?: boolean
@@ -32,7 +34,8 @@ const NavBar = ({
   showSearchCommunities,
   searchUsers,
 }: NavBarProps) => {
-  const { setLoading } = useLoading()
+  const { isNewNotification, setNewNotification } = useNewNotification()
+  const { isNewMessage, setNewMessage } = useNewMessage()
   const navigationTab = useNavigation<TabNavigationType>()
   const navigation = useNavigation<NavigationType>()
 
@@ -47,8 +50,6 @@ const NavBar = ({
   }
 
   const getColor = (key: string) => (isPressed[key] ? "black" : "white")
-
-  const searchUsersColour = isPressed["searchothers"] ? "white" : "black"
 
   return (
     <>
@@ -72,7 +73,6 @@ const NavBar = ({
               onPressIn={() => handlePressIn("searchothers")}
               onPressOut={() => handlePressOut("searchothers")}
               onPress={() => {
-                setLoading(true)
                 navigation.navigate("SearchUsers")
               }}
             >
@@ -89,7 +89,6 @@ const NavBar = ({
               onPressIn={() => handlePressIn("search")}
               onPressOut={() => handlePressOut("search")}
               onPress={() => {
-                setLoading(true)
                 navigation.navigate("SearchCommunities")
               }}
             >
@@ -105,7 +104,8 @@ const NavBar = ({
             onPressIn={() => handlePressIn("message")}
             onPressOut={() => handlePressOut("message")}
             onPress={() => {
-              setLoading(true)
+              setNewMessage(false)
+
               navigation.navigate("DirectMessageTab")
             }}
           >
@@ -114,6 +114,19 @@ const NavBar = ({
               size={30}
               color={iconColour ? iconColour : getColor("message")}
             />
+            {isNewMessage ? ( // This is the red dot for notifications
+              <View
+                style={{
+                  position: "absolute",
+                  right: 1,
+                  bottom: 0,
+                  backgroundColor: "red",
+                  borderRadius: 10,
+                  width: 10,
+                  height: 10,
+                }}
+              />
+            ) : null}
           </Pressable>
           {showFriends ? (
             <Pressable
@@ -121,7 +134,6 @@ const NavBar = ({
               onPressIn={() => handlePressIn("friends")}
               onPressOut={() => handlePressOut("friends")}
               onPress={() => {
-                setLoading(true)
                 navigation.navigate("ManageConnections")
               }}
             >
@@ -138,7 +150,6 @@ const NavBar = ({
               onPressIn={() => handlePressIn("settings")}
               onPressOut={() => handlePressOut("settings")}
               onPress={() => {
-                setLoading(true)
                 navigation.navigate("UserSettings")
               }}
             >
@@ -155,7 +166,7 @@ const NavBar = ({
             onPressIn={() => handlePressIn("settings")}
             onPressOut={() => handlePressOut("settings")}
             onPress={() => {
-              setLoading(true)
+              setNewNotification(false)
               navigation.navigate("NotificationsTab")
             }}
           >
@@ -164,6 +175,19 @@ const NavBar = ({
               size={24}
               color={iconColour ? iconColour : getColor("settings")}
             />
+            {isNewNotification ? ( // This is the red dot for notifications
+              <View
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  top: 0,
+                  backgroundColor: "red",
+                  borderRadius: 10,
+                  width: 10,
+                  height: 10,
+                }}
+              />
+            ) : null}
           </Pressable>
         </View>
       </SafeAreaView>

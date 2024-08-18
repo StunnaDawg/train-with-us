@@ -27,10 +27,12 @@ import MessageInput from "../../../components/MessageInput"
 import MessageComponent from "../../../components/MessageCard"
 import MessageSkeleton from "./MessagesSkeleton"
 import { cacheStorage } from "../../../utilFunctions/mmkvStorage"
+import { useNewMessage } from "../../../context/NewMessage"
 
 const MessageScreen = () => {
   const route = useRoute<RouteProp<RootStackParamList, "MessagingScreen">>()
   const chatSession = route.params.chatSession
+  const { setNewMessage } = useNewMessage()
   const [initialLoading, setInitialLoading] = useState(true)
   const [page, setPage] = useState(0)
   const [endOfData, setEndOfData] = useState(false)
@@ -50,6 +52,7 @@ const MessageScreen = () => {
 
   useEffect(() => {
     const fetchMessages = async () => {
+      setNewMessage(false)
       setInitialLoading(true)
       await getChatSessionMessages(
         chatSession.id,

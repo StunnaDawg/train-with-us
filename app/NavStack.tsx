@@ -86,6 +86,8 @@ import EndOnBoard from "./UserOnBoard/EndOnBoard"
 import EditGender from "./userSide/Profile/AddInfoComponents/EditGender"
 import EditFitnessInterests from "./userSide/Profile/AddInfoComponents/EditFitnessInterests"
 import NotificationsTab from "./userSide/NotificationsTab"
+import { useNewNotification } from "./context/NewNotification"
+import { useNewMessage } from "./context/NewMessage"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -140,6 +142,8 @@ const UserFooter = () => {
 
 const NavStack = () => {
   const { user } = useAuth()
+  const { setNewNotification } = useNewNotification()
+  const { setNewMessage } = useNewMessage()
   const [currentUserId, setCurrentUserId] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
   const [appReady, setAppReady] = useState<boolean>(false)
@@ -155,14 +159,16 @@ const NavStack = () => {
   useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener(
       (response) => {
+        setNewNotification(true)
         console.log("response from notification", response.notification)
         const data = response.notification.request.content.data
         console.log("data from notification", JSON.stringify(data))
-        if (data.chatSession) {
+        if (data.type === "new_message") {
+          setNewMessage(true)
           navigation.navigate("MessagingScreen", {
             chatSession: data.chatSession,
           })
-        } else if (data.channel === "channel_message") {
+        } else if (data.type === "channel_message") {
           navigation.navigate("ChannelScreen", { channelId: data.channel })
         } else if (data.type === "community_request_sent") {
           navigation.navigate("MyCommunityRequests", {
@@ -184,6 +190,7 @@ const NavStack = () => {
             community: data.community,
           })
         } else if (data.type === "connection_accepted") {
+          setNewMessage(true)
           navigation.navigate("MessagingScreen", {
             chatSession: data.chatSession,
           })

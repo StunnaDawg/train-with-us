@@ -14,7 +14,7 @@ const sendNotification = async (
       token,
       titleWords: title,
       bodyWords: body,
-      data: { chatSession },
+      data: { chatSession, type: "new_message" },
     },
   })
 
