@@ -1,5 +1,13 @@
-import { View, Text, SafeAreaView, Pressable, ScrollView } from "react-native"
-import React, { useEffect, useState } from "react"
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Pressable,
+  ScrollView,
+  FlatList,
+  ActivityIndicator,
+} from "react-native"
+import React, { useCallback, useEffect, useState } from "react"
 import BackButton from "../components/BackButton"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../@types/navigation"
@@ -7,6 +15,7 @@ import { useAuth } from "../supabaseFunctions/authcontext"
 import { SupaNotification } from "../@types/supabaseTypes"
 import supabase from "../../lib/supabase"
 import SinglePicCommunity from "../components/SinglePicCommunity"
+import formatTimestampShort from "../utilFunctions/formatTimeStampShort"
 
 type NotificationsTabProps = {
   createdAt: string
@@ -100,6 +109,10 @@ const NotificationsCard = ({
           <Text className="font-semibold">{title}</Text>
           <Text>{description}</Text>
         </View>
+
+        <View>
+          <Text>{formatTimestampShort(createdAt)}</Text>
+        </View>
       </View>
     </Pressable>
   )
@@ -110,21 +123,69 @@ const NotificationsTab = () => {
   const [notifications, setNotifications] = useState<SupaNotification[] | null>(
     []
   )
+  const [page, setPage] = useState<number>(0)
+  const [endOfData, setEndOfData] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
+  const PAGE_SIZE = 10
+
+  const fetchNotifications = async (pageState: number) => {
+    const from = pageState * PAGE_SIZE
+    const to = from + PAGE_SIZE - 1
+
+    if (!user) return
+    setLoading(true)
+    const { data, error } = await supabase
+      .from("notifications")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .range(from, to)
+    setLoading(false)
+
+    if (error) {
+      throw new Error(error.message)
+    } else {
+      if (data.length < PAGE_SIZE) {
+        setEndOfData(true)
+      }
+      setNotifications((prevNotifications) =>
+        prevNotifications ? [...prevNotifications, ...data] : data
+      )
+    }
+  }
 
   useEffect(() => {
-    if (!user) return
-    const fetchNotifications = async () => {
-      const { data, error } = await supabase
-        .from("notifications")
-        .select("*")
-        .eq("user_id", user.id)
-      if (error) {
-        throw new Error(error.message)
-      }
-      setNotifications(data)
+    fetchNotifications(page)
+  }, [user, page])
+
+  const loadMoreNotifications = () => {
+    if (!endOfData && !loading) {
+      setPage((prevPage) => prevPage + 1)
     }
-    fetchNotifications()
-  }, [user])
+  }
+
+  const renderFooter = () => {
+    if (!loading) return null
+    return <ActivityIndicator size="large" color="#0000ff" />
+  }
+
+  const renderNotification = useCallback(
+    ({ item }: { item: SupaNotification }) => {
+      return (
+        <NotificationsCard
+          key={item.id}
+          createdAt={item.created_at}
+          data={item.data}
+          description={item.description}
+          notificationType={item.notification_type}
+          title={item.title}
+          image={item.image}
+        />
+      )
+    },
+    []
+  )
+
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
       <View className="flex flex-row items-center mx-2">
@@ -135,21 +196,16 @@ const NotificationsTab = () => {
           <Text className="text-white text-xl font-bold">Notifications</Text>
         </View>
       </View>
-      <ScrollView>
-        <View>
-          {notifications?.map((notification) => (
-            <NotificationsCard
-              key={notification.id}
-              createdAt={notification.created_at}
-              data={notification.data}
-              description={notification.description}
-              notificationType={notification.notification_type}
-              title={notification.title}
-              image={notification.image}
-            />
-          ))}
-        </View>
-      </ScrollView>
+      <FlatList
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        renderItem={renderNotification}
+        data={notifications}
+        keyExtractor={(item) => item.id.toString()}
+        onEndReached={loadMoreNotifications}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
+      />
     </SafeAreaView>
   )
 }
