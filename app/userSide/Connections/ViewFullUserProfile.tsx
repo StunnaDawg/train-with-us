@@ -110,12 +110,14 @@ const ViewFullUserProfile = () => {
               <Text>{profile.gender}</Text>
             </View>
           </View>
-          <View className="flex flex-row justify-center mt-1 mb-2">
-            <View className="bg-white rounded-xl p-2">
-              <Text className="font-semibold">About me</Text>
-              <Text>{profile.about}</Text>
+          {profile.about ? (
+            <View className="flex flex-row justify-center mt-1 mb-2">
+              <View className="bg-white rounded-xl p-2">
+                <Text className="font-semibold">About me</Text>
+                <Text>{profile.about}</Text>
+              </View>
             </View>
-          </View>
+          ) : null}
           {profile?.activities && profile.activities.length > 0 ? (
             <ScrollView horizontal={true}>
               <View className="flex flex-row flex-wrap  ">
@@ -187,6 +189,7 @@ const ViewFullUserProfile = () => {
             loading={loading}
             profileId={profile?.id}
             coach={false}
+            profilePic={profile?.profile_pic || ""}
           />
         ) : null}
       </View>
