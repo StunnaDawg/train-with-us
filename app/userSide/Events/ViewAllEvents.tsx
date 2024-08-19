@@ -197,14 +197,13 @@ const ViewAllEvents = () => {
                     event.event_cover_photo
                   ),
                   (
-                    <View className="mt-3 mb-1">
+                    <View key={event.id} className="mt-3 mb-1">
                       <EventCard
                         eventId={event.id}
                         title={event.event_title}
                         date={event.date}
                         communityId={event.community_host}
                         eventCoverPhoto={event.event_cover_photo}
-                        key={event.id}
                         eventPrice={event.price}
                       />
                     </View>

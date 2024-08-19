@@ -183,8 +183,12 @@ const ConnectionsCard = ({
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
-            <Text className="font-bold text-lg">That's it for today</Text>
-            <Text className="font-semibold text-sm">Come back later</Text>
+            <Text className="font-bold text-lg text-white">
+              That's it for today
+            </Text>
+            <Text className="font-semibold text-sm text-white">
+              Come back later
+            </Text>
           </View>
         </>
       )}
