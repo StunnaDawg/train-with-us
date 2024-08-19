@@ -7,87 +7,88 @@ import {
   SafeAreaView,
 } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
-import { useNavigation } from "@react-navigation/native"
-import { NavigationType } from "../../@types/navigation"
-import getAllCommunities from "../../supabaseFunctions/getFuncs/getAllCommunities"
 import { Communities } from "../../@types/supabaseTypes"
 import CommunityCard from "./components/CommunityCard"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { NavBar } from "../../../components"
 import searchCommunitiesFunction from "../../supabaseFunctions/getFuncs/searchCommunities"
 import SearchBar from "../Events/components/SearchBar"
+import supabase from "../../../lib/supabase"
 
 const CommunitiesHome = () => {
-  const [communities, setCommunities] = useState<Communities[] | null>([])
-  const [loading, setLoading] = useState<boolean>(false)
-  const [searchText, setSearchText] = useState<string>("")
-  const [refreshing, setRefreshing] = useState<boolean>(false)
-  const [page, setPage] = useState<number>(1)
-  const [loadingMore, setLoadingMore] = useState<boolean>(false)
-  const navigation = useNavigation<NavigationType>()
   const { user } = useAuth()
+  const [communities, setCommunities] = useState<Communities[] | null>([])
+  const [searchText, setSearchText] = useState<string>("")
+  const [page, setPage] = useState<number>(0)
+  const [endOfData, setEndOfData] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
+  const PAGE_SIZE = 10
 
-  const limit = 4
+  const fetchCommunities = async (pageState: number) => {
+    const from = pageState * PAGE_SIZE
+    const to = from + PAGE_SIZE - 1
 
-  const fetchCommunities = async (
-    pageNumber: number,
-    isRefreshing = false,
-    query = searchText
-  ) => {
-    await getAllCommunities(
-      pageNumber,
-      limit,
-      setLoading,
-      setCommunities,
-      communities,
-      isRefreshing
-    )
-    setLoadingMore(false)
-  }
+    setLoading(true)
+    const { data, error } = await supabase
+      .from("communities")
+      .select("*")
+      .range(from, to)
+    setLoading(false)
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true)
-    setPage(1)
-    fetchCommunities(1, true).then(() => setRefreshing(false))
-  }, [])
-
-  const loadMore = () => {
-    if (!loadingMore) {
-      setLoadingMore(true)
-      const nextPage = page + 1
-      setPage(nextPage)
-      fetchCommunities(nextPage)
-    }
-  }
-
-  useEffect(() => {
-    if (!searchText) fetchCommunities(1)
-  }, [])
-
-  useEffect(() => {
-    if (searchText) {
-      searchCommunitiesFunction(
-        searchText,
-        setCommunities,
-        setLoading,
-        page,
-        limit
+    if (error) {
+      throw new Error(error.message)
+    } else {
+      if (data.length < PAGE_SIZE) {
+        setEndOfData(true)
+      }
+      setCommunities((prevCommunties) =>
+        prevCommunties ? [...prevCommunties, ...data] : data
       )
     }
-  }, [searchText])
+  }
 
-  const renderItem = ({ item }: { item: Communities }) => (
-    <View className="m-2">
-      <CommunityCard community={item} userId={user?.id} />
-    </View>
+  useEffect(() => {
+    fetchCommunities(page)
+  }, [page])
+
+  const loadMoreCommunties = () => {
+    if (!endOfData && !loading) {
+      setPage((prevPage) => prevPage + 1)
+    }
+  }
+
+  // useEffect(() => {
+  //   if (searchText) {
+  //     searchCommunitiesFunction(
+  //       searchText,
+  //       setCommunities,
+  //       setLoadingMore,
+  //       page,
+  //       limit
+  //     )
+  //   }
+  // }, [searchText])
+
+  const renderItem = useCallback(
+    ({ item }: { item: Communities }) => (
+      <View className="m-2">
+        <CommunityCard community={item} userId={user?.id} />
+      </View>
+    ),
+    []
   )
+
+  const renderFooter = () => {
+    if (!loading) return null
+    return <ActivityIndicator size="large" color="#0000ff" />
+  }
 
   const keyExtractor = (item: Communities) => item.id.toString()
 
   const handleSearch = (text: string) => {
     setSearchText(text)
-    setPage(1) // Reset to the first page
-    fetchCommunities(1, true, text) // Fetch with the search query
+    setPage(0)
+    searchCommunitiesFunction(searchText, setCommunities, setLoading, page, 10)
   }
 
   return (
@@ -116,27 +117,18 @@ const CommunitiesHome = () => {
             <Text className="text-white font-bold text-2xl">Halifax, NS</Text>
           </View>
           <FlatList
+            className="mb-3"
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
             data={communities}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-            ListFooterComponent={
-              loadingMore ? (
-                <ActivityIndicator size="large" color="#0000ff" />
-              ) : null
-            }
-            initialNumToRender={1}
-            onEndReached={
-              communities && communities?.length > 0 && !searchText
-                ? loadMore
-                : null
-            }
-            onEndReachedThreshold={0.7}
+            ListFooterComponent={renderFooter}
+            onEndReached={loadMoreCommunties}
+            onEndReachedThreshold={0.5}
             ListEmptyComponent={
               <View className="m-2">
-                <Text>No Communities near!</Text>
+                <Text className="text-white">No Communities near!</Text>
               </View>
             }
           />

@@ -71,6 +71,23 @@ const NavBar = ({
     return unsubscribe
   }, [navigation])
 
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener("focus", async () => {
+  //     if (!user) return
+  //     const { data, error } = await supabase
+  //       .from("chat_sessions")
+  //       .select("*")
+  //       .eq("user_id", user.id)
+  //       .eq("is_read", false)
+
+  //     if (data && data.length > 0) {
+  //       setNewNotification(true)
+  //     }
+  //   })
+
+  //   return unsubscribe
+  // }, [navigation])
+
   return (
     <>
       <SafeAreaView
