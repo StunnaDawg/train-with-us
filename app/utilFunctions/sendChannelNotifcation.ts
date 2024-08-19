@@ -48,6 +48,7 @@ const sendNotification = async (
 const sendChannelNotification = async (
   communityId: number,
   senderId: string,
+  senderToken: string | null,
   titleWords: string,
   bodyWords: string,
   channel: CommunityChannel,
@@ -73,6 +74,8 @@ const sendChannelNotification = async (
           token: member.expo_push_token,
           userId: member.user_id,
         }))
+
+      console.log("Sending notification to ahhhhhhh", users)
 
       users.forEach(async (member) => {
         await sendNotification(

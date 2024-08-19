@@ -4,6 +4,8 @@ import {
   TabNavigationType,
   TabParamList,
 } from "./@types/navigation"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { Dimensions } from "react-native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import Login from "./UserAuth/Login"
@@ -91,26 +93,44 @@ import { useNewMessage } from "./context/NewMessage"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
+const { width } = Dimensions.get("window")
 
 const UserFooter = () => {
+  const insets = useSafeAreaInsets()
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarStyle: {
-          marginHorizontal: 20,
           height: 60,
           borderRadius: 30,
           position: "absolute",
           bottom: 20,
-          left: 40,
-          right: 40,
+          left: (width - (width - 80)) / 2, // Center horizontally
+          right: (width - (width - 80)) / 2, // Center horizontally
+          width: width - 80, // Fixed width for the tab bar
           backgroundColor: "white",
           elevation: 10,
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 5 },
           shadowOpacity: 0.3,
           shadowRadius: 10,
+          paddingBottom: 0, // Remove any bottom padding
+          paddingTop: 0, // Remove any top padding
+          marginBottom: 0,
         },
+        tabBarItemStyle: {
+          flex: 1,
+          alignContent: "center",
+          justifyContent: "center", // Center icons vertically
+          alignItems: "center",
+        },
+        tabBarIconStyle: {
+          flex: 1,
+          alignContent: "center",
+          justifyContent: "center", // Ensure the icon itself is centered
+          alignItems: "center",
+        },
+
         headerShown: false,
         tabBarShowLabel: false,
         tabBarIcon: ({ color }) => {

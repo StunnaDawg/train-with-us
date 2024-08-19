@@ -91,6 +91,7 @@ const ChannelMessageScreen = () => {
       sendChannelNotification(
         channel.community,
         currentUser.id,
+        currentUser.expo_push_token,
         `New Message in ${channel.channel_title}` || "New Message in Channel",
         message,
         channel,
@@ -105,6 +106,7 @@ const ChannelMessageScreen = () => {
       sendChannelNotification(
         channel.community,
         currentUser.id,
+        currentUser.expo_push_token,
         `New Message in ${channel.channel_title}` || "New Message in Channel",
         message,
         channel,
