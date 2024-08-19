@@ -12,6 +12,7 @@ import { useAuth } from "../../supabaseFunctions/authcontext"
 import { NavBar } from "../../../components"
 import SearchBar from "../Events/components/SearchBar"
 import supabase from "../../../lib/supabase"
+import BackButton from "../../components/BackButton"
 
 const CommunitiesHome = () => {
   const { user } = useAuth()
@@ -93,19 +94,25 @@ const CommunitiesHome = () => {
           showSearchCommunities={false}
           searchUsers={false}
         />
-        <View className="flex-grow">
-          <SearchBar
-            value={searchText}
-            onChange={(text) => handleSearch(text)}
-            placeholder="Search Communities"
-          />
+        <View className="flex flex-row items-center">
+          <View className="mx-1">
+            <BackButton colour="white" size={26} />
+          </View>
+
+          <View className="flex-grow">
+            <SearchBar
+              value={searchText}
+              onChange={(text) => handleSearch(text)}
+              placeholder="Search Communities"
+            />
+          </View>
         </View>
 
         <View className="mx-2">
           <Text className="text-white font-bold text-2xl">Halifax, NS</Text>
         </View>
       </View>
-      <View>
+      <View className="flex-1">
         <FlatList
           initialNumToRender={10}
           maxToRenderPerBatch={10}
