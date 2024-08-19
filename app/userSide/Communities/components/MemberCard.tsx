@@ -43,7 +43,7 @@ const MemberCard = ({ member }: MemberCardProps) => {
     >
       <View className="flex flex-row items-center">
         <SinglePicCommunity
-          item={member.profile_pic}
+          item={member?.profile_pic || ""}
           size={50}
           avatarRadius={100}
           noAvatarRadius={100}
