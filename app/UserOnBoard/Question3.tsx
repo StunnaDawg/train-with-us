@@ -23,7 +23,7 @@ const Question3 = () => {
   const [selectedGender, setSelectedGender] = useState<GenderOption>("Male")
   const [specifyInput, setSpecifyInput] = useState<string>("")
 
-  const { user, userProfile } = useAuth()
+  const { user } = useAuth()
 
   const showAlert = () =>
     Alert.alert(
@@ -41,7 +41,7 @@ const Question3 = () => {
     )
 
   const handleUserUpdate = async () => {
-    if (selectedGender === null || userProfile === null) {
+    if (selectedGender === null) {
       showAlert()
       return
     }

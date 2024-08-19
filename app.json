@@ -2,7 +2,7 @@
   "expo": {
     "name": "train-with-us",
     "slug": "train-with-us",
-    "version": "0.0.16",
+    "version": "0.0.3",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "icon": "./assets/images/icon.png",
