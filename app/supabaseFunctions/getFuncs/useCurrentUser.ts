@@ -20,6 +20,7 @@ const useCurrentUser = async (
     setUserProfile(profile)
     const endTime = Date.now()
     console.log(`getProfile took ${endTime - startTime} ms`)
+    return profile
   } catch (error) {
     console.log(error)
   }
