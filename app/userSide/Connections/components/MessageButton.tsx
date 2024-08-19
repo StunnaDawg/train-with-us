@@ -127,11 +127,11 @@ const MessageButton = ({
             }}
             className={` ${
               isPressed ? "bg-black" : "bg-white"
-            } border-2 rounded-full px-5 py-1 mx-1`}
+            } border-2 rounded-full px-5 py-2 mx-1`}
           >
             <FontAwesome6
               name="message"
-              size={24}
+              size={26}
               color={`${isPressed ? "white" : "black"}`}
             />
           </Pressable>
@@ -144,7 +144,7 @@ const MessageButton = ({
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
       >
-        <KeyboardAvoidingView className="flex flex-row justify-center my-2 pt-2 border-t">
+        <KeyboardAvoidingView className="flex flex-row justify-center pt-2 border-t items-center">
           <TextInput
             onSubmitEditing={async () => {
               dismiss()
@@ -176,7 +176,7 @@ const MessageButton = ({
               dismiss()
             }}
           >
-            <Text className="font-bold">Send</Text>
+            <Text className="font-bold text-lg">Send</Text>
           </Pressable>
         </KeyboardAvoidingView>
       </BottomSheetModal>

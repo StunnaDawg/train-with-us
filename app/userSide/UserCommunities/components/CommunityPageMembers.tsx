@@ -13,15 +13,26 @@ const CommunityMemberCard = ({
   member: Profile & { role?: string }
 }) => {
   const navigation = useNavigation<NavigationType>()
+  const [isPressed, setIsPressed] = useState<boolean>(false)
+
+  const handlePressIn = () => {
+    setIsPressed(true)
+  }
+
+  const handlePressOut = () => {
+    setIsPressed(false)
+  }
   return (
     <Pressable
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       key={member.id}
       onPress={() =>
         navigation.navigate("ViewFullUserProfile", {
           user: member,
         })
       }
-      className="m-4"
+      className={`m-4 ${isPressed ? "opacity-50" : ""}`}
     >
       <View className="flex flex-row items-center">
         <SinglePicCommunity

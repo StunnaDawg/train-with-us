@@ -1,6 +1,5 @@
 import { View, Text, FlatList } from "react-native"
 import React from "react"
-import getNewsFromCommunity from "../../../supabaseFunctions/getFuncs/getNewsFromCommunity"
 import { News } from "../../../@types/supabaseTypes"
 import { formatDate } from "date-fns"
 
@@ -44,7 +43,7 @@ const CommunityNews = ({ communityNews }: CommunityNewsProps) => {
           />
         ) : (
           <View className="flex-1 justify-center items-center">
-            <Text className="text-white">No News!</Text>
+            <Text className="text-white font-bold">No News!</Text>
           </View>
         )}
       </View>

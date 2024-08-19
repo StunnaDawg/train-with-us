@@ -168,7 +168,7 @@ const CommuntiyPageEvents = ({ community }: CommuntiyPageEventsProps) => {
                 </View>
               ))
             ) : (
-              <Text className="font-bold text-xl text-white">
+              <Text className="font-bold text-white">
                 {community.community_title} has no upcoming events!
               </Text>
             )
