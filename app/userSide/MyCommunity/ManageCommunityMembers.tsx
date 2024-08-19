@@ -119,8 +119,11 @@ const ManageCommunityMembers = () => {
           {!loading ? (
             communityMembers?.map((member) => {
               return member.first_name ? (
-                <View className="flex flex-row justify-between items-center">
-                  <MemberCard key={member.id} member={member} />
+                <View
+                  key={member.id}
+                  className="flex flex-row justify-between items-center"
+                >
+                  <MemberCard member={member} />
                   <Pressable onPress={() => showAlertOptions(member.id)}>
                     <MaterialCommunityIcons
                       name="dots-vertical"

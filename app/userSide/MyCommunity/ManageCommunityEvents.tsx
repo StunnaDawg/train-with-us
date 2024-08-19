@@ -184,7 +184,7 @@ const ManageCommunityEvents = () => {
         </Pressable>
       </View>
       <View className="m-5 mx-7">
-        <View className="flex-row justify-center mt-4 mb-2">
+        <View className="flex-row justify-center mb-2">
           <Pressable
             onPress={() => {
               setSearchUpcomingEvents(true)
@@ -211,126 +211,127 @@ const ManageCommunityEvents = () => {
             <Text className={"text-center text-white"}>Past</Text>
           </Pressable>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false} className="h-full">
-          <View className="flex flex-row flex-wrap justify-center">
-            {loading ? (
-              <MotiView
-                transition={{
-                  type: "timing",
-                }}
-                className="items-center mx-3 flex flex-row justify-center"
-                animate={{ backgroundColor: "#07182d" }}
-              >
-                <View className="flex flex-row justify-center flex-wrap items-center">
-                  <View className=" my-2 mx-2">
-                    <Skeleton
-                      colorMode={colorMode}
-                      radius="square"
-                      height={150}
-                      width={150}
-                    />
-                  </View>
-                  <View className=" my-2 mx-1">
-                    <Skeleton
-                      colorMode={colorMode}
-                      radius="square"
-                      height={150}
-                      width={150}
-                    />
-                  </View>
-                  <View className="my-2 mx-2">
-                    <Skeleton
-                      colorMode={colorMode}
-                      radius="square"
-                      height={150}
-                      width={150}
-                    />
-                  </View>
-                  <View className="my-2 mx-2">
-                    <Skeleton
-                      colorMode={colorMode}
-                      radius="square"
-                      height={150}
-                      width={150}
-                    />
-                  </View>
-                  <View className="my-2 mx-2">
-                    <Skeleton
-                      colorMode={colorMode}
-                      radius="square"
-                      height={150}
-                      width={150}
-                    />
-                  </View>
-                  <View className="my-2 mx-2">
-                    <Skeleton
-                      colorMode={colorMode}
-                      radius="square"
-                      height={150}
-                      width={150}
-                    />
-                  </View>
-                </View>
-              </MotiView>
-            ) : searchUpcomingEvents ? (
-              upcomingEvents && upcomingEvents.length > 0 ? (
-                upcomingEvents.map((event) => (
-                  <View key={event.id} className="mt-3 mb-1">
-                    <EventCard
-                      eventId={event.id}
-                      title={event.event_title}
-                      date={event.date}
-                      communityId={event.community_host}
-                      eventCoverPhoto={event.event_cover_photo}
-                      eventPrice={event.price}
-                    />
-                    <Pressable
-                      onPress={() =>
-                        showDeleteAlert(() => deleteUpcomingEvent(event.id))
-                      }
-                      className="bg-black rounded-xl p-2 z-50 absolute top-0 right-1"
-                    >
-                      <FontAwesome6 name="trash" size={24} color="white" />
-                    </Pressable>
-                  </View>
-                ))
-              ) : (
-                <Text className="font-semibold text-xl text-white">
-                  No upcoming events!
-                </Text>
-              )
-            ) : searchPastEvents ? (
-              pastEvents && pastEvents.length > 0 ? (
-                pastEvents.map((event) => (
-                  <View key={event.id} className="mt-3 mb-1 mx-3">
-                    <EventCard
-                      eventId={event.id}
-                      title={event.event_title}
-                      date={event.date}
-                      communityId={event.community_host}
-                      eventCoverPhoto={event.event_cover_photo}
-                      eventPrice={event.price}
-                    />
-
-                    <Pressable
-                      onPress={() =>
-                        showDeleteAlert(() => deletePastEvent(event.id))
-                      }
-                      className="bg-black rounded-xl p-2 z-50 absolute top-0 right-1"
-                    >
-                      <FontAwesome6 name="trash" size={24} color="white" />
-                    </Pressable>
-                  </View>
-                ))
-              ) : (
-                <Text className="text-xl font-semibold text-white">
-                  No past events!
-                </Text>
-              )
-            ) : null}
-          </View>
-        </ScrollView>
       </View>
+
+      <ScrollView showsVerticalScrollIndicator={false} className="mb-2 h-full">
+        <View className="flex flex-row flex-wrap justify-center">
+          {loading ? (
+            <MotiView
+              transition={{
+                type: "timing",
+              }}
+              className="items-center mx-3 flex flex-row justify-center"
+              animate={{ backgroundColor: "#07182d" }}
+            >
+              <View className="flex flex-row justify-center flex-wrap items-center">
+                <View className=" my-2 mx-2">
+                  <Skeleton
+                    colorMode={colorMode}
+                    radius="square"
+                    height={150}
+                    width={150}
+                  />
+                </View>
+                <View className=" my-2 mx-1">
+                  <Skeleton
+                    colorMode={colorMode}
+                    radius="square"
+                    height={150}
+                    width={150}
+                  />
+                </View>
+                <View className="my-2 mx-2">
+                  <Skeleton
+                    colorMode={colorMode}
+                    radius="square"
+                    height={150}
+                    width={150}
+                  />
+                </View>
+                <View className="my-2 mx-2">
+                  <Skeleton
+                    colorMode={colorMode}
+                    radius="square"
+                    height={150}
+                    width={150}
+                  />
+                </View>
+                <View className="my-2 mx-2">
+                  <Skeleton
+                    colorMode={colorMode}
+                    radius="square"
+                    height={150}
+                    width={150}
+                  />
+                </View>
+                <View className="my-2 mx-2">
+                  <Skeleton
+                    colorMode={colorMode}
+                    radius="square"
+                    height={150}
+                    width={150}
+                  />
+                </View>
+              </View>
+            </MotiView>
+          ) : searchUpcomingEvents ? (
+            upcomingEvents && upcomingEvents.length > 0 ? (
+              upcomingEvents.map((event) => (
+                <View key={event.id} className="mt-3">
+                  <EventCard
+                    eventId={event.id}
+                    title={event.event_title}
+                    date={event.date}
+                    communityId={event.community_host}
+                    eventCoverPhoto={event.event_cover_photo}
+                    eventPrice={event.price}
+                  />
+                  <Pressable
+                    onPress={() =>
+                      showDeleteAlert(() => deleteUpcomingEvent(event.id))
+                    }
+                    className="bg-black rounded-xl p-2 z-50 absolute top-0 right-1"
+                  >
+                    <FontAwesome6 name="trash" size={24} color="white" />
+                  </Pressable>
+                </View>
+              ))
+            ) : (
+              <Text className="font-semibold text-xl text-white">
+                No upcoming events!
+              </Text>
+            )
+          ) : searchPastEvents ? (
+            pastEvents && pastEvents.length > 0 ? (
+              pastEvents.map((event) => (
+                <View key={event.id} className="mt-3 mb-1 mx-1">
+                  <EventCard
+                    eventId={event.id}
+                    title={event.event_title}
+                    date={event.date}
+                    communityId={event.community_host}
+                    eventCoverPhoto={event.event_cover_photo}
+                    eventPrice={event.price}
+                  />
+
+                  <Pressable
+                    onPress={() =>
+                      showDeleteAlert(() => deletePastEvent(event.id))
+                    }
+                    className="bg-black rounded-xl p-2 z-50 absolute top-0 right-1"
+                  >
+                    <FontAwesome6 name="trash" size={24} color="white" />
+                  </Pressable>
+                </View>
+              ))
+            ) : (
+              <Text className="text-xl font-semibold text-white">
+                No past events!
+              </Text>
+            )
+          ) : null}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }

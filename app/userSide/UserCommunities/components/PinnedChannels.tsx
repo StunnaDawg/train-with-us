@@ -179,7 +179,7 @@ const PinnedChannels = React.memo(() => {
   return (
     <View>
       <View>
-        <Text className="font-bold text-lg underline text-white p-4">
+        <Text className="font-bold text-lg underline text-white px-4">
           Pinned Channels
         </Text>
       </View>
