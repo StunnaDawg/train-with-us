@@ -92,49 +92,47 @@ const CommunitiesHome = () => {
   }
 
   return (
-    <>
-      <SafeAreaView className="flex-1 bg-primary-900">
-        <NavBar
-          navBar={true}
-          title="Find Communities"
-          bgColour="bg-primary-900"
-          textColour="text-white"
-          showFriends={false}
-          showSettings={false}
-          showSearchCommunities={false}
-          searchUsers={false}
-        />
-
-        <View>
-          <View className="flex-grow">
-            <SearchBar
-              value={searchText}
-              onChange={(text) => handleSearch(text)}
-              placeholder="Search Communities"
-            />
-          </View>
-          <View className="m-2">
-            <Text className="text-white font-bold text-2xl">Halifax, NS</Text>
-          </View>
-          <FlatList
-            className="mb-3"
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            data={communities}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            ListFooterComponent={renderFooter}
-            onEndReached={loadMoreCommunties}
-            onEndReachedThreshold={0.5}
-            ListEmptyComponent={
-              <View className="m-2">
-                <Text className="text-white">No Communities near!</Text>
-              </View>
-            }
+    <SafeAreaView className="flex-1 bg-primary-900">
+      <NavBar
+        navBar={true}
+        title="Find Communities"
+        bgColour="bg-primary-900"
+        textColour="text-white"
+        showFriends={false}
+        showSettings={false}
+        showSearchCommunities={false}
+        searchUsers={false}
+      />
+      <View className="flex-1">
+        <View className="flex-grow">
+          <SearchBar
+            value={searchText}
+            onChange={(text) => handleSearch(text)}
+            placeholder="Search Communities"
           />
         </View>
-      </SafeAreaView>
-    </>
+        <View className="mx-2">
+          <Text className="text-white font-bold text-2xl">Halifax, NS</Text>
+        </View>
+        <FlatList
+          className=""
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          data={communities}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          ListFooterComponent={renderFooter}
+          onEndReached={loadMoreCommunties}
+          onEndReachedThreshold={0.5}
+          contentContainerStyle={{ paddingBottom: 10 }} // Adjust padding to avoid clipping
+          ListEmptyComponent={
+            <View className="m-2">
+              <Text className="text-white">No Communities near!</Text>
+            </View>
+          }
+        />
+      </View>
+    </SafeAreaView>
   )
 }
 
