@@ -134,7 +134,6 @@ const FitnessInterests = () => {
     "Canoeing 🛶",
     "Horseback Riding 🐎",
     "Archery 🏹",
-    "Fencing 🤺",
   ]
 
   useEffect(() => {

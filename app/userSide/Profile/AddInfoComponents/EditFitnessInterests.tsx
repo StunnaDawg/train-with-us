@@ -131,7 +131,6 @@ const EditFitnessInterests = () => {
     "Canoeing 🛶",
     "Horseback Riding 🐎",
     "Archery 🏹",
-    "Fencing 🤺",
   ]
 
   useEffect(() => {
