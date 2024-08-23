@@ -109,6 +109,7 @@ const MessageScreen = () => {
       !chatSession.id ||
       !otherUserId
     ) {
+      console.log("No message or image")
       return
     }
     await sendMessage(

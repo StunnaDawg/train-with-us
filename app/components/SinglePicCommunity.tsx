@@ -12,6 +12,7 @@ import supabase from "../../lib/supabase"
 import { Skeleton } from "moti/skeleton"
 
 import { cacheStorage } from "../utilFunctions/mmkvStorage"
+import showAlert from "../utilFunctions/showAlert"
 
 type SinglePicProps = {
   size: number
@@ -42,17 +43,7 @@ export default function SinglePicCommunity({
   const isMounted = useRef(true)
 
   useEffect(() => {
-    isMounted.current = true
-    if (!item) {
-      setPlaceholder(true)
-      setLoading(false)
-      return
-    }
     readImage()
-
-    return () => {
-      isMounted.current = false
-    }
   }, [item])
 
   const readImage = async () => {
@@ -96,8 +87,6 @@ export default function SinglePicCommunity({
       }
     } catch (error) {
       setPlaceholder(true)
-
-      setLoading(false)
     } finally {
       setLoading(false)
     }

@@ -29,23 +29,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { data, error } = await supabase.auth.getSession()
       if (error) {
         console.error("Error getting session:", error)
-        setLoading(false)
-        return
+      } else {
+        setSession(data.session)
+        setUser(data.session?.user || null)
       }
-      setSession(data.session)
-      setUser(data.session?.user || null)
       setLoading(false)
     }
+
+    setData()
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session)
         setUser(session?.user || null)
+        if (!session) {
+          setUserProfile(null) // Clear profile if the session is null
+        }
         setLoading(false)
       }
     )
-
-    setData()
 
     return () => {
       listener?.subscription.unsubscribe()
@@ -55,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (user) {
-        await useCurrentUser(user.id, setUserProfile) // Adjust to use your actual fetching logic
+        await useCurrentUser(user.id, setUserProfile) // Ensure this function is asynchronous and handles errors
       }
     }
     fetchUserProfile()

@@ -9,7 +9,7 @@ import { decode } from "base64-arraybuffer"
 import { Image } from "expo-image"
 
 type MessageInputProps = {
-  sendMessageAction: (image: string | null, message: string) => void
+  sendMessageAction: (image: string | null, message: string) => Promise<void>
   chatSessionId: string
 }
 

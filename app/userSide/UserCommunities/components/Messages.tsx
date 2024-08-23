@@ -202,9 +202,9 @@ const Messages = () => {
                 )
               })
             ) : (
-              <View className="flex-1 w-full">
-                <Text className="text-center text-white">
-                  No chat sessions found.
+              <View className="flex-1 flex flex-row justify-center items-center m-2">
+                <Text className="text-center font-semibold text-white">
+                  You have no Messages!
                 </Text>
               </View>
             )

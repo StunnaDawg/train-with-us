@@ -13,6 +13,7 @@ import { Skeleton } from "moti/skeleton"
 import { MotiView } from "moti"
 import { ca } from "date-fns/locale"
 import { cacheStorage } from "../utilFunctions/mmkvStorage"
+import showAlert from "../utilFunctions/showAlert"
 
 type SingleImageProp = {
   imageUrl: string | null
@@ -94,9 +95,20 @@ const SingleImageSupa = ({
         img.type === "image"
       }`
       const contentType = "image/png"
-      await supabase.storage.from("photos").upload(filePath, decode(base64), {
-        contentType: contentType,
-      })
+      const { error } = await supabase.storage
+        .from("photos")
+        .upload(filePath, decode(base64), {
+          contentType: contentType,
+        })
+
+      if (error) {
+        console.log("Error uploading image", error)
+        showAlert({
+          title: "Error",
+          message: `Error uploading image ${error}`,
+        })
+        return
+      }
 
       if (userId === undefined) return
       insertProfilePhoto(setLoading, filePath, userId)

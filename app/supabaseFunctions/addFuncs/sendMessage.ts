@@ -1,5 +1,6 @@
 import supabase from "../../../lib/supabase"
 import { ChatSession } from "../../@types/supabaseTypes"
+import { cacheStorage } from "../../utilFunctions/mmkvStorage"
 import addNotification from "./addNotification"
 
 const sendMessage = async (
@@ -12,7 +13,6 @@ const sendMessage = async (
   recieverId: string
 ) => {
   try {
-    console.log("sending message", message, userId)
     const { error } = await supabase.from("messages").insert([
       {
         message: message,

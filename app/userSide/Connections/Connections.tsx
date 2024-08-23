@@ -91,7 +91,7 @@ const Connections = () => {
         setConnectionProfiles,
         0 // Initial page
       )
-      setPage(1) // Set initial page to 1
+
       setLoading(false)
     }
   }

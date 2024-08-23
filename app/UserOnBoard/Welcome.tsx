@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView } from "react-native"
+import { View, Text, SafeAreaView, Pressable } from "react-native"
 import React from "react"
 import GenericButton from "../components/GenericButton"
 import { useNavigation } from "@react-navigation/native"
@@ -6,6 +6,7 @@ import { NavigationType } from "../@types/navigation"
 
 const Welcome = () => {
   const navigation = useNavigation<NavigationType>()
+
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
       <View className="flex-1">

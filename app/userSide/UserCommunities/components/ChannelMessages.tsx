@@ -60,10 +60,10 @@ const ChannelMessageScreen = () => {
     if (
       (message.trim().length === 0 && image === null) ||
       !user?.id ||
-      currentUser?.first_name === null ||
-      currentUser?.first_name === undefined ||
+      !currentUser ||
       !channel
     ) {
+      console.log(message)
       return
     }
     await sendChannelMessage(

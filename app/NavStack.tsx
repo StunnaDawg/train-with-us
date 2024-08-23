@@ -161,15 +161,13 @@ const UserFooter = () => {
 }
 
 const NavStack = () => {
-  const { user } = useAuth()
+  const { user, userProfile } = useAuth()
   const { setNewNotification } = useNewNotification()
   const { setNewMessage } = useNewMessage()
   const [currentUserId, setCurrentUserId] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
   const [appReady, setAppReady] = useState<boolean>(false)
-  const [userProfile, setUserProfile] = useState<
-    Database["public"]["Tables"]["profiles"]["Row"] | null
-  >(null)
+
   const navigation = useNavigation<NavigationType>()
 
   useEffect(() => {
@@ -222,24 +220,7 @@ const NavStack = () => {
   }, [])
 
   useEffect(() => {
-    const setProfile = async () => {
-      try {
-        setLoading(true)
-        if (currentUserId) {
-          useCurrentUser(currentUserId, setUserProfile)
-        } else {
-          console.log("no user")
-        }
-      } catch (error) {
-        console.log(error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    setProfile()
-  }, [currentUserId])
-
-  useEffect(() => {
+    console.log("userProfile", userProfile, user)
     if (userProfile) {
       setAppReady(true)
       setTimeout(() => {

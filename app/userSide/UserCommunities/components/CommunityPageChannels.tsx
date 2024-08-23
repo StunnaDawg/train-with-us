@@ -176,9 +176,13 @@ const CommunityPageChannels = ({
                       </Text>
                       <Text className="text-xs text-white">
                         <Text>
-                          {`${c.recent_message_sender} said ` || null}
+                          {c.recent_message_sender
+                            ? `${c.recent_message_sender} said `
+                            : null}
                         </Text>
-                        {c.recent_message || "No Messages yet!"}
+                        {c.recent_message
+                          ? c.recent_message
+                          : "No Messages yet!"}
                       </Text>
                     </View>
                   </Pressable>

@@ -35,7 +35,6 @@ const CreateCommunity = () => {
       return
     }
 
-    console.log("Am I null?????", privateCommunity)
     await addNewCommunity(
       setLoading,
       communityProfilePic,

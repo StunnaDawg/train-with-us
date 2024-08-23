@@ -35,9 +35,28 @@ const Question1 = () => {
       }
     )
 
+  const showAuthError = () =>
+    Alert.alert(
+      "Authentication Error",
+      "Please try again or restart the app.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    )
   const handleUserUpdate = async () => {
     if (first_name === "") {
       showAlert()
+      return
+    }
+
+    if (user === null) {
+      showAuthError()
       return
     }
     try {

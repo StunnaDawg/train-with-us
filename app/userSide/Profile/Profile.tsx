@@ -12,7 +12,8 @@ import { NavBar } from "../../../components"
 import { is } from "date-fns/locale"
 
 const ProfileView = () => {
-  const { userProfile } = useAuth()
+  const { user } = useAuth()
+  const [userProfile, setUserProfile] = useState<Profile | null>(null)
   const [pressedButton, setPressedButton] = useState<{
     [key: string]: boolean
   }>({})
@@ -24,20 +25,20 @@ const ProfileView = () => {
   const handlePressedButtonOut = (buttonName: string) => {
     setPressedButton((prev) => ({ ...prev, [buttonName]: false }))
   }
-  // const fetchCurrentUser = async () => {
-  //   if (!user) return
-  //   setCurrentUser(null)
-  //   await useCurrentUser(user?.id, setCurrentUser)
-  // }
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     let isMounted = true
-  //     fetchCurrentUser()
-  //     return () => {
-  //       isMounted = false
-  //     }
-  //   }, [user])
-  // )
+  const fetchCurrentUser = async () => {
+    if (!user) return
+    setUserProfile(null)
+    await useCurrentUser(user?.id, setUserProfile)
+  }
+  useFocusEffect(
+    useCallback(() => {
+      let isMounted = true
+      fetchCurrentUser()
+      return () => {
+        isMounted = false
+      }
+    }, [user])
+  )
 
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
