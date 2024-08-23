@@ -16,7 +16,13 @@ import { Image } from "expo-image"
 import { set } from "mongoose"
 
 type MessageInputProps = {
-  sendMessageAction: (image: string | null, message: string) => Promise<void>
+  sendMessageAction: (
+    image: string | null,
+    message: string,
+    setLoadingSentMessage: Dispatch<SetStateAction<boolean>>,
+    setImage: Dispatch<SetStateAction<string>>,
+    setMessage: Dispatch<SetStateAction<string>>
+  ) => Promise<void>
   chatSessionId: string
 }
 
@@ -119,15 +125,19 @@ const MessageInput = ({
           onPressOut={handlePressOut}
           className={`${isPressed ? "opacity-40" : null} mx-2`}
           onPress={async () => {
-            setSending(true)
-            await sendMessageAction(imageUrl, messageToSend)
-            setImage("")
-            setMessageToSend("")
-            setSending(false)
+            await sendMessageAction(
+              imageUrl,
+              messageToSend,
+              setSending,
+              setImage,
+              setMessageToSend
+            )
+
+            setImageUrl("")
           }}
         >
           {sending ? (
-            <ActivityIndicator />
+            <ActivityIndicator color={"#07182d"} />
           ) : (
             <Text className="text-lg font-bold">Send</Text>
           )}

@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { ChatSession } from "../../@types/supabaseTypes"
 import { cacheStorage } from "../../utilFunctions/mmkvStorage"
@@ -12,9 +13,13 @@ const sendMessage = async (
   senderProfilePic: string | null,
   senderName: string,
   recieverId: string,
-  usersPushToken: string | null | undefined
+  usersPushToken: string | null | undefined,
+  setLoadingSentMessage: Dispatch<SetStateAction<boolean>>,
+  setImage: Dispatch<SetStateAction<string>>,
+  setMessageToSend: Dispatch<SetStateAction<string>>
 ) => {
   try {
+    setLoadingSentMessage(true)
     const { error } = await supabase.from("messages").insert([
       {
         message: message,
@@ -46,6 +51,10 @@ const sendMessage = async (
     sendNotification(usersPushToken, title, message, chatSession)
   } catch (error) {
     console.log("message didn't send", error)
+  } finally {
+    setLoadingSentMessage(false)
+    setImage("")
+    setMessageToSend("")
   }
 }
 

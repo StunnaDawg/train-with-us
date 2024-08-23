@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react"
 import {
   View,
   Text,
@@ -28,12 +34,14 @@ import MessageComponent from "../../../components/MessageCard"
 import MessageSkeleton from "./MessagesSkeleton"
 import { cacheStorage } from "../../../utilFunctions/mmkvStorage"
 import { useNewMessage } from "../../../context/NewMessage"
+import { set } from "mongoose"
 
 const MessageScreen = () => {
   const route = useRoute<RouteProp<RootStackParamList, "MessagingScreen">>()
   const chatSession = route.params.chatSession
   const { setNewMessage } = useNewMessage()
   const [initialLoading, setInitialLoading] = useState(true)
+  const [appending, setAppending] = useState(false)
   const [page, setPage] = useState(0)
   const [endOfData, setEndOfData] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -78,6 +86,7 @@ const MessageScreen = () => {
                 ? [payload.new as Messages, ...prevMessages]
                 : [payload.new as Messages]
             )
+
             // cacheStorage.set(cacheKey, JSON.stringify(serverMessages))
           }
         )
@@ -102,7 +111,13 @@ const MessageScreen = () => {
     }
   }
 
-  const sendMessageAction = async (image: string | null, message: string) => {
+  const sendMessageAction = async (
+    image: string | null,
+    message: string,
+    setLoadingSentMessage: Dispatch<SetStateAction<boolean>>,
+    setImage: Dispatch<SetStateAction<string>>,
+    setMessageToSend: Dispatch<SetStateAction<string>>
+  ) => {
     if (
       (message.trim().length === 0 && image === null) ||
       !user?.id ||
@@ -118,9 +133,13 @@ const MessageScreen = () => {
       user?.id,
       chatSession,
       userProfile!.profile_pic,
-      userProfile!.first_name + " " + userProfile!.last_name,
+      userProfile!.first_name +
+        (userProfile?.last_name ? " " + userProfile.last_name : ""),
       otherUserId,
-      currentUser?.expo_push_token
+      currentUser?.expo_push_token,
+      setLoadingSentMessage,
+      setImage,
+      setMessageToSend
     )
 
     await upsertChatSession(chatSession.id, message || "Sent an image")

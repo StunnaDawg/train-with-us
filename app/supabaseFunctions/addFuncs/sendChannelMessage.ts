@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 
 const sendChannelMessage = async (
@@ -6,7 +7,10 @@ const sendChannelMessage = async (
   userId: string,
   channelId: string,
   name: string,
-  senderProfilePic: string | null
+  senderProfilePic: string | null,
+  setLoadingSentMessage: Dispatch<SetStateAction<boolean>>,
+  setImage: Dispatch<SetStateAction<string>>,
+  setMessageToSend: Dispatch<SetStateAction<string>>
 ) => {
   try {
     console.log("sending message", message, userId)
@@ -28,6 +32,10 @@ const sendChannelMessage = async (
     }
   } catch (error) {
     console.log(error)
+  } finally {
+    setLoadingSentMessage(false)
+    setImage("")
+    setMessageToSend("")
   }
 }
 

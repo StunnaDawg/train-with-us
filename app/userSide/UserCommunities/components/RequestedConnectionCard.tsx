@@ -57,11 +57,13 @@ const RequestCard = ({
 
   const acceptRequest = async () => {
     try {
+      console.log("Requester:", profile, "Requested:", userProfile)
       if (
         !userProfile ||
+        !profile ||
         !otherUserId ||
         !recentMessage ||
-        !profile?.first_name
+        !userProfile?.first_name
       ) {
         if (!userProfile) {
           showAlert({
@@ -93,9 +95,10 @@ const RequestCard = ({
       setDisableButton(true)
       await sendNewMessage(
         recentMessage,
-        profile?.first_name,
+        userProfile?.first_name,
         userProfile?.id,
         otherUserId,
+        profile?.profile_pic,
         userProfile?.profile_pic
       )
       setModalVisible(!modalVisible)

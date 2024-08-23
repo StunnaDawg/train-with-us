@@ -52,7 +52,8 @@ const sendNewMessage = async (
   myName: string,
   userId: string,
   user2Id: string,
-  user2Photo: string | null
+  user2Photo: string | null,
+  senderProfilePic: string | null
 ) => {
   try {
     const userExpotoken = await getUserToken(user2Id)
@@ -63,6 +64,8 @@ const sendNewMessage = async (
         sent_at: new Date(),
         sender: user2Id,
         chat_session: chatSession?.id,
+        sender_name: myName,
+        sender_profile_pic: senderProfilePic,
       },
     ])
 

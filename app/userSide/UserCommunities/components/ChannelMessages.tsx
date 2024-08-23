@@ -1,4 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import {
   View,
   Text,
@@ -56,7 +64,13 @@ const ChannelMessageScreen = () => {
     console.log("handleSheetChanges", index)
   }, [])
 
-  const sendMessageAction = async (image: string | null, message: string) => {
+  const sendMessageAction = async (
+    image: string | null,
+    message: string,
+    setLoadingSentMessage: Dispatch<SetStateAction<boolean>>,
+    setImage: Dispatch<SetStateAction<string>>,
+    setMessageToSend: Dispatch<SetStateAction<string>>
+  ) => {
     if (
       (message.trim().length === 0 && image === null) ||
       !user?.id ||
@@ -71,8 +85,12 @@ const ChannelMessageScreen = () => {
       image,
       user?.id,
       channel.id,
-      currentUser?.first_name + " " + currentUser?.last_name,
-      currentUser?.profile_pic
+      currentUser?.first_name +
+        (currentUser?.last_name ? " " + currentUser?.last_name : " "),
+      currentUser?.profile_pic,
+      setLoadingSentMessage,
+      setImage,
+      setMessageToSend
     )
 
     await upsertCommunitySession(
