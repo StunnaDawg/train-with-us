@@ -76,7 +76,7 @@ const requestConnection = async (
 
     await sendNotification(
       expoPushToken,
-      `Connection Request form ${myName || "Someone"}`,
+      `Connection Request from ${myName || "Someone"}`,
       message,
       user2Id,
       user2ProfilePic

@@ -1,4 +1,11 @@
-import { View, Text, Modal, Pressable, Alert } from "react-native"
+import {
+  View,
+  Text,
+  Modal,
+  Pressable,
+  Alert,
+  ActivityIndicator,
+} from "react-native"
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
@@ -55,8 +62,34 @@ const RequestCard = ({
         !otherUserId ||
         !recentMessage ||
         !profile?.first_name
-      )
+      ) {
+        if (!userProfile) {
+          showAlert({
+            title: "Error",
+            message: "Authentication Error!. Make sure you are logged in",
+          })
+          return
+        }
+
+        if (!otherUserId) {
+          showAlert({
+            title: "Error",
+            message:
+              "There was an error getting the other user's ID, contact support",
+          })
+          return
+        }
+
+        if (!profile?.first_name) {
+          showAlert({
+            title: "Error",
+            message: "Please make sure you have entered your first name",
+          })
+          return
+        }
         return
+      }
+
       setDisableButton(true)
       await sendNewMessage(
         recentMessage,
@@ -229,7 +262,11 @@ const RequestCard = ({
                   className="mt-4 mx-1 bg-green-500 px-3 py-2 rounded-md"
                   onPress={() => acceptRequest()}
                 >
-                  <Text className="text-white">Accept</Text>
+                  {disableButton ? (
+                    <ActivityIndicator />
+                  ) : (
+                    <Text className="text-white">Accept</Text>
+                  )}
                 </Pressable>
               ) : (
                 <Pressable

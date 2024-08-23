@@ -213,13 +213,13 @@ const Messages = () => {
               connectionRequest.map((request, index) => (
                 <View
                   className={` ${
-                    isPressed[request.requested] ? "opacity-50" : null
+                    isPressed[request.requested + index] ? "opacity-50" : null
                   } flex-1 w-full`}
-                  key={request.requested}
+                  key={request.requested + index}
                 >
                   <Pressable
-                    onPressIn={() => handlePressIn(request.requested)}
-                    onPressOut={() => handlePressOut(request.requested)}
+                    onPressIn={() => handlePressIn(request.requested + index)}
+                    onPressOut={() => handlePressOut(request.requested + index)}
                     onPress={() => setModalVisible(true)}
                   >
                     <RequestCard
