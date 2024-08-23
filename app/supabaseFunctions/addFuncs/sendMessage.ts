@@ -1,6 +1,7 @@
 import supabase from "../../../lib/supabase"
 import { ChatSession } from "../../@types/supabaseTypes"
 import { cacheStorage } from "../../utilFunctions/mmkvStorage"
+import sendNotification from "../../utilFunctions/sendNotification"
 import addNotification from "./addNotification"
 
 const sendMessage = async (
@@ -10,7 +11,8 @@ const sendMessage = async (
   chatSession: ChatSession,
   senderProfilePic: string | null,
   senderName: string,
-  recieverId: string
+  recieverId: string,
+  usersPushToken: string | null | undefined
 ) => {
   try {
     const { error } = await supabase.from("messages").insert([
@@ -39,6 +41,9 @@ const sendMessage = async (
       chatSession,
       senderProfilePic
     )
+
+    if (!usersPushToken) return
+    sendNotification(usersPushToken, title, message, chatSession)
   } catch (error) {
     console.log("message didn't send", error)
   }

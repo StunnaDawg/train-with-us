@@ -1,4 +1,10 @@
-import { View, Text, Platform, KeyboardAvoidingView } from "react-native"
+import {
+  View,
+  Text,
+  Platform,
+  KeyboardAvoidingView,
+  ActivityIndicator,
+} from "react-native"
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { TextInput, Pressable } from "react-native"
 import * as ImagePicker from "expo-image-picker"
@@ -7,6 +13,7 @@ import { FontAwesome6 } from "@expo/vector-icons"
 import supabase from "../../lib/supabase"
 import { decode } from "base64-arraybuffer"
 import { Image } from "expo-image"
+import { set } from "mongoose"
 
 type MessageInputProps = {
   sendMessageAction: (image: string | null, message: string) => Promise<void>
@@ -20,6 +27,7 @@ const MessageInput = ({
   const [messageToSend, setMessageToSend] = useState<string>("")
   const [image, setImage] = useState<string>("")
   const [imageUrl, setImageUrl] = useState<string>("")
+  const [sending, setSending] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [isPressed, setIsPressed] = useState<boolean>(false)
   const [isImagePressed, setIsImagePressed] = useState<boolean>(false)
@@ -106,16 +114,23 @@ const MessageInput = ({
           />
         </View>
         <Pressable
+          disabled={sending}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
           className={`${isPressed ? "opacity-40" : null} mx-2`}
           onPress={async () => {
+            setSending(true)
             await sendMessageAction(imageUrl, messageToSend)
             setImage("")
             setMessageToSend("")
+            setSending(false)
           }}
         >
-          <Text className="text-lg font-bold">Send</Text>
+          {sending ? (
+            <ActivityIndicator />
+          ) : (
+            <Text className="text-lg font-bold">Send</Text>
+          )}
         </Pressable>
       </View>
     </KeyboardAvoidingView>

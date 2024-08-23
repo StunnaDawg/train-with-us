@@ -119,19 +119,11 @@ const MessageScreen = () => {
       chatSession,
       userProfile!.profile_pic,
       userProfile!.first_name + " " + userProfile!.last_name,
-      otherUserId
+      otherUserId,
+      currentUser?.expo_push_token
     )
 
     await upsertChatSession(chatSession.id, message || "Sent an image")
-
-    if (currentUser?.expo_push_token) {
-      sendNotification(
-        currentUser?.expo_push_token,
-        `Message from ${currentUser?.first_name}`,
-        message,
-        chatSession
-      )
-    }
   }
 
   useEffect(() => {
