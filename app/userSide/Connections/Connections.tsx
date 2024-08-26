@@ -135,45 +135,44 @@ const Connections = () => {
           </View>
         )}
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Animated.ScrollView
           showsVerticalScrollIndicator={false}
           onScroll={scrollHandler}
           scrollEnabled={scrollEnabledState}
           scrollEventThrottle={16}
-          snapToInterval={cardHeight} // Optional, native snapping to help with alignment
+          snapToInterval={cardHeight}
           decelerationRate="fast"
           snapToAlignment="start"
           contentContainerStyle={{
-            height: cardHeight * connectionProfiles.length, // Ensure the content container is tall enough
+            flexGrow: 1, // Ensure content takes up full height of the ScrollView
+            justifyContent: "center", // Center vertically
+            alignItems: "center", // Center horizontally
           }}
         >
-          <View className="flex flex-row justify-center">
-            <View>
-              {loading ? (
-                <CardSkeleton />
-              ) : (
-                connectionProfiles.map((profile, index) => (
-                  <View
-                    key={profile.id}
-                    style={{
-                      height: cardHeight,
-                      justifyContent: "center",
-                    }}
-                  >
-                    <ConnectionsCard
-                      key={profile.id}
-                      setLoading={setNewConnection}
-                      loading={newConnection}
-                      profile={profile}
-                      isLast={index === connectionProfiles.length - 1}
-                      setEndOfData={setEndOfData}
-                    />
-                  </View>
-                ))
-              )}
-            </View>
-          </View>
+          {loading ? (
+            <CardSkeleton />
+          ) : (
+            connectionProfiles.map((profile, index) => (
+              <View
+                key={profile.id}
+                style={{
+                  height: cardHeight,
+                  justifyContent: "center", // Center content vertically within the card
+                  alignItems: "center", // Center content horizontally within the card
+                }}
+              >
+                <ConnectionsCard
+                  key={profile.id}
+                  setLoading={setNewConnection}
+                  loading={newConnection}
+                  profile={profile}
+                  isLast={index === connectionProfiles.length - 1}
+                  setEndOfData={setEndOfData}
+                />
+              </View>
+            ))
+          )}
         </Animated.ScrollView>
       </View>
     </SafeAreaView>

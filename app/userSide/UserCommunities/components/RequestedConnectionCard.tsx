@@ -63,7 +63,8 @@ const RequestCard = ({
         !profile ||
         !otherUserId ||
         !recentMessage ||
-        !userProfile?.first_name
+        !userProfile?.first_name ||
+        !profile?.first_name
       ) {
         if (!userProfile) {
           showAlert({
@@ -95,7 +96,7 @@ const RequestCard = ({
       setDisableButton(true)
       await sendNewMessage(
         recentMessage,
-        userProfile?.first_name,
+        profile?.first_name,
         userProfile?.id,
         otherUserId,
         profile?.profile_pic,

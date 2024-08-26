@@ -90,6 +90,7 @@ import EditFitnessInterests from "./userSide/Profile/AddInfoComponents/EditFitne
 import NotificationsTab from "./userSide/NotificationsTab"
 import { useNewNotification } from "./context/NewNotification"
 import { useNewMessage } from "./context/NewMessage"
+import ConnectionsScroll from "./userSide/Connections/ConnectionsScroll"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -153,7 +154,7 @@ const UserFooter = () => {
       })}
     >
       <Tab.Screen name="Events" component={Events} />
-      <Tab.Screen name="Connections" component={Connections} />
+      <Tab.Screen name="Connections" component={ConnectionsScroll} />
       <Tab.Screen name="Community" component={CommunitiesDash} />
       <Tab.Screen name="Profile" component={ProfileView} />
     </Tab.Navigator>
