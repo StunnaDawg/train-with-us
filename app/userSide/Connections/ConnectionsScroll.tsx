@@ -70,7 +70,11 @@ const ConnectionsScroll = () => {
   const renderCard = useCallback(({ item }: { item: Profile }) => {
     return (
       <View style={{ height: windowHeight }}>
-        <ConnectionsScrollCard profile={item} />
+        <ConnectionsScrollCard
+          profile={item}
+          loading={loading}
+          setLoading={setLoading}
+        />
       </View>
     )
   }, [])
@@ -80,7 +84,7 @@ const ConnectionsScroll = () => {
   }, [])
 
   return (
-    <View className="bg-primary-900" style={{ flex: 1 }}>
+    <View className="bg-black" style={{ flex: 1 }}>
       <View className="mb-1">
         {/* <NavBar
           textColour="text-white"
