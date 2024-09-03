@@ -91,6 +91,7 @@ import NotificationsTab from "./userSide/NotificationsTab"
 import { useNewNotification } from "./context/NewNotification"
 import { useNewMessage } from "./context/NewMessage"
 import ConnectionsScroll from "./userSide/Connections/ConnectionsScroll"
+import EventsComponent from "./userSide/Events/Events"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -153,7 +154,7 @@ const UserFooter = () => {
         tabBarInactiveTintColor: "gray",
       })}
     >
-      <Tab.Screen name="Events" component={Events} />
+      <Tab.Screen name="Events" component={EventsComponent} />
       <Tab.Screen name="Connections" component={ConnectionsScroll} />
       <Tab.Screen name="Community" component={CommunitiesDash} />
       <Tab.Screen name="Profile" component={ProfileView} />
