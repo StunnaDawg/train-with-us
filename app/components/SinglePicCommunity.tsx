@@ -50,9 +50,10 @@ export default function SinglePicCommunity({
     setLoading(true)
 
     const cacheKey = `image:${item}`
+
     const cachedImage = cacheStorage.getString(cacheKey)
 
-    if (cachedImage && allowCacheImage) {
+    if (cachedImage && allowCacheImage && cacheKey === "image:" + item) {
       setAvatarUrl(cachedImage)
       setLoading(false)
       return

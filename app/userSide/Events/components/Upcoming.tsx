@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react"
 import EventCard from "./EventCard"
 import { Events } from "../../../@types/supabaseTypes"
 import getUpcomingEvents from "../../../supabaseFunctions/getFuncs/getUpcomingEvents"
-import { Skeleton } from "moti/skeleton"
 
 type RefreshProp = {
   refreshing?: boolean

@@ -80,11 +80,13 @@ const ChannelMessageScreen = () => {
       console.log(message)
       return
     }
+
+    console.log(currentUser.profile_pic)
     await sendChannelMessage(
       message,
       image,
       user?.id,
-      channel.id,
+      channel,
       currentUser?.first_name +
         (currentUser?.last_name ? " " + currentUser?.last_name : " "),
       currentUser?.profile_pic,
@@ -109,7 +111,7 @@ const ChannelMessageScreen = () => {
       sendChannelNotification(
         channel.community,
         currentUser.id,
-        currentUser.expo_push_token,
+        currentUser?.profile_pic,
         `New Message in ${channel.channel_title}` || "New Message in Channel",
         message,
         channel,
@@ -124,7 +126,7 @@ const ChannelMessageScreen = () => {
       sendChannelNotification(
         channel.community,
         currentUser.id,
-        currentUser.expo_push_token,
+        currentUser?.profile_pic,
         `New Message in ${channel.channel_title}` || "New Message in Channel",
         message,
         channel,

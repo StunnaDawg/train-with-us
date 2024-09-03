@@ -13,7 +13,7 @@ type NewPhotoProps = {
 const NewPhoto = ({ setProfilePic }: NewPhotoProps) => {
   const { user } = useAuth()
   const userId = user?.id
-  const avatarSize = { height: 150, width: 150 }
+  const avatarSize = { height: 300, width: 375 }
 
   const [imageUri, setImageUri] = useState("")
 
@@ -21,6 +21,7 @@ const NewPhoto = ({ setProfilePic }: NewPhotoProps) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0,
+      aspect: [16, 9],
       allowsEditing: true,
       selectionLimit: 1,
     })
@@ -39,7 +40,7 @@ const NewPhoto = ({ setProfilePic }: NewPhotoProps) => {
           <Image
             className="m-1 relative overflow-hidden max-w-full rounded-lg bg-gray-800 "
             source={{ uri: imageUri }}
-            style={{ width: 150, height: 150 }}
+            style={{ width: 375, height: 300 }}
           />
           <Pressable
             className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded hover:bg-blue-800 m-2"

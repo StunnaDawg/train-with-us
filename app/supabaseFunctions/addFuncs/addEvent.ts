@@ -4,6 +4,7 @@ import * as FileSystem from "expo-file-system"
 import * as ImagePicker from "expo-image-picker"
 import { decode } from "base64-arraybuffer"
 import { FunctionsHttpError } from "@supabase/supabase-js"
+import showAlert from "../../utilFunctions/showAlert"
 
 const sendNotification = async (
   token: string,
@@ -112,6 +113,11 @@ const addNewEvent = async (
 
     if (!data || data.length === 0)
       throw new Error("No data returned from insert")
+
+    showAlert({
+      title: "Success",
+      message: "Event created successfully",
+    })
 
     const eventId = data[0].id
 

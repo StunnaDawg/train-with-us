@@ -31,7 +31,7 @@ const ViewEventTitle = ({
       <View className="flex flex-row justify-center items-center">
         <View>
           <EventCoverPic
-            height={200}
+            height={300}
             width={375}
             avatarRadius={0}
             noAvatarRadius={0}

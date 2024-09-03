@@ -1,11 +1,13 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
+import addNotification from "./addNotification"
+import { CommunityChannel } from "../../@types/supabaseTypes"
 
 const sendChannelMessage = async (
   message: string,
   image: string | null,
   userId: string,
-  channelId: string,
+  channel: CommunityChannel,
   name: string,
   senderProfilePic: string | null,
   setLoadingSentMessage: Dispatch<SetStateAction<boolean>>,
@@ -19,7 +21,7 @@ const sendChannelMessage = async (
         message: message,
         sent_at: new Date(),
         sender_id: userId,
-        channel_id: channelId,
+        channel_id: channel.id,
         sender_name: name,
         image: image,
         sender_profile_pic: senderProfilePic,
@@ -30,6 +32,15 @@ const sendChannelMessage = async (
       console.log("message error", error)
       throw error
     }
+
+    // await addNotification(
+    //   message,
+    //   "New Message In" + channel.channel_title,
+    //   userId,
+    //   "ChannelNotification",
+    //   channel,
+    //   senderProfilePic
+    // )
   } catch (error) {
     console.log(error)
   } finally {

@@ -8,7 +8,8 @@ const sendNotification = async (
   userId: string,
   title: string,
   body: string,
-  channel: CommunityChannel
+  channel: CommunityChannel,
+  senderProfilePic: string | null
 ) => {
   try {
     console.log("Sending channel notification", channel)
@@ -18,7 +19,7 @@ const sendNotification = async (
       userId,
       "ChannelNotification",
       channel,
-      null
+      senderProfilePic
     )
 
     if (!token) {
@@ -48,7 +49,7 @@ const sendNotification = async (
 const sendChannelNotification = async (
   communityId: number,
   senderId: string,
-  senderToken: string | null,
+  senderProfilePic: string | null,
   titleWords: string,
   bodyWords: string,
   channel: CommunityChannel,
@@ -83,7 +84,8 @@ const sendChannelNotification = async (
           member.userId,
           titleWords,
           bodyWords,
-          channel
+          channel,
+          senderProfilePic
         )
       })
     } else {
@@ -112,7 +114,8 @@ const sendChannelNotification = async (
           member.userId,
           titleWords,
           bodyWords,
-          channel
+          channel,
+          senderProfilePic
         )
       })
     }

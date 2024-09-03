@@ -65,7 +65,7 @@ const ConnectionsScroll = () => {
 
   useEffect(() => {
     fetchConnectionProfiles()
-  }, [user])
+  }, [])
 
   const renderCard = useCallback(({ item }: { item: Profile }) => {
     return (

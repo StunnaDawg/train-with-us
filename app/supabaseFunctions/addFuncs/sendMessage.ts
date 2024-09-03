@@ -38,14 +38,25 @@ const sendMessage = async (
     }
     const title = `New Message from ${senderName}`
 
-    await addNotification(
-      message,
-      title,
-      recieverId,
-      "MessageNotification",
-      chatSession,
-      senderProfilePic
-    )
+    if (image) {
+      await addNotification(
+        "Sent an Image",
+        title,
+        recieverId,
+        "MessageNotification",
+        chatSession,
+        senderProfilePic
+      )
+    } else {
+      await addNotification(
+        message,
+        title,
+        recieverId,
+        "MessageNotification",
+        chatSession,
+        senderProfilePic
+      )
+    }
 
     if (!usersPushToken) return
     sendNotification(usersPushToken, title, message, chatSession)

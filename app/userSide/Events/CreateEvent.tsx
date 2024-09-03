@@ -222,12 +222,7 @@ const CreateEvent = () => {
 
                   if (attendaceLimitSwitch) {
                     if (!eventLimitNumber || eventLimitNumber <= 0) {
-                      showAlert({
-                        title: "Invalid Limit",
-                        message:
-                          "Please enter a valid limit greater than zero.",
-                      })
-                      return
+                      setAttendaceLimitSwitch(false)
                     }
                   }
 
