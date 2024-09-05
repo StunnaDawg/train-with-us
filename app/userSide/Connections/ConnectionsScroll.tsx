@@ -18,7 +18,7 @@ const ConnectionsScroll = () => {
   const [loadingMore, setLoadingMore] = useState(false)
   const [loading, setLoading] = useState(false)
   const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
-  const [page, setPage] = useState(0) // Track the current page
+  const [page, setPage] = useState(1) // Track the current page
 
   const imageWidth = 363
   const itemMargin = 0

@@ -1,6 +1,6 @@
 import supabase from "../../lib/supabase"
 
-const returnCommunityName = async (communityId: number | null | undefined) => {
+const returnCommunityName = async (communityId: number) => {
   const { data, error } = await supabase
     .from("communities")
     .select("community_title")
@@ -12,7 +12,7 @@ const returnCommunityName = async (communityId: number | null | undefined) => {
     throw error
   }
 
-  return data?.community_title || null
+  return data.community_title
 }
 
 export default returnCommunityName

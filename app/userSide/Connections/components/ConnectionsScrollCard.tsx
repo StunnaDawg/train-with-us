@@ -33,12 +33,31 @@ const ConnectionsScrollCard = ({
 }: ConnectionsScrollCardProps) => {
   const [showPlaceholder, setPlaceholder] = useState<boolean>(false)
   const [avatarUrl, setAvatarUrl] = useState<string>("")
+  const [communityTitle, setCommunityTitle] = useState<string>("")
   const windowHeight = Dimensions.get("window").height
 
   const isMounted = useRef(true)
 
+  const returnCommunityName = async (communityId: number) => {
+    const { data, error } = await supabase
+      .from("communities")
+      .select("community_title")
+      .eq("id", communityId)
+      .single()
+
+    if (error) {
+      console.error("Error fetching community name:", error.message)
+      throw error
+    }
+
+    setCommunityTitle(data.community_title)
+  }
+
   useEffect(() => {
     readImage()
+    if (profile.primary_gym) {
+      returnCommunityName(profile.primary_gym)
+    }
   }, [profile])
 
   const readImage = async () => {
@@ -97,7 +116,7 @@ const ConnectionsScrollCard = ({
         {/* Top Section */}
         <View style={styles.topSection}>
           <Text className="font-bold text-2xl text-white">
-            {profile.first_name}
+            {profile.first_name} {profile.last_name}
           </Text>
           <Text className="font-bold text-3xl text-center mx-1 text-white">
             {calculateAge(profile.birthday)}
@@ -117,6 +136,11 @@ const ConnectionsScrollCard = ({
 
         {/* Bottom Section */}
         <View style={styles.bottomSection}>
+          {profile.primary_gym ? (
+            <View>
+              <Text className="text-white font-bold">{communityTitle}</Text>
+            </View>
+          ) : null}
           <View className="m-2">
             <Text className="text-white font-bold">{profile.about}</Text>
           </View>
