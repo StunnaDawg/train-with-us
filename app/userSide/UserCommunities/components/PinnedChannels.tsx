@@ -142,25 +142,19 @@ const PinnedChannels = React.memo(() => {
           onPressOut={() => handlePressOut(c.id)}
           key={c.id}
           onPress={() => {
-            if (c.channel_type === "Annoucement") {
-              navigation.navigate("AnnouncementChannel", { channelId: c })
-            } else {
-              navigation.navigate("ChannelScreen", { channelId: c })
-            }
+            navigation.navigate("ChannelScreen", { channelId: c })
           }}
           className={`${pressedChannels[c.id] ? "opacity-50" : null}`}
         >
           <View>
             <View>
-              <Text className="text-xs font-semibold text-white">
+              <Text className="font-bold text-white">
+                #{c.channel_title || "Error loading channel title"} in{" "}
                 {c.community_name}
-              </Text>
-              <Text className="font-bold text-base text-white">
-                #{c.channel_title || "Error loading channel title"}
               </Text>
             </View>
             <Text className="text-xs text-white">
-              <Text>{`${c.recent_message_sender} said ` || null}</Text>
+              <Text>{`${c.recent_message_sender} said `}</Text>
               {c.recent_message || "No Messages yet!"}
             </Text>
           </View>

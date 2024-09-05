@@ -97,7 +97,9 @@ const ChannelMessageScreen = () => {
 
     await upsertCommunitySession(
       channel.id,
-      currentUser?.first_name + " " + currentUser?.last_name,
+      `${currentUser?.first_name}${
+        currentUser?.last_name ? ` ${currentUser.last_name}` : ""
+      }`,
       message || "Sent an Image"
     )
 

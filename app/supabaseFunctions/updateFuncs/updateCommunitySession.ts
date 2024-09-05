@@ -9,7 +9,7 @@ const upsertCommunitySession = async (
     const { error: updateError } = await supabase
       .from("community_channels")
       .update({
-        recent_message: message, // Only the fields to update
+        recent_message: message,
         updated_at: new Date(),
         recent_message_sender: name,
       })
