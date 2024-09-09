@@ -7,9 +7,15 @@ import {
   Platform,
   Keyboard,
   ActivityIndicator,
+  Pressable,
 } from "react-native"
-import React, { useEffect, useState } from "react"
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
+import React, { useCallback, useEffect, useState } from "react"
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommunity"
@@ -21,40 +27,67 @@ import showAlert from "../../utilFunctions/showAlert"
 import { TouchableWithoutFeedback } from "react-native"
 import Loading from "../../components/Loading"
 import EditProfileTopBar from "../Profile/AddInfoComponents/EditProfileTopBar"
+import ActivityTags from "../../components/AcvitivityTags"
+import { Communities } from "../../@types/supabaseTypes"
 
 const CommunitySettings = () => {
-  const [location, setLocation] = useState("")
-  const [communityName, setCommunityName] = useState("")
-  const [communityNumber, setCommunityNumber] = useState("")
-  const [communityStyle, setCommunityStyle] = useState("")
-  const [communityAbout, setCommunityAbout] = useState("")
+  const [location, setLocation] = useState<string>("")
+  const [communityData, setCommunityData] = useState<Communities | null>(
+    {} as Communities
+  )
+  const [communityName, setCommunityName] = useState<string>("")
+  const [communityNumber, setCommunityNumber] = useState<string>("")
+
+  const [communityAbout, setCommunityAbout] = useState<string>("")
+  const [communityTags, setCommunityTags] = useState<string[] | null>([])
   const [loading, setLoading] = useState(false)
   const navigation = useNavigation<NavigationType>()
   const route = useRoute<RouteProp<RootStackParamList, "MyCommunitySettings">>()
-  const [singleImageFile, setSingleImageFile] = useState<string | null>(null)
+  const [addTagsPressed, setAddTagsPressed] = useState<boolean>(false)
   const community = route.params.community
   const { user } = useAuth()
 
-  useEffect(() => {
-    if (community === null) return
-    setCommunityName(community.community_title || "")
-    setCommunityStyle(community.community_style || "")
-    setLocation(community.address || "")
-    setCommunityAbout(community.about || "")
-    setCommunityNumber(community.phone_number || "")
-  }, [community])
+  const addTagsPressedIn = () => {
+    setAddTagsPressed(true)
+  }
+
+  const addTagsPressedOut = () => {
+    setAddTagsPressed(false)
+  }
+
+  const fetchCommunityData = async () => {
+    await getSingleCommunity(setLoading, community.id, setCommunityData)
+
+    if (community) {
+      setCommunityName(community.community_title || "")
+      setCommunityNumber(community.phone_number || "")
+      setCommunityAbout(community.about || "")
+      setLocation(community.address || "")
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      let isMounted = true
+      fetchCommunityData()
+
+      return () => {
+        isMounted = false
+      }
+    }, [user])
+  )
 
   const updateCommunity = () => {
     setLoading(true)
     if (!user?.id) return
     if (!community) return
 
-    if (!communityName.trim()) {
+    if (!communityName?.trim()) {
       alert("Title is required.")
       return
     }
 
-    if (communityName !== community?.community_title) {
+    if (communityName !== community?.community_title && communityName) {
       updateSingleCommunityTrait(
         setLoading,
         community.id,
@@ -63,7 +96,7 @@ const CommunitySettings = () => {
       )
     }
 
-    if (community.about !== communityAbout) {
+    if (community.about !== communityAbout && communityAbout) {
       updateSingleCommunityTrait(
         setLoading,
         community.id,
@@ -72,11 +105,11 @@ const CommunitySettings = () => {
       )
     }
 
-    if (community.address !== location) {
+    if (community.address !== location && location) {
       updateSingleCommunityTrait(setLoading, community.id, "address", location)
     }
 
-    if (community.phone_number !== communityNumber) {
+    if (community.phone_number !== communityNumber && communityNumber) {
       updateSingleCommunityTrait(
         setLoading,
         community.id,
@@ -93,6 +126,11 @@ const CommunitySettings = () => {
     navigation.goBack()
   }
 
+  useEffect(() => {
+    if (communityData) {
+      setCommunityTags(communityData.community_tags)
+    }
+  }, [communityData])
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
       {!loading ? (
@@ -141,15 +179,39 @@ const CommunitySettings = () => {
                       />
                     </View>
 
-                    <Text className="font-bold text-sm text-white">
-                      Community Style
-                    </Text>
-                    <View className="border rounded-lg p-2 w-full bg-white">
-                      <TextInput
-                        value={communityStyle} // Binds the TextInput value to the state
-                        onChangeText={setCommunityStyle}
-                      />
+                    <View className="flex flex-row justify-between">
+                      <Text className="font-bold text-sm text-white">
+                        Community Tags
+                      </Text>
+                      <Pressable
+                        onPressIn={addTagsPressedIn}
+                        onPressOut={addTagsPressedOut}
+                        onPress={() =>
+                          navigation.navigate("AddCommunityTags", {
+                            community: community,
+                          })
+                        }
+                        className={`${addTagsPressed ? "opacity-50" : null}`}
+                      >
+                        <Text className="font-bold text-sm text-white underline">
+                          Add Tags
+                        </Text>
+                      </Pressable>
                     </View>
+
+                    <ScrollView
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      className="mt-1"
+                    >
+                      {communityTags && communityTags.length > 0
+                        ? communityTags.map((tag) => (
+                            <View key={tag} className="mb-1">
+                              <ActivityTags activity={`${tag}`} />
+                            </View>
+                          ))
+                        : null}
+                    </ScrollView>
 
                     <Text className="font-bold text-sm text-white">
                       Community Address

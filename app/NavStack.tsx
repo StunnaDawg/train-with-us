@@ -95,6 +95,7 @@ import EventsComponent from "./userSide/Events/Events"
 import ChooseCommunityActivities from "./userSide/CreateCommunity/ChooseCommunityActivities"
 import AddCommunityPictures from "./userSide/CreateCommunity/AddCommunityPictures"
 import CreateAboutCommunity from "./userSide/CreateCommunity/CreateAboutCommunity"
+import AddCommunityTags from "./userSide/MyCommunity/AddCommunityTags"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -390,6 +391,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="CommunityPage"
                 component={CommunityPage}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="AddCommunityTags"
+                component={AddCommunityTags}
               />
 
               <Stack.Screen

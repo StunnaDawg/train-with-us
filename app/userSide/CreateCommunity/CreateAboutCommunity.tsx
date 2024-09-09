@@ -10,6 +10,7 @@ import supabase from "../../../lib/supabase"
 import EnhancedTextInput from "../../components/TextInput"
 import GenericButton from "../../components/GenericButton"
 import CreateCommunityTopBar from "./components/TopBar"
+import showAlert from "../../utilFunctions/showAlert"
 
 const CreateAboutCommunity = () => {
   const route =
@@ -29,6 +30,13 @@ const CreateAboutCommunity = () => {
       if (error) throw error
 
       navigation.navigate("Community")
+
+      showAlert({
+        title: "Success",
+        message:
+          "Community created successfully!, Head to the community Dashboard to see your new community",
+        buttonText: "Understood",
+      })
     } catch (error) {
       console.error("Failed to update community preferences:", error)
     }
