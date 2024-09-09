@@ -92,6 +92,8 @@ import { useNewNotification } from "./context/NewNotification"
 import { useNewMessage } from "./context/NewMessage"
 import ConnectionsScroll from "./userSide/Connections/ConnectionsScroll"
 import EventsComponent from "./userSide/Events/Events"
+import ChooseCommunityActivities from "./userSide/CreateCommunity/ChooseCommunityActivities"
+import AddCommunityPictures from "./userSide/CreateCommunity/AddCommunityPictures"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -479,6 +481,18 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="CreateCommunity"
                 component={CreateCommunity}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ChooseCommunityActivities"
+                component={ChooseCommunityActivities}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="AddNewCommunityPhotos"
+                component={AddCommunityPictures}
               />
 
               <Stack.Screen

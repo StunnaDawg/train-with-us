@@ -7,7 +7,6 @@ import { useAuth } from "../../supabaseFunctions/authcontext"
 import { NavigationType } from "../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
 import * as ImagePicker from "expo-image-picker"
-import supabase from "../../../lib/supabase"
 import Loading from "../../components/Loading"
 import { Switch } from "react-native-gesture-handler"
 import showAlert from "../../utilFunctions/showAlert"
@@ -19,6 +18,7 @@ const CreateCommunity = () => {
   const [communityName, setCommunityName] = useState("")
   const [communityStyle, setCommunityStyle] = useState("")
   const [privateCommunity, setPrivateCommunity] = useState<boolean>(true)
+  const [communityId, setCommunityId] = useState<number>(0)
   const navigation = useNavigation<NavigationType>()
 
   const [communityProfilePic, setCommunityProfilePic] =
@@ -41,7 +41,8 @@ const CreateCommunity = () => {
       communityName,
       user!.id,
       communityStyle,
-      privateCommunity
+      privateCommunity,
+      setCommunityId
     )
   }
 
@@ -104,14 +105,6 @@ const CreateCommunity = () => {
                 />
               </View>
 
-              <Text className="font-medium text-lg">Community Style</Text>
-              <View className="border rounded-lg p-2 w-full">
-                <TextInput
-                  value={communityStyle} // Binds the TextInput value to the state
-                  onChangeText={setCommunityStyle}
-                />
-              </View>
-
               <Text className="font-medium text-sm">
                 By creating a server, you agree to Train With Us's{" "}
                 <Pressable>
@@ -124,9 +117,12 @@ const CreateCommunity = () => {
           </View>
           <View className="flex flex-row justify-center my-2">
             <BasicButton
-              text="Create Community"
+              text="Next"
               buttonFunction={async () => {
-                await createCommunity(), navigation.goBack()
+                await createCommunity(),
+                  navigation.navigate("ChooseCommunityActivities", {
+                    communityId: communityId,
+                  })
               }}
             />
           </View>

@@ -2,10 +2,6 @@ import { View, Text, ActivityIndicator } from "react-native"
 import React, { useEffect, useState } from "react"
 import { Communities, Profile } from "../../@types/supabaseTypes"
 import SingleImageSupaCommunity from "../../components/EditCommunityPicture"
-import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
-import { useAuth } from "../../supabaseFunctions/authcontext"
-import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommunity"
-
 type ImageGridProp = {
   community: Communities
 }
@@ -14,15 +10,8 @@ const CommunityImageGrid = ({ community }: ImageGridProp) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [refresh, setRefresh] = useState<boolean>(false)
   const [imageFiles, setImageFiles] = useState<string[] | null | undefined>([])
-  const [currentCommunity, setCurrentCommunity] = useState<Communities | null>(
-    {} as Communities
-  )
-  const { user } = useAuth()
-
-  const getCommunity = () => {
-    if (community?.id === undefined) return
-    getSingleCommunity(setLoading, community.id, setCurrentCommunity)
-  }
+ 
+ 
 
   useEffect(() => {
     setLoading(true)

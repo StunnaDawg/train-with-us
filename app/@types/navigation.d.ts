@@ -211,6 +211,10 @@ export type RootStackParamList = {
     userProfile: Profile
   }
   NotificationsTab: undefined
+  ChooseCommunityActivities: {
+    communityId: number
+  }
+  AddNewCommunityPhotos: undefined
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

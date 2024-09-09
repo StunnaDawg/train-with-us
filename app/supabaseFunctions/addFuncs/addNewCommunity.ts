@@ -33,7 +33,8 @@ const addNewCommunity = async (
   communityName: string,
   communityOwner: string,
   communityStyle: string,
-  isCommunityPrivate: boolean
+  isCommunityPrivate: boolean,
+  setNewCommunityId: Dispatch<SetStateAction<number>>
 ) => {
   try {
     setLoading(true)
@@ -65,6 +66,7 @@ const addNewCommunity = async (
 
     if (error) throw error
     const communtiyId = community![0].id
+    setNewCommunityId(communtiyId)
 
     const { error: channelError } = await supabase
       .from("community_channels")
