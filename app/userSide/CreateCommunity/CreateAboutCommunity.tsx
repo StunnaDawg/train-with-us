@@ -1,6 +1,10 @@
 import { View, SafeAreaView } from "react-native"
 import React, { useState } from "react"
-import { NavigationType, RootStackParamList } from "../../@types/navigation"
+import {
+  NavigationType,
+  RootStackParamList,
+  TabNavigationType,
+} from "../../@types/navigation"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import supabase from "../../../lib/supabase"
 import EnhancedTextInput from "../../components/TextInput"
@@ -9,10 +13,10 @@ import CreateCommunityTopBar from "./components/TopBar"
 
 const CreateAboutCommunity = () => {
   const route =
-    useRoute<RouteProp<RootStackParamList, "ChooseCommunityActivities">>()
+    useRoute<RouteProp<RootStackParamList, "CreateAboutCommunity">>()
   const communityId = route.params.communityId
 
-  const navigation = useNavigation<NavigationType>()
+  const navigation = useNavigation<TabNavigationType>()
 
   const [bio, setBio] = useState<string>("")
 
@@ -24,7 +28,7 @@ const CreateAboutCommunity = () => {
 
       if (error) throw error
 
-      navigation.goBack()
+      navigation.navigate("Community")
     } catch (error) {
       console.error("Failed to update community preferences:", error)
     }

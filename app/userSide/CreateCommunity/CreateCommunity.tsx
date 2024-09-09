@@ -120,9 +120,7 @@ const CreateCommunity = () => {
               text="Next"
               buttonFunction={async () => {
                 await createCommunity(),
-                  navigation.navigate("ChooseCommunityActivities", {
-                    communityId: communityId,
-                  })
+                  navigation.navigate("ChooseCommunityActivities")
               }}
             />
           </View>

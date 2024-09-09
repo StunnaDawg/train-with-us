@@ -43,7 +43,7 @@ const CreateCommunityTopBar = ({
         onPress={() => navigation.goBack()}
         className={`${isCancelPressed ? "opacity-50" : null}`}
       >
-        <Text className=" text-xs font-semibold text-white">Cancel</Text>
+        <Text className=" text-sm font-semibold text-white">Back</Text>
       </Pressable>
       <Text className="font-bold text-lg text-center text-white">{text}</Text>
       {doneButton ? (
@@ -53,7 +53,7 @@ const CreateCommunityTopBar = ({
           onPress={functionProp}
           className={`${isSkipPressed ? "opacity-50" : null}`}
         >
-          <Text className="text-xs font-semibold text-white">Skip</Text>
+          <Text className="text-sm font-semibold text-white">Skip</Text>
         </Pressable>
       ) : (
         <View />

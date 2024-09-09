@@ -94,6 +94,7 @@ import ConnectionsScroll from "./userSide/Connections/ConnectionsScroll"
 import EventsComponent from "./userSide/Events/Events"
 import ChooseCommunityActivities from "./userSide/CreateCommunity/ChooseCommunityActivities"
 import AddCommunityPictures from "./userSide/CreateCommunity/AddCommunityPictures"
+import CreateAboutCommunity from "./userSide/CreateCommunity/CreateAboutCommunity"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -493,6 +494,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="AddNewCommunityPhotos"
                 component={AddCommunityPictures}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="CreateAboutCommunity"
+                component={CreateAboutCommunity}
               />
 
               <Stack.Screen

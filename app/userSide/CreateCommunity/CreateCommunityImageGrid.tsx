@@ -1,7 +1,8 @@
-import { View, Text, ActivityIndicator } from "react-native"
+import { View, Text, ActivityIndicator, SafeAreaView } from "react-native"
 import React, { useEffect, useState } from "react"
 import { Communities, Profile } from "../../@types/supabaseTypes"
 import SingleImageSupaCommunity from "../../components/EditCommunityPicture"
+import CreateCommunityTopBar from "./components/TopBar"
 type ImageGridProp = {
   communityId: number
 }

@@ -7,24 +7,26 @@ import {
   Pressable,
 } from "react-native"
 import React, { useEffect } from "react"
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
+import { useNavigation } from "@react-navigation/native"
 import { useState } from "react"
-import { NavigationType, RootStackParamList } from "../../@types/navigation"
-import BackButton from "../../components/BackButton"
+import { NavigationType } from "../../@types/navigation"
 import GenericButton from "../../components/GenericButton"
 import supabase from "../../../lib/supabase"
 import CreateCommunityTopBar from "./components/TopBar"
+import { useAuth } from "../../supabaseFunctions/authcontext"
+import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
+import { Profile } from "../../@types/supabaseTypes"
+import showAlert from "../../utilFunctions/showAlert"
 
 type ActvitiesOption = string
 
 const ChooseCommunityActivities = () => {
+  const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
-  const route =
-    useRoute<RouteProp<RootStackParamList, "ChooseCommunityActivities">>()
-  const communityId = route.params.communityId
   const [selectedActvities, setSelectedActvities] = useState<ActvitiesOption[]>(
     []
   )
+  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
 
   const handleSelectActivities = (activity: ActvitiesOption) => {
     if (!selectedActvities.includes(activity)) {
@@ -45,11 +47,17 @@ const ChooseCommunityActivities = () => {
   const handleCommunityUpdate = async () => {
     try {
       const { error } = await supabase.from("communities").upsert({
-        id: communityId,
+        id: currentUser?.community_created,
         community_tags: selectedActvities,
       })
       if (error) throw error
-      navigation.navigate("AddNewCommunityPhotos")
+      if (currentUser?.community_created) {
+        navigation.navigate("AddNewCommunityPhotos", {
+          communityId: currentUser?.community_created,
+        })
+      } else {
+        showAlert({ title: "Error", message: "Community not found" })
+      }
     } catch (error) {
       console.log(error)
     }
@@ -131,11 +139,22 @@ const ChooseCommunityActivities = () => {
     "Archery 🏹",
   ]
 
+  useEffect(() => {
+    if (!user) return
+    useCurrentUser(user.id, setCurrentUser)
+  }, [user])
+
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
       <CreateCommunityTopBar
-        text=" What actvities does your community/gym offer?"
-        functionProp={() => navigation.navigate("AddNewCommunityPhotos")}
+        text="Community Activities"
+        functionProp={() => {
+          if (currentUser?.community_created) {
+            navigation.navigate("AddNewCommunityPhotos", {
+              communityId: currentUser?.community_created,
+            })
+          }
+        }}
       />
 
       <ScrollView showsVerticalScrollIndicator={false}>
