@@ -8,29 +8,69 @@ import {
 } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import AllEvents from "./components/AllEvents"
-import { RefreshControl } from "react-native-gesture-handler"
-import EventTypes from "./components/EventTypes"
-import Upcoming from "./components/Upcoming"
-import { Skeleton } from "moti/skeleton"
+import { FlatList, RefreshControl } from "react-native-gesture-handler"
 import { NavBar } from "../../../components"
 import getUpcomingEvents from "../../supabaseFunctions/getFuncs/getUpcomingEvents"
-import { Events } from "../../@types/supabaseTypes"
+import { Events, EventWithCompatibility } from "../../@types/supabaseTypes"
 import EventCard from "./components/EventCard"
+import getCompatibleEvents from "../../supabaseFunctions/getFuncs/getCompatibleEvents"
+import { useAuth } from "../../supabaseFunctions/authcontext"
 
 const EventsComponent = () => {
+  const { user } = useAuth()
   const [loading, setLoading] = useState<boolean>(false)
   const [refreshing, setRefreshing] = useState<boolean>(false)
-  const [upcomingEvents, setUpcomingEvents] = useState<Events[] | null>([])
+  const [page, setPage] = useState<number>(0)
+  const [endOfData, setEndOfData] = useState<boolean>(false)
+  const [upcomingEvents, setUpcomingEvents] = useState<
+    EventWithCompatibility[]
+  >([])
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true)
-    getUpcomingEvents(setLoading, setUpcomingEvents, 10)
-    setRefreshing(false)
-  }, [])
+  const fetchEvents = async (pageState: number) => {
+    setLoading(true)
+    if (user?.id === undefined) return
+    getCompatibleEvents(
+      user?.id,
+      page,
+      setLoading,
+      setUpcomingEvents,
+      setEndOfData
+    )
+    setLoading(false)
+  }
 
   useEffect(() => {
-    getUpcomingEvents(setLoading, setUpcomingEvents, 10)
-  }, [])
+    fetchEvents(page)
+  }, [page])
+
+  const loadMoreEvents = () => {
+    if (!endOfData && !loading) {
+      setPage((prevPage) => prevPage + 1)
+    }
+  }
+
+  const renderItem = useCallback(
+    ({ item }: { item: EventWithCompatibility }) => (
+      <View className="mt-1">
+        <EventCard
+          eventId={item.id}
+          title={item.event_title}
+          date={item.date}
+          communityId={item.community_host}
+          eventCoverPhoto={item.event_cover_photo}
+          eventPrice={item.price}
+          eventCompatibility={item.compatibility_score}
+        />
+      </View>
+    ),
+    []
+  )
+
+  const renderFooter = () => {
+    return loading ? <ActivityIndicator /> : null
+  }
+
+  const keyExtractor = (item: EventWithCompatibility) => item.id.toString()
 
   return (
     <>
@@ -46,7 +86,32 @@ const EventsComponent = () => {
       <View className="bg-primary-900">
         <AllEvents />
       </View>
-      <ScrollView
+
+      <View className="flex-1 bg-primary-900">
+        <FlatList
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          data={upcomingEvents}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          ListFooterComponent={renderFooter}
+          onEndReached={loadMoreEvents}
+          onEndReachedThreshold={0.5}
+          contentContainerStyle={{
+            paddingBottom: 20,
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+          ListEmptyComponent={
+            <View className="m-2">
+              <Text className="text-white">No Communities near!</Text>
+            </View>
+          }
+        />
+      </View>
+
+      {/* <ScrollView
         className=" bg-primary-900"
         style={{ backgroundColor: "#07182d" }}
         refreshControl={
@@ -73,7 +138,7 @@ const EventsComponent = () => {
             <Text className="text-white font-bold">No upcoming events</Text>
           )}
         </View>
-      </ScrollView>
+      </ScrollView> */}
     </>
   )
 }

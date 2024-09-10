@@ -23,6 +23,7 @@ type EventCardProps = {
   communityId: number | null
   eventCoverPhoto: string | null
   eventPrice: number | null
+  eventCompatibility: number
 }
 
 const EventCard = ({
@@ -32,6 +33,7 @@ const EventCard = ({
   eventId,
   eventCoverPhoto,
   eventPrice,
+  eventCompatibility,
 }: EventCardProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [isPressed, setIsPressed] = useState<boolean>(false)
@@ -134,6 +136,9 @@ const EventCard = ({
             </Text>
             <Text className="text-xs" style={styles.text}>
               {formatBirthdate(date)}
+            </Text>
+            <Text className="text-xs" style={styles.text}>
+              {eventCompatibility}
             </Text>
           </View>
         </ImageBackground>
