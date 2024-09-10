@@ -1,16 +1,20 @@
-import { View, Text, Pressable } from "react-native"
+import { View, Text, Pressable, ScrollView } from "react-native"
 import { NavigationType } from "../../../@types/navigation"
 import { useNavigation } from "@react-navigation/native"
-import { Communities } from "../../../@types/supabaseTypes"
+import {
+  Communities,
+  CommunityWithCompatibility,
+} from "../../../@types/supabaseTypes"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import { FontAwesome6 } from "@expo/vector-icons"
 import { useEffect, useState } from "react"
 
 import getCommunityMembersUUIDs from "../../../supabaseFunctions/getFuncs/getCommunityMembersUUIDS"
 import supabase from "../../../../lib/supabase"
+import ActivityTags from "../../../components/AcvitivityTags"
 
 type CommunityCardProps = {
-  community: Communities
+  community: CommunityWithCompatibility
   addPrimary?: boolean
   userId: string | undefined
 }
@@ -49,6 +53,8 @@ const CommunityCard = ({
     }
 
     fetchMemberCount()
+
+    console.log("Community profile pic", community.community_profile_pic)
   }, [community])
 
   useEffect(() => {
@@ -97,6 +103,19 @@ const CommunityCard = ({
           <Text className=" text-white font-bold text-lg">
             {community.community_title}
           </Text>
+          <ScrollView
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            className="mt-1"
+          >
+            {community.community_tags && community.community_tags.length > 0
+              ? community.community_tags.map((tag) => (
+                  <View key={tag} className="mb-1">
+                    <ActivityTags activity={`${tag}`} />
+                  </View>
+                ))
+              : null}
+          </ScrollView>
           <View className="flex flex-row justify-between items-center">
             <View className="flex flex-row ">
               <Text className=" text-white font-bold text-sm">
@@ -118,6 +137,9 @@ const CommunityCard = ({
           </View>
 
           <View className="border-b-2 border-b-white p-1" />
+          <Text className="text-white">
+            Compatibility {community.compatibility_score.toString()}%
+          </Text>
         </View>
       </View>
     </Pressable>
