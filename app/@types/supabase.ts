@@ -438,6 +438,7 @@ export type Database = {
           event_limit: number | null
           event_photos: string[] | null
           event_style: string | null
+          event_tags: string[] | null
           event_title: string | null
           id: number
           location: string | null
@@ -455,6 +456,7 @@ export type Database = {
           event_limit?: number | null
           event_photos?: string[] | null
           event_style?: string | null
+          event_tags?: string[] | null
           event_title?: string | null
           id?: number
           location?: string | null
@@ -472,6 +474,7 @@ export type Database = {
           event_limit?: number | null
           event_photos?: string[] | null
           event_style?: string | null
+          event_tags?: string[] | null
           event_title?: string | null
           id?: number
           location?: string | null
@@ -843,6 +846,18 @@ export type Database = {
           "": unknown
         }
         Returns: string
+      }
+      get_compatible_communities: {
+        Args: {
+          user_id: string
+        }
+        Returns: {
+          id: number
+          community_title: string
+          community_tags: string[]
+          community_profile_pic: string
+          compatibility_score: number
+        }[]
       }
       get_profiles_with_min_urls: {
         Args: {
