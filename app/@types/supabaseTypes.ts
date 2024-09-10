@@ -61,3 +61,7 @@ export type SupaNotification =
 export type CommunityWithCompatibility = Communities & {
   compatibility_score: number
 }
+
+export type EventWithCompatibility = Events & {
+  compatibility_score: number
+}

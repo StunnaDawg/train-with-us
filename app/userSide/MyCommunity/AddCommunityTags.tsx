@@ -10,10 +10,7 @@ import React, { useEffect } from "react"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { useState } from "react"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
-import GenericButton from "../../components/GenericButton"
 import supabase from "../../../lib/supabase"
-
-import showAlert from "../../utilFunctions/showAlert"
 
 import EditProfileTopBar from "../Profile/AddInfoComponents/EditProfileTopBar"
 
