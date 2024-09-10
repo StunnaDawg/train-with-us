@@ -6,17 +6,21 @@ import {
   SafeAreaView,
 } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
-import { Communities } from "../../@types/supabaseTypes"
+import { CommunityWithCompatibility } from "../../@types/supabaseTypes"
 import CommunityCard from "./components/CommunityCard"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { NavBar } from "../../../components"
 import SearchBar from "../Events/components/SearchBar"
 import supabase from "../../../lib/supabase"
 import BackButton from "../../components/BackButton"
+import getCompatibleCommunities from "../../supabaseFunctions/getFuncs/getCompatibleCommunity"
+import showAlert from "../../utilFunctions/showAlert"
 
 const CommunitiesHome = () => {
   const { user } = useAuth()
-  const [communities, setCommunities] = useState<Communities[]>([])
+  const [communities, setCommunities] = useState<CommunityWithCompatibility[]>(
+    []
+  )
   const [searchText, setSearchText] = useState<string>("")
   const [page, setPage] = useState<number>(0)
   const [endOfData, setEndOfData] = useState<boolean>(false)
@@ -24,29 +28,21 @@ const CommunitiesHome = () => {
   const PAGE_SIZE = 10
 
   const fetchCommunities = async (pageState: number, searchQuery: string) => {
-    const from = pageState * PAGE_SIZE
-    const to = from + PAGE_SIZE - 1
-
     setLoading(true)
 
-    let query = supabase.from("communities").select("*").range(from, to)
-
-    if (searchQuery) {
-      query = query.ilike("community_title", `%${searchQuery}%`)
-    }
-
-    const { data, error } = await query
-    setLoading(false)
-
-    if (error) {
-      throw new Error(error.message)
-    } else {
-      if (data.length < PAGE_SIZE) {
-        setEndOfData(true)
-      }
-      setCommunities((prevCommunties) =>
-        pageState === 0 ? data : [...prevCommunties, ...data]
+    if (user?.id !== undefined) {
+      await getCompatibleCommunities(
+        user?.id,
+        pageState,
+        setLoading,
+        setCommunities,
+        setEndOfData
       )
+
+      setLoading(false)
+    } else {
+      showAlert({ title: "Error", message: "User not found" })
+      setLoading(false)
     }
   }
 
@@ -61,7 +57,7 @@ const CommunitiesHome = () => {
   }
 
   const renderItem = useCallback(
-    ({ item }: { item: Communities }) => (
+    ({ item }: { item: CommunityWithCompatibility }) => (
       <View className="m-2">
         <CommunityCard community={item} userId={user?.id} />
       </View>
@@ -74,7 +70,7 @@ const CommunitiesHome = () => {
     return <ActivityIndicator size="large" color="#0000ff" />
   }
 
-  const keyExtractor = (item: Communities) => item.id.toString()
+  const keyExtractor = (item: CommunityWithCompatibility) => item.id.toString()
 
   const handleSearch = (text: string) => {
     setSearchText(text)
