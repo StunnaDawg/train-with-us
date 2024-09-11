@@ -87,21 +87,21 @@ const EventsComponent = () => {
         <AllEvents />
       </View>
 
-      <View className="flex-1 bg-primary-900">
+      <View className="flex-1 items-center bg-primary-900">
         <FlatList
           initialNumToRender={10}
           maxToRenderPerBatch={10}
           data={upcomingEvents}
+          horizontal={false}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           ListFooterComponent={renderFooter}
           onEndReached={loadMoreEvents}
           onEndReachedThreshold={0.5}
+          numColumns={2}
           contentContainerStyle={{
             paddingBottom: 20,
-            flexDirection: "row",
-            flexWrap: "wrap",
-            justifyContent: "center",
+            marginBottom: 20,
           }}
           ListEmptyComponent={
             <View className="m-2">
