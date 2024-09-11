@@ -56,6 +56,12 @@ export type News = Database["public"]["Tables"]["news_posts"]["Row"]
 export type SupaNotification =
   Database["public"]["Tables"]["notifications"]["Row"]
 
+export type CommunityClasses =
+  Database["public"]["Tables"]["community_classes"]["Row"]
+
+export type CommunitySchedule =
+  Database["public"]["Tables"]["community_class_schedule"]["Row"]
+
 // custom types
 
 export type CommunityWithCompatibility = Communities & {

@@ -138,7 +138,7 @@ const CommunityCard = ({
 
           <View className="border-b-2 border-b-white p-1" />
           <Text className="text-white">
-            Compatibility {community.compatibility_score.toString()}%
+            Compatibility {Math.round(community.compatibility_score)}%
           </Text>
         </View>
       </View>

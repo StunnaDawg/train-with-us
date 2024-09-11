@@ -312,6 +312,86 @@ export type Database = {
           }
         ]
       }
+      community_class_schedule: {
+        Row: {
+          class_id: string
+          community_id: number
+          created_at: string
+          end_time: string
+          id: string
+          recurrence_end: string | null
+          recurrence_rule: string
+          start_time: string
+        }
+        Insert: {
+          class_id?: string
+          community_id: number
+          created_at?: string
+          end_time: string
+          id?: string
+          recurrence_end?: string | null
+          recurrence_rule: string
+          start_time: string
+        }
+        Update: {
+          class_id?: string
+          community_id?: number
+          created_at?: string
+          end_time?: string
+          id?: string
+          recurrence_end?: string | null
+          recurrence_rule?: string
+          start_time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_community_class_schedule_class_id_fkey"
+            columns: ["class_id"]
+            referencedRelation: "community_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_community_class_schedule_community_id_fkey"
+            columns: ["community_id"]
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      community_classes: {
+        Row: {
+          class_name: string
+          community_id: number | null
+          created_at: string | null
+          description: string | null
+          duration: number | null
+          id: string
+        }
+        Insert: {
+          class_name?: string
+          community_id?: number | null
+          created_at?: string | null
+          description?: string | null
+          duration?: number | null
+          id?: string
+        }
+        Update: {
+          class_name?: string
+          community_id?: number | null
+          created_at?: string | null
+          description?: string | null
+          duration?: number | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_community_classes_community_id_fkey"
+            columns: ["community_id"]
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       community_members: {
         Row: {
           community_id: number
@@ -856,6 +936,20 @@ export type Database = {
           community_title: string
           community_tags: string[]
           community_profile_pic: string
+          compatibility_score: number
+        }[]
+      }
+      get_compatible_events: {
+        Args: {
+          user_id: string
+        }
+        Returns: {
+          id: number
+          event_title: string
+          event_tags: string[]
+          event_cover_photo: string
+          date: string
+          price: number
           compatibility_score: number
         }[]
       }

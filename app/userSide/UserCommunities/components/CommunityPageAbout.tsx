@@ -1,6 +1,6 @@
 import { View, Text, Platform, Pressable, ScrollView } from "react-native"
-import React, { useState } from "react"
-import { Communities } from "../../../@types/supabaseTypes"
+import React, { useEffect, useState } from "react"
+import { Communities, Profile } from "../../../@types/supabaseTypes"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import { FontAwesome6 } from "@expo/vector-icons"
 import { ImageBackground } from "expo-image"
@@ -22,6 +22,7 @@ const CommunityPageAbout = ({ community }: CommunityPageAboutProps) => {
   const handlePressOut = (name: string) => {
     setIsPressed((prev) => ({ ...prev, [name]: false }))
   }
+
   return (
     <View className="flex-1 bg-primary-900">
       <View className="m-2 mx-4">
