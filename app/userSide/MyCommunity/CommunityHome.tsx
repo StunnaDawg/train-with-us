@@ -185,6 +185,25 @@ const CommunityHome = () => {
             </Pressable>
           </View>
 
+          <View className="border-b pb-2">
+            <Pressable
+              className="pt-2"
+              onPress={() => {
+                if (!currentCommunity) return
+                navigation.navigate("CreateOrUpdateClassSchedule", {
+                  community: currentCommunity,
+                })
+              }}
+              onPressIn={() => setPressed("settings")}
+              onPressOut={() => setPressed(null)}
+              style={{ opacity: pressed === "settings" ? 0.5 : 1 }}
+            >
+              <Text className="mx-2 font-bold text-sm">
+                Create/Update Community Class Schedule
+              </Text>
+            </Pressable>
+          </View>
+
           <View>
             <Pressable
               className="pt-2"

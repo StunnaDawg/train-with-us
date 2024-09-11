@@ -96,6 +96,7 @@ import ChooseCommunityActivities from "./userSide/CreateCommunity/ChooseCommunit
 import AddCommunityPictures from "./userSide/CreateCommunity/AddCommunityPictures"
 import CreateAboutCommunity from "./userSide/CreateCommunity/CreateAboutCommunity"
 import AddCommunityTags from "./userSide/MyCommunity/AddCommunityTags"
+import CreateOrUpdateSchedule from "./userSide/MyCommunity/CreateOrUpdateSchedule"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -507,6 +508,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="CreateAboutCommunity"
                 component={CreateAboutCommunity}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="CreateOrUpdateClassSchedule"
+                component={CreateOrUpdateSchedule}
               />
 
               <Stack.Screen

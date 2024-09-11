@@ -217,6 +217,10 @@ export type RootStackParamList = {
   }
   CreateAboutCommunity: { communityId: number }
   AddCommunityTags: { community: Communities }
+
+  CreateOrUpdateClassSchedule: {
+    community: Communities
+  }
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>
