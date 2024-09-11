@@ -73,7 +73,7 @@ const EventsComponent = () => {
   const keyExtractor = (item: EventWithCompatibility) => item.id.toString()
 
   return (
-    <>
+    <SafeAreaView className="flex-1 bg-primary-900">
       <NavBar
         title="Events"
         bgColour="bg-primary-900"
@@ -99,10 +99,7 @@ const EventsComponent = () => {
           onEndReached={loadMoreEvents}
           onEndReachedThreshold={0.5}
           numColumns={2}
-          contentContainerStyle={{
-            paddingBottom: 20,
-            marginBottom: 20,
-          }}
+          contentContainerStyle={{ paddingBottom: 100 }}
           ListEmptyComponent={
             <View className="m-2">
               <Text className="text-white">No Communities near!</Text>
@@ -110,36 +107,7 @@ const EventsComponent = () => {
           }
         />
       </View>
-
-      {/* <ScrollView
-        className=" bg-primary-900"
-        style={{ backgroundColor: "#07182d" }}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <View className="flex flex-row flex-wrap justify-center">
-          {loading ? (
-            <ActivityIndicator />
-          ) : upcomingEvents && upcomingEvents?.length > 0 ? (
-            upcomingEvents?.map((event) => (
-              <View className="my-1" key={event.id}>
-                <EventCard
-                  eventId={event.id}
-                  title={event.event_title}
-                  date={event.date}
-                  communityId={event.community_host}
-                  eventCoverPhoto={event.event_cover_photo}
-                  eventPrice={event.price}
-                />
-              </View>
-            ))
-          ) : (
-            <Text className="text-white font-bold">No upcoming events</Text>
-          )}
-        </View>
-      </ScrollView> */}
-    </>
+    </SafeAreaView>
   )
 }
 
