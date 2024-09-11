@@ -286,13 +286,16 @@ const ManageCommunityEvents = () => {
                     eventCoverPhoto={event.event_cover_photo}
                     eventPrice={event.price}
                   />
+
                   <Pressable
                     onPress={() =>
-                      showDeleteAlert(() => deleteUpcomingEvent(event.id))
+                      navigation.navigate("EditEvent", {
+                        eventId: event.id,
+                      })
                     }
                     className="bg-black rounded-xl p-2 z-50 absolute top-0 right-1"
                   >
-                    <FontAwesome6 name="trash" size={24} color="white" />
+                    <FontAwesome6 name="edit" size={24} color="white" />
                   </Pressable>
                 </View>
               ))

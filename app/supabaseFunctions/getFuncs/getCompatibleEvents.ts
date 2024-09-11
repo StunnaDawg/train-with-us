@@ -13,12 +13,14 @@ const getCompatibleEvents = async (
 ) => {
   try {
     setLoading(true)
+    const currentDate = new Date().toISOString()
     const from = page * PAGE_SIZE
     const to = from + PAGE_SIZE - 1
 
     const { data: events, error } = await supabase
       .rpc("get_compatible_events", { user_id: userId })
       .range(from, to)
+      .gte("date", currentDate)
 
     if (error) {
       throw new Error(error.message)

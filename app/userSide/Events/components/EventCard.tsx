@@ -23,7 +23,7 @@ type EventCardProps = {
   communityId: number | null
   eventCoverPhoto: string | null
   eventPrice: number | null
-  eventCompatibility: number
+  eventCompatibility?: number | null
 }
 
 const EventCard = ({
@@ -137,9 +137,11 @@ const EventCard = ({
             <Text className="text-xs" style={styles.text}>
               {formatBirthdate(date)}
             </Text>
-            <Text className="text-xs" style={styles.text}>
-              {eventCompatibility}
-            </Text>
+            {eventCompatibility || eventCompatibility === 0 ? (
+              <Text className="text-xs" style={styles.text}>
+                {Math.round(eventCompatibility)}% compatibility score
+              </Text>
+            ) : null}
           </View>
         </ImageBackground>
       </Pressable>

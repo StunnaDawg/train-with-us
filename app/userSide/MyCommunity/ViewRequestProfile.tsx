@@ -25,6 +25,7 @@ const ViewRequestProfile = () => {
         setPrimaryGymName("No Primary Gym")
         return
       }
+      if (!currentUser?.primary_gym) return
       const PrimaryGymName = await returnCommunityName(currentUser?.primary_gym)
       setPrimaryGymName(PrimaryGymName)
     }
@@ -57,6 +58,7 @@ const ViewRequestProfile = () => {
             loading={loading}
             profileId={currentUser?.id}
             coach={false}
+            profilePic={currentUser?.profile_pic || ""}
           />
         </View>
 
