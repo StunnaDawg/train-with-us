@@ -29,6 +29,8 @@ import { TouchableWithoutFeedback } from "react-native"
 import Loading from "../../components/Loading"
 import { Switch } from "react-native-gesture-handler"
 
+type ActvitiesOption = string
+
 const EditEvent = () => {
   const { user } = useAuth()
   const [event, setEvent] = useState<Events | null>(null)
@@ -44,12 +46,40 @@ const EditEvent = () => {
   const [eventPicture, setEventPicture] = useState<string | null | undefined>(
     null
   )
+  const [updateEventPressed, setUpdateEventPressed] = useState<boolean>(false)
   const [eventStyle, setEventStyle] = useState<string>("")
   const [show, setShow] = useState(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const navigation = useNavigation<NavigationType>()
   const route = useRoute<RouteProp<RootStackParamList, "EditEvent">>()
+  const [selectedActvities, setSelectedActvities] = useState<ActvitiesOption[]>(
+    []
+  )
   const eventId = route.params.eventId
+
+  const handleSelectActivities = (activity: ActvitiesOption) => {
+    if (!selectedActvities.includes(activity)) {
+      setSelectedActvities([...selectedActvities, activity])
+    } else {
+      handleDeselectActivities(activity)
+    }
+  }
+
+  const handleDeselectActivities = (activity: ActvitiesOption) => {
+    const index = selectedActvities.indexOf(activity)
+    if (index > -1) {
+      selectedActvities.splice(index, 1)
+    }
+    setSelectedActvities([...selectedActvities])
+  }
+
+  const handleEventButtonPressedIn = () => {
+    setUpdateEventPressed(true)
+  }
+
+  const handleEventButtonPressedOut = () => {
+    setUpdateEventPressed(false)
+  }
 
   const onChangeDate = (
     event: DateTimePickerEvent,
@@ -93,11 +123,88 @@ const EditEvent = () => {
     setLocation(event?.location || "")
     setEventStyle(event?.event_style || "")
     setEventLimit(event?.event_limit?.toString() || "")
+    setSelectedActvities(event?.event_tags || [])
 
     if (event?.event_limit) {
       setAttendaceLimitSwitch(true)
     }
   }, [event])
+
+  const ActvitiesOptions: ActvitiesOption[] = [
+    "Aerobics 🏃‍♀️",
+    "Boxing 🥊",
+    "CrossFit 🏋️‍♂️",
+    "Hyrox 💪",
+    "Running 🏃",
+    "Weightlifting 🏋️‍♀️",
+    "Cycling 🚴",
+    "Yoga 🧘",
+    "Pilates 🧘‍♀️",
+    "Powerlifting 🏋️‍♂️",
+    "Basketball 🏀",
+    "Bodybuilding 💪",
+    "Calisthenics 🤸‍♂️",
+    "Swimming 🏊",
+    "Dance 💃",
+    "Hiking 🥾",
+    "Rock Climbing 🧗",
+    "Rowing 🚣",
+    "Martial Arts 🥋",
+    "Soccer ⚽",
+    "Tennis 🎾",
+    "Golf ⛳",
+    "Baseball ⚾",
+    "Softball ⚾",
+    "Football 🏈",
+    "Rugby 🏉",
+    "Hockey 🏒",
+    "Mountain Biking 🚵",
+    "Skiing 🎿",
+    "Snowboarding 🏂",
+    "Surfing 🏄",
+    "Skateboarding 🛹",
+    "Zumba 🕺",
+    "Kickboxing 🥊",
+    "Spin Class 🚴‍♂️",
+    "Tai Chi 🧘‍♂️",
+    "Stretching 🤸‍♀️",
+    "HIIT 🔥",
+    "TRX Training 🏋️",
+    "Functional Training 🏋️‍♂️",
+    "Trail Running 🏃‍♂️",
+    "Obstacle Course Racing 🏅",
+    "Stand-Up Paddleboarding (SUP) 🏄‍♂️",
+    "Cross-Country Skiing 🎿",
+    "Fencing 🤺",
+    "Taekwondo 🥋",
+    "Jiu-Jitsu 🥋",
+    "Karate 🥋",
+    "Judo 🥋",
+    "Badminton 🏸",
+    "Table Tennis 🏓",
+    "Volleyball 🏐",
+    "Cricket 🏏",
+    "Handball 🤾‍♂️",
+    "Figure Skating ⛸",
+    "Track and Field 🏃‍♀️",
+    "Climbing 🧗‍♂️",
+    "Parkour 🏃‍♂️",
+    "Cheerleading 🎀",
+    "Gymnastics 🤸‍♀️",
+    "Pole Dancing 💃",
+    "Diving 🤿",
+    "Water Polo 🤽‍♂️",
+    "Wrestling 🤼‍♂️",
+    "Racquetball 🎾",
+    "Squash 🎾",
+    "Frisbee 🥏",
+    "Lacrosse 🥍",
+    "Sailing ⛵",
+    "Kayaking 🛶",
+    "Canoeing 🛶",
+    "Horseback Riding 🐎",
+    "Archery 🏹",
+  ]
   return (
     <SafeAreaView className="flex-1">
       {!loading ? (
@@ -222,6 +329,34 @@ const EditEvent = () => {
                 />
               </View>
 
+              <View className="mb-4">
+                <Text className="mb-2 text-sm font-semibold text-gray">
+                  Event Tags
+                </Text>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                  <View className="flex flex-row justify-center flex-wrap">
+                    {ActvitiesOptions.map((activity, index) => {
+                      const isSelected = selectedActvities.includes(activity)
+                      return (
+                        <Pressable
+                          onPress={() => handleSelectActivities(activity)}
+                          key={index}
+                          className={`border-2 rounded-full p-1 text-center mx-1 my-1 ${
+                            isSelected
+                              ? "bg-yellow-300 border-yellow-400 shadow-xl"
+                              : "bg-white border-gray-300"
+                          }`}
+                        >
+                          <Text className={`text-xs font-semibold`}>
+                            {activity}
+                          </Text>
+                        </Pressable>
+                      )
+                    })}
+                  </View>
+                </ScrollView>
+              </View>
+
               <View className="items-center mb-1">
                 <Text className="text-lg font-bold text-gray underline">
                   Advanced Settings
@@ -252,9 +387,12 @@ const EditEvent = () => {
               </View>
 
               <Pressable
+                onPressIn={handleEventButtonPressedIn}
+                onPressOut={handleEventButtonPressedOut}
                 onPress={async () => {
-                  setTimeout(() => {
-                    setLoading(true)
+                  setLoading(true) // Set loading to true immediately
+
+                  try {
                     if (!currentUser?.id && !currentUser?.community_created)
                       return
                     if (!event) return
@@ -266,8 +404,9 @@ const EditEvent = () => {
                       return
                     }
 
+                    // Event title update
                     if (event.event_title !== eventTitle) {
-                      updateSingleEventTrait(
+                      await updateSingleEventTrait(
                         setLoading,
                         eventId,
                         "event_title",
@@ -275,8 +414,9 @@ const EditEvent = () => {
                       )
                     }
 
+                    // Description update
                     if (event.event_description !== description) {
-                      updateSingleEventTrait(
+                      await updateSingleEventTrait(
                         setLoading,
                         eventId,
                         "event_description",
@@ -284,8 +424,9 @@ const EditEvent = () => {
                       )
                     }
 
+                    // Location update
                     if (event.location !== location) {
-                      updateSingleEventTrait(
+                      await updateSingleEventTrait(
                         setLoading,
                         eventId,
                         "location",
@@ -293,8 +434,9 @@ const EditEvent = () => {
                       )
                     }
 
+                    // Price update
                     if (event.price !== Number(price)) {
-                      updateSingleEventTrait(
+                      await updateSingleEventTrait(
                         setLoading,
                         eventId,
                         "price",
@@ -302,8 +444,9 @@ const EditEvent = () => {
                       )
                     }
 
+                    // Event style update
                     if (event.event_style !== eventStyle) {
-                      updateSingleEventTrait(
+                      await updateSingleEventTrait(
                         setLoading,
                         eventId,
                         "event_style",
@@ -311,6 +454,7 @@ const EditEvent = () => {
                       )
                     }
 
+                    // Attendance limit logic
                     if (
                       event.event_limit !== Number(eventLimit) &&
                       attendaceLimitSwitch
@@ -326,14 +470,14 @@ const EditEvent = () => {
                         })
                         return
                       }
-                      updateSingleEventTrait(
+                      await updateSingleEventTrait(
                         setLoading,
                         eventId,
                         "event_limit",
                         eventLimitNumber
                       )
                     } else if (!attendaceLimitSwitch) {
-                      updateSingleEventTrait(
+                      await updateSingleEventTrait(
                         setLoading,
                         eventId,
                         "event_limit",
@@ -341,11 +485,12 @@ const EditEvent = () => {
                       )
                     }
 
+                    // Date update
                     if (event.date !== null) {
                       const dateVar = Date.parse(event?.date)
                       const editDate = new Date(dateVar)
                       if (editDate !== date) {
-                        updateSingleEventTrait(
+                        await updateSingleEventTrait(
                           setLoading,
                           eventId,
                           "date",
@@ -353,11 +498,32 @@ const EditEvent = () => {
                         )
                       }
                     }
-                    setLoading(false)
+
+                    // Activity tags update
+                    if (selectedActvities !== event.event_tags) {
+                      await updateSingleEventTrait(
+                        setLoading,
+                        eventId,
+                        "event_tags",
+                        selectedActvities
+                      )
+                    }
+
+                    // On success, navigate back and show alert
                     navigation.goBack()
-                  }, 2000)
+                    showAlert({
+                      title: "Success",
+                      message: "Event Updated",
+                    })
+                  } catch (error) {
+                    console.error("Error updating event: ", error)
+                  } finally {
+                    setLoading(false) // Set loading to false after everything is done
+                  }
                 }}
-                className=" bg-black p-4 rounded-lg items-center mb-20"
+                className={`${
+                  updateEventPressed ? "opacity-50" : null
+                } bg-black p-4 rounded-lg items-center mb-20`}
               >
                 <Text className="text-white text-lg font-bold">
                   Update Event

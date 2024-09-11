@@ -31,8 +31,17 @@ const ManageCommunityEvents = () => {
   const community = route.params.community
   const navigation = useNavigation<NavigationType>()
   const [pastEvents, setPastEvents] = React.useState<Events[] | null>([])
+  const [editPress, setEditPress] = React.useState<number | null>(null)
 
   const colorMode = "dark"
+
+  const handleEditPressIn = (id: number) => {
+    setEditPress(id)
+  }
+
+  const handleEditPressOut = () => {
+    setEditPress(null)
+  }
 
   const handlePressPlusIn = () => {
     setPressPlus(true)
@@ -288,12 +297,16 @@ const ManageCommunityEvents = () => {
                   />
 
                   <Pressable
+                    onPressIn={() => handleEditPressIn(event.id)}
+                    onPressOut={handleEditPressOut}
                     onPress={() =>
                       navigation.navigate("EditEvent", {
                         eventId: event.id,
                       })
                     }
-                    className="bg-black rounded-xl p-2 z-50 absolute top-0 right-1"
+                    className={`${
+                      editPress === event.id ? "opacity-50" : null
+                    } bg-black rounded-xl p-2 z-50 absolute top-0 right-1`}
                   >
                     <FontAwesome6 name="edit" size={24} color="white" />
                   </Pressable>

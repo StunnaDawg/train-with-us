@@ -28,7 +28,7 @@ const EventCoverPhotoEdit = ({
   const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
-  const avatarSize = { height: 150, width: 150 }
+  const avatarSize = { height: 300, width: 375 }
   const userId = user?.id
 
   const [image, setImage] = useState<string>("")
@@ -60,8 +60,8 @@ const EventCoverPhotoEdit = ({
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
-      aspect: [9, 16],
-      quality: 1,
+      aspect: [16, 9],
+      quality: 0,
       allowsEditing: true,
     })
 
@@ -119,9 +119,9 @@ const EventCoverPhotoEdit = ({
       {image !== "" ? (
         <View>
           <Image
-            className="m-1 relative overflow-hidden max-w-full rounded-full bg-gray-800 border-1 border-solid border-gray-200 border-r-10"
+            className="m-1 relative overflow-hidden max-w-full rounded-lg bg-gray-800 "
             source={{ uri: image }}
-            style={{ width: 150, height: 150 }}
+            style={{ height: 300, width: 375 }}
           />
           {loading ? <ActivityIndicator /> : null}
           <Pressable
