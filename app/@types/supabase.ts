@@ -361,6 +361,7 @@ export type Database = {
       community_classes: {
         Row: {
           class_name: string
+          class_tags: string[] | null
           community_id: number | null
           created_at: string | null
           description: string | null
@@ -369,6 +370,7 @@ export type Database = {
         }
         Insert: {
           class_name?: string
+          class_tags?: string[] | null
           community_id?: number | null
           created_at?: string | null
           description?: string | null
@@ -377,6 +379,7 @@ export type Database = {
         }
         Update: {
           class_name?: string
+          class_tags?: string[] | null
           community_id?: number | null
           created_at?: string | null
           description?: string | null
