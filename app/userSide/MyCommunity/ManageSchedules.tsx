@@ -2,7 +2,6 @@ import { View, Text, SafeAreaView } from "react-native"
 import React from "react"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
-import BackButton from "../../components/BackButton"
 import EditProfileTopBar from "../../components/TopBarEdit"
 
 const ManageSchedules = () => {
@@ -15,7 +14,12 @@ const ManageSchedules = () => {
       <EditProfileTopBar
         text="Manage Class Schedules"
         cancelText={"Back"}
-        functionProp={() => navigation.navigate("AllEventsPage")}
+        doneButtonText="Create"
+        functionProp={() =>
+          navigation.navigate("CreateSchedule", {
+            communityId: community.id,
+          })
+        }
       />
     </SafeAreaView>
   )

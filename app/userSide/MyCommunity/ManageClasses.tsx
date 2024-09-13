@@ -16,7 +16,11 @@ const ManageClasses = () => {
         text="Manage Classes"
         cancelText={"Back"}
         doneButtonText="Create"
-        functionProp={() => navigation.navigate("AllEventsPage")}
+        functionProp={() =>
+          navigation.navigate("CreateClass", {
+            communityId: community.id,
+          })
+        }
       />
     </SafeAreaView>
   )
