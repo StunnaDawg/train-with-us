@@ -9,7 +9,7 @@ import NextButton from "../../../components/NextButton"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import EnhancedTextInput from "../../../components/TextInput"
 import BackButton from "../../../components/BackButton"
-import EditProfileTopBar from "./EditProfileTopBar"
+import EditProfileTopBar from "../../../components/TopBarEdit"
 
 type MusicOptions =
   | "Pop"

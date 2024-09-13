@@ -96,7 +96,12 @@ import ChooseCommunityActivities from "./userSide/CreateCommunity/ChooseCommunit
 import AddCommunityPictures from "./userSide/CreateCommunity/AddCommunityPictures"
 import CreateAboutCommunity from "./userSide/CreateCommunity/CreateAboutCommunity"
 import AddCommunityTags from "./userSide/MyCommunity/AddCommunityTags"
-import CreateOrUpdateSchedule from "./userSide/MyCommunity/CreateOrUpdateSchedule"
+import ManageClasses from "./userSide/MyCommunity/ManageClasses"
+import ManageSchedules from "./userSide/MyCommunity/ManageSchedules"
+import CreateClass from "./userSide/MyCommunity/CreateClass"
+import EditClass from "./userSide/MyCommunity/EditClass"
+import CreateSchedule from "./userSide/MyCommunity/CreateSchedule"
+import EditSchedule from "./userSide/MyCommunity/EditSchedule"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -512,8 +517,38 @@ const NavStack = () => {
 
               <Stack.Screen
                 options={{ headerShown: false }}
-                name="CreateOrUpdateClassSchedule"
-                component={CreateOrUpdateSchedule}
+                name="ManageSchedules"
+                component={ManageSchedules}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ManageClasses"
+                component={ManageClasses}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="CreateClass"
+                component={CreateClass}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="EditClass"
+                component={EditClass}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="CreateSchedule"
+                component={CreateSchedule}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="EditSchedule"
+                component={EditSchedule}
               />
 
               <Stack.Screen

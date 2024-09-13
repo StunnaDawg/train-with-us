@@ -13,7 +13,7 @@ import { NavigationType, RootStackParamList } from "../../../@types/navigation"
 
 import supabase from "../../../../lib/supabase"
 
-import EditProfileTopBar from "./EditProfileTopBar"
+import EditProfileTopBar from "../../../components/TopBarEdit"
 
 type ActvitiesOption = string
 

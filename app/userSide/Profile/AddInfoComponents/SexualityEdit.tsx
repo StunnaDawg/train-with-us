@@ -16,7 +16,7 @@ import NextButton from "../../../components/NextButton"
 import supabase from "../../../../lib/supabase"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
-import EditProfileTopBar from "./EditProfileTopBar"
+import EditProfileTopBar from "../../../components/TopBarEdit"
 
 type SexualityOption =
   | "Prefer not to say"

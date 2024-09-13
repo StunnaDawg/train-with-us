@@ -14,7 +14,7 @@ import { NavigationType } from "../../../@types/navigation"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
 import GenericButton from "../../../components/GenericButton"
-import EditProfileTopBar from "./EditProfileTopBar"
+import EditProfileTopBar from "../../../components/TopBarEdit"
 
 type GenderOption = "Male" | "Female" | "Non-Binary" | "Specify other..." | null
 

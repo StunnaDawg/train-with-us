@@ -26,7 +26,7 @@ import CommunityImageGrid from "./ImageGrid"
 import showAlert from "../../utilFunctions/showAlert"
 import { TouchableWithoutFeedback } from "react-native"
 import Loading from "../../components/Loading"
-import EditProfileTopBar from "../Profile/AddInfoComponents/EditProfileTopBar"
+import EditProfileTopBar from "../../components/TopBarEdit"
 import ActivityTags from "../../components/AcvitivityTags"
 import { Communities } from "../../@types/supabaseTypes"
 

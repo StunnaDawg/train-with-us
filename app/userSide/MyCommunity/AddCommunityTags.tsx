@@ -12,7 +12,7 @@ import { useState } from "react"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import supabase from "../../../lib/supabase"
 
-import EditProfileTopBar from "../Profile/AddInfoComponents/EditProfileTopBar"
+import EditProfileTopBar from "../../components/TopBarEdit"
 
 type ActvitiesOption = string
 

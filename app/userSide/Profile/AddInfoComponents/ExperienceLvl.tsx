@@ -8,7 +8,7 @@ import supabase from "../../../../lib/supabase"
 import NextButton from "../../../components/NextButton"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import BackButton from "../../../components/BackButton"
-import EditProfileTopBar from "./EditProfileTopBar"
+import EditProfileTopBar from "../../../components/TopBarEdit"
 
 type LvlOptions =
   | "Beginner"

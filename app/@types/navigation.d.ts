@@ -218,8 +218,28 @@ export type RootStackParamList = {
   CreateAboutCommunity: { communityId: number }
   AddCommunityTags: { community: Communities }
 
-  CreateOrUpdateClassSchedule: {
+  ManageSchedules: {
     community: Communities
+  }
+
+  ManageClasses: {
+    community: Communities
+  }
+
+  CreateClass: {
+    communityId: number
+  }
+
+  CreateSchedule: {
+    communityId: number
+  }
+
+  EditClass: {
+    classId: string
+  }
+
+  EditSchedule: {
+    scheduleId: string
   }
 }
 

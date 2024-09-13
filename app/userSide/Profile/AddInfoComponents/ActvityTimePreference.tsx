@@ -8,7 +8,7 @@ import { NavigationType } from "../../../@types/navigation"
 import supabase from "../../../../lib/supabase"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import BackButton from "../../../components/BackButton"
-import EditProfileTopBar from "./EditProfileTopBar"
+import EditProfileTopBar from "../../../components/TopBarEdit"
 
 type TimeOption =
   | "Morning"

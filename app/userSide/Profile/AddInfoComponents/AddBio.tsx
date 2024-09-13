@@ -6,7 +6,7 @@ import supabase from "../../../../lib/supabase"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { NavigationType, RootStackParamList } from "../../../@types/navigation"
 import BackButton from "../../../components/BackButton"
-import EditProfileTopBar from "./EditProfileTopBar"
+import EditProfileTopBar from "../../../components/TopBarEdit"
 
 const AddBio = () => {
   const route = useRoute<RouteProp<RootStackParamList, "EditBio">>()

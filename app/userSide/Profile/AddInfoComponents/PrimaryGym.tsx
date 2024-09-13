@@ -17,7 +17,7 @@ import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import CommunityCardAboutMe from "./CommuntiyCard"
 
-import EditProfileTopBar from "./EditProfileTopBar"
+import EditProfileTopBar from "../../../components/TopBarEdit"
 
 const PrimaryGym = () => {
   const [loading, setLoading] = useState<boolean>(false)

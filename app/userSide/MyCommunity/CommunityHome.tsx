@@ -190,16 +190,33 @@ const CommunityHome = () => {
               className="pt-2"
               onPress={() => {
                 if (!currentCommunity) return
-                navigation.navigate("CreateOrUpdateClassSchedule", {
+                navigation.navigate("ManageClasses", {
                   community: currentCommunity,
                 })
               }}
-              onPressIn={() => setPressed("settings")}
+              onPressIn={() => setPressed("manageClasses")}
               onPressOut={() => setPressed(null)}
-              style={{ opacity: pressed === "settings" ? 0.5 : 1 }}
+              style={{ opacity: pressed === "manageClasses" ? 0.5 : 1 }}
+            >
+              <Text className="mx-2 font-bold text-sm">Manage Classes</Text>
+            </Pressable>
+          </View>
+
+          <View className="border-b pb-2">
+            <Pressable
+              className="pt-2"
+              onPress={() => {
+                if (!currentCommunity) return
+                navigation.navigate("ManageSchedules", {
+                  community: currentCommunity,
+                })
+              }}
+              onPressIn={() => setPressed("schedule")}
+              onPressOut={() => setPressed(null)}
+              style={{ opacity: pressed === "schedule" ? 0.5 : 1 }}
             >
               <Text className="mx-2 font-bold text-sm">
-                Create/Update Community Class Schedule
+                Manage Class Schedules
               </Text>
             </Pressable>
           </View>
