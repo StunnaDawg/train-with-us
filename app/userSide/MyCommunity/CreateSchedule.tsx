@@ -17,9 +17,10 @@ import EditProfileTopBar from "../../components/TopBarEdit"
 import showAlert from "../../utilFunctions/showAlert"
 import supabase from "../../../lib/supabase"
 import { CommunityClasses } from "../../@types/supabaseTypes"
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker"
+import BouncyCheckbox from "react-native-bouncy-checkbox"
+import { se } from "date-fns/locale"
+
+type DaysOption = string
 
 const CreateSchedule = () => {
   const [communityClasses, setCommunityClasses] = useState<CommunityClasses[]>(
@@ -33,9 +34,8 @@ const CreateSchedule = () => {
   const [selectedClassButton, setSelectedClassButton] = useState<string | null>(
     null
   )
-  const [date, setDate] = useState<Date>(new Date())
-  const [show, setShow] = useState(false)
 
+  const [selectedDayOfWeek, setSelectedDayOfWeek] = useState<string[]>([])
   const route = useRoute<RouteProp<RootStackParamList, "CreateSchedule">>()
   const communityId = route.params.communityId
   const navigation = useNavigation<NavigationType>()
@@ -76,15 +76,6 @@ const CreateSchedule = () => {
     }
   }
 
-  const onChangeDate = (
-    event: DateTimePickerEvent,
-    selectedDate: Date | undefined
-  ) => {
-    const currentDate = selectedDate || date
-    setShow(Platform.OS === "ios") // For iOS, keep the picker open
-    setDate(currentDate)
-  }
-
   const getClassesFunc = async () => {
     try {
       const { data, error } = await supabase
@@ -114,6 +105,16 @@ const CreateSchedule = () => {
   useEffect(() => {
     getClassesFunc()
   }, [])
+
+  const DaysOptions: DaysOption[] = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ]
 
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
@@ -155,42 +156,43 @@ const CreateSchedule = () => {
           keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View className="flex flex-row mx-5">
-                <View className="w-full">
-                  <View className="mb-4">
-                    {/* Instead of Dates we need to pick days of the week, since 1 time classes are events and can be slotted into the schedule as well */}
-                    {/* So ask the days that the classes are, amount on each day, and then the times for each of those classes sheesh so confusing */}
-                    <Text className="mb-2 text-sm font-semibold text-gray">
-                      Date
-                    </Text>
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={date}
-                      mode="date"
-                      is24Hour={true}
-                      display="default"
-                      onChange={onChangeDate}
-                      className="mb-4"
-                    />
-                  </View>
+            <View className="flex flex-row mx-5">
+              <View className="w-full">
+                <View className="mb-4">
+                  {/* Instead of Dates we need to pick days of the week, since 1 time classes are events and can be slotted into the schedule as well */}
+                  {/* So ask the days that the classes are, amount on each day, and then the times for each of those classes sheesh so confusing */}
+                  <Text className="mb-2 text-sm font-semibold text-white">
+                    Days of the week
+                  </Text>
 
-                  <View className="mb-4">
-                    <Text className="mb-2 text-sm font-semibold text-gray">
-                      Time
-                    </Text>
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={date}
-                      mode="time"
-                      is24Hour={true}
-                      display="default"
-                      onChange={onChangeDate}
-                    />
+                  <View className="flex flex-row justify-center flex-wrap">
+                    {DaysOptions.map((day) => (
+                      <View key={day} className="m-1">
+                        <BouncyCheckbox
+                          size={25}
+                          fillColor="#eab308"
+                          unFillColor="#FFFFFF"
+                          text={day}
+                          textStyle={{
+                            color: "#FFFFFF",
+                            textDecorationLine: "none",
+                          }}
+                          onPress={() => {
+                            setSelectedDayOfWeek((prev) => {
+                              if (prev.includes(day)) {
+                                return prev.filter((item) => item !== day)
+                              } else {
+                                return [...prev, day]
+                              }
+                            })
+                          }}
+                        />
+                      </View>
+                    ))}
                   </View>
                 </View>
               </View>
-            </ScrollView>
+            </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
       </View>
