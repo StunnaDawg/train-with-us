@@ -74,8 +74,9 @@ const ManageSchedules = () => {
         renderItem={({ item }) => (
           <Pressable
             onPress={() => {
-              navigation.navigate("EditClass", {
-                classId: item.id,
+              navigation.navigate("EditSchedule", {
+                schedule: item,
+                communityId: community.id,
               })
             }}
           >

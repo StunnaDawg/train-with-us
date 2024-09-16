@@ -22,10 +22,12 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
+import { useAuth } from "../../supabaseFunctions/authcontext"
 
 type DaysOption = string
 
 const CreateSchedule = () => {
+  const { user } = useAuth()
   const [communityClasses, setCommunityClasses] = useState<CommunityClasses[]>(
     []
   )
@@ -67,10 +69,18 @@ const CreateSchedule = () => {
   }
 
   const CreateScheduleFunc = async () => {
-    if (!selectedClass) {
+    if (!user) {
       showAlert({
         title: "Error",
-        message: "Please select a class",
+        message: "User not found",
+      })
+      return
+    }
+
+    if (!selectedClass || !scheduleName) {
+      showAlert({
+        title: "Error",
+        message: "Please Fill the required fields",
       })
       return
     }
@@ -85,6 +95,7 @@ const CreateSchedule = () => {
           recurrence_end: recurrence_end_date,
           selected_days_of_week: selectedDayOfWeek,
           recurring_class: recurrenceEnabled,
+          community_owner: user?.id,
         },
       ])
       if (error) {
@@ -161,10 +172,7 @@ const CreateSchedule = () => {
             Schedule Name (Required)
           </Text>
           <View className="border rounded-lg p-2 w-full bg-white">
-            <TextInput
-              value={scheduleName} // Binds the TextInput value to the state
-              onChangeText={setScheduleName}
-            />
+            <TextInput value={scheduleName} onChangeText={setScheduleName} />
           </View>
         </View>
 

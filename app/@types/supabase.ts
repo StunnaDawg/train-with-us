@@ -316,6 +316,7 @@ export type Database = {
         Row: {
           class_id: string
           community_id: number
+          community_owner: string
           created_at: string
           end_time: string | null
           id: string
@@ -328,6 +329,7 @@ export type Database = {
         Insert: {
           class_id?: string
           community_id: number
+          community_owner: string
           created_at?: string
           end_time?: string | null
           id?: string
@@ -340,6 +342,7 @@ export type Database = {
         Update: {
           class_id?: string
           community_id?: number
+          community_owner?: string
           created_at?: string
           end_time?: string | null
           id?: string
@@ -360,6 +363,12 @@ export type Database = {
             foreignKeyName: "public_community_class_schedule_community_id_fkey"
             columns: ["community_id"]
             referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_community_class_schedule_community_owner_fkey"
+            columns: ["community_owner"]
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]

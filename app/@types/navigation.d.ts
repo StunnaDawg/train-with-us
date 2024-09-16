@@ -239,7 +239,8 @@ export type RootStackParamList = {
   }
 
   EditSchedule: {
-    scheduleId: string
+    schedule: CommununitySchedule
+    communityId: number
   }
 }
 
