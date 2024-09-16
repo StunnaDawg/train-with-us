@@ -321,6 +321,7 @@ export type Database = {
           id: string
           recurrence_end: string | null
           recurring_class: boolean
+          schedule_name: string
           selected_days_of_week: string[]
           start_time: string
         }
@@ -332,6 +333,7 @@ export type Database = {
           id?: string
           recurrence_end?: string | null
           recurring_class?: boolean
+          schedule_name: string
           selected_days_of_week: string[]
           start_time: string
         }
@@ -343,6 +345,7 @@ export type Database = {
           id?: string
           recurrence_end?: string | null
           recurring_class?: boolean
+          schedule_name?: string
           selected_days_of_week?: string[]
           start_time?: string
         }

@@ -1,6 +1,11 @@
-import { View, Text, SafeAreaView } from "react-native"
-import React, { useEffect, useState } from "react"
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
+import { View, Text, SafeAreaView, FlatList, Pressable } from "react-native"
+import React, { useCallback, useEffect, useState } from "react"
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import EditProfileTopBar from "../../components/TopBarEdit"
 import supabase from "../../../lib/supabase"
@@ -41,9 +46,15 @@ const ManageSchedules = () => {
     }
   }
 
-  useEffect(() => {
-    getSchedulesFunc()
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      let isMounted = true
+      getSchedulesFunc()
+      return () => {
+        isMounted = false
+      }
+    }, [])
+  )
 
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
@@ -56,6 +67,22 @@ const ManageSchedules = () => {
             communityId: community.id,
           })
         }
+      />
+
+      <FlatList
+        data={communityClasses}
+        renderItem={({ item }) => (
+          <Pressable
+            onPress={() => {
+              navigation.navigate("EditClass", {
+                classId: item.id,
+              })
+            }}
+          >
+            <Text className="text-white">{item.schedule_name}</Text>
+          </Pressable>
+        )}
+        keyExtractor={(item) => item.id}
       />
     </SafeAreaView>
   )

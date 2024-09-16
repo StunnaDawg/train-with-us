@@ -30,6 +30,8 @@ const CreateSchedule = () => {
     []
   )
 
+  const [scheduleName, setScheduleName] = useState<string>("")
+
   const [selectedClass, setSelectedClass] = useState<CommunityClasses | null>(
     null
   )
@@ -78,6 +80,7 @@ const CreateSchedule = () => {
         {
           class_id: selectedClass.id,
           community_id: communityId,
+          schedule_name: scheduleName,
           start_time: date,
           recurrence_end: recurrence_end_date,
           selected_days_of_week: selectedDayOfWeek,
@@ -152,29 +155,45 @@ const CreateSchedule = () => {
         functionProp={() => CreateScheduleFunc()}
       />
 
-      <View className="flex flex-row items-center">
+      <View>
         <View>
-          <Text className="text-white">
-            Which class do you want to create a schedule for
+          <Text className="font-bold text-sm text-white">
+            Schedule Name (Required)
           </Text>
+          <View className="border rounded-lg p-2 w-full bg-white">
+            <TextInput
+              value={scheduleName} // Binds the TextInput value to the state
+              onChangeText={setScheduleName}
+            />
+          </View>
+        </View>
 
-          <ScrollView horizontal={true} className="flex flex-row">
-            {communityClasses.map((classObj) => (
-              <View key={classObj.id} className="mx-1">
-                <Pressable
-                  onPress={() => {
-                    setSelectedClass(classObj),
-                      setSelectedClassButton(classObj.id)
-                  }}
-                  className={`${
-                    selectedClassButton === classObj.id ? "bg-yellow-500" : null
-                  } p-2 rounded-md`}
-                >
-                  <Text className="text-white">{classObj.class_name}</Text>
-                </Pressable>
-              </View>
-            ))}
-          </ScrollView>
+        <View>
+          <View>
+            <Text className="text-white">
+              Which class do you want to create a schedule for
+            </Text>
+
+            <ScrollView horizontal={true} className="flex flex-row">
+              {communityClasses.map((classObj) => (
+                <View key={classObj.id} className="mx-1">
+                  <Pressable
+                    onPress={() => {
+                      setSelectedClass(classObj),
+                        setSelectedClassButton(classObj.id)
+                    }}
+                    className={`${
+                      selectedClassButton === classObj.id
+                        ? "bg-yellow-500"
+                        : null
+                    } p-2 rounded-md`}
+                  >
+                    <Text className="text-white">{classObj.class_name}</Text>
+                  </Pressable>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
         </View>
       </View>
 
