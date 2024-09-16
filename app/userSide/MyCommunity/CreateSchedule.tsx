@@ -9,6 +9,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   TextInput,
+  Switch,
 } from "react-native"
 import React, { useEffect, useState } from "react"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
@@ -17,8 +18,10 @@ import EditProfileTopBar from "../../components/TopBarEdit"
 import showAlert from "../../utilFunctions/showAlert"
 import supabase from "../../../lib/supabase"
 import { CommunityClasses } from "../../@types/supabaseTypes"
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
-import { se } from "date-fns/locale"
 
 type DaysOption = string
 
@@ -34,11 +37,32 @@ const CreateSchedule = () => {
   const [selectedClassButton, setSelectedClassButton] = useState<string | null>(
     null
   )
+  const [recurrence_end_date, setRecurrenceEndDate] = useState<Date | null>(
+    null
+  )
 
   const [selectedDayOfWeek, setSelectedDayOfWeek] = useState<string[]>([])
   const route = useRoute<RouteProp<RootStackParamList, "CreateSchedule">>()
   const communityId = route.params.communityId
   const navigation = useNavigation<NavigationType>()
+  const [date, setDate] = useState<Date>(new Date())
+  const [show, setShow] = useState(false)
+  const [recurrenceEnabled, setRecurrenceEnabled] = useState(false)
+  const [endDate, setEndDate] = useState(false)
+
+  const toggleSwitch = () =>
+    setRecurrenceEnabled((previousState) => !previousState)
+
+  const toggleEndDate = () => setEndDate((previousState) => !previousState)
+
+  const onChangeDate = (
+    event: DateTimePickerEvent,
+    selectedDate: Date | undefined
+  ) => {
+    const currentDate = selectedDate || date
+    setShow(Platform.OS === "ios") // For iOS, keep the picker open
+    setDate(currentDate)
+  }
 
   const CreateScheduleFunc = async () => {
     if (!selectedClass) {
@@ -50,10 +74,14 @@ const CreateSchedule = () => {
     }
 
     try {
-      const { error } = await supabase.from("class_schedule").insert([
+      const { error } = await supabase.from("community_class_schedule").insert([
         {
           class_id: selectedClass.id,
           community_id: communityId,
+          start_time: date,
+          recurrence_end: recurrence_end_date,
+          selected_days_of_week: selectedDayOfWeek,
+          recurring_class: recurrenceEnabled,
         },
       ])
       if (error) {
@@ -159,6 +187,20 @@ const CreateSchedule = () => {
             <View className="flex flex-row mx-5">
               <View className="w-full">
                 <View className="mb-4">
+                  <Text className="mb-2 text-sm font-semibold text-white">
+                    Start Time
+                  </Text>
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode="time"
+                    is24Hour={true}
+                    display="default"
+                    onChange={onChangeDate}
+                    themeVariant="dark"
+                  />
+                </View>
+                <View className="mb-4">
                   {/* Instead of Dates we need to pick days of the week, since 1 time classes are events and can be slotted into the schedule as well */}
                   {/* So ask the days that the classes are, amount on each day, and then the times for each of those classes sheesh so confusing */}
                   <Text className="mb-2 text-sm font-semibold text-white">
@@ -190,6 +232,53 @@ const CreateSchedule = () => {
                       </View>
                     ))}
                   </View>
+                </View>
+
+                <View>
+                  <View className="flex flex-row justify-center items-center">
+                    <Text className="mb-2 text-sm font-semibold text-white">
+                      Will this class reoccur every week?
+                    </Text>
+                    <Switch
+                      trackColor={{ false: "#767577", true: "#81b0ff" }}
+                      thumbColor={recurrenceEnabled ? "#f5dd4b" : "#f4f3f4"}
+                      ios_backgroundColor="#3e3e3e"
+                      onValueChange={toggleSwitch}
+                      value={recurrenceEnabled}
+                    />
+                  </View>
+
+                  {recurrenceEnabled ? (
+                    <>
+                      <View className="flex flex-row justify-center items-center">
+                        <Text className="mb-2 text-sm font-semibold text-white">
+                          Will there be an End Date?
+                        </Text>
+                        <Switch
+                          trackColor={{ false: "#767577", true: "#81b0ff" }}
+                          thumbColor={endDate ? "#f5dd4b" : "#f4f3f4"}
+                          ios_backgroundColor="#3e3e3e"
+                          onValueChange={toggleEndDate}
+                          value={endDate}
+                        />
+                      </View>
+                      {endDate ? (
+                        <DateTimePicker
+                          testID="dateTimePicker"
+                          value={recurrence_end_date || new Date()}
+                          mode="date"
+                          display="default"
+                          onChange={(event, selectedDate) => {
+                            const currentDate =
+                              selectedDate || recurrence_end_date
+                            setShow(Platform.OS === "ios")
+                            setRecurrenceEndDate(currentDate)
+                          }}
+                          themeVariant="dark"
+                        />
+                      ) : null}
+                    </>
+                  ) : null}
                 </View>
               </View>
             </View>

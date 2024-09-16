@@ -317,30 +317,33 @@ export type Database = {
           class_id: string
           community_id: number
           created_at: string
-          end_time: string
+          end_time: string | null
           id: string
           recurrence_end: string | null
-          recurrence_rule: string
+          recurring_class: boolean
+          selected_days_of_week: string[]
           start_time: string
         }
         Insert: {
           class_id?: string
           community_id: number
           created_at?: string
-          end_time: string
+          end_time?: string | null
           id?: string
           recurrence_end?: string | null
-          recurrence_rule: string
+          recurring_class?: boolean
+          selected_days_of_week: string[]
           start_time: string
         }
         Update: {
           class_id?: string
           community_id?: number
           created_at?: string
-          end_time?: string
+          end_time?: string | null
           id?: string
           recurrence_end?: string | null
-          recurrence_rule?: string
+          recurring_class?: boolean
+          selected_days_of_week?: string[]
           start_time?: string
         }
         Relationships: [
@@ -363,6 +366,7 @@ export type Database = {
           class_name: string
           class_tags: string[] | null
           community_id: number | null
+          community_owner: string | null
           created_at: string | null
           description: string | null
           duration: number | null
@@ -372,6 +376,7 @@ export type Database = {
           class_name?: string
           class_tags?: string[] | null
           community_id?: number | null
+          community_owner?: string | null
           created_at?: string | null
           description?: string | null
           duration?: number | null
@@ -381,6 +386,7 @@ export type Database = {
           class_name?: string
           class_tags?: string[] | null
           community_id?: number | null
+          community_owner?: string | null
           created_at?: string | null
           description?: string | null
           duration?: number | null
@@ -391,6 +397,12 @@ export type Database = {
             foreignKeyName: "public_community_classes_community_id_fkey"
             columns: ["community_id"]
             referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_community_classes_community_owner_fkey"
+            columns: ["community_owner"]
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]
