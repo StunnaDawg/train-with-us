@@ -11,6 +11,7 @@ import EditProfileTopBar from "../../components/TopBarEdit"
 import supabase from "../../../lib/supabase"
 import { CommunitySchedule } from "../../@types/supabaseTypes"
 import showAlert from "../../utilFunctions/showAlert"
+import CommunityScheduleDisplay from "../../components/CommunityScheduleDisplay"
 
 const ManageSchedules = () => {
   const route = useRoute<RouteProp<RootStackParamList, "ManageClasses">>()

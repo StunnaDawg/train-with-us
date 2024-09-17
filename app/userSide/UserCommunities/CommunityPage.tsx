@@ -28,6 +28,7 @@ import { Events, News, Profile } from "../../@types/supabaseTypes"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import getNewsFromCommunity from "../../supabaseFunctions/getFuncs/getNewsFromCommunity"
 import getCommunityMembers from "../../supabaseFunctions/getFuncs/getCommunityMembers"
+import CommunityPageClasses from "./components/CommunityPageClasses"
 
 const CommunityPage = () => {
   const { userProfile } = useAuth()
@@ -176,6 +177,20 @@ const CommunityPage = () => {
           >
             {() => <CommuntiyPageEvents community={community} />}
           </Tab.Screen>
+
+          <Tab.Screen
+            options={{
+              tabBarLabelStyle: {
+                color: "white",
+                fontSize: 12,
+                fontWeight: "bold",
+              },
+            }}
+            name="Classes"
+          >
+            {() => <CommunityPageClasses community={community} />}
+          </Tab.Screen>
+
           <Tab.Screen
             options={{
               tabBarLabelStyle: {

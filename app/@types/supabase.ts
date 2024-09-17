@@ -314,7 +314,9 @@ export type Database = {
       }
       community_class_schedule: {
         Row: {
+          class_duration: number | null
           class_id: string
+          class_name: string | null
           community_id: number
           community_owner: string
           created_at: string
@@ -327,7 +329,9 @@ export type Database = {
           start_time: string
         }
         Insert: {
+          class_duration?: number | null
           class_id?: string
+          class_name?: string | null
           community_id: number
           community_owner: string
           created_at?: string
@@ -340,7 +344,9 @@ export type Database = {
           start_time: string
         }
         Update: {
+          class_duration?: number | null
           class_id?: string
+          class_name?: string | null
           community_id?: number
           community_owner?: string
           created_at?: string

@@ -89,6 +89,8 @@ const CreateSchedule = () => {
       const { error } = await supabase.from("community_class_schedule").insert([
         {
           class_id: selectedClass.id,
+          class_name: selectedClass.class_name,
+          class_duration: selectedClass.duration,
           community_id: communityId,
           schedule_name: scheduleName,
           start_time: date,
