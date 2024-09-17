@@ -102,6 +102,7 @@ import CreateClass from "./userSide/MyCommunity/CreateClass"
 import EditClass from "./userSide/MyCommunity/EditClass"
 import CreateSchedule from "./userSide/MyCommunity/CreateSchedule"
 import EditSchedule from "./userSide/MyCommunity/EditSchedule"
+import ClassInformationPage from "./userSide/UserCommunities/ClassInformationPage"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -549,6 +550,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="EditSchedule"
                 component={EditSchedule}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ClassInformationPage"
+                component={ClassInformationPage}
               />
 
               <Stack.Screen

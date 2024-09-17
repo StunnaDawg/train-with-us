@@ -5,6 +5,7 @@ import {
   ChatSession,
   Communities,
   CommunityChannel,
+  CommunityClasses,
   Events,
   Profile,
 } from "./supabaseTypes"
@@ -241,6 +242,10 @@ export type RootStackParamList = {
   EditSchedule: {
     schedule: CommununitySchedule
     communityId: number
+  }
+
+  ClassInformationPage: {
+    class: CommunityClasses
   }
 }
 

@@ -5,6 +5,7 @@ import supabase from "../../lib/supabase"
 import { ca, se } from "date-fns/locale"
 import { FlatList, ScrollView } from "react-native-gesture-handler"
 import { format, parseISO } from "date-fns"
+import ClassDisplayCard from "./ClassDisplayCard"
 
 // So all we need to do is create Monday - Friday Headers then every class that includes that day
 // will be displayed under that header. Also we need to display the time of the class. In order and display its duration.
@@ -24,12 +25,6 @@ const CommunityScheduleDisplay = ({
     CommunitySchedule[]
   >([])
 
-  const formatTime = (start_time: string) => {
-    const date = parseISO(start_time)
-    const formattedTime = format(date, "hh:mm a")
-    return formattedTime
-  }
-
   const getCommunitySchedule = async () => {
     try {
       setLoading(true)
@@ -37,6 +32,8 @@ const CommunityScheduleDisplay = ({
         .from("community_class_schedule")
         .select("*")
         .eq("community_id", communityId)
+        .order("start_time", { ascending: true })
+
       if (error) {
         console.log(error)
         return
@@ -71,9 +68,7 @@ const CommunityScheduleDisplay = ({
   const renderItem = ({ item }: { item: CommunitySchedule }) => {
     return (
       <View>
-        <Text className="text-white">{item.class_name}</Text>
-        <Text className="text-white">{formatTime(item.start_time)}</Text>
-        <Text className="text-white">{item.class_duration}</Text>
+        <ClassDisplayCard communitySchedule={item} />
       </View>
     )
   }
