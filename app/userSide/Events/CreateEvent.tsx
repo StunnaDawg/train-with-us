@@ -337,7 +337,7 @@ const CreateEvent = () => {
                 onPress={async () => {
                   setLoading(true)
                   const eventLimitNumber =
-                    eventLimit.trim() === "" || attendaceLimitSwitch
+                    eventLimit.trim() === "" || !attendaceLimitSwitch
                       ? null
                       : Number(eventLimit)
 
@@ -349,6 +349,8 @@ const CreateEvent = () => {
 
                   if (!currentUser?.id && !currentUser?.community_created)
                     return
+
+                  console.log(eventLimitNumber)
                   addNewEvent(
                     setLoading,
                     currentUser?.id,

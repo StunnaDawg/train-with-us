@@ -14,6 +14,7 @@ import { useAuth } from "../../supabaseFunctions/authcontext"
 import ViewCommuntiesSkeleton from "./components/ViewCommuntiesSkeleton"
 import ViewJoinedCommunityFooter from "./components/ViewJoinedCommunity"
 import getCommunityMembersUUIDs from "../../supabaseFunctions/getFuncs/getCommunityMembersUUIDS"
+import CommunityScheduleDisplay from "../../components/CommunityScheduleDisplay"
 
 const ViewCommunities = () => {
   const { user } = useAuth()
@@ -70,7 +71,13 @@ const ViewCommunities = () => {
             <View>
               <UpcomingCommunityEvents community={community} />
             </View>
+            {/* {community ? (
+              <View>
+                <CommunityScheduleDisplay communityId={community?.id} />
+              </View>
+            ) : null} */}
           </ScrollView>
+
           {!joined && community ? (
             <JoinFooter
               communityOwner={community.community_owner}
