@@ -26,14 +26,18 @@ import Spacer from "../../components/Spacer"
 import CommunityEventCard from "./components/CommunityEventCard"
 import { MotiView } from "moti"
 import { Skeleton } from "moti/skeleton"
+import getEventAttendees from "../../supabaseFunctions/getFuncs/getEventAttendees"
+import checkIfWaitlisted from "../../supabaseFunctions/checkIfWaitlisted"
 
 const ViewEvent = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const { user } = useAuth()
   const [userProfile, setUserProfile] = useState<Profile | null>(null)
   const [isAttending, setIsAttending] = useState<boolean>(false)
+  const [isWaitList, setIsWaitList] = useState<boolean>(false)
   const [event, setEvent] = useState<Events | null>(null)
   const [refreshing, setRefreshing] = useState<boolean>(false)
+  const [eventProfiles, setEventProfiles] = useState<Profile[] | null>(null)
   const route = useRoute<RouteProp<RootStackParamList, "ViewEvent">>()
   const eventId = route.params.eventId
   const colorMode = "dark"
@@ -54,6 +58,10 @@ const ViewEvent = () => {
   }, [])
 
   useEffect(() => {
+    getEventAttendees(eventId, setLoading, setEventProfiles)
+  }, [eventId])
+
+  useEffect(() => {
     if (eventId === undefined) return
     getSingleEvent(setLoading, eventId, setEvent)
   }, [])
@@ -61,6 +69,7 @@ const ViewEvent = () => {
   useEffect(() => {
     if (!userProfile) return
     checkIfAttending(eventId, userProfile.id, setIsAttending)
+    checkIfWaitlisted(eventId, userProfile.id, setIsWaitList)
   }, [userProfile])
 
   return (
@@ -130,6 +139,7 @@ const ViewEvent = () => {
                   location={event?.location}
                   price={event?.price}
                   attendanceLimit={event?.event_limit}
+                  eventProfiles={eventProfiles}
                 />
               </View>
 
@@ -147,13 +157,18 @@ const ViewEvent = () => {
               ) : null}
             </ScrollView>
 
-            {!isAttending ? (
-              <Checkout // this is used to buy a ticket and attend the event
+            {!isAttending && !isWaitList ? (
+              <Checkout // this is used to buy a ticket and attend the event not yet implemented just adds user to events
                 ticketPrice={event?.price ? event.price : 0}
                 event={event}
+                eventProfiles={eventProfiles}
               />
             ) : (
-              <LeaveEvent eventId={eventId} userId={user?.id} />
+              <LeaveEvent
+                eventId={eventId}
+                userId={user?.id}
+                isWaitList={isWaitList}
+              />
             )}
           </>
         )}

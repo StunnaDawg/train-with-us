@@ -314,9 +314,9 @@ export type Database = {
       }
       community_class_schedule: {
         Row: {
-          class_duration: number | null
+          class_duration: number
           class_id: string
-          class_name: string | null
+          class_name: string
           community_id: number
           community_owner: string
           created_at: string
@@ -329,9 +329,9 @@ export type Database = {
           start_time: string
         }
         Insert: {
-          class_duration?: number | null
+          class_duration: number
           class_id?: string
-          class_name?: string | null
+          class_name: string
           community_id: number
           community_owner: string
           created_at?: string
@@ -344,9 +344,9 @@ export type Database = {
           start_time: string
         }
         Update: {
-          class_duration?: number | null
+          class_duration?: number
           class_id?: string
-          class_name?: string | null
+          class_name?: string
           community_id?: number
           community_owner?: string
           created_at?: string
@@ -534,6 +534,46 @@ export type Database = {
           {
             foreignKeyName: "public_connection_requests_requester_fkey"
             columns: ["requester"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      event_waitlist: {
+        Row: {
+          event_id: number
+          first_name: string
+          id: string
+          last_name: string | null
+          user_id: string | null
+          waitlist_joined: string
+        }
+        Insert: {
+          event_id: number
+          first_name: string
+          id?: string
+          last_name?: string | null
+          user_id?: string | null
+          waitlist_joined?: string
+        }
+        Update: {
+          event_id?: number
+          first_name?: string
+          id?: string
+          last_name?: string | null
+          user_id?: string | null
+          waitlist_joined?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_event_waitlist_event_id_fkey"
+            columns: ["event_id"]
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_event_waitlist_user_id_fkey"
+            columns: ["user_id"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           }

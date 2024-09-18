@@ -7,13 +7,18 @@ import { useAuth } from "../../../supabaseFunctions/authcontext"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import addEventUser from "../../../supabaseFunctions/addFuncs/addEventUser"
 import showAlertFunc from "../../../utilFunctions/showAlertFunc"
+import supabase from "../../../../lib/supabase"
+import showAlert from "../../../utilFunctions/showAlert"
+import { ca } from "date-fns/locale"
 
 type CheckoutProps = {
   ticketPrice: number
   event: Events | null
+  eventProfiles: Profile[] | null
 }
 
-const Checkout = ({ ticketPrice, event }: CheckoutProps) => {
+const Checkout = ({ ticketPrice, event, eventProfiles }: CheckoutProps) => {
+  const [isWaitList, setIsWaitList] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const [eventHostState, setEventHost] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
@@ -27,12 +32,62 @@ const Checkout = ({ ticketPrice, event }: CheckoutProps) => {
     setIsPressed(false)
   }
 
+  const addUserToWaitlist = async () => {
+    if (!event || !user) {
+      showAlertFunc({
+        title: "Error",
+        message: "Please check your connection and try again.",
+      })
+      return
+    }
+
+    try {
+      const { error } = await supabase.from("event_waitlist").insert([
+        {
+          event_id: event.id,
+          user_id: user.id,
+          first_name: currentUser?.first_name || "",
+          last_name: currentUser?.last_name || "",
+        },
+      ])
+
+      if (error) {
+        showAlert({
+          title: "Error",
+          message: error.message,
+        })
+        return
+      }
+
+      showAlert({
+        title: "Success",
+        message: "You have been added to the waitlist",
+      })
+    } catch (error) {
+      showAlert({
+        title: "Error",
+        message: "Unexpected error",
+      })
+    }
+  }
+
   const alert = () => {
     showAlertFunc({
       title: "Join Event",
       message: `Would you like to RVSP ${event?.event_title}?`,
       buttons: [
         { text: "RVSP", onPress: () => handleCheckout() },
+        { text: "Cancel" },
+      ],
+    })
+  }
+
+  const waitlistAlert = () => {
+    showAlertFunc({
+      title: "Join Waitlist",
+      message: `Would you like to join the waitlist for ${event?.event_title}?`,
+      buttons: [
+        { text: "Join Waitlist", onPress: () => addUserToWaitlist() },
         { text: "Cancel" },
       ],
     })
@@ -47,6 +102,23 @@ const Checkout = ({ ticketPrice, event }: CheckoutProps) => {
       return
     }
 
+    if (event?.event_limit) {
+      const { data, error } = await supabase
+        .from("events_users")
+        .select("*")
+        .eq("event_id", event.id)
+      if (error) throw error
+
+      if (data.length >= event.event_limit) {
+        showAlert({
+          title: "Event Full",
+          message: "You have been added to the waitlist",
+        })
+        navigation.goBack()
+        return
+      }
+    }
+
     await addEventUser(
       event?.id,
       eventHostState?.expo_push_token,
@@ -54,6 +126,7 @@ const Checkout = ({ ticketPrice, event }: CheckoutProps) => {
       currentUser?.first_name || "",
       currentUser?.last_name || ""
     )
+
     navigation.navigate("PurchaseScreen")
   }
 
@@ -70,20 +143,35 @@ const Checkout = ({ ticketPrice, event }: CheckoutProps) => {
   return (
     <View className="flex flex-row justify-center">
       <View className="items-center">
-        <Pressable
-          onPressIn={handleOnPressIn}
-          onPressOut={handleOnPressOut}
-          onPress={() => {
-            alert()
-          }}
-          className={` ${
-            isPressed ? "bg-slate-500" : "bg-white"
-          } border rounded-lg px-20 my-2 py-2`}
-        >
-          <Text className="font-bold text-sm">
-            {ticketPrice > 0 ? "Purchase Ticket" : "RVSP for Event"}
-          </Text>
-        </Pressable>
+        {event?.event_limit !== eventProfiles?.length ? (
+          <Pressable
+            onPressIn={handleOnPressIn}
+            onPressOut={handleOnPressOut}
+            onPress={() => {
+              alert()
+            }}
+            className={` ${
+              isPressed ? "bg-slate-500" : "bg-white"
+            } border rounded-lg px-20 my-2 py-2`}
+          >
+            <Text className="font-bold text-sm">
+              {ticketPrice > 0 ? "Purchase Ticket" : "RVSP for Event"}
+            </Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            onPressIn={handleOnPressIn}
+            onPressOut={handleOnPressOut}
+            onPress={() => {
+              waitlistAlert()
+            }}
+            className={` ${
+              isPressed ? "bg-slate-500" : "bg-white"
+            } border rounded-lg px-20 my-2 py-2`}
+          >
+            <Text className="font-bold text-sm">Join WaitList</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   )

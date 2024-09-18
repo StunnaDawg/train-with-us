@@ -1,5 +1,6 @@
 import supabase from "../../../lib/supabase"
 import { FunctionsHttpError } from "@supabase/supabase-js"
+import showAlert from "../../utilFunctions/showAlert"
 
 const sendNotification = async (
   token: string,
@@ -47,7 +48,18 @@ const addEventUser = async (
         last_name: last_name,
       },
     ])
-    if (error) throw error
+    if (error) {
+      showAlert({
+        title: "Error",
+        message: error.message,
+      })
+      throw error
+    } else {
+      showAlert({
+        title: "Success",
+        message: "You have successfully joined this event",
+      })
+    }
 
     if (!expo_push_token) return
     console.log("Sending notification to", expo_push_token)
@@ -59,6 +71,8 @@ const addEventUser = async (
     )
   } catch (error) {
     console.log(error)
+  } finally {
+    return true
   }
 }
 

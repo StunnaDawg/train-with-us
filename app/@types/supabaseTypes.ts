@@ -62,6 +62,9 @@ export type CommunityClasses =
 export type CommunitySchedule =
   Database["public"]["Tables"]["community_class_schedule"]["Row"]
 
+export type EventWaitList =
+  Database["public"]["Tables"]["event_waitlist"]["Row"]
+
 // custom types
 
 export type CommunityWithCompatibility = Communities & {

@@ -16,6 +16,7 @@ type ViewEventDetailsProps = {
   location: string | null | undefined
   price: number | null | undefined
   attendanceLimit: number | null | undefined
+  eventProfiles: Profile[] | null
 }
 
 const ViewEventDetails = ({
@@ -24,15 +25,17 @@ const ViewEventDetails = ({
   location,
   price,
   attendanceLimit,
+  eventProfiles,
 }: ViewEventDetailsProps) => {
   const navigation = useNavigation<NavigationType>()
   const [loading, setLoading] = useState<boolean>(false)
-  const [eventProfiles, setEventProfiles] = useState<Profile[] | null>([])
   const [isPressed, setIsPressed] = useState<{ [key: string]: boolean }>({})
   const maxDisplayCount = 2
 
-  const displayProfiles = eventProfiles?.slice(0, maxDisplayCount)
-  const additionalCount = eventProfiles!.length - maxDisplayCount
+  const displayProfiles =
+    eventProfiles && eventProfiles?.slice(0, maxDisplayCount)
+  const additionalCount =
+    eventProfiles && eventProfiles!.length - maxDisplayCount
 
   const handlePressIn = (name: string) => {
     setIsPressed((prev) => ({ ...prev, [name]: true }))
@@ -41,10 +44,6 @@ const ViewEventDetails = ({
   const handlePressOut = (name: string) => {
     setIsPressed((prev) => ({ ...prev, [name]: false }))
   }
-
-  useEffect(() => {
-    getEventAttendees(eventId, setLoading, setEventProfiles)
-  }, [eventId])
 
   return (
     <View>
@@ -123,7 +122,10 @@ const ViewEventDetails = ({
         <View className="flex flex-row  justify-between items-center mb-1 mt-2">
           <View>
             <Text className="font-bold text-sm text-white mx-1  ">
-              Attendees
+              Attendees{" "}
+              {attendanceLimit && eventProfiles
+                ? `(${eventProfiles?.length}/${attendanceLimit})`
+                : ""}
             </Text>
           </View>
 
@@ -138,7 +140,7 @@ const ViewEventDetails = ({
               />
             ))}
             <View>
-              {additionalCount > 0 ? (
+              {additionalCount && additionalCount > 0 ? (
                 <Text className="font-bold text-sm text-white mx-1  ">
                   +{additionalCount} more
                 </Text>

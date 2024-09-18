@@ -6,9 +6,13 @@ import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import showAlert from "../../../utilFunctions/showAlert"
 
-type LeaveEventProps = { eventId: number; userId: string | null | undefined }
+type LeaveEventProps = {
+  eventId: number
+  userId: string | null | undefined
+  isWaitList: boolean
+}
 
-const LeaveEvent = ({ eventId, userId }: LeaveEventProps) => {
+const LeaveEvent = ({ eventId, userId, isWaitList }: LeaveEventProps) => {
   const navigation = useNavigation<NavigationType>()
   const [isPressed, setIsPressed] = React.useState<boolean>(false)
 
@@ -21,25 +25,46 @@ const LeaveEvent = ({ eventId, userId }: LeaveEventProps) => {
 
   const leaveEventFunc = async () => {
     if (!userId || !eventId) return
-    const { error } = await supabase
-      .from("events_users")
-      .delete()
-      .match({ user_id: userId, event_id: eventId })
+    try {
+      if (isWaitList) {
+        const { error } = await supabase
+          .from("event_waitlist")
+          .delete()
+          .match({ user_id: userId, event_id: eventId })
 
-    if (error) {
+        if (error) {
+          console.error("Failed to leave event:", error)
+          throw error
+        }
+        showAlert({ title: "Success", message: "WaitList Left" })
+      } else {
+        const { error } = await supabase
+          .from("events_users")
+          .delete()
+          .match({ user_id: userId, event_id: eventId })
+
+        if (error) {
+          console.error("Failed to leave event:", error)
+          throw error
+        }
+        showAlert({ title: "Success", message: "Event Left" })
+      }
+    } catch (error) {
       console.error("Failed to leave event:", error)
-      throw error
+      showAlert({ title: "Error", message: "Failed to leave event" })
+    } finally {
+      navigation.goBack()
     }
-
-    navigation.goBack()
-
-    showAlert({ title: "Success", message: "Event Left" })
   }
 
   const handleLeaveButton = () => {
     showAlertFunc({
-      title: "Are you sure you want to leave this event?",
-      message: "You can rejoin later",
+      title: isWaitList
+        ? "Are you sure you want to leave waitlist?"
+        : "Are you sure you want to leave this event?",
+      message: isWaitList
+        ? "You can rejoin later, but will lose your spot in the waitlist"
+        : "You can rejoin later",
       buttons: [
         {
           text: "Leave",
@@ -68,7 +93,9 @@ const LeaveEvent = ({ eventId, userId }: LeaveEventProps) => {
             isPressed ? "bg-slate-500" : "bg-white"
           } border rounded-lg px-20 my-2 py-2`}
         >
-          <Text className="font-bold text-sm">Leave Event</Text>
+          <Text className="font-bold text-sm">
+            {isWaitList ? "Leave WaitList" : "Leave Event"}
+          </Text>
         </Pressable>
       </View>
     </View>
