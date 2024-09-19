@@ -15,10 +15,15 @@ type CheckoutProps = {
   ticketPrice: number
   event: Events | null
   eventProfiles: Profile[] | null
+  setIsWaitList: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Checkout = ({ ticketPrice, event, eventProfiles }: CheckoutProps) => {
-  const [isWaitList, setIsWaitList] = useState<boolean>(false)
+const Checkout = ({
+  ticketPrice,
+  event,
+  eventProfiles,
+  setIsWaitList,
+}: CheckoutProps) => {
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const [eventHostState, setEventHost] = useState<Profile | null>({} as Profile)
   const { user } = useAuth()
@@ -42,6 +47,31 @@ const Checkout = ({ ticketPrice, event, eventProfiles }: CheckoutProps) => {
     }
 
     try {
+      if (event?.event_limit) {
+        const { data, error } = await supabase
+          .from("events_users")
+          .select("*")
+          .eq("event_id", event.id)
+        if (error) throw error
+
+        if (data.length < event.event_limit) {
+          showAlert({
+            title: "Event Spot Available",
+            message: "You have been added to the event",
+          })
+          await addEventUser(
+            event?.id,
+            eventHostState?.expo_push_token,
+            user?.id,
+            currentUser?.first_name || "",
+            currentUser?.last_name || "",
+            true
+          )
+          navigation.goBack()
+          return
+        }
+      }
+
       const { error } = await supabase.from("event_waitlist").insert([
         {
           event_id: event.id,
@@ -61,13 +91,16 @@ const Checkout = ({ ticketPrice, event, eventProfiles }: CheckoutProps) => {
 
       showAlert({
         title: "Success",
-        message: "You have been added to the waitlist",
+        message:
+          "You have been added to the waitlist, you will be automatically promoted and notified if a spot opens up.",
       })
     } catch (error) {
       showAlert({
         title: "Error",
         message: "Unexpected error",
       })
+    } finally {
+      setIsWaitList(true)
     }
   }
 

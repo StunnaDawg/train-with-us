@@ -168,12 +168,14 @@ const ViewEvent = () => {
                 ticketPrice={event?.price ? event.price : 0}
                 event={event}
                 eventProfiles={eventProfiles}
+                setIsWaitList={setIsWaitList}
               />
             ) : (
               <LeaveEvent
                 eventId={eventId}
                 userId={user?.id}
                 isWaitList={isWaitList}
+                setIsWaitList={setIsWaitList}
               />
             )}
           </>

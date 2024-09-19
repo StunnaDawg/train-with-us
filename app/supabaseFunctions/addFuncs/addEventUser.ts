@@ -37,7 +37,8 @@ const addEventUser = async (
   expo_push_token: string | null | undefined,
   userId: string,
   first_name: string,
-  last_name: string
+  last_name: string,
+  waitlistJoined = false
 ) => {
   try {
     const { error } = await supabase.from("events_users").insert([
@@ -55,10 +56,11 @@ const addEventUser = async (
       })
       throw error
     } else {
-      showAlert({
-        title: "Success",
-        message: "You have successfully joined this event",
-      })
+      if (!waitlistJoined)
+        showAlert({
+          title: "Success",
+          message: "You have successfully joined this event",
+        })
     }
 
     if (!expo_push_token) return

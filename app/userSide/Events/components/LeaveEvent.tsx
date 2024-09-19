@@ -11,6 +11,7 @@ type LeaveEventProps = {
   eventId: number
   userId: string | null | undefined
   isWaitList: boolean
+  setIsWaitList: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const sendNotification = async (
@@ -37,7 +38,12 @@ const sendNotification = async (
   console.log("Notification sent:", data)
 }
 
-const LeaveEvent = ({ eventId, userId, isWaitList }: LeaveEventProps) => {
+const LeaveEvent = ({
+  eventId,
+  userId,
+  isWaitList,
+  setIsWaitList,
+}: LeaveEventProps) => {
   const navigation = useNavigation<NavigationType>()
   const [isPressed, setIsPressed] = React.useState<boolean>(false)
 
@@ -61,6 +67,7 @@ const LeaveEvent = ({ eventId, userId, isWaitList }: LeaveEventProps) => {
           console.error("Failed to leave event:", error)
           throw error
         }
+        setIsWaitList(false)
         showAlert({ title: "Success", message: "WaitList Left" })
       } else {
         console.log("Attempting Promoting next waitlist user")
@@ -93,13 +100,12 @@ const LeaveEvent = ({ eventId, userId, isWaitList }: LeaveEventProps) => {
           console.error("Failed to leave event:", error)
           throw error
         }
+        navigation.goBack()
         showAlert({ title: "Success", message: "Event Left" })
       }
     } catch (error) {
       console.error("Failed to leave event:", error)
       showAlert({ title: "Error", message: "Failed to leave event" })
-    } finally {
-      navigation.goBack()
     }
   }
 
