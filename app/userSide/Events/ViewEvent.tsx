@@ -28,6 +28,7 @@ import { MotiView } from "moti"
 import { Skeleton } from "moti/skeleton"
 import getEventAttendees from "../../supabaseFunctions/getFuncs/getEventAttendees"
 import checkIfWaitlisted from "../../supabaseFunctions/checkIfWaitlisted"
+import getWaitListUsers from "../../supabaseFunctions/getFuncs/getWaitlistUsers"
 
 const ViewEvent = () => {
   const [loading, setLoading] = useState<boolean>(true)
@@ -38,6 +39,9 @@ const ViewEvent = () => {
   const [event, setEvent] = useState<Events | null>(null)
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const [eventProfiles, setEventProfiles] = useState<Profile[] | null>(null)
+  const [waitlistProfiles, setWaitlistProfiles] = useState<Profile[] | null>(
+    null
+  )
   const route = useRoute<RouteProp<RootStackParamList, "ViewEvent">>()
   const eventId = route.params.eventId
   const colorMode = "dark"
@@ -59,6 +63,7 @@ const ViewEvent = () => {
 
   useEffect(() => {
     getEventAttendees(eventId, setLoading, setEventProfiles)
+    getWaitListUsers(eventId, setLoading, setWaitlistProfiles)
   }, [eventId])
 
   useEffect(() => {
@@ -140,6 +145,7 @@ const ViewEvent = () => {
                   price={event?.price}
                   attendanceLimit={event?.event_limit}
                   eventProfiles={eventProfiles}
+                  waitlistProfiles={waitlistProfiles}
                 />
               </View>
 

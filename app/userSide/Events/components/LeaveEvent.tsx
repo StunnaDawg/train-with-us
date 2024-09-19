@@ -38,6 +38,15 @@ const LeaveEvent = ({ eventId, userId, isWaitList }: LeaveEventProps) => {
         }
         showAlert({ title: "Success", message: "WaitList Left" })
       } else {
+        const { data, error: promoteError } = await supabase.rpc(
+          "promote_next_waitlist_user",
+          { p_event_id: eventId }
+        )
+
+        if (promoteError) {
+          console.error("Failed to promote next waitlist user:", promoteError)
+        }
+
         const { error } = await supabase
           .from("events_users")
           .delete()

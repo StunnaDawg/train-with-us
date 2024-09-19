@@ -17,6 +17,7 @@ type ViewEventDetailsProps = {
   price: number | null | undefined
   attendanceLimit: number | null | undefined
   eventProfiles: Profile[] | null
+  waitlistProfiles: Profile[] | null
 }
 
 const ViewEventDetails = ({
@@ -26,6 +27,7 @@ const ViewEventDetails = ({
   price,
   attendanceLimit,
   eventProfiles,
+  waitlistProfiles,
 }: ViewEventDetailsProps) => {
   const navigation = useNavigation<NavigationType>()
   const [loading, setLoading] = useState<boolean>(false)
@@ -34,8 +36,15 @@ const ViewEventDetails = ({
 
   const displayProfiles =
     eventProfiles && eventProfiles?.slice(0, maxDisplayCount)
+
+  const waitlistDisplayProfiles =
+    waitlistProfiles && waitlistProfiles?.slice(0, maxDisplayCount)
+
   const additionalCount =
     eventProfiles && eventProfiles!.length - maxDisplayCount
+
+  const additionalWaitlistCount =
+    waitlistProfiles && waitlistProfiles!.length - maxDisplayCount
 
   const handlePressIn = (name: string) => {
     setIsPressed((prev) => ({ ...prev, [name]: true }))
@@ -143,6 +152,42 @@ const ViewEventDetails = ({
               {additionalCount && additionalCount > 0 ? (
                 <Text className="font-bold text-sm text-white mx-1  ">
                   +{additionalCount} more
+                </Text>
+              ) : null}
+            </View>
+          </View>
+        </View>
+      </Pressable>
+
+      <Pressable
+        className={`${isPressed["attendees"] ? "opacity-50" : null}`}
+        onPressIn={() => handlePressIn("attendees")}
+        onPressOut={() => handlePressOut("attendees")}
+        onPress={() => {
+          navigation.navigate("ViewEventAttendees", { profile: eventProfiles })
+        }}
+      >
+        <View className="flex flex-row  justify-between items-center mb-1 mt-2">
+          <View>
+            <Text className="font-bold text-sm text-white mx-1  ">
+              Waitlist
+            </Text>
+          </View>
+
+          <View className="flex flex-row items-center">
+            {waitlistDisplayProfiles?.map((profile) => (
+              <SinglePicCommunity
+                key={profile.id}
+                item={profile.profile_pic}
+                size={30}
+                avatarRadius={100}
+                noAvatarRadius={100}
+              />
+            ))}
+            <View>
+              {additionalWaitlistCount && additionalWaitlistCount > 0 ? (
+                <Text className="font-bold text-sm text-white mx-1  ">
+                  +{additionalWaitlistCount} more
                 </Text>
               ) : null}
             </View>
