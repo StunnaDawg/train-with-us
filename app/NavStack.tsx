@@ -214,6 +214,8 @@ const NavStack = () => {
           navigation.navigate("ViewEvent", { eventId: data.eventId })
         } else if (data.type === "new_event") {
           navigation.navigate("ViewEvent", { eventId: data.eventId })
+        } else if (data.type === "waitlist_promoted") {
+          navigation.navigate("ViewEvent", { eventId: data.eventId })
         } else if (data.type === "connection_request") {
           navigation.navigate("DirectMessageTab")
         } else if (data.type === "news") {

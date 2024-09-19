@@ -5,11 +5,36 @@ import supabase from "../../../../lib/supabase"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import showAlert from "../../../utilFunctions/showAlert"
+import { FunctionsHttpError } from "@supabase/supabase-js"
 
 type LeaveEventProps = {
   eventId: number
   userId: string | null | undefined
   isWaitList: boolean
+}
+
+const sendNotification = async (
+  token: string,
+  title: string,
+  body: string,
+  eventId: number
+) => {
+  console.log("Sending notification to", token)
+  const { data, error } = await supabase.functions.invoke("push", {
+    body: {
+      token,
+      titleWords: title,
+      bodyWords: body,
+      data: { eventId, type: "waitlist_promoted" },
+    },
+  })
+
+  if (error && error instanceof FunctionsHttpError) {
+    const errorMessage = await error.context.json()
+    console.log("Function returned an error", errorMessage)
+  }
+
+  console.log("Notification sent:", data)
 }
 
 const LeaveEvent = ({ eventId, userId, isWaitList }: LeaveEventProps) => {
@@ -38,13 +63,25 @@ const LeaveEvent = ({ eventId, userId, isWaitList }: LeaveEventProps) => {
         }
         showAlert({ title: "Success", message: "WaitList Left" })
       } else {
-        const { data, error: promoteError } = await supabase.rpc(
+        console.log("Attempting Promoting next waitlist user")
+
+        const { data: promoteData, error: promoteError } = await supabase.rpc(
           "promote_next_waitlist_user",
           { p_event_id: eventId }
         )
 
         if (promoteError) {
           console.error("Failed to promote next waitlist user:", promoteError)
+          // Handle the error as needed
+        }
+
+        if (promoteData && promoteData.length > 0) {
+          const promotedUserId = promoteData[0]
+          // Use the promotedUserId as needed
+          console.log("Promoted user ID:", promotedUserId)
+          // For example, send a notification to the promoted user
+        } else {
+          console.log("No user was on the waitlist to promote.")
         }
 
         const { error } = await supabase
