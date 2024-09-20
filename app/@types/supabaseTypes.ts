@@ -65,6 +65,11 @@ export type CommunitySchedule =
 export type EventWaitList =
   Database["public"]["Tables"]["event_waitlist"]["Row"]
 
+export type EventChat = Database["public"]["Tables"]["event_chat"]["Row"]
+
+export type EventChatMessages =
+  Database["public"]["Tables"]["event_messages"]["Row"]
+
 // custom types
 
 export type CommunityWithCompatibility = Communities & {

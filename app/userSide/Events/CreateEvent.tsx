@@ -48,6 +48,7 @@ const CreateEvent = () => {
   const [eventPicture, setEventPicture] =
     useState<ImagePicker.ImagePickerAsset>({} as ImagePicker.ImagePickerAsset)
   const [show, setShow] = useState(false)
+  const [eventChatSwitch, setEventChatSwitch] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const navigation = useNavigation<NavigationType>()
 
@@ -331,6 +332,33 @@ const CreateEvent = () => {
                 ) : null}
               </View>
 
+              <View className="mb-4">
+                <View className="flex flex-row justify-between items-center mb-2">
+                  <Text className=" text-sm font-semibold text-gray">
+                    Event Chat
+                  </Text>
+                  <Switch
+                    value={eventChatSwitch}
+                    onChange={() => {
+                      setEventChatSwitch(!eventChatSwitch)
+                      if (!eventChatSwitch) {
+                        showAlert({
+                          title: "Event Chat Enabled",
+                          message:
+                            "Event chat has been enabled for this event. Users will be automatically added to the chat when they join the event.",
+                        })
+                      } else {
+                        showAlert({
+                          title: "Event Chat Disabled",
+                          message:
+                            "Event chat has been disabled for this event.",
+                        })
+                      }
+                    }}
+                  />
+                </View>
+              </View>
+
               <Pressable
                 onPressIn={handleEventButtonPressedIn}
                 onPressOut={handleEventButtonPressedOut}
@@ -363,7 +391,8 @@ const CreateEvent = () => {
                     location,
                     eventStyle,
                     eventLimitNumber,
-                    selectedActvities
+                    selectedActvities,
+                    eventChatSwitch
                   )
                   navigation.goBack()
                   setLoading(false)

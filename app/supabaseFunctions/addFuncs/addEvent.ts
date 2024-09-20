@@ -66,7 +66,8 @@ const addNewEvent = async (
   location: string,
   eventStyle: string,
   eventLimit: number | null,
-  eventTags: string[]
+  eventTags: string[],
+  eventChatSwitch: boolean
 ) => {
   try {
     setLoading(true)
@@ -120,6 +121,18 @@ const addNewEvent = async (
       title: "Success",
       message: "Event created successfully",
     })
+
+    if (eventChatSwitch) {
+      const { error: chatError } = await supabase.from("event_chat").insert([
+        {
+          event_id: data[0].id,
+          event_chat_name: eventName,
+          event_creator: user_id,
+        },
+      ])
+
+      if (chatError) throw chatError
+    }
 
     const eventId = data[0].id
 

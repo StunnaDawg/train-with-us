@@ -30,7 +30,7 @@ SET default_table_access_method = "heap";
 
 ALTER PUBLICATION "supabase_realtime" OWNER TO "postgres";
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."messages";
+
 
 GRANT USAGE ON SCHEMA "public" TO "postgres";
 GRANT USAGE ON SCHEMA "public" TO "anon";

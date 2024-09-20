@@ -539,12 +539,104 @@ export type Database = {
           }
         ]
       }
+      event_chat: {
+        Row: {
+          created_at: string
+          event_chat_name: string
+          event_creator: string
+          event_id: number
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          event_chat_name?: string
+          event_creator: string
+          event_id: number
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          event_chat_name?: string
+          event_creator?: string
+          event_id?: number
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_event_chat_event_creator_fkey"
+            columns: ["event_creator"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_event_chat_event_id_fkey"
+            columns: ["event_id"]
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      event_messages: {
+        Row: {
+          event_chat: string
+          event_id: number
+          id: string
+          image: string | null
+          message: string | null
+          sender_id: string
+          sender_name: string
+          sender_profile_pic: string | null
+          sent_at: string
+        }
+        Insert: {
+          event_chat?: string
+          event_id: number
+          id?: string
+          image?: string | null
+          message?: string | null
+          sender_id?: string
+          sender_name?: string
+          sender_profile_pic?: string | null
+          sent_at?: string
+        }
+        Update: {
+          event_chat?: string
+          event_id?: number
+          id?: string
+          image?: string | null
+          message?: string | null
+          sender_id?: string
+          sender_name?: string
+          sender_profile_pic?: string | null
+          sent_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_event_messages_event_chat_fkey"
+            columns: ["event_chat"]
+            referencedRelation: "event_chat"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_event_messages_event_id_fkey"
+            columns: ["event_id"]
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_event_messages_sender_id_fkey"
+            columns: ["sender_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       event_waitlist: {
         Row: {
           event_id: number
           first_name: string
           id: string
-          last_name: string | null
+          last_name: string
           user_id: string | null
           waitlist_joined: string
         }
@@ -552,7 +644,7 @@ export type Database = {
           event_id: number
           first_name: string
           id?: string
-          last_name?: string | null
+          last_name?: string
           user_id?: string | null
           waitlist_joined?: string
         }
@@ -560,7 +652,7 @@ export type Database = {
           event_id?: number
           first_name?: string
           id?: string
-          last_name?: string | null
+          last_name?: string
           user_id?: string | null
           waitlist_joined?: string
         }
@@ -1062,6 +1154,21 @@ export type Database = {
           secondary_gym: number | null
           sexuality: string | null
           username: string | null
+        }[]
+      }
+      promote_next_waitlist_user: {
+        Args: {
+          p_event_id: number
+        }
+        Returns: string
+      }
+      promote_next_waitlist_user_return_token: {
+        Args: {
+          p_event_id: number
+        }
+        Returns: {
+          user_id: string
+          expo_push_token: string
         }[]
       }
     }
