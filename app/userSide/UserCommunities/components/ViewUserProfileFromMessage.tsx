@@ -200,6 +200,7 @@ const ViewFullUserProfileFromMessages = () => {
             loading={loading}
             profileId={currentProfile?.id}
             coach={false}
+            profilePic={currentProfile?.profile_pic || ""}
           />
         ) : null}
       </View>

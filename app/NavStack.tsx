@@ -103,6 +103,7 @@ import EditClass from "./userSide/MyCommunity/EditClass"
 import CreateSchedule from "./userSide/MyCommunity/CreateSchedule"
 import EditSchedule from "./userSide/MyCommunity/EditSchedule"
 import ClassInformationPage from "./userSide/UserCommunities/ClassInformationPage"
+import EventChat from "./userSide/UserCommunities/components/EventChat"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -587,6 +588,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="EventCheckout"
                 component={EventCheckout}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="EventChat"
+                component={EventChat}
               />
 
               <Stack.Screen

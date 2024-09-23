@@ -18,9 +18,9 @@ type MessageProps = {
   imageUrl: string | null
   sentAt: string | null
   senderProfilePic: string | null
-  isLink: boolean
-  eventId: number | null
-  communityId: number | null
+  isLink?: boolean
+  eventId?: number | null
+  communityId?: number | null
 }
 
 const MessageComponent = ({
@@ -30,9 +30,9 @@ const MessageComponent = ({
   imageUrl,
   sentAt,
   senderProfilePic,
-  isLink,
-  eventId,
-  communityId,
+  isLink = false,
+  eventId = null,
+  communityId = null,
 }: MessageProps) => {
   const [isPressed, setIsPressed] = useState(false)
   const navigation = useNavigation<NavigationType>()

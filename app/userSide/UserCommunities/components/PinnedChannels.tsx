@@ -8,7 +8,11 @@ import {
 } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import supabase from "../../../../lib/supabase"
-import { CommunityChannel, Profile } from "../../../@types/supabaseTypes"
+import {
+  CommunityChannel,
+  EventChat,
+  Profile,
+} from "../../../@types/supabaseTypes"
 import getUserPinnedChannels from "../../../supabaseFunctions/getFuncs/getUserPinnedChannels"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
@@ -17,6 +21,8 @@ import { useAuth } from "../../../supabaseFunctions/authcontext"
 import { FontAwesome6 } from "@expo/vector-icons"
 
 const PinnedChannels = React.memo(() => {
+  const [eventChats, setEventChats] = useState<EventChat[] | null>([])
+
   const [pressedChannels, setPressedChannels] = useState<{
     [key: string]: boolean
   }>({})
@@ -44,6 +50,54 @@ const PinnedChannels = React.memo(() => {
   const handlePressOut = (channelId: string) => {
     setPressedChannels((prev) => ({ ...prev, [channelId]: false }))
   }
+
+  //check what events user is going to, using the event id from the events get the chats
+
+  const getEventChats = useCallback(async () => {
+    try {
+      if (!user?.id) {
+        console.error("No user logged in!")
+        return
+      }
+
+      const userId = user.id
+
+      const { data: eventGoing, error: eventGoingError } = await supabase
+        .from("events_users")
+        .select("*")
+        .eq("user_id", userId)
+
+      if (eventGoingError) {
+        throw eventGoingError
+      }
+
+      const eventIds = eventGoing.map((event) => event.event_chat)
+
+      console.log("Event ids:", eventIds)
+
+      const filterNulls = eventIds.filter((id) => id !== null)
+
+      if (filterNulls.length === 0) {
+        console.log("User is not attending any events.")
+        setEventChats([])
+        return
+      }
+
+      const { data: eventChatsData, error: eventChatsError } = await supabase
+        .from("event_chat")
+        .select("*")
+        .in("id", filterNulls)
+
+      if (eventChatsError) {
+        throw eventChatsError
+      }
+
+      setEventChats(eventChatsData)
+      console.log("Event chats:", eventChatsData)
+    } catch (error) {
+      console.error("Error fetching event chats:", error)
+    }
+  }, [user])
 
   const showAlert = (onConfirm: () => void) =>
     Alert.alert(
@@ -127,6 +181,10 @@ const PinnedChannels = React.memo(() => {
       }
     }, [fetchUserPinnedChannels])
   )
+
+  useEffect(() => {
+    getEventChats()
+  }, [])
 
   const renderChannels = useCallback(() => {
     return communityChannels?.map((c) => (

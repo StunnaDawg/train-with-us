@@ -122,6 +122,8 @@ const addNewEvent = async (
       message: "Event created successfully",
     })
 
+    // add user to make event chat page, then display in users community home page
+
     if (eventChatSwitch) {
       const { error: chatError } = await supabase.from("event_chat").insert([
         {

@@ -546,6 +546,8 @@ export type Database = {
           event_creator: string
           event_id: number
           id: string
+          recent_message: string | null
+          updated_at: string | null
         }
         Insert: {
           created_at?: string
@@ -553,6 +555,8 @@ export type Database = {
           event_creator: string
           event_id: number
           id?: string
+          recent_message?: string | null
+          updated_at?: string | null
         }
         Update: {
           created_at?: string
@@ -560,6 +564,8 @@ export type Database = {
           event_creator?: string
           event_id?: number
           id?: string
+          recent_message?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {
@@ -677,6 +683,7 @@ export type Database = {
           community_host_name: string | null
           created_at: string
           date: string | null
+          event_chat: string | null
           event_cover_photo: string | null
           event_description: string | null
           event_host: string
@@ -695,6 +702,7 @@ export type Database = {
           community_host_name?: string | null
           created_at?: string
           date?: string | null
+          event_chat?: string | null
           event_cover_photo?: string | null
           event_description?: string | null
           event_host: string
@@ -713,6 +721,7 @@ export type Database = {
           community_host_name?: string | null
           created_at?: string
           date?: string | null
+          event_chat?: string | null
           event_cover_photo?: string | null
           event_description?: string | null
           event_host?: string
@@ -734,6 +743,12 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "public_events_event_chat_fkey"
+            columns: ["event_chat"]
+            referencedRelation: "event_chat"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "public_events_event_host_fkey"
             columns: ["event_host"]
             referencedRelation: "profiles"
@@ -743,24 +758,33 @@ export type Database = {
       }
       events_users: {
         Row: {
+          event_chat: string | null
           event_id: number
           first_name: string | null
           last_name: string | null
           user_id: string
         }
         Insert: {
+          event_chat?: string | null
           event_id: number
           first_name?: string | null
           last_name?: string | null
           user_id: string
         }
         Update: {
+          event_chat?: string | null
           event_id?: number
           first_name?: string | null
           last_name?: string | null
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "public_events_users_event_chat_fkey"
+            columns: ["event_chat"]
+            referencedRelation: "event_chat"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "public_events_users_event_id_fkey"
             columns: ["event_id"]

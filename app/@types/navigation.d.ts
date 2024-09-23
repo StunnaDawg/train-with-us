@@ -247,6 +247,10 @@ export type RootStackParamList = {
   ClassInformationPage: {
     class: CommunityClasses
   }
+
+  EventChat: {
+    event: Events
+  }
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

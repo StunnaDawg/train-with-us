@@ -13,7 +13,6 @@ import { FontAwesome6 } from "@expo/vector-icons"
 import supabase from "../../lib/supabase"
 import { decode } from "base64-arraybuffer"
 import { Image } from "expo-image"
-import { set } from "mongoose"
 
 type MessageInputProps = {
   sendMessageAction: (
