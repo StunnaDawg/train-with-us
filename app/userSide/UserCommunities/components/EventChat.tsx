@@ -42,14 +42,14 @@ const EventChat = () => {
   >([])
   const { user, userProfile } = useAuth()
   const route = useRoute<RouteProp<RootStackParamList, "EventChat">>()
-  const event = route.params.event
+  const eventChat = route.params.eventChat
   const navigation = useNavigation<NavigationType>()
 
   useEffect(() => {
     const fetchMessages = async () => {
       setNewMessage(false)
       setInitialLoading(true)
-      if (!event.event_chat) {
+      if (!eventChat.id) {
         showAlert({
           title: "Error",
           message: "No chat for this event",
@@ -58,7 +58,7 @@ const EventChat = () => {
         return
       }
       await getEventChatMessages(
-        event.event_chat,
+        eventChat.id,
         setServerMessages,
         page,
         setEndOfData,
@@ -73,7 +73,7 @@ const EventChat = () => {
             event: "INSERT",
             schema: "public",
             table: "event_messages",
-            filter: `event_chat=eq.${event.event_chat}`,
+            filter: `event_chat=eq.${eventChat.id}`,
           },
           (payload) => {
             setServerMessages((prevMessages: EventChatMessages[] | null) =>
@@ -98,7 +98,7 @@ const EventChat = () => {
     }
     fetchMessages()
     setInitialLoading(false)
-  }, [event])
+  }, [eventChat])
 
   const handleLoadMore = () => {
     if (!loading && !endOfData) {
@@ -116,7 +116,7 @@ const EventChat = () => {
     if (
       (message.trim().length === 0 && image === null) ||
       !user?.id ||
-      !event.event_chat
+      !eventChat.id
     ) {
       console.log("No message or image")
       return
@@ -125,7 +125,8 @@ const EventChat = () => {
       message,
       image,
       user.id,
-      event.event_chat,
+      eventChat.id,
+      eventChat.event_id,
       userProfile?.profile_pic || "",
       userProfile?.first_name || "",
       setLoadingSentMessage,
@@ -133,14 +134,18 @@ const EventChat = () => {
       setMessageToSend
     )
 
-    await upsertEventChatSession(event.event_chat, message || "Sent an image")
+    await upsertEventChatSession(
+      eventChat.id,
+      message || "Sent an image",
+      eventChat.event_id
+    )
   }
 
   useEffect(() => {
     if (page > 0) {
-      if (event.event_chat) {
+      if (eventChat.id) {
         getEventChatMessages(
-          event.event_chat,
+          eventChat.id,
           setServerMessages,
           page,
           setEndOfData,
@@ -184,7 +189,9 @@ const EventChat = () => {
           <BackButton size={24} />
         </View>
         <View className=" items-center mb-2">
-          <Text className="font-bold text-lg mb-1">{event.event_title}</Text>
+          <Text className="font-bold text-lg mb-1">
+            {eventChat.event_chat_name}
+          </Text>
         </View>
 
         <View />
@@ -228,7 +235,7 @@ const EventChat = () => {
 
       <MessageInput
         sendMessageAction={sendMessageAction}
-        chatSessionId={event.event_chat || ""}
+        chatSessionId={eventChat.id || ""}
       />
     </SafeAreaView>
   )

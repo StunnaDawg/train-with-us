@@ -268,6 +268,34 @@ const PinnedChannels = React.memo(() => {
             </Pressable>
           </View>
         )}
+
+        {eventChats && eventChats.length > 0 ? (
+          <View>
+            <Text className="font-bold text-lg underline text-white px-4">
+              Event Chats
+            </Text>
+            {eventChats.map((eventChat) => (
+              <View
+                key={eventChat.id}
+                className="mx-2 w-72 border-b-slate-400 p-4 flex flex-row justify-between flex-grow items-center border-b-2"
+              >
+                <Pressable
+                  onPress={() => {
+                    navigation.navigate("EventChat", {
+                      eventChat: eventChat,
+                    })
+                  }}
+                >
+                  <View>
+                    <Text className="font-bold text-white">
+                      {eventChat.event_chat_name}
+                    </Text>
+                  </View>
+                </Pressable>
+              </View>
+            ))}
+          </View>
+        ) : null}
       </ScrollView>
     </View>
   )

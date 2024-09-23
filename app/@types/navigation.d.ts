@@ -6,6 +6,7 @@ import {
   Communities,
   CommunityChannel,
   CommunityClasses,
+  EventChat,
   Events,
   Profile,
 } from "./supabaseTypes"
@@ -249,7 +250,7 @@ export type RootStackParamList = {
   }
 
   EventChat: {
-    event: Events
+    eventChat: EventChat
   }
 }
 

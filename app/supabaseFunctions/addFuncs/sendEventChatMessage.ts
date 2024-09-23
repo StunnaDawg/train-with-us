@@ -10,6 +10,7 @@ const sendEventChatMessage = async (
   image: string | null,
   userId: string,
   eventChatId: string,
+  eventId: number,
   senderProfilePic: string | null,
   senderName: string,
   setLoadingSentMessage: Dispatch<SetStateAction<boolean>>,
@@ -27,6 +28,7 @@ const sendEventChatMessage = async (
         image: image,
         sender_profile_pic: senderProfilePic,
         sender_name: senderName,
+        event_id: eventId,
       },
     ])
 
