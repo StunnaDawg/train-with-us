@@ -28,6 +28,7 @@ import BackButton from "../../components/BackButton"
 import { TouchableWithoutFeedback } from "react-native"
 import Loading from "../../components/Loading"
 import { Switch } from "react-native-gesture-handler"
+import showAlertFunc from "../../utilFunctions/showAlertFunc"
 
 type ActvitiesOption = string
 
@@ -221,7 +222,22 @@ const EditEvent = () => {
                 </Text>
                 <Pressable
                   onPress={() => {
-                    deleteEvent()
+                    showAlertFunc({
+                      title: "Delete Event",
+                      message: "Are you sure you want to delete this event?",
+                      buttons: [
+                        {
+                          text: "Cancel",
+                          onPress: () => {},
+                          style: "cancel",
+                        },
+                        {
+                          text: "Delete",
+                          onPress: deleteEvent,
+                          style: "destructive",
+                        },
+                      ],
+                    })
                   }}
                 >
                   <FontAwesome6 name="trash" size={24} color="black" />
