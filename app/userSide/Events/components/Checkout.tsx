@@ -9,7 +9,6 @@ import addEventUser from "../../../supabaseFunctions/addFuncs/addEventUser"
 import showAlertFunc from "../../../utilFunctions/showAlertFunc"
 import supabase from "../../../../lib/supabase"
 import showAlert from "../../../utilFunctions/showAlert"
-import { ca } from "date-fns/locale"
 
 type CheckoutProps = {
   ticketPrice: number

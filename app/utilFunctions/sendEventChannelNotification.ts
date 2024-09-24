@@ -71,8 +71,6 @@ const sendEventChannelNotification = async (
         userId: member.user_id,
       }))
 
-    console.log("Sending notification to ahhhhhhh", senderId, users)
-
     users.forEach(async (member) => {
       await sendNotification(
         member.token,

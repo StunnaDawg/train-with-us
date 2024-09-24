@@ -60,11 +60,20 @@ const addEventUser = async (
       })
       throw error
     } else {
-      if (!waitlistJoined)
-        showAlert({
-          title: "Success",
-          message: "You have successfully joined this event",
-        })
+      if (!waitlistJoined) {
+        if (eventChatId !== null) {
+          showAlert({
+            title: "Event Joined!",
+            message:
+              "You have been RVSP for the event and added to the Event chat",
+          })
+        } else {
+          showAlert({
+            title: "Success",
+            message: "You have successfully joined this event",
+          })
+        }
+      }
     }
 
     if (!expo_push_token) return
