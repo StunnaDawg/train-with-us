@@ -93,6 +93,12 @@ const NotificationsCard = ({
             eventId: data.event_id,
           })
         }
+
+        if (notificationType === "EventChannelNotification") {
+          navigation.navigate("EventChat", {
+            eventChat: data,
+          })
+        }
       }}
     >
       <View className="flex flex-row items-center">

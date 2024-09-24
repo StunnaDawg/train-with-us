@@ -760,6 +760,7 @@ export type Database = {
         Row: {
           event_chat: string | null
           event_id: number
+          expo_push_token: string | null
           first_name: string | null
           last_name: string | null
           user_id: string
@@ -767,6 +768,7 @@ export type Database = {
         Insert: {
           event_chat?: string | null
           event_id: number
+          expo_push_token?: string | null
           first_name?: string | null
           last_name?: string | null
           user_id: string
@@ -774,6 +776,7 @@ export type Database = {
         Update: {
           event_chat?: string | null
           event_id?: number
+          expo_push_token?: string | null
           first_name?: string | null
           last_name?: string | null
           user_id?: string

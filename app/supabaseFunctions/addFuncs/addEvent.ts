@@ -122,21 +122,45 @@ const addNewEvent = async (
       message: "Event created successfully",
     })
 
+    const eventId = data[0].id
     // add user to make event chat page, then display in users community home page
 
     if (eventChatSwitch) {
-      const { error: chatError } = await supabase.from("event_chat").insert([
-        {
-          event_id: data[0].id,
-          event_chat_name: eventName,
-          event_creator: user_id,
-        },
-      ])
+      const { data: chatData, error: chatError } = await supabase
+        .from("event_chat")
+        .insert([
+          {
+            event_id: data[0].id,
+            event_chat_name: eventName,
+            event_creator: user_id,
+          },
+        ])
+        .select()
 
       if (chatError) throw chatError
-    }
 
-    const eventId = data[0].id
+      if (!chatData || chatData.length === 0) {
+        showAlert({
+          title: "Error",
+          message: "Error creating chat for event",
+        })
+      }
+
+      const chatId = chatData[0].id
+
+      const { error: chatDataError } = await supabase
+        .from("events")
+        .update({ event_chat: chatId })
+        .eq("id", data[0].id)
+
+      if (chatDataError) {
+        showAlert({
+          title: "Error",
+          message: "Error updating event with chat",
+        })
+        throw chatDataError
+      }
+    }
 
     console.log("Event created:", data)
     await sendEventNotification(

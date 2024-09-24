@@ -13,7 +13,7 @@ const upsertEventChatSession = async (
         updated_at: new Date(),
         event_id: eventId,
       })
-      .eq("id", eventChatId) // Ensure this targets the row with the specific id
+      .eq("id", eventChatId)
 
     if (error) {
       console.log("upsertChatSession error", error)

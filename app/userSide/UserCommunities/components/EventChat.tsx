@@ -30,6 +30,7 @@ import MessageInput from "../../../components/MessageInput"
 import showAlert from "../../../utilFunctions/showAlert"
 import sendEventChatMessage from "../../../supabaseFunctions/addFuncs/sendEventChatMessage"
 import upsertEventChatSession from "../../../supabaseFunctions/updateFuncs/updateEventChat"
+import sendEventChannelNotification from "../../../utilFunctions/sendEventChannelNotification"
 
 const EventChat = () => {
   const [page, setPage] = useState(0)
@@ -138,6 +139,14 @@ const EventChat = () => {
       eventChat.id,
       message || "Sent an image",
       eventChat.event_id
+    )
+
+    sendEventChannelNotification(
+      user.id,
+      userProfile?.profile_pic || "",
+      "New Message in Event" + eventChat.event_chat_name + "Chat",
+      message,
+      eventChat
     )
   }
 

@@ -35,10 +35,12 @@ const sendNotification = async (
 const addEventUser = async (
   eventId: number,
   expo_push_token: string | null | undefined,
+  userJoiningPushToken: string | null | undefined,
   userId: string,
   first_name: string,
   last_name: string,
-  waitlistJoined = false
+  waitlistJoined = false,
+  eventChatId: string | null
 ) => {
   try {
     const { error } = await supabase.from("events_users").insert([
@@ -47,6 +49,8 @@ const addEventUser = async (
         user_id: userId,
         first_name: first_name,
         last_name: last_name,
+        event_chat: eventChatId,
+        expo_push_token: userJoiningPushToken,
       },
     ])
     if (error) {

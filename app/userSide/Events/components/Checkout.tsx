@@ -62,10 +62,12 @@ const Checkout = ({
           await addEventUser(
             event?.id,
             eventHostState?.expo_push_token,
+            currentUser?.expo_push_token,
             user?.id,
             currentUser?.first_name || "",
             currentUser?.last_name || "",
-            true
+            true,
+            event?.event_chat
           )
           navigation.goBack()
           return
@@ -155,9 +157,12 @@ const Checkout = ({
     await addEventUser(
       event?.id,
       eventHostState?.expo_push_token,
+      currentUser?.expo_push_token,
       user?.id,
       currentUser?.first_name || "",
-      currentUser?.last_name || ""
+      currentUser?.last_name || "",
+      false,
+      event?.event_chat
     )
 
     navigation.navigate("PurchaseScreen")

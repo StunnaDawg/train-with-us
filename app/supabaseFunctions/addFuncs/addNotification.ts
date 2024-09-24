@@ -3,6 +3,7 @@ import {
   ChatSession,
   Communities,
   CommunityChannel,
+  EventChat,
 } from "../../@types/supabaseTypes"
 
 const addNotification = async (
@@ -15,6 +16,7 @@ const addNotification = async (
     | CommunityChannel
     | Communities
     | { community_id: number; community_title: string }
+    | EventChat
     | null,
   image: string | null
 ) => {
