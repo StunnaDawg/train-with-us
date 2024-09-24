@@ -4,6 +4,8 @@ import { useAuth } from "../../../supabaseFunctions/authcontext"
 import { Communities } from "../../../@types/supabaseTypes"
 import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
+import { MotiView } from "moti"
+import { Skeleton } from "moti/skeleton"
 
 type PhotoArrayProps = {
   community: Communities
@@ -15,6 +17,7 @@ const PhotoArray = ({ community }: PhotoArrayProps) => {
     {} as Communities
   )
   const { user } = useAuth()
+  const colorMode = "dark"
 
   useEffect(() => {
     if (!user) return
@@ -23,47 +26,90 @@ const PhotoArray = ({ community }: PhotoArrayProps) => {
   }, [user])
 
   return (
-    <View>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-        <View className="m-1">
-          <SinglePicCommunity
-            size={165}
-            avatarRadius={10}
-            noAvatarRadius={10}
-            item={currentCommunity?.community_photos?.[0]}
-            skeletonRadius={"square"}
-          />
-        </View>
+    <>
+      {!loading ? (
+        <View>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <View className="m-1">
+              <SinglePicCommunity
+                size={165}
+                avatarRadius={10}
+                noAvatarRadius={10}
+                item={currentCommunity?.community_photos?.[0]}
+                skeletonRadius={"square"}
+                allowCacheImage={false}
+              />
+            </View>
 
-        <View className="m-1">
-          <SinglePicCommunity
-            size={165}
-            avatarRadius={10}
-            noAvatarRadius={10}
-            item={currentCommunity?.community_photos?.[1]}
-            skeletonRadius={"square"}
-          />
+            <View className="m-1">
+              <SinglePicCommunity
+                size={165}
+                avatarRadius={10}
+                noAvatarRadius={10}
+                item={currentCommunity?.community_photos?.[1]}
+                skeletonRadius={"square"}
+                allowCacheImage={false}
+              />
+            </View>
+            <View className="m-1">
+              <SinglePicCommunity
+                size={165}
+                avatarRadius={10}
+                noAvatarRadius={10}
+                item={currentCommunity?.community_photos?.[2]}
+                skeletonRadius={"square"}
+                allowCacheImage={false}
+              />
+            </View>
+            <View className="m-1">
+              <SinglePicCommunity
+                size={165}
+                avatarRadius={10}
+                noAvatarRadius={10}
+                item={currentCommunity?.community_photos?.[3]}
+                skeletonRadius={"square"}
+                allowCacheImage={false}
+              />
+            </View>
+          </ScrollView>
         </View>
-        <View className="m-1">
-          <SinglePicCommunity
-            size={165}
-            avatarRadius={10}
-            noAvatarRadius={10}
-            item={currentCommunity?.community_photos?.[2]}
-            skeletonRadius={"square"}
-          />
-        </View>
-        <View className="m-1">
-          <SinglePicCommunity
-            size={165}
-            avatarRadius={10}
-            noAvatarRadius={10}
-            item={currentCommunity?.community_photos?.[3]}
-            skeletonRadius={"square"}
-          />
-        </View>
-      </ScrollView>
-    </View>
+      ) : (
+        <MotiView
+          transition={{
+            type: "timing",
+          }}
+          className="items-center mx-3 flex flex-row justify-center"
+          animate={{ backgroundColor: "#07182d" }}
+        >
+          <View className="flex flex-row">
+            <View className="m-1">
+              <Skeleton
+                colorMode={colorMode}
+                radius="square"
+                height={165}
+                width={165}
+              />
+            </View>
+            <View className="m-1">
+              <Skeleton
+                colorMode={colorMode}
+                radius="square"
+                height={165}
+                width={165}
+              />
+            </View>
+            <View className="m-1">
+              <Skeleton
+                colorMode={colorMode}
+                radius="square"
+                height={165}
+                width={165}
+              />
+            </View>
+          </View>
+        </MotiView>
+      )}
+    </>
   )
 }
 
