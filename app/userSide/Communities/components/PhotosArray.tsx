@@ -30,47 +30,59 @@ const PhotoArray = ({ community }: PhotoArrayProps) => {
       {!loading ? (
         <View>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <View className="m-1">
-              <SinglePicCommunity
-                size={165}
-                avatarRadius={10}
-                noAvatarRadius={10}
-                item={currentCommunity?.community_photos?.[0]}
-                skeletonRadius={"square"}
-                allowCacheImage={false}
-              />
-            </View>
+            {currentCommunity?.community_photos?.[0] ? (
+              <View className="m-1">
+                <SinglePicCommunity
+                  allowExpand={true}
+                  size={165}
+                  avatarRadius={10}
+                  noAvatarRadius={10}
+                  item={currentCommunity?.community_photos?.[0]}
+                  skeletonRadius={"square"}
+                  allowCacheImage={false}
+                />
+              </View>
+            ) : null}
 
-            <View className="m-1">
-              <SinglePicCommunity
-                size={165}
-                avatarRadius={10}
-                noAvatarRadius={10}
-                item={currentCommunity?.community_photos?.[1]}
-                skeletonRadius={"square"}
-                allowCacheImage={false}
-              />
-            </View>
-            <View className="m-1">
-              <SinglePicCommunity
-                size={165}
-                avatarRadius={10}
-                noAvatarRadius={10}
-                item={currentCommunity?.community_photos?.[2]}
-                skeletonRadius={"square"}
-                allowCacheImage={false}
-              />
-            </View>
-            <View className="m-1">
-              <SinglePicCommunity
-                size={165}
-                avatarRadius={10}
-                noAvatarRadius={10}
-                item={currentCommunity?.community_photos?.[3]}
-                skeletonRadius={"square"}
-                allowCacheImage={false}
-              />
-            </View>
+            {currentCommunity?.community_photos?.[1] ? (
+              <View className="m-1">
+                <SinglePicCommunity
+                  allowExpand={true}
+                  size={165}
+                  avatarRadius={10}
+                  noAvatarRadius={10}
+                  item={currentCommunity?.community_photos?.[1]}
+                  skeletonRadius={"square"}
+                  allowCacheImage={false}
+                />
+              </View>
+            ) : null}
+            {currentCommunity?.community_photos?.[2] ? (
+              <View className="m-1">
+                <SinglePicCommunity
+                  allowExpand={true}
+                  size={165}
+                  avatarRadius={10}
+                  noAvatarRadius={10}
+                  item={currentCommunity?.community_photos?.[2]}
+                  skeletonRadius={"square"}
+                  allowCacheImage={false}
+                />
+              </View>
+            ) : null}
+            {currentCommunity?.community_photos?.[3] ? (
+              <View className="m-1">
+                <SinglePicCommunity
+                  allowExpand={true}
+                  size={165}
+                  avatarRadius={10}
+                  noAvatarRadius={10}
+                  item={currentCommunity?.community_photos?.[3]}
+                  skeletonRadius={"square"}
+                  allowCacheImage={false}
+                />
+              </View>
+            ) : null}
           </ScrollView>
         </View>
       ) : (
