@@ -59,13 +59,15 @@ const ClassDisplayCard = ({ communitySchedule }: ClassDisplayProps) => {
     >
       <View className="flex">
         <View className="flex flex-row">
-          <Text className="text-white mx-1">
+          <Text className="text-white font-semibold mx-1">
             {formatTime(communitySchedule.start_time)}
           </Text>
-          <Text className="text-white">{classData.class_name}</Text>
+          <Text className="text-white font-bold">{classData.class_name}</Text>
         </View>
         <View className="flex flex-row ">
-          <Text className="text-white mx-1">{classData.duration} minutes</Text>
+          <Text className="text-white mx-1 font-semibold">
+            {classData.duration} minutes
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

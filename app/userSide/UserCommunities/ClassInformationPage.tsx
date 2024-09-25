@@ -47,9 +47,21 @@ const ClassInformationPage = () => {
 
   const renderItem = ({ item }: { item: CommunitySchedule }) => {
     return (
-      <View>
-        <Text className="text-white">{item.selected_days_of_week}</Text>
-        <Text className="text-white">{formatTime(item.start_time)}</Text>
+      <View className="flex flex-row m-2">
+        <View>
+          <View className="flex flex-row justify-center">
+            <Text className="text-white font-bold mx-1">
+              {formatTime(item.start_time)} Class
+            </Text>
+          </View>
+          <View className="flex flex-row flex-wrap">
+            {item.selected_days_of_week.map((day) => (
+              <Text key={day} className="text-white mx-1 font-semibold">
+                {day}
+              </Text>
+            ))}
+          </View>
+        </View>
       </View>
     )
   }
@@ -69,7 +81,10 @@ const ClassInformationPage = () => {
       </View>
 
       <View className="p-2">
-        <Text className="text-white"> {classObject.description}</Text>
+        <Text className="text-white font-semibold text-lg">
+          {" "}
+          {classObject.description}
+        </Text>
         <ScrollView
           showsHorizontalScrollIndicator={false}
           horizontal={true}
@@ -86,12 +101,14 @@ const ClassInformationPage = () => {
       </View>
 
       <View>
-        <Text className="text-white"> {classObject.class_name} Schedule</Text>
-        <FlatList
-          keyExtractor={(item) => item.id.toString()}
-          data={classSchedule}
-          renderItem={renderItem}
-        />
+        <Text className="text-white text-xl font-semibold"> Schedule</Text>
+        <View className="flex flex-row">
+          <FlatList
+            keyExtractor={(item) => item.id.toString()}
+            data={classSchedule}
+            renderItem={renderItem}
+          />
+        </View>
       </View>
     </SafeAreaView>
   )
