@@ -50,17 +50,24 @@ const ClassDisplayCard = ({ communitySchedule }: ClassDisplayProps) => {
 
   return (
     <TouchableOpacity
+      className="m-2 p-2 border-b border-white border-opacity-50"
       onPress={() =>
         navigation.navigate("ClassInformationPage", {
           class: classData,
         })
       }
     >
-      <Text className="text-white">
-        {formatTime(communitySchedule.start_time)}
-      </Text>
-      <Text className="text-white">{classData.class_name}</Text>
-      <Text className="text-white">{classData.duration}</Text>
+      <View className="flex">
+        <View className="flex flex-row">
+          <Text className="text-white mx-1">
+            {formatTime(communitySchedule.start_time)}
+          </Text>
+          <Text className="text-white">{classData.class_name}</Text>
+        </View>
+        <View className="flex flex-row ">
+          <Text className="text-white mx-1">{classData.duration} minutes</Text>
+        </View>
+      </View>
     </TouchableOpacity>
   )
 }

@@ -32,13 +32,22 @@ const CommunityScheduleDisplay = ({
         .from("community_class_schedule")
         .select("*")
         .eq("community_id", communityId)
-        .order("start_time", { ascending: true })
 
       if (error) {
         console.log(error)
         return
       }
-      setCommunitySchedule(data)
+
+      const sortedData = data.sort((a, b) => {
+        const timeA =
+          new Date(a.start_time).getHours() * 60 +
+          new Date(a.start_time).getMinutes()
+        const timeB =
+          new Date(b.start_time).getHours() * 60 +
+          new Date(b.start_time).getMinutes()
+        return timeA - timeB
+      })
+      setCommunitySchedule(sortedData)
     } catch (error) {
       console.log(error)
     } finally {
@@ -74,23 +83,32 @@ const CommunityScheduleDisplay = ({
   }
 
   return (
-    <View>
-      <View>
-        <View>
-          <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
+    <View className="flex flex-1 h-full">
+      <View className="flex-1">
+        <View className="my-2">
+          <ScrollView indicatorStyle="white" horizontal={true}>
             {daysOfWeek.map((day) => (
-              <TouchableOpacity key={day} onPress={() => setSelectedDay(day)}>
-                <Text className="text-white">{day}</Text>
+              <TouchableOpacity
+                className={`${
+                  selectedDay === day ? "bg-yellow-500" : null
+                } p-2 rounded-md m-2`}
+                key={day}
+                onPress={() => setSelectedDay(day)}
+              >
+                <Text className="text-white text-xl">{day}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
-        {/* Date Header FlatList, displays todays date first and then click next to see tomorrows classes? */}
-        <FlatList
-          data={classesForSelectedDay}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderItem}
-        />
+        <View className="">
+          {/* Date Header FlatList, displays todays date first and then click next to see tomorrows classes? */}
+          <FlatList
+            className="h-full"
+            data={classesForSelectedDay}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderItem}
+          />
+        </View>
       </View>
     </View>
   )
