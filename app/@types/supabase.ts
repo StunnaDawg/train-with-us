@@ -547,6 +547,7 @@ export type Database = {
           event_id: number
           id: string
           recent_message: string | null
+          recent_sender_name: string | null
           updated_at: string | null
         }
         Insert: {
@@ -556,6 +557,7 @@ export type Database = {
           event_id: number
           id?: string
           recent_message?: string | null
+          recent_sender_name?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -565,6 +567,7 @@ export type Database = {
           event_id?: number
           id?: string
           recent_message?: string | null
+          recent_sender_name?: string | null
           updated_at?: string | null
         }
         Relationships: [

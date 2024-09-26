@@ -138,7 +138,8 @@ const EventChat = () => {
     await upsertEventChatSession(
       eventChat.id,
       message || "Sent an image",
-      eventChat.event_id
+      eventChat.event_id,
+      userProfile?.first_name || ""
     )
 
     sendEventChannelNotification(

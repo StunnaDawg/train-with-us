@@ -5,14 +5,11 @@ import {
   ActivityIndicator,
   ScrollView,
   Alert,
+  TouchableOpacity,
 } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import supabase from "../../../../lib/supabase"
-import {
-  CommunityChannel,
-  EventChat,
-  Profile,
-} from "../../../@types/supabaseTypes"
+import { CommunityChannel, EventChat } from "../../../@types/supabaseTypes"
 import getUserPinnedChannels from "../../../supabaseFunctions/getFuncs/getUserPinnedChannels"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
@@ -22,18 +19,19 @@ import { FontAwesome6 } from "@expo/vector-icons"
 
 const PinnedChannels = React.memo(() => {
   const [eventChats, setEventChats] = useState<EventChat[] | null>([])
-
   const [pressedChannels, setPressedChannels] = useState<{
     [key: string]: boolean
   }>({})
   const { user } = useAuth()
-
   const [loading, setLoading] = useState<boolean>(false)
   const [communityChannels, setCommunityChannels] = useState<
     CommunityChannel[] | null
   >([])
-  const [isDashPressed, setIsDashPressed] = useState<boolean>()
+  const [isDashPressed, setIsDashPressed] = useState<boolean>(false)
   const navigation = useNavigation<NavigationType>()
+
+  // State to manage the selected tab
+  const [selectedTab, setSelectedTab] = useState<"pinned" | "events">("pinned")
 
   const handleOnPressIn = useCallback(() => {
     setIsDashPressed(true)
@@ -51,8 +49,7 @@ const PinnedChannels = React.memo(() => {
     setPressedChannels((prev) => ({ ...prev, [channelId]: false }))
   }
 
-  //check what events user is going to, using the event id from the events get the chats
-
+  // Fetch event chats
   const getEventChats = useCallback(async () => {
     try {
       if (!user?.id) {
@@ -64,7 +61,7 @@ const PinnedChannels = React.memo(() => {
 
       const { data: eventGoing, error: eventGoingError } = await supabase
         .from("events_users")
-        .select("*")
+        .select("event_chat")
         .eq("user_id", userId)
 
       if (eventGoingError) {
@@ -72,9 +69,6 @@ const PinnedChannels = React.memo(() => {
       }
 
       const eventIds = eventGoing.map((event) => event.event_chat)
-
-      console.log("Event ids:", eventIds)
-
       const filterNulls = eventIds.filter((id) => id !== null)
 
       if (filterNulls.length === 0) {
@@ -174,49 +168,41 @@ const PinnedChannels = React.memo(() => {
 
       if (isActive) {
         fetchUserPinnedChannels()
+        getEventChats()
       }
 
       return () => {
         isActive = false
       }
-    }, [fetchUserPinnedChannels])
+    }, [fetchUserPinnedChannels, getEventChats])
   )
 
-  useEffect(() => {
-    getEventChats()
-  }, [])
-
-  const renderChannels = useCallback(() => {
+  const renderPinnedChannels = useCallback(() => {
     return communityChannels?.map((c) => (
       <View
         key={c.id}
-        className={` mx-2 w-72 border-b-slate-400 p-4 flex flex-row justify-between  flex-grow items-center border-b-2 `}
+        className="mx-2 w-full border-b-slate-400 p-4 flex flex-row justify-between items-center border-b-2"
       >
-        <Pressable
+        <TouchableOpacity
           onLongPress={() => {
             removePinChannel(c.id)
           }}
-          onPressIn={() => handlePressIn(c.id)}
-          onPressOut={() => handlePressOut(c.id)}
-          key={c.id}
           onPress={() => {
             navigation.navigate("ChannelScreen", { channelId: c })
           }}
-          className={`${pressedChannels[c.id] ? "opacity-50" : null}`}
+          className={pressedChannels[c.id] ? "opacity-50" : ""}
         >
           <View>
-            <View>
-              <Text className="font-bold text-white">
-                #{c.channel_title || "Error loading channel title"} in{" "}
-                {c.community_name}
-              </Text>
-            </View>
+            <Text className="font-bold text-white">
+              #{c.channel_title || "Error loading channel title"} in{" "}
+              {c.community_name}
+            </Text>
             <Text className="text-xs text-white">
               <Text>{`${c.recent_message_sender} said `}</Text>
               {c.recent_message || "No Messages yet!"}
             </Text>
           </View>
-        </Pressable>
+        </TouchableOpacity>
         <Pressable onPress={() => removePinChannel(c.id)}>
           <MaterialCommunityIcons
             name="dots-vertical"
@@ -226,76 +212,119 @@ const PinnedChannels = React.memo(() => {
         </Pressable>
       </View>
     ))
-  }, [communityChannels, navigation, removePinChannel])
+  }, [communityChannels, navigation, removePinChannel, pressedChannels])
+
+  const renderEventChats = useCallback(() => {
+    return eventChats?.map((eventChat) => (
+      <View
+        key={eventChat.id}
+        className="mx-2 w-full border-b-slate-400 p-4 flex flex-row justify-between items-center border-b-2"
+      >
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("EventChat", {
+              eventChat: eventChat,
+            })
+          }}
+        >
+          <View>
+            <Text className="font-bold text-white">
+              {eventChat.event_chat_name}
+            </Text>
+            <Text className="text-xs text-white">
+              <Text>{`${eventChat.recent_sender_name} said `}</Text>
+              {eventChat.recent_message || "No Messages yet!"}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    ))
+  }, [eventChats, navigation])
 
   return (
-    <View>
-      <View>
-        <Text className="font-bold text-lg underline text-white px-4">
-          Pinned Channels
-        </Text>
+    <View className=" bg-primary-900">
+      {/* Tabs */}
+      <View className="flex-row justify-around bg-gray-800">
+        <TouchableOpacity
+          onPress={() => setSelectedTab("pinned")}
+          className={`items-center py-4 ${
+            selectedTab === "pinned" ? "border-b-2 border-blue-500" : ""
+          }`}
+        >
+          <Text
+            className={`text-white ${
+              selectedTab === "pinned" ? "font-extrabold" : "font-semibold"
+            }`}
+          >
+            Pinned Channels
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setSelectedTab("events")}
+          className={` items-center py-4 ${
+            selectedTab === "events" ? "border-b-2 border-blue-500" : ""
+          }`}
+        >
+          <Text
+            className={`text-white ${
+              selectedTab === "events" ? "font-extrabold" : "font-semibold"
+            }`}
+          >
+            Event Chats
+          </Text>
+        </TouchableOpacity>
       </View>
-      <ScrollView className="h-full">
-        {!loading && communityChannels && communityChannels.length > 0 ? (
-          renderChannels()
-        ) : communityChannels?.length && communityChannels.length > 0 ? (
-          <ActivityIndicator />
-        ) : (
-          <View className="flex flex-row justify-end items-center p-1 ">
-            <View>
-              <Text className="text-white font-bold text-center">
-                Join a Community to pin
-              </Text>
-              <Text className="text-white font-bold text-center">
-                favourite channels!
-              </Text>
-            </View>
-            <Pressable
-              onPressIn={handleOnPressIn}
-              onPressOut={handleOnPressOut}
-              onPress={() => {
-                navigation.navigate("Communities")
-              }}
-              className={`m-2 ${
-                isDashPressed ? "bg-black" : "bg-white"
-              } rounded-full p-2 items-center`}
-            >
-              <FontAwesome6
-                name="magnifying-glass"
-                size={36}
-                color={isDashPressed ? "white" : "black"}
-              />
-            </Pressable>
-          </View>
-        )}
 
-        {eventChats && eventChats.length > 0 ? (
-          <View>
-            <Text className="font-bold text-lg underline text-white px-4">
-              Event Chats
-            </Text>
-            {eventChats.map((eventChat) => (
-              <View
-                key={eventChat.id}
-                className="mx-2 w-72 border-b-slate-400 p-4 flex flex-row justify-between flex-grow items-center border-b-2"
-              >
+      {/* Content */}
+      <ScrollView className=" h-full bg-gray-900">
+        {selectedTab === "pinned" ? (
+          <>
+            {!loading && communityChannels && communityChannels.length > 0 ? (
+              renderPinnedChannels()
+            ) : loading ? (
+              <ActivityIndicator />
+            ) : (
+              <View className="flex flex-row justify-center items-center p-4">
+                <View>
+                  <Text className="text-white font-bold text-center">
+                    Join a Community to pin
+                  </Text>
+                  <Text className="text-white font-bold text-center">
+                    favourite channels!
+                  </Text>
+                </View>
                 <Pressable
+                  onPressIn={handleOnPressIn}
+                  onPressOut={handleOnPressOut}
                   onPress={() => {
-                    navigation.navigate("EventChat", {
-                      eventChat: eventChat,
-                    })
+                    navigation.navigate("Communities")
                   }}
+                  className={`m-2 ${
+                    isDashPressed ? "bg-black" : "bg-white"
+                  } rounded-full p-2 items-center`}
                 >
-                  <View>
-                    <Text className="font-bold text-white">
-                      {eventChat.event_chat_name}
-                    </Text>
-                  </View>
+                  <FontAwesome6
+                    name="magnifying-glass"
+                    size={36}
+                    color={isDashPressed ? "white" : "black"}
+                  />
                 </Pressable>
               </View>
-            ))}
-          </View>
-        ) : null}
+            )}
+          </>
+        ) : (
+          <>
+            {eventChats && eventChats.length > 0 ? (
+              renderEventChats()
+            ) : (
+              <View className="flex items-center justify-center p-4">
+                <Text className="text-white font-bold text-center">
+                  No Event Chats available.
+                </Text>
+              </View>
+            )}
+          </>
+        )}
       </ScrollView>
     </View>
   )

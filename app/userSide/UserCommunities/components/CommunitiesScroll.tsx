@@ -1,4 +1,4 @@
-import { View, ScrollView, Pressable } from "react-native"
+import { View, ScrollView, Pressable, Text } from "react-native"
 import React, { useState, useCallback, useEffect } from "react"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
@@ -48,9 +48,9 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
   }, [communities, activeCommunity])
 
   return (
-    <View className="max-h-full border-r border-slate-400">
-      <ScrollView className="h-full">
-        <View className="items-center">
+    <View className="max-h-full  border-slate-400">
+      <ScrollView horizontal={true}>
+        <View className="flex flex-row items-center">
           {!userProfile?.community_created && (
             <Pressable
               onPress={() => navigation.navigate("CreateCommunity")}
@@ -76,6 +76,7 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
               size={36}
               color={isDashPressed ? "white" : "black"}
             />
+            <Text className="font-bold">Search</Text>
           </Pressable>
 
           {renderCommunities()}

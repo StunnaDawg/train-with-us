@@ -46,11 +46,11 @@ const CommunitiesDash = () => {
           <CommunitiesDashSkeleton />
         </View>
       ) : (
-        <View className="flex flex-row bg-primary-900">
+        <View className=" bg-primary-900">
           <View className="bg-primary-900">
             <CommunitiesScroll communities={communities} />
           </View>
-          <View>
+          <View className="bg-primary-900">
             <View>
               <PinnedChannels />
             </View>

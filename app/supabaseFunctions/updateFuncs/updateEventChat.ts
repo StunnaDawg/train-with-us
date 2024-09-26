@@ -3,7 +3,8 @@ import supabase from "../../../lib/supabase"
 const upsertEventChatSession = async (
   eventChatId: string,
   recentMessage: string,
-  eventId: number
+  eventId: number,
+  senderName: string
 ) => {
   try {
     const { error } = await supabase
@@ -12,6 +13,7 @@ const upsertEventChatSession = async (
         recent_message: recentMessage,
         updated_at: new Date(),
         event_id: eventId,
+        recent_sender_name: senderName,
       })
       .eq("id", eventChatId)
 
