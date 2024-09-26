@@ -1,4 +1,12 @@
-import { View, Text, SafeAreaView, TextInput, Pressable } from "react-native"
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TextInput,
+  Pressable,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native"
 import React, { useEffect, useState } from "react"
 import BackButton from "../../components/BackButton"
 import supabase from "../../../lib/supabase"
@@ -7,9 +15,13 @@ import { useAuth } from "../../supabaseFunctions/authcontext"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import showAlertFunc from "../../utilFunctions/showAlertFunc"
+import * as ImagePicker from "expo-image-picker"
 import { FunctionsHttpError } from "@supabase/supabase-js"
 import { Communities, CommunityMember } from "../../@types/supabaseTypes"
+import * as FileSystem from "expo-file-system"
+import { decode } from "base64-arraybuffer"
 import getCommunityMembersType from "../../supabaseFunctions/getFuncs/getCommunityMemberArrayType"
+import NewPhoto from "../../components/NewPhoto"
 
 const sendNotification = async (
   token: string,
@@ -17,7 +29,6 @@ const sendNotification = async (
   body: string,
   community: Communities
 ) => {
-  console.log("Sending notification to", token)
   const { data, error } = await supabase.functions.invoke("push", {
     body: {
       token,
@@ -71,10 +82,12 @@ const sendChannelNotification = async (
 const CreateNewsPost = () => {
   const { userProfile } = useAuth()
   const [tokens, setTokens] = useState<string[] | null>(null)
+  const [newsPic, setNewsPic] = useState<ImagePicker.ImagePickerAsset>(
+    {} as ImagePicker.ImagePickerAsset
+  )
   const [loading, setLoading] = useState<boolean>(false)
   const [title, setTitle] = useState<string>("")
   const [content, setContent] = useState<string>("")
-  const [createButtonPressed, setCreateButtonPressed] = useState<boolean>(false)
   const [communityMembers, setCommunityMembers] = useState<
     CommunityMember[] | null
   >(null)
@@ -91,7 +104,7 @@ const CreateNewsPost = () => {
     if (communityMembers) {
       const validTokens = communityMembers
         .map((member) => member.expo_push_token)
-        .filter((token): token is string => token !== null) // Filter out null values
+        .filter((token): token is string => token !== null)
       setTokens(validTokens)
     }
   }, [communityMembers])
@@ -106,7 +119,21 @@ const CreateNewsPost = () => {
       return
     }
 
-    console.log("Creating news post", title, content, userProfile, communityId)
+    let filePath: string | null = null
+
+    if (newsPic) {
+      const base64 = await FileSystem.readAsStringAsync(newsPic.uri, {
+        encoding: "base64",
+      })
+      filePath = `news/${communityId}/${new Date().getTime()}.${
+        newsPic.type === "image"
+      }`
+      const contentType = "image/png"
+      await supabase.storage.from("photos").upload(filePath, decode(base64), {
+        contentType: contentType,
+      })
+    }
+
     const lastName = userProfile.last_name ? userProfile.last_name : ""
     const createdAt = new Date().toISOString()
     const { error } = await supabase.from("news_posts").insert([
@@ -117,6 +144,7 @@ const CreateNewsPost = () => {
         community_id: communityId,
         author: userProfile.id,
         author_name: userProfile.first_name + " " + lastName,
+        news_image: filePath ? filePath : null,
       },
     ])
 
@@ -154,31 +182,38 @@ const CreateNewsPost = () => {
         <View />
       </View>
 
-      <View className="mx-2">
-        <Text className="text-lg text-white font-bold">Title</Text>
+      <ScrollView>
+        <View className="mx-2">
+          <Text className="text-lg text-white font-bold">Title</Text>
+          <View>
+            <TextInput
+              className="h-8 px-1 bg-white border-4 rounded-md"
+              onChangeText={(text) => setTitle(text)}
+            />
+          </View>
+        </View>
+
+        <View className="mx-2">
+          <Text className="text-lg text-white font-bold">Content</Text>
+          <View className="border rounded-md">
+            <TextInput
+              multiline={true}
+              onChangeText={(text) => setContent(text)}
+              className="h-56 bg-white border-4 px-1 rounded-md"
+            />
+          </View>
+        </View>
+
         <View>
-          <TextInput
-            className="h-8 px-1 bg-white border-4 rounded-md"
-            onChangeText={(text) => setTitle(text)}
+          <NewPhoto
+            heightProp={200}
+            widthProp={200}
+            setProfilePic={setNewsPic}
           />
         </View>
-      </View>
-
-      <View className="mx-2">
-        <Text className="text-lg text-white font-bold">Content</Text>
-        <View className="border rounded-md">
-          <TextInput
-            multiline={true}
-            onChangeText={(text) => setContent(text)}
-            className="h-56 bg-white border-4 px-1 rounded-md"
-          />
-        </View>
-      </View>
-
+      </ScrollView>
       <View className="flex flex-row justify-center">
-        <Pressable
-          onPressIn={() => setCreateButtonPressed(true)}
-          onPressOut={() => setCreateButtonPressed(false)}
+        <TouchableOpacity
           onPress={() =>
             showAlertFunc({
               title: "Create News Post",
@@ -197,14 +232,12 @@ const CreateNewsPost = () => {
               ],
             })
           }
-          className={`${
-            createButtonPressed ? "opacity-80" : "bg-slate-500"
-          } p-2 rounded-md mx-2 mt-2 w-48`}
+          className={`bg-white p-2 rounded-md mx-2 mt-2 w-56`}
         >
           <Text className="text-black text-center text-xl font-bold">
             Create News Post
           </Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   )

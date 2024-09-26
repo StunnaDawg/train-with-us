@@ -8,12 +8,18 @@ type NewPhotoProps = {
   setProfilePic: React.Dispatch<
     React.SetStateAction<ImagePicker.ImagePickerAsset>
   >
+  heightProp?: number
+  widthProp?: number
 }
 
-const NewPhoto = ({ setProfilePic }: NewPhotoProps) => {
+const NewPhoto = ({
+  setProfilePic,
+  heightProp = 300,
+  widthProp = 375,
+}: NewPhotoProps) => {
   const { user } = useAuth()
   const userId = user?.id
-  const avatarSize = { height: 300, width: 375 }
+  const avatarSize = { height: heightProp, width: widthProp }
 
   const [imageUri, setImageUri] = useState("")
 
@@ -40,7 +46,7 @@ const NewPhoto = ({ setProfilePic }: NewPhotoProps) => {
           <Image
             className="m-1 relative overflow-hidden max-w-full rounded-lg bg-gray-800 "
             source={{ uri: imageUri }}
-            style={{ width: 375, height: 300 }}
+            style={{ width: widthProp, height: heightProp }}
           />
           <Pressable
             className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded hover:bg-blue-800 m-2"

@@ -2,6 +2,7 @@ import { View, Text, FlatList } from "react-native"
 import React from "react"
 import { News } from "../../../@types/supabaseTypes"
 import { formatDate } from "date-fns"
+import SinglePicCommunity from "../../../components/SinglePicCommunity"
 
 export type NewsCard = {
   news: News
@@ -19,6 +20,15 @@ const NewsCard = ({ news }: NewsCard) => {
       </View>
 
       <Text className="text-slate-200 ">{news.content}</Text>
+
+      {news.news_image ? (
+        <SinglePicCommunity
+          item={news.news_image}
+          size={200}
+          avatarRadius={10}
+          noAvatarRadius={10}
+        />
+      ) : null}
     </View>
   )
 }

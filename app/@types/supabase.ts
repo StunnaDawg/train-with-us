@@ -883,6 +883,7 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          news_image: string | null
           title: string | null
         }
         Insert: {
@@ -892,6 +893,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          news_image?: string | null
           title?: string | null
         }
         Update: {
@@ -901,6 +903,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          news_image?: string | null
           title?: string | null
         }
         Relationships: [
