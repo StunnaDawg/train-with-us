@@ -40,14 +40,14 @@ const MyEvents = () => {
   return (
     <SafeAreaView className="flex-1">
       <View className="flex flex-row justify-center m-3 items-center">
-        <Text className="font-bold text-lg text-white ">
-          My Upcoming Events
+        <Text className="font-bold text-xl text-white ">
+          Upcoming Events
         </Text>
       </View>
 
       {userEvents && userEvents.length > 0 ? (
-        <ScrollView horizontal={true}>
-          <View className="flex flex-row flex-wrap">
+        <ScrollView className="pb-24">
+          <View className="flex flex-row justify-center flex-wrap">
             {userEvents?.map((event) => (
               <Pressable
                 key={event.id}
