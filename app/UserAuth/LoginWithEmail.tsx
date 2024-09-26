@@ -12,6 +12,7 @@ import supabase from "../../lib/supabase"
 import * as Updates from "expo-updates"
 import GenericButton from "../components/GenericButton"
 import BackButton from "../components/BackButton"
+import showAlert from "../utilFunctions/showAlert"
 
 const LoginWithEmail = () => {
   const [email, setEmail] = useState("")
@@ -23,7 +24,12 @@ const LoginWithEmail = () => {
       password: password,
     })
 
-    if (error) Alert.alert(error.message)
+    if (error) {
+      showAlert({
+        title: "Email or Password is incorrect",
+        message: "Please try again",
+      })
+    }
     await Updates.reloadAsync()
   }
   return (

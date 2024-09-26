@@ -12,6 +12,7 @@ import BackButton from "../components/BackButton"
 import GenericButton from "../components/GenericButton"
 import supabase from "../../lib/supabase"
 import * as Updates from "expo-updates"
+import showAlert from "../utilFunctions/showAlert"
 
 const SignUpWithEmail = () => {
   const [email, setEmail] = useState("")
@@ -26,7 +27,13 @@ const SignUpWithEmail = () => {
       password: password,
     })
 
-    if (error) Alert.alert(error.message)
+    if (error) {
+      showAlert({
+        title: "There was an error signing up",
+        message: error.message,
+      })
+      Alert.alert(error.message)
+    }
     if (!session) Alert.alert("Please check your inbox for email verification!")
 
     await Updates.reloadAsync()

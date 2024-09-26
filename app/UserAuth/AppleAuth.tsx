@@ -3,6 +3,7 @@ import { Platform, View } from "react-native"
 import * as AppleAuthentication from "expo-apple-authentication"
 import supabase from "../../lib/supabase"
 import * as Updates from "expo-updates"
+import showAlert from "../utilFunctions/showAlert"
 
 const AppleAuth = () => {
   if (Platform.OS === "ios") {
@@ -36,11 +37,20 @@ const AppleAuth = () => {
                   await Updates.reloadAsync()
                 }
               } else {
+                showAlert({
+                  title: "Apple Sign-In failed",
+                  message: "Please try again",
+                })
                 throw new Error("Apple Sign-In failed")
               }
             } catch (e: any) {
               if (e.code === "ERR_REQUEST_CANCELED") {
                 // handle that the user canceled the sign-in flow
+
+                showAlert({
+                  title: "Apple Sign-In canceled",
+                  message: "Please try again",
+                })
               } else {
                 throw console.error(e)
               }
