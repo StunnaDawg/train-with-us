@@ -98,13 +98,15 @@ const NewsCard = ({ news, userId }: NewsCard) => {
   return (
     <View className="bg-white rounded-xl shadow-md m-4 overflow-hidden">
       {news.news_image ? (
-        <SinglePicCommunity
-          item={news.news_image}
-          size={200}
-          avatarRadius={10}
-          noAvatarRadius={10}
-          allowExpand={true}
-        />
+        <View className="flex flex-row justify-center p-2">
+          <SinglePicCommunity
+            item={news.news_image}
+            size={300}
+            avatarRadius={10}
+            noAvatarRadius={10}
+            allowExpand={true}
+          />
+        </View>
       ) : null}
       <View className="p-4">
         <View className="flex-row items-center mb-2">
@@ -158,7 +160,7 @@ const NewsCard = ({ news, userId }: NewsCard) => {
             className="flex flex-row items-center mr-4"
           >
             {likes > 0 ? (
-              <Text className="font-bold text-lg text-pink-400">1</Text>
+              <Text className="font-bold text-lg text-pink-400">{likes}</Text>
             ) : null}
             <MaterialCommunityIcons
               name={likePressed ? "heart" : "heart-outline"}
