@@ -162,7 +162,12 @@ const CommunityPage = () => {
             }}
             name="News"
           >
-            {() => <CommunityNews communityNews={communityNewsState} />}
+            {() => (
+              <CommunityNews
+                communityNews={communityNewsState}
+                userId={userProfile?.id}
+              />
+            )}
           </Tab.Screen>
 
           <Tab.Screen

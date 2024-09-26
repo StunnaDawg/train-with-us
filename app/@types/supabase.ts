@@ -879,30 +879,36 @@ export type Database = {
         Row: {
           author: string
           author_name: string
+          author_profile_pic: string | null
           community_id: number
           content: string
           created_at: string
           id: string
+          likes: string[] | null
           news_image: string | null
           title: string | null
         }
         Insert: {
           author: string
           author_name?: string
+          author_profile_pic?: string | null
           community_id: number
           content?: string
           created_at?: string
           id?: string
+          likes?: string[] | null
           news_image?: string | null
           title?: string | null
         }
         Update: {
           author?: string
           author_name?: string
+          author_profile_pic?: string | null
           community_id?: number
           content?: string
           created_at?: string
           id?: string
+          likes?: string[] | null
           news_image?: string | null
           title?: string | null
         }
