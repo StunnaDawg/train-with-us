@@ -14,6 +14,7 @@ const getNewsFromCommunity = async (
       .from("news_posts")
       .select("*")
       .eq("community_id", communityId)
+      .order("created_at", { ascending: false })
 
     if (error) {
       console.error("Error fetching community news:", error.message)

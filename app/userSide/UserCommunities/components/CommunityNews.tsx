@@ -147,7 +147,7 @@ const NewsCard = ({ news, userId }: NewsCard) => {
             </Text>
           </TouchableOpacity>
         )}
-        <View className="flex-row justify-end mt-4">
+        <View className="flex-row justify-end mt-2">
           <TouchableOpacity
             onPress={() => {
               setLikePressed(likePressed ? false : true)
@@ -186,11 +186,7 @@ const CommunityNews = ({ communityNews, userId }: CommunityNewsProps) => {
         {communityNews && communityNews?.length > 0 ? (
           <FlatList
             data={communityNews}
-            renderItem={({ item }) => (
-              <View className="m-2 border-b-2 border-slate-500">
-                <NewsCard news={item} userId={userId} />
-              </View>
-            )}
+            renderItem={({ item }) => <NewsCard news={item} userId={userId} />}
             keyExtractor={(item) => item.id}
           />
         ) : (
