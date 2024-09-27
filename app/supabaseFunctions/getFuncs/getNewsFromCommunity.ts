@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { News } from "../../@types/supabaseTypes"
-import { fi } from "date-fns/locale"
 
 const getNewsFromCommunity = async (
   setLoading: Dispatch<SetStateAction<boolean>>,

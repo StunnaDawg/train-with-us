@@ -6,6 +6,7 @@ import {
   Pressable,
   ScrollView,
   TouchableOpacity,
+  Switch,
 } from "react-native"
 import React, { useEffect, useState } from "react"
 import BackButton from "../../components/BackButton"
@@ -17,11 +18,17 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import showAlertFunc from "../../utilFunctions/showAlertFunc"
 import * as ImagePicker from "expo-image-picker"
 import { FunctionsHttpError } from "@supabase/supabase-js"
-import { Communities, CommunityMember } from "../../@types/supabaseTypes"
+import {
+  Communities,
+  CommunityMember,
+  Events,
+} from "../../@types/supabaseTypes"
 import * as FileSystem from "expo-file-system"
 import { decode } from "base64-arraybuffer"
 import getCommunityMembersType from "../../supabaseFunctions/getFuncs/getCommunityMemberArrayType"
 import NewPhoto from "../../components/NewPhoto"
+import getCommunityEvents from "../../supabaseFunctions/getFuncs/getCommunityEvent"
+import { FontAwesome6 } from "@expo/vector-icons"
 
 const sendNotification = async (
   token: string,
@@ -88,9 +95,12 @@ const CreateNewsPost = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [title, setTitle] = useState<string>("")
   const [content, setContent] = useState<string>("")
+  const [eventSwitch, setEventSwitch] = useState<boolean>(false)
   const [communityMembers, setCommunityMembers] = useState<
     CommunityMember[] | null
   >(null)
+  const [events, setEvents] = useState<Events[] | null>(null)
+  const [eventSelected, setEventSelected] = useState<number | null>(null)
   const route = useRoute<RouteProp<RootStackParamList, "CreateNewsPost">>()
   const communityId = route.params.communityId
   const communityTitle = route.params.communityTitle
@@ -121,7 +131,7 @@ const CreateNewsPost = () => {
 
     let filePath: string | null = null
 
-    if (newsPic) {
+    if (newsPic.uri) {
       const base64 = await FileSystem.readAsStringAsync(newsPic.uri, {
         encoding: "base64",
       })
@@ -145,6 +155,7 @@ const CreateNewsPost = () => {
         author: userProfile.id,
         author_name: userProfile.first_name + " " + lastName,
         news_image: filePath ? filePath : null,
+        event_link: eventSelected ? eventSelected : null,
       },
     ])
 
@@ -202,6 +213,62 @@ const CreateNewsPost = () => {
               className="h-56 bg-white border-4 px-1 rounded-md"
             />
           </View>
+        </View>
+
+        <View>
+          <Text className="text-lg text-white font-bold mx-2">
+            Link an Event
+          </Text>
+          <Switch
+            value={eventSwitch}
+            onChange={() => {
+              setEventSwitch(!eventSwitch)
+              if (eventSwitch) {
+                setEventSelected(null)
+              }
+              console.log(eventSwitch)
+              if (!eventSwitch && events === null) {
+                getCommunityEvents(setLoading, communityId, setEvents)
+              }
+            }}
+          />
+
+          {eventSwitch ? (
+            <View>
+              {events && events.length > 0 ? (
+                <View>
+                  <Text className="text-lg text-white font-bold mx-2">
+                    Select an Event
+                  </Text>
+                  {events.map((event) => (
+                    <TouchableOpacity
+                      className={`${
+                        eventSelected === event.id ? "bg-yellow-500" : null
+                      } p-2 rounded-md mx-2`}
+                      onPress={() => setEventSelected(event.id)}
+                      key={event.id}
+                    >
+                      <View className="flex flex-row justify-center">
+                        <Text className="text-lg text-white font-bold mx-2">
+                          {event.event_title}
+                        </Text>
+
+                        {eventSelected === event.id ? (
+                          <FontAwesome6 name="check" size={24} color="black" />
+                        ) : null}
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              ) : (
+                <View>
+                  <Text className="text-lg text-white font-bold mx-2">
+                    No Events
+                  </Text>
+                </View>
+              )}
+            </View>
+          ) : null}
         </View>
 
         <View>
