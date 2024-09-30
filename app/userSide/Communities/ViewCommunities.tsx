@@ -86,7 +86,7 @@ const ViewCommunities = () => {
               <TouchableOpacity onPress={() => setActiveSection("about")}>
                 <Text
                   className={`text-xl font-semibold text-white ${
-                    activeSection === "about" ? "underline" : ""
+                    activeSection === "about" ? "underline text-yellow-400" : ""
                   }`}
                 >
                   About
@@ -95,7 +95,9 @@ const ViewCommunities = () => {
               <TouchableOpacity onPress={() => setActiveSection("photos")}>
                 <Text
                   className={`text-xl font-semibold text-white ${
-                    activeSection === "photos" ? "underline" : ""
+                    activeSection === "photos"
+                      ? "underline text-yellow-400"
+                      : ""
                   }`}
                 >
                   Photos
@@ -106,7 +108,9 @@ const ViewCommunities = () => {
                 <TouchableOpacity onPress={() => setActiveSection("schedule")}>
                   <Text
                     className={`text-xl font-semibold text-white ${
-                      activeSection === "schedule" ? "underline" : ""
+                      activeSection === "schedule"
+                        ? "underline text-yellow-400"
+                        : ""
                     }`}
                   >
                     Schedule
@@ -116,7 +120,9 @@ const ViewCommunities = () => {
               <TouchableOpacity onPress={() => setActiveSection("events")}>
                 <Text
                   className={`text-xl font-semibold text-white ${
-                    activeSection === "events" ? "underline" : ""
+                    activeSection === "events"
+                      ? "underline text-yellow-400"
+                      : ""
                   }`}
                 >
                   Events

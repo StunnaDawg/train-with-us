@@ -23,32 +23,38 @@ const UpcomingCommunityEvents = ({
     }
   }, [community])
   return (
-    <View className="flex flex-col m-5">
-      <Text
-        className={`text-xl font-bold m-4 ${
-          textColour ? textColour : "text-white"
-        }`}
-      >
-        Upcoming Events
-      </Text>
-      <ScrollView horizontal={true}>
-        {loading ? (
-          <ActivityIndicator />
-        ) : upcomingEvents && upcomingEvents?.length > 0 ? (
-          upcomingEvents?.map((event) => (
-            <EventCard
-              eventId={event.id}
-              eventCoverPhoto={event.event_cover_photo}
-              communityId={event.community_host}
-              title={event.event_title}
-              date={event.date}
-              key={event.id}
-              eventPrice={event.price}
-            />
-          ))
-        ) : (
-          <Text className="font-bold text-white">No upcoming events</Text>
-        )}
+    <View className="flex-1">
+      <ScrollView>
+        <View className="flex-row justify-center">
+          <Text
+            className={`text-xl font-bold m-4 ${
+              textColour ? textColour : "text-white"
+            }`}
+          >
+            Upcoming Events
+          </Text>
+        </View>
+        <View className="flex flex-row flex-wrap">
+          {loading ? (
+            <ActivityIndicator />
+          ) : upcomingEvents && upcomingEvents?.length > 0 ? (
+            upcomingEvents?.map((event) => (
+              <View className=" my-1">
+                <EventCard
+                  eventId={event.id}
+                  eventCoverPhoto={event.event_cover_photo}
+                  communityId={event.community_host}
+                  title={event.event_title}
+                  date={event.date}
+                  key={event.id}
+                  eventPrice={event.price}
+                />
+              </View>
+            ))
+          ) : (
+            <Text className="font-bold text-white">No upcoming events</Text>
+          )}
+        </View>
       </ScrollView>
     </View>
   )
