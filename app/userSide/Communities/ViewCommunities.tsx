@@ -1,4 +1,11 @@
-import { View, SafeAreaView, ScrollView, Text } from "react-native"
+import {
+  View,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  Button,
+  TouchableOpacity,
+} from "react-native"
 import React, { useEffect, useState } from "react"
 import ViewCommunityTitle from "./components/ViewCommunityTitle"
 
@@ -44,43 +51,80 @@ const ViewCommunities = () => {
     }
   }, [profiles])
 
+  const [activeSection, setActiveSection] = useState<string>("about")
+
+  const renderSection = () => {
+    switch (activeSection) {
+      case "about":
+        return <CommunityAbout community={community} />
+      case "photos":
+        return community ? <PhotoArray community={community} /> : null
+      case "schedule":
+        return community && community.classes ? (
+          <CommunityScheduleDisplay communityId={community?.id} />
+        ) : null
+      case "events":
+        return <UpcomingCommunityEvents community={community} />
+      default:
+        return null
+    }
+  }
+
   return (
-    <SafeAreaView className=" flex-1 bg-primary-900 ">
+    <SafeAreaView className="flex-1 bg-primary-900">
       {loading ? (
-        <View className="my-2">
-          <ViewCommuntiesSkeleton />
-        </View>
+        <ViewCommuntiesSkeleton />
       ) : (
         <>
-          <View>
-            <ViewCommunityTitle
-              community={community}
-              communityId={communityId}
-              userId={user?.id}
-            />
-          </View>
-          <ScrollView>
-            <View className="my-2">
-              {community ? <PhotoArray community={community} /> : null}
-            </View>
-
-            <View>
-              <CommunityAbout community={community} />
-            </View>
-
-            {community ? (
-              <View>
-                <Text className="font-semibold text-lg text-white">
-                  Classes offered
+          <ViewCommunityTitle
+            community={community}
+            communityId={communityId}
+            userId={user?.id}
+          />
+          <View className="flex-1">
+            <View className="flex-row justify-around my-2">
+              <TouchableOpacity onPress={() => setActiveSection("about")}>
+                <Text
+                  className={`text-xl font-semibold text-white ${
+                    activeSection === "about" ? "underline" : ""
+                  }`}
+                >
+                  About
                 </Text>
-                <CommunityScheduleDisplay communityId={community?.id} />
-              </View>
-            ) : null}
-            <View>
-              <UpcomingCommunityEvents community={community} />
-            </View>
-          </ScrollView>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setActiveSection("photos")}>
+                <Text
+                  className={`text-xl font-semibold text-white ${
+                    activeSection === "photos" ? "underline" : ""
+                  }`}
+                >
+                  Photos
+                </Text>
+              </TouchableOpacity>
 
+              {community?.classes ? (
+                <TouchableOpacity onPress={() => setActiveSection("schedule")}>
+                  <Text
+                    className={`text-xl font-semibold text-white ${
+                      activeSection === "schedule" ? "underline" : ""
+                    }`}
+                  >
+                    Schedule
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
+              <TouchableOpacity onPress={() => setActiveSection("events")}>
+                <Text
+                  className={`text-xl font-semibold text-white ${
+                    activeSection === "events" ? "underline" : ""
+                  }`}
+                >
+                  Events
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {renderSection()}
+          </View>
           {!joined && community ? (
             <JoinFooter
               communityOwner={community.community_owner}

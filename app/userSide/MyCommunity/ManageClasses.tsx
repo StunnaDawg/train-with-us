@@ -51,6 +51,7 @@ const ManageClasses = () => {
   useFocusEffect(
     useCallback(() => {
       let isMounted = true
+
       getClassesFunc()
       return () => {
         isMounted = false

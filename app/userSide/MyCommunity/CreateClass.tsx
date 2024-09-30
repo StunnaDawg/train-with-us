@@ -9,7 +9,7 @@ import {
   TextInput,
   Pressable,
 } from "react-native"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import EditProfileTopBar from "../../components/TopBarEdit"
@@ -17,11 +17,13 @@ import { ScrollView } from "react-native-gesture-handler"
 import supabase from "../../../lib/supabase"
 import showAlert from "../../utilFunctions/showAlert"
 import { useAuth } from "../../supabaseFunctions/authcontext"
+import { Communities } from "../../@types/supabaseTypes"
 
 type ActvitiesOption = string
 
 const CreateClass = () => {
   const { user } = useAuth()
+  const [community, setCommunity] = useState<Communities>({} as Communities)
   const [className, setClassName] = useState<string>("")
   const [classAbout, setClassAbout] = useState<string>("")
   const [classDuration, setClassDuration] = useState<string>("")
@@ -48,6 +50,29 @@ const CreateClass = () => {
     setSelectedActvities([...selectedActvities])
   }
 
+  const getCommunity = async () => {
+    const { data, error } = await supabase
+      .from("communities")
+      .select("*")
+      .eq("id", communityId)
+    if (error) {
+      console.log("error", error)
+    }
+    if (data) {
+      setCommunity(data[0])
+    }
+  }
+
+  const updateCommunityClassesBoolean = async () => {
+    const { error } = await supabase
+      .from("communities")
+      .update({ classes: true })
+      .eq("id", communityId)
+    if (error) {
+      console.log("error", error)
+    }
+  }
+
   const CreateClassFunc = async () => {
     if (!className || !classDuration) {
       alert("Please fill in all required fields")
@@ -55,6 +80,9 @@ const CreateClass = () => {
     }
 
     try {
+      if (community.classes === false) {
+        updateCommunityClassesBoolean()
+      }
       const { error } = await supabase.from("community_classes").insert([
         {
           community_id: communityId,
@@ -155,6 +183,10 @@ const CreateClass = () => {
     "Horseback Riding 🐎",
     "Archery 🏹",
   ]
+
+  useEffect(() => {
+    getCommunity()
+  }, [])
 
   return (
     <SafeAreaView className="flex-1 bg-primary-900">

@@ -86,6 +86,7 @@ export type Database = {
           address: string | null
           channels: string[] | null
           city: string
+          classes: boolean
           community_members: string[] | null
           community_owner: string | null
           community_photos: string[] | null
@@ -104,6 +105,7 @@ export type Database = {
           address?: string | null
           channels?: string[] | null
           city?: string
+          classes?: boolean
           community_members?: string[] | null
           community_owner?: string | null
           community_photos?: string[] | null
@@ -122,6 +124,7 @@ export type Database = {
           address?: string | null
           channels?: string[] | null
           city?: string
+          classes?: boolean
           community_members?: string[] | null
           community_owner?: string | null
           community_photos?: string[] | null

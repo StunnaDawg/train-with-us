@@ -17,7 +17,7 @@ import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import EditProfileTopBar from "../../components/TopBarEdit"
 import showAlert from "../../utilFunctions/showAlert"
 import supabase from "../../../lib/supabase"
-import { CommunityClasses } from "../../@types/supabaseTypes"
+import { Communities, CommunityClasses } from "../../@types/supabaseTypes"
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker"
@@ -33,6 +33,7 @@ const CreateSchedule = () => {
   )
 
   const [scheduleName, setScheduleName] = useState<string>("")
+  const [community, setCommunity] = useState<Communities>({} as Communities)
 
   const [selectedClass, setSelectedClass] = useState<CommunityClasses | null>(
     null
@@ -68,6 +69,16 @@ const CreateSchedule = () => {
     setDate(currentDate)
   }
 
+  const updateCommunityScheduleBoolean = async () => {
+    const { error } = await supabase
+      .from("communities")
+      .update({ classes: true })
+      .eq("id", communityId)
+    if (error) {
+      console.log("error", error)
+    }
+  }
+
   const CreateScheduleFunc = async () => {
     if (!user) {
       showAlert({
@@ -86,6 +97,9 @@ const CreateSchedule = () => {
     }
 
     try {
+      if (community.classes === false) {
+        updateCommunityScheduleBoolean()
+      }
       const { error } = await supabase.from("community_class_schedule").insert([
         {
           class_id: selectedClass.id,
@@ -148,6 +162,7 @@ const CreateSchedule = () => {
 
   useEffect(() => {
     getClassesFunc()
+    getCommunity()
   }, [])
 
   const DaysOptions: DaysOption[] = [
@@ -159,6 +174,16 @@ const CreateSchedule = () => {
     "Saturday",
     "Sunday",
   ]
+
+  const getCommunity = async () => {
+    const { data, error } = await supabase
+      .from("communities")
+      .select("*")
+      .eq("id", communityId)
+    if (error) {
+      console.log("error", error)
+    }
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
