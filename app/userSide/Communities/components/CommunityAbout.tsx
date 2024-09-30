@@ -17,24 +17,24 @@ const CommunityAbout = ({ community }: CommunityAboutProps) => {
         </Text>
       </View>
 
-      <View className="mx-4">
-        <Text className="font-semibold text-sm text-wrap text-white">
+      <View className="mx-2">
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          className="mt-1"
+        >
+          {community?.community_tags && community.community_tags.length > 0
+            ? community.community_tags.map((tag) => (
+                <View key={tag} className="mb-1">
+                  <ActivityTags activity={`${tag}`} />
+                </View>
+              ))
+            : null}
+        </ScrollView>
+        <Text className="font-semibold text-lg text-wrap text-white">
           {community?.about}
         </Text>
       </View>
-      <ScrollView
-        showsHorizontalScrollIndicator={false}
-        horizontal={true}
-        className="mt-1"
-      >
-        {community?.community_tags && community.community_tags.length > 0
-          ? community.community_tags.map((tag) => (
-              <View key={tag} className="mb-1">
-                <ActivityTags activity={`${tag}`} />
-              </View>
-            ))
-          : null}
-      </ScrollView>
     </View>
   )
 }

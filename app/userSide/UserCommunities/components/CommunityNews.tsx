@@ -1,11 +1,13 @@
 import { View, Text, FlatList, TouchableOpacity } from "react-native"
 import React, { useEffect, useState } from "react"
-import { News } from "../../../@types/supabaseTypes"
+import { Events, News } from "../../../@types/supabaseTypes"
 import { format, formatDate } from "date-fns"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import showAlert from "../../../utilFunctions/showAlert"
 import supabase from "../../../../lib/supabase"
+import getSingleEvent from "../../../supabaseFunctions/getFuncs/getSingleEvent"
+import EventCard from "../../Events/components/EventCard"
 
 export type NewsCard = {
   news: News
@@ -13,6 +15,8 @@ export type NewsCard = {
 }
 
 const NewsCard = ({ news, userId }: NewsCard) => {
+  const [event, setEvent] = useState<Events | null>(null)
+  const [loading, setLoading] = useState(false)
   const [showFullContent, setShowFullContent] = useState(false)
   const [likePressed, setLikePressed] = useState(false)
   const [likes, setLikes] = useState(news?.likes?.length || 0)
@@ -94,6 +98,10 @@ const NewsCard = ({ news, userId }: NewsCard) => {
     if (userId && news.likes && news.likes.includes(userId)) {
       setLikePressed(true)
     }
+
+    if (news.event_link) {
+      getSingleEvent(setLoading, news.event_link, setEvent)
+    }
   }, [news])
   return (
     <View className="bg-white rounded-xl shadow-md m-4 overflow-hidden">
@@ -147,6 +155,20 @@ const NewsCard = ({ news, userId }: NewsCard) => {
             </Text>
           </TouchableOpacity>
         )}
+
+        {news.event_link && event ? (
+          <View className=" bg-black flex-row items-center mt-2">
+            <EventCard
+              title={event.event_title}
+              date={event.date}
+              communityId={event.community_host}
+              eventId={event.id}
+              eventCoverPhoto={event.event_cover_photo}
+              eventPrice={event.price}
+            />
+          </View>
+        ) : null}
+
         <View className="flex-row justify-end mt-2">
           <TouchableOpacity
             onPress={() => {

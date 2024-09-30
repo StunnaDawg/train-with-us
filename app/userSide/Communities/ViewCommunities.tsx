@@ -1,4 +1,4 @@
-import { View, SafeAreaView, ScrollView } from "react-native"
+import { View, SafeAreaView, ScrollView, Text } from "react-native"
 import React, { useEffect, useState } from "react"
 import ViewCommunityTitle from "./components/ViewCommunityTitle"
 
@@ -68,14 +68,17 @@ const ViewCommunities = () => {
               <CommunityAbout community={community} />
             </View>
 
+            {community ? (
+              <View>
+                <Text className="font-semibold text-lg text-white">
+                  Classes offered
+                </Text>
+                <CommunityScheduleDisplay communityId={community?.id} />
+              </View>
+            ) : null}
             <View>
               <UpcomingCommunityEvents community={community} />
             </View>
-            {/* {community ? (
-              <View>
-                <CommunityScheduleDisplay communityId={community?.id} />
-              </View>
-            ) : null} */}
           </ScrollView>
 
           {!joined && community ? (

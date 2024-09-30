@@ -6,6 +6,7 @@ import * as Notifications from "expo-notifications"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import BackButton from "../components/BackButton"
 import Constants from "expo-constants"
+import { useEffect, useState } from "react"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -17,6 +18,7 @@ Notifications.setNotificationHandler({
 
 const Settings = () => {
   const { user } = useAuth()
+  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(false)
 
   function handleRegistrationError(errorMessage: string) {
     alert(errorMessage)
@@ -89,33 +91,84 @@ const Settings = () => {
       alert(error.message)
     }
   }
+
+  const checkNotificationStatus = async () => {
+    if (user?.id) {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("expo_push_token")
+        .eq("id", user.id)
+        .single()
+
+      if (error) {
+        console.error("Error checking notification status:", error)
+      } else {
+        setIsNotificationsEnabled(!!data?.expo_push_token)
+      }
+    }
+  }
+
+  useEffect(() => {
+    checkNotificationStatus()
+  }, [])
+
+  const handleNotifications = async () => {
+    if (isNotificationsEnabled) {
+      // Disable notifications logic here
+      // For example, remove the token from the database
+      if (user?.id) {
+        const { error } = await supabase
+          .from("profiles")
+          .update({ expo_push_token: null })
+          .eq("id", user.id)
+
+        if (error) {
+          console.error("Error disabling notifications:", error)
+          Alert.alert("Error disabling notifications")
+        } else {
+          setIsNotificationsEnabled(false)
+          Alert.alert("Notifications disabled")
+        }
+      }
+    } else {
+      const token = await registerForPushNotificationsAsync()
+      if (token) {
+        await savePushToken(token)
+        setIsNotificationsEnabled(true)
+        Alert.alert("Notifications enabled")
+      }
+    }
+  }
   return (
-    <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-between">
-        <View className="ml-1">
-          <BackButton size={26} colour="black" />
-        </View>
-        <Text className="text-2xl font-bold">Settings</Text>
+    <SafeAreaView className="flex-1 bg-primary-900">
+      <View className="flex flex-row justify-between items-center p-4">
+        <BackButton size={26} colour="white" />
+        <Text className="text-2xl font-bold text-white">Settings</Text>
         <View />
       </View>
 
       <View className="flex-1 justify-center items-center">
-        <View className="space-y-4 items-center">
+        <View className="space-y-4 items-center w-full px-4">
           <Pressable
             onPress={handleSignOut}
-            className="flex flex-row items-center"
+            className="flex flex-row items-center justify-center w-full bg-gray-600 p-4 rounded-xl"
           >
-            <Text className="font-semibold text-xl mx-1">Log Out</Text>
-            <FontAwesome6 name="door-open" size={24} color="black" />
+            <Text className="font-semibold text-xl text-white mr-2">
+              Log Out
+            </Text>
+            <FontAwesome6 name="door-open" size={24} color="white" />
           </Pressable>
 
           <Pressable
-            onPress={() => handleEnableNotifications()}
-            className="flex flex-row items-center rounded-xl bg-black p-2"
+            onPress={handleNotifications}
+            className={`flex flex-row items-center justify-center w-full p-4 rounded-xl ${
+              isNotificationsEnabled ? "bg-indigo-600" : "bg-teal-600"
+            }`}
           >
-            <Text className="text-xl text-white font-semibold mx-1">
-              Reset Push Notifications
+            <Text className="text-xl text-white font-semibold mr-2">
+              {isNotificationsEnabled ? "Disable" : "Enable"} Push Notifications
             </Text>
+            <FontAwesome6 name="bell" size={24} color="white" />
           </Pressable>
         </View>
       </View>

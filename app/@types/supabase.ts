@@ -883,6 +883,7 @@ export type Database = {
           community_id: number
           content: string
           created_at: string
+          event_link: number | null
           id: string
           likes: string[] | null
           news_image: string | null
@@ -895,6 +896,7 @@ export type Database = {
           community_id: number
           content?: string
           created_at?: string
+          event_link?: number | null
           id?: string
           likes?: string[] | null
           news_image?: string | null
@@ -907,6 +909,7 @@ export type Database = {
           community_id?: number
           content?: string
           created_at?: string
+          event_link?: number | null
           id?: string
           likes?: string[] | null
           news_image?: string | null
@@ -923,6 +926,12 @@ export type Database = {
             foreignKeyName: "public_news_posts_community_id_fkey"
             columns: ["community_id"]
             referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_news_posts_event_link_fkey"
+            columns: ["event_link"]
+            referencedRelation: "events"
             referencedColumns: ["id"]
           }
         ]
