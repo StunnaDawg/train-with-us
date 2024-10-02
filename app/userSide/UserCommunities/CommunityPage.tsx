@@ -1,18 +1,6 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  Pressable,
-  ScrollView,
-  Alert,
-} from "react-native"
+import { View, Text, SafeAreaView, Pressable } from "react-native"
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import {
-  RouteProp,
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native"
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import { FontAwesome6 } from "@expo/vector-icons"
 import BackButton from "../../components/BackButton"
@@ -26,6 +14,7 @@ import CommunityPageMembers from "./components/CommunityPageMembers"
 import CommunityPageAbout from "./components/CommunityPageAbout"
 import { Events, News, Profile } from "../../@types/supabaseTypes"
 import { useAuth } from "../../supabaseFunctions/authcontext"
+import { useIsFocused } from "@react-navigation/native"
 import getNewsFromCommunity from "../../supabaseFunctions/getFuncs/getNewsFromCommunity"
 import getCommunityMembers from "../../supabaseFunctions/getFuncs/getCommunityMembers"
 import CommunityPageClasses from "./components/CommunityPageClasses"
@@ -35,7 +24,6 @@ const CommunityPage = () => {
   const [communityNewsState, setCommunityNewsState] = useState<News[] | null>(
     null
   )
-  const [gearPressed, setGearPressed] = useState<boolean>(false)
   const [communityMembers, setCommunityMembers] = useState<Profile[] | null>(
     null
   )
@@ -49,18 +37,10 @@ const CommunityPage = () => {
   const community = route.params.community
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const { dismiss } = useBottomSheetModal()
-
+  const isFocused = useIsFocused()
   const Tab = createMaterialTopTabNavigator()
 
   const snapPoints = useMemo(() => ["25%", "90%"], [])
-
-  const handleGearPressIn = () => {
-    setGearPressed(true)
-  }
-
-  const handleGearPressOut = () => {
-    setGearPressed(false)
-  }
 
   const handleCommunitySettingsPress = () => {
     setIsSettingsCommunityButtonPressed(true)
@@ -78,9 +58,126 @@ const CommunityPage = () => {
   }, [])
 
   useEffect(() => {
-    getCommunityMembers(setLoading, community.id, setCommunityMembers)
-    getNewsFromCommunity(setLoading, community.id, setCommunityNewsState)
-  }, [community])
+    if (isFocused) {
+      getCommunityMembers(setLoading, community.id, setCommunityMembers)
+      getNewsFromCommunity(setLoading, community.id, setCommunityNewsState)
+    }
+  }, [community, isFocused])
+
+  const GearIcon = ({ onPress }: { onPress: () => void }) => {
+    const [pressed, setPressed] = useState(false)
+
+    return (
+      <Pressable
+        className={`${pressed ? "opacity-50" : ""}`}
+        onPressIn={() => setPressed(true)}
+        onPressOut={() => setPressed(false)}
+        onPress={onPress}
+      >
+        <FontAwesome6 name="gear" size={22} color="white" />
+      </Pressable>
+    )
+  }
+
+  const MemoizedTabNavigator = useMemo(
+    () => (
+      <Tab.Navigator
+        screenOptions={{
+          tabBarStyle: { backgroundColor: "#00000", height: 32 },
+          tabBarScrollEnabled: true,
+          tabBarIndicatorStyle: { backgroundColor: "blue" },
+        }}
+      >
+        <Tab.Screen
+          name="Channels"
+          options={{
+            tabBarLabelStyle: {
+              color: "white",
+              fontSize: 12,
+              fontWeight: "bold",
+            },
+          }}
+        >
+          {() => (
+            <CommunityPageChannels
+              community={community}
+              loading={loading}
+              setLoadingState={setLoading}
+            />
+          )}
+        </Tab.Screen>
+        <Tab.Screen
+          options={{
+            tabBarLabelStyle: {
+              color: "white",
+              fontSize: 12,
+              fontWeight: "bold",
+            },
+          }}
+          name="News"
+        >
+          {() => (
+            <CommunityNews
+              communityNews={communityNewsState}
+              userId={userProfile?.id}
+            />
+          )}
+        </Tab.Screen>
+
+        <Tab.Screen
+          options={{
+            tabBarLabelStyle: {
+              color: "white",
+              fontSize: 12,
+              fontWeight: "bold",
+            },
+          }}
+          name="Events"
+        >
+          {() => <CommuntiyPageEvents community={community} />}
+        </Tab.Screen>
+
+        <Tab.Screen
+          options={{
+            tabBarLabelStyle: {
+              color: "white",
+              fontSize: 12,
+              fontWeight: "bold",
+            },
+          }}
+          name="Classes"
+        >
+          {() => <CommunityPageClasses community={community} />}
+        </Tab.Screen>
+
+        <Tab.Screen
+          options={{
+            tabBarLabelStyle: {
+              color: "white",
+              fontSize: 12,
+              fontWeight: "bold",
+            },
+          }}
+          name="Members"
+        >
+          {() => <CommunityPageMembers communityMembers={communityMembers} />}
+        </Tab.Screen>
+        <Tab.Screen
+          options={{
+            tabBarLabelStyle: {
+              color: "white",
+              fontSize: 12,
+              fontWeight: "bold",
+            },
+          }}
+          name="Details"
+        >
+          {() => <CommunityPageAbout community={community} />}
+        </Tab.Screen>
+      </Tab.Navigator>
+    ),
+    [community, communityNewsState, communityMembers, loading, userProfile]
+  )
 
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
@@ -96,14 +193,7 @@ const CommunityPage = () => {
             </Text>
           </View>
 
-          <Pressable
-            className={`${gearPressed ? "opacity-50" : null}`}
-            onPressIn={handleGearPressIn}
-            onPressOut={handleGearPressOut}
-            onPress={handlePresentModalPress}
-          >
-            <FontAwesome6 name="gear" size={22} color="white" />
-          </Pressable>
+          <GearIcon onPress={handlePresentModalPress} />
         </View>
 
         <View className="m-1">
@@ -127,100 +217,7 @@ const CommunityPage = () => {
           )}
         </View>
 
-        <Tab.Navigator
-          screenOptions={{
-            tabBarStyle: { backgroundColor: "#00000", height: 32 },
-            tabBarScrollEnabled: true,
-            tabBarIndicatorStyle: { backgroundColor: "blue" },
-          }}
-        >
-          <Tab.Screen
-            name="Channels"
-            options={{
-              tabBarLabelStyle: {
-                color: "white",
-                fontSize: 12,
-                fontWeight: "bold",
-              },
-            }}
-          >
-            {() => (
-              <CommunityPageChannels
-                community={community}
-                loading={loading}
-                setLoadingState={setLoading}
-              />
-            )}
-          </Tab.Screen>
-          <Tab.Screen
-            options={{
-              tabBarLabelStyle: {
-                color: "white",
-                fontSize: 12,
-                fontWeight: "bold",
-              },
-            }}
-            name="News"
-          >
-            {() => (
-              <CommunityNews
-                communityNews={communityNewsState}
-                userId={userProfile?.id}
-              />
-            )}
-          </Tab.Screen>
-
-          <Tab.Screen
-            options={{
-              tabBarLabelStyle: {
-                color: "white",
-                fontSize: 12,
-                fontWeight: "bold",
-              },
-            }}
-            name="Events"
-          >
-            {() => <CommuntiyPageEvents community={community} />}
-          </Tab.Screen>
-
-          <Tab.Screen
-            options={{
-              tabBarLabelStyle: {
-                color: "white",
-                fontSize: 12,
-                fontWeight: "bold",
-              },
-            }}
-            name="Classes"
-          >
-            {() => <CommunityPageClasses community={community} />}
-          </Tab.Screen>
-
-          <Tab.Screen
-            options={{
-              tabBarLabelStyle: {
-                color: "white",
-                fontSize: 12,
-                fontWeight: "bold",
-              },
-            }}
-            name="Members"
-          >
-            {() => <CommunityPageMembers communityMembers={communityMembers} />}
-          </Tab.Screen>
-          <Tab.Screen
-            options={{
-              tabBarLabelStyle: {
-                color: "white",
-                fontSize: 12,
-                fontWeight: "bold",
-              },
-            }}
-            name="Details"
-          >
-            {() => <CommunityPageAbout community={community} />}
-          </Tab.Screen>
-        </Tab.Navigator>
+        {MemoizedTabNavigator}
       </>
 
       <BottomSheetModal

@@ -36,6 +36,12 @@ import { cacheStorage } from "../../../utilFunctions/mmkvStorage"
 import { useNewMessage } from "../../../context/NewMessage"
 import { set } from "mongoose"
 
+export interface MessageWithProfile extends Messages {
+  sender_profile: {
+    profile_pic: string | null
+  }
+}
+
 const MessageScreen = () => {
   const route = useRoute<RouteProp<RootStackParamList, "MessagingScreen">>()
   const chatSession = route.params.chatSession
@@ -45,7 +51,9 @@ const MessageScreen = () => {
   const [page, setPage] = useState(0)
   const [endOfData, setEndOfData] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [serverMessages, setServerMessages] = useState<Messages[] | null>([])
+  const [serverMessages, setServerMessages] = useState<
+    MessageWithProfile[] | null
+  >([])
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const { user, userProfile } = useAuth()
   // const cacheKey = `chatSession:${chatSession.id}:page:${page}`
@@ -80,22 +88,26 @@ const MessageScreen = () => {
             table: "messages",
             filter: `chat_session=eq.${chatSession.id}`,
           },
-          (payload) => {
-            setServerMessages((prevMessages: Messages[] | null) =>
-              prevMessages
-                ? [payload.new as Messages, ...prevMessages]
-                : [payload.new as Messages]
-            )
+          async (payload) => {
+            const { data: senderProfile } = await supabase
+              .from("profiles")
+              .select("profile_pic")
+              .eq("id", payload.new.sender)
+              .single()
 
-            // cacheStorage.set(cacheKey, JSON.stringify(serverMessages))
+            const newMessage: MessageWithProfile = {
+              ...(payload.new as Messages),
+              sender_profile: {
+                profile_pic: senderProfile?.profile_pic || null,
+              },
+            }
+
+            setServerMessages((prevMessages: MessageWithProfile[] | null) =>
+              prevMessages ? [newMessage, ...prevMessages] : [newMessage]
+            )
           }
         )
-        .subscribe((status, error) => {
-          console.log("Subscription status:", status)
-          if (error) {
-            console.error("Subscription error:", error)
-          }
-        })
+        .subscribe()
 
       return () => {
         supabase.removeChannel(channelSubscription)
@@ -158,21 +170,24 @@ const MessageScreen = () => {
     }
   }, [page])
 
-  const renderMessage = useCallback(({ item }: { item: Messages }) => {
-    return (
-      <MessageComponent
-        eventId={item.eventId}
-        communityId={item.community_id}
-        isLink={item.community_or_event_link}
-        sentAt={item.sent_at}
-        message={item.message}
-        id={item.sender}
-        name={item.sender_name}
-        imageUrl={item.image}
-        senderProfilePic={item.sender_profile_pic}
-      />
-    )
-  }, [])
+  const renderMessage = useCallback(
+    ({ item }: { item: MessageWithProfile }) => {
+      return (
+        <MessageComponent
+          eventId={item.eventId}
+          communityId={item.community_id}
+          isLink={item.community_or_event_link}
+          sentAt={item.sent_at}
+          message={item.message}
+          id={item.sender}
+          name={item.sender_name}
+          imageUrl={item.image}
+          senderProfilePic={item.sender_profile.profile_pic}
+        />
+      )
+    },
+    []
+  )
 
   const messageKeyExtractor = useCallback((item: Messages, index: number) => {
     return item.id + index.toString()

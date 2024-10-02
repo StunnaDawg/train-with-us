@@ -27,7 +27,7 @@ const sendMessage = async (
         sender: userId,
         chat_session: chatSession.id,
         image: image,
-        sender_profile_pic: senderProfilePic,
+
         sender_name: senderName,
       },
     ])

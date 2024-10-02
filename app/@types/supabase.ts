@@ -820,7 +820,6 @@ export type Database = {
           read: boolean
           sender: string | null
           sender_name: string | null
-          sender_profile_pic: string | null
           sent_at: string
         }
         Insert: {
@@ -834,7 +833,6 @@ export type Database = {
           read?: boolean
           sender?: string | null
           sender_name?: string | null
-          sender_profile_pic?: string | null
           sent_at?: string
         }
         Update: {
@@ -848,7 +846,6 @@ export type Database = {
           read?: boolean
           sender?: string | null
           sender_name?: string | null
-          sender_profile_pic?: string | null
           sent_at?: string
         }
         Relationships: [

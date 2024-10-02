@@ -14,26 +14,7 @@ type CommunitiesScrollProps = {
 
 const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
   const { userProfile } = useAuth()
-  const [currentUserProfile, setCurrentUserProfile] = useState<Profile | null>(
-    null
-  )
-  const [isDashPressed, setIsDashPressed] = useState<boolean>()
-  const [activeCommunity, setActiveCommunity] = useState<number | null>(null)
   const navigation = useNavigation<NavigationType>()
-
-  useEffect(() => {
-    if (userProfile) {
-      setCurrentUserProfile(userProfile)
-    }
-  }, [userProfile])
-
-  const handleOnPressIn = useCallback(() => {
-    setIsDashPressed(true)
-  }, [])
-
-  const handleOnPressOut = useCallback(() => {
-    setIsDashPressed(false)
-  }, [])
 
   const renderCommunities = useCallback(() => {
     return communities?.map((community) => {
@@ -45,7 +26,7 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
         />
       )
     })
-  }, [communities, activeCommunity])
+  }, [communities])
 
   return (
     <View className="max-h-full  border-slate-400">
@@ -59,25 +40,6 @@ const CommunitiesScroll = ({ communities }: CommunitiesScrollProps) => {
               <FontAwesome6 name="circle-plus" size={64} color="white" />
             </Pressable>
           )}
-
-          <Pressable
-            onPressIn={handleOnPressIn}
-            onPressOut={handleOnPressOut}
-            onPress={() => {
-              navigation.navigate("Communities")
-              setActiveCommunity(null)
-            }}
-            className={`m-2 ${
-              isDashPressed ? "bg-black" : "bg-white"
-            } rounded-full p-2 items-center`}
-          >
-            <FontAwesome6
-              name="magnifying-glass"
-              size={36}
-              color={isDashPressed ? "white" : "black"}
-            />
-            <Text className="font-bold">Search</Text>
-          </Pressable>
 
           {renderCommunities()}
         </View>
