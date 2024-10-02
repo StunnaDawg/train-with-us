@@ -1,7 +1,7 @@
 import { View, Text, FlatList, TouchableOpacity } from "react-native"
 import React, { useEffect, useState } from "react"
 import { Events, News } from "../../../@types/supabaseTypes"
-import { format, formatDate } from "date-fns"
+import { format, formatDistanceToNow } from "date-fns"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import showAlert from "../../../utilFunctions/showAlert"
@@ -137,7 +137,9 @@ const NewsCard = ({ news, userId }: NewsCard) => {
             {news.author_name}
           </Text>
           <Text className="ml-auto text-gray-500 text-xs">
-            {format(new Date(news.created_at), "dd MMM yyyy, HH:mm")}
+            {formatDistanceToNow(new Date(news.created_at), {
+              addSuffix: true,
+            })}
           </Text>
         </View>
         <Text className="text-xl font-bold text-gray-900 mb-2">
