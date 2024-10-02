@@ -157,15 +157,17 @@ const NewsCard = ({ news, userId }: NewsCard) => {
         )}
 
         {news.event_link && event ? (
-          <View className=" bg-black flex-row items-center mt-2">
-            <EventCard
-              title={event.event_title}
-              date={event.date}
-              communityId={event.community_host}
-              eventId={event.id}
-              eventCoverPhoto={event.event_cover_photo}
-              eventPrice={event.price}
-            />
+          <View className="mt-2">
+            <View className="bg-black self-start rounded-lg overflow-hidden pt-1 pb-1">
+              <EventCard
+                title={event.event_title}
+                date={event.date}
+                communityId={event.community_host}
+                eventId={event.id}
+                eventCoverPhoto={event.event_cover_photo}
+                eventPrice={event.price}
+              />
+            </View>
           </View>
         ) : null}
 

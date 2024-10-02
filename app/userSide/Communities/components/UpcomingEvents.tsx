@@ -39,14 +39,13 @@ const UpcomingCommunityEvents = ({
             <ActivityIndicator />
           ) : upcomingEvents && upcomingEvents?.length > 0 ? (
             upcomingEvents?.map((event) => (
-              <View className=" my-1">
+              <View key={event.id} className=" my-1">
                 <EventCard
                   eventId={event.id}
                   eventCoverPhoto={event.event_cover_photo}
                   communityId={event.community_host}
                   title={event.event_title}
                   date={event.date}
-                  key={event.id}
                   eventPrice={event.price}
                 />
               </View>
