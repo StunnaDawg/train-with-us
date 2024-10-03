@@ -31,6 +31,7 @@ import showAlert from "../../../utilFunctions/showAlert"
 import sendEventChatMessage from "../../../supabaseFunctions/addFuncs/sendEventChatMessage"
 import upsertEventChatSession from "../../../supabaseFunctions/updateFuncs/updateEventChat"
 import sendEventChannelNotification from "../../../utilFunctions/sendEventChannelNotification"
+import { FlashList } from "@shopify/flash-list"
 
 const EventChat = () => {
   const [page, setPage] = useState(0)
@@ -216,15 +217,9 @@ const EventChat = () => {
           keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <FlatList
-              initialNumToRender={10}
-              maxToRenderPerBatch={5}
-              windowSize={5}
+            <FlashList
+              estimatedItemSize={120}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                flexGrow: 1,
-                justifyContent: "flex-end",
-              }}
               inverted={true}
               className="mx-1"
               data={serverMessages}

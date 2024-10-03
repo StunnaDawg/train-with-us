@@ -40,6 +40,7 @@ import MessageInput from "../../../components/MessageInput"
 import MessageComponent from "../../../components/MessageCard"
 import MessageSkeleton from "./MessagesSkeleton"
 import sendChannelNotification from "../../../utilFunctions/sendChannelNotifcation"
+import { FlashList } from "@shopify/flash-list"
 
 const ChannelMessageScreen = () => {
   const [initialLoading, setInitialLoading] = useState(true)
@@ -258,18 +259,15 @@ const ChannelMessageScreen = () => {
           keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <FlatList
+            <FlashList
+              estimatedItemSize={120}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                flexGrow: 1,
-                justifyContent: "flex-end",
-              }}
+              inverted={true}
               className="mx-1"
               data={serverMessages}
+              ListHeaderComponent={<View className="h-2" />}
               onEndReached={handleLoadMore}
               onEndReachedThreshold={0.5}
-              initialNumToRender={10}
-              inverted={true}
               ListFooterComponent={
                 loading && !endOfData ? (
                   <ActivityIndicator size="large" />
