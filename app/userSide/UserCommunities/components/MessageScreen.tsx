@@ -35,6 +35,7 @@ import MessageSkeleton from "./MessagesSkeleton"
 import { cacheStorage } from "../../../utilFunctions/mmkvStorage"
 import { useNewMessage } from "../../../context/NewMessage"
 import { set } from "mongoose"
+import { FlashList } from "@shopify/flash-list"
 
 export interface MessageWithProfile extends Messages {
   sender_profile: {
@@ -224,15 +225,9 @@ const MessageScreen = () => {
           keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <FlatList
-              initialNumToRender={10}
-              maxToRenderPerBatch={5}
-              windowSize={5}
+            <FlashList
+              estimatedItemSize={120}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                flexGrow: 1,
-                justifyContent: "flex-end",
-              }}
               inverted={true}
               className="mx-1"
               data={serverMessages}
