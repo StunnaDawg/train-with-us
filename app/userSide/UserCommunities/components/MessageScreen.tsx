@@ -32,9 +32,7 @@ import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import MessageInput from "../../../components/MessageInput"
 import MessageComponent from "../../../components/MessageCard"
 import MessageSkeleton from "./MessagesSkeleton"
-import { cacheStorage } from "../../../utilFunctions/mmkvStorage"
 import { useNewMessage } from "../../../context/NewMessage"
-import { set } from "mongoose"
 import { FlashList } from "@shopify/flash-list"
 
 export interface MessageWithProfile extends Messages {
@@ -43,10 +41,79 @@ export interface MessageWithProfile extends Messages {
   }
 }
 
+type ProfilePic = {
+  id: string
+  profile_pic: string | null
+}
+
+const readImage = async (item: string) => {
+  try {
+    const { data, error } = await supabase.storage
+      .from("photos")
+      .download(`${item}`, {
+        transform: {
+          quality: 20,
+        },
+      })
+    if (error) {
+      throw error
+    }
+    return new Promise((resolve, reject) => {
+      const fr = new FileReader()
+      fr.onload = () => {
+        const imageDataUrl = fr.result as string
+        resolve(imageDataUrl)
+      }
+      fr.onerror = () => {
+        reject(new Error("Failed to read file"))
+      }
+      fr.readAsDataURL(data!)
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+const getDirectMessagesProfilePics = async (
+  setDirectMessagesProfilePics: Dispatch<SetStateAction<ProfilePic[]>>,
+  sessionIds: string[]
+) => {
+  try {
+    if (!sessionIds) return
+    const { data: profilePics, error: profilePicError } = await supabase
+      .from("profiles")
+      .select("id, profile_pic")
+      .in("id", sessionIds)
+
+    if (profilePicError) {
+      console.error("Error fetching profile pics:", profilePicError)
+      return null
+    }
+
+    const ProfilePics = await Promise.all(
+      profilePics.map(async (pic) => {
+        const image = await readImage(pic.profile_pic)
+
+        return {
+          id: pic.id as string,
+          profile_pic: image as string,
+        }
+      })
+    )
+
+    setDirectMessagesProfilePics(ProfilePics)
+  } catch (error) {
+    console.error("Unexpected error in getChannelMembersProfilePics:", error)
+    return null
+  }
+}
+
 const MessageScreen = () => {
   const route = useRoute<RouteProp<RootStackParamList, "MessagingScreen">>()
   const chatSession = route.params.chatSession
-  const { setNewMessage } = useNewMessage()
+  const [directMessagesProfilePics, setDirectMessagesProfilePics] = useState<
+    ProfilePic[]
+  >([])
   const [initialLoading, setInitialLoading] = useState(true)
   const [appending, setAppending] = useState(false)
   const [page, setPage] = useState(0)
@@ -69,53 +136,67 @@ const MessageScreen = () => {
 
   useEffect(() => {
     const fetchMessages = async () => {
-      setNewMessage(false)
-      setInitialLoading(true)
-      await getChatSessionMessages(
-        chatSession.id,
-        setServerMessages,
-        page,
-        setEndOfData,
-        false,
-        setLoading
-      )
-      const channelSubscription = supabase
-        .channel("schema-db-changes")
-        .on(
-          "postgres_changes",
-          {
-            event: "INSERT",
-            schema: "public",
-            table: "messages",
-            filter: `chat_session=eq.${chatSession.id}`,
-          },
-          async (payload) => {
-            const { data: senderProfile } = await supabase
-              .from("profiles")
-              .select("profile_pic")
-              .eq("id", payload.new.sender)
-              .single()
+      if (otherUserId && user?.id) {
+        try {
+          await getDirectMessagesProfilePics(setDirectMessagesProfilePics, [
+            otherUserId,
+            user?.id,
+          ])
+        } catch (error) {
+          console.error("Error fetching profile pictures:", error)
+        }
+      }
 
-            const newMessage: MessageWithProfile = {
-              ...(payload.new as Messages),
-              sender_profile: {
-                profile_pic: senderProfile?.profile_pic || null,
-              },
-            }
-
-            setServerMessages((prevMessages: MessageWithProfile[] | null) =>
-              prevMessages ? [newMessage, ...prevMessages] : [newMessage]
-            )
-          }
+      try {
+        await getChatSessionMessages(
+          chatSession.id,
+          setServerMessages,
+          page,
+          setEndOfData,
+          false,
+          setLoading
         )
-        .subscribe()
+        const channelSubscription = supabase
+          .channel("schema-db-changes")
+          .on(
+            "postgres_changes",
+            {
+              event: "INSERT",
+              schema: "public",
+              table: "messages",
+              filter: `chat_session=eq.${chatSession.id}`,
+            },
+            async (payload) => {
+              const { data: senderProfile } = await supabase
+                .from("profiles")
+                .select("profile_pic")
+                .eq("id", payload.new.sender)
+                .single()
 
-      return () => {
-        supabase.removeChannel(channelSubscription)
+              const newMessage: MessageWithProfile = {
+                ...(payload.new as Messages),
+                sender_profile: {
+                  profile_pic: senderProfile?.profile_pic || null,
+                },
+              }
+
+              setServerMessages((prevMessages: MessageWithProfile[] | null) =>
+                prevMessages ? [newMessage, ...prevMessages] : [newMessage]
+              )
+            }
+          )
+          .subscribe()
+
+        return () => {
+          supabase.removeChannel(channelSubscription)
+        }
+      } catch (error) {
+        console.error("Error loading initial data:", error)
+      } finally {
+        setInitialLoading(false)
       }
     }
     fetchMessages()
-    setInitialLoading(false)
   }, [chatSession])
 
   const handleLoadMore = () => {
@@ -173,6 +254,9 @@ const MessageScreen = () => {
 
   const renderMessage = useCallback(
     ({ item }: { item: MessageWithProfile }) => {
+      const profilePic = directMessagesProfilePics?.find(
+        (pic) => pic.id === item.sender
+      )
       return (
         <MessageComponent
           eventId={item.eventId}
@@ -183,11 +267,11 @@ const MessageScreen = () => {
           id={item.sender}
           name={item.sender_name}
           imageUrl={item.image}
-          senderProfilePic={item.sender_profile.profile_pic}
+          senderProfilePic={profilePic?.profile_pic || null}
         />
       )
     },
-    []
+    [directMessagesProfilePics]
   )
 
   const messageKeyExtractor = useCallback((item: Messages, index: number) => {

@@ -55,14 +55,6 @@ export interface CommunityChannelMessageWithProfile
 // I can use the useEffect to load the profile pics for each sender, then attach them to the messages
 // Can I only read the profile pic once ?
 
-const LoadingIndicator = () => {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <ActivityIndicator size="large" color="#0000ff" />
-    </View>
-  )
-}
-
 type ProfilePic = {
   id: string
   profile_pic: string | null
@@ -111,11 +103,8 @@ const getChannelMembersProfilePics = async (
       console.error("Error fetching channel members:", channelMembersError)
       return null
     }
-    console.log("channelMembersData", channelMembersData)
 
     const channelMembers = channelMembersData.map((member) => member.user_id)
-
-    console.log("channelMembers", channelMembers)
 
     const { data: profilePics, error: profilePicError } = await supabase
       .from("profiles")
@@ -127,10 +116,6 @@ const getChannelMembersProfilePics = async (
       return null
     }
 
-    console.log("profilePics being read", profilePics.length)
-
-    console.log("profilePics", profilePics)
-
     const channelMembersProfilePics = await Promise.all(
       profilePics.map(async (pic) => {
         const image = await readImage(pic.profile_pic)
@@ -141,8 +126,6 @@ const getChannelMembersProfilePics = async (
         }
       })
     )
-
-    console.log("channelMembersProfilePics", channelMembersProfilePics)
 
     setChannelMembersProfilePics(channelMembersProfilePics)
   } catch (error) {
@@ -189,7 +172,6 @@ const ChannelMessageScreen = () => {
       !currentUser ||
       !channel
     ) {
-      console.log(message)
       return
     }
 
@@ -216,7 +198,6 @@ const ChannelMessageScreen = () => {
 
     if (!channel.private) {
       if (!channel) {
-        console.log("no channel data")
         return
       }
 
@@ -232,10 +213,9 @@ const ChannelMessageScreen = () => {
       )
     } else {
       if (!channel) {
-        console.log("no channel data")
         return
       }
-      console.log("sending notification from channel", channel)
+
       sendChannelNotification(
         channel.community,
         currentUser.id,
@@ -335,7 +315,6 @@ const ChannelMessageScreen = () => {
 
   const renderMessage = useCallback(
     ({ item }: { item: CommunityChannelMessageWithProfile }) => {
-      console.log("channelMembersProfilePics", channelMembersProfilePics)
       const profilePic = channelMembersProfilePics?.find(
         (pic) => pic.id === item.sender_id
       )
