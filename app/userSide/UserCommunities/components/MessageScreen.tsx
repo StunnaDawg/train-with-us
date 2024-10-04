@@ -230,6 +230,7 @@ const MessageScreen = () => {
               showsVerticalScrollIndicator={false}
               inverted={true}
               className="mx-1"
+              contentContainerStyle={{}}
               data={serverMessages}
               ListHeaderComponent={<View className="h-2" />}
               onEndReached={handleLoadMore}

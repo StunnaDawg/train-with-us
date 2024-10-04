@@ -9,7 +9,7 @@ const sendChannelMessage = async (
   userId: string,
   channel: CommunityChannel,
   name: string,
-  senderProfilePic: string | null,
+
   setLoadingSentMessage: Dispatch<SetStateAction<boolean>>,
   setImage: Dispatch<SetStateAction<string>>,
   setMessageToSend: Dispatch<SetStateAction<string>>
@@ -24,7 +24,6 @@ const sendChannelMessage = async (
         channel_id: channel.id,
         sender_name: name,
         image: image,
-        sender_profile_pic: senderProfilePic,
       },
     ])
 

@@ -22,6 +22,7 @@ type SinglePicProps = {
   skeletonRadius?: any
   allowExpand?: boolean
   allowCacheImage?: boolean
+  isMessagePic?: boolean
 }
 
 export default function SinglePicCommunity({
@@ -32,6 +33,7 @@ export default function SinglePicCommunity({
   noAvatarRadius,
   allowExpand = false,
   allowCacheImage = true,
+  isMessagePic = false,
 }: SinglePicProps) {
   const [showPlaceholder, setPlaceholder] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
@@ -43,7 +45,12 @@ export default function SinglePicCommunity({
   const isMounted = useRef(true)
 
   useEffect(() => {
-    readImage()
+    if (isMessagePic === false) {
+      readImage()
+    } else {
+      setLoading(false)
+      setAvatarUrl(item || "")
+    }
   }, [item])
 
   const readImage = async () => {

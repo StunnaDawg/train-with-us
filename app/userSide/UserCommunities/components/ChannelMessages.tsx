@@ -42,14 +42,125 @@ import MessageSkeleton from "./MessagesSkeleton"
 import sendChannelNotification from "../../../utilFunctions/sendChannelNotifcation"
 import { FlashList } from "@shopify/flash-list"
 
+export interface CommunityChannelMessageWithProfile
+  extends CommunityChannelMessages {
+  sender_profile: {
+    profile_pic: string | null
+  }
+}
+
+// I actually think I can just load all the profile pics from the channel members and load them, then attach them to the messages
+// I think the best thing to do is to load all the channel members, then load all the messages, then load the profile pics for each sender
+// I can do this by getting the channel members from the channel, then getting the profile pics from the profiles table
+// I can use the useEffect to load the profile pics for each sender, then attach them to the messages
+// Can I only read the profile pic once ?
+
+const LoadingIndicator = () => {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <ActivityIndicator size="large" color="#0000ff" />
+    </View>
+  )
+}
+
+type ProfilePic = {
+  id: string
+  profile_pic: string | null
+}
+
+const readImage = async (item: string) => {
+  try {
+    const { data, error } = await supabase.storage
+      .from("photos")
+      .download(`${item}`, {
+        transform: {
+          quality: 20,
+        },
+      })
+    if (error) {
+      throw error
+    }
+    return new Promise((resolve, reject) => {
+      const fr = new FileReader()
+      fr.onload = () => {
+        const imageDataUrl = fr.result as string
+        resolve(imageDataUrl)
+      }
+      fr.onerror = () => {
+        reject(new Error("Failed to read file"))
+      }
+      fr.readAsDataURL(data!)
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+const getChannelMembersProfilePics = async (
+  communityId: number,
+  setChannelMembersProfilePics: Dispatch<SetStateAction<ProfilePic[]>>
+) => {
+  try {
+    const { data: channelMembersData, error: channelMembersError } =
+      await supabase
+        .from("community_members")
+        .select("*")
+        .eq("community_id", communityId)
+
+    if (channelMembersError) {
+      console.error("Error fetching channel members:", channelMembersError)
+      return null
+    }
+    console.log("channelMembersData", channelMembersData)
+
+    const channelMembers = channelMembersData.map((member) => member.user_id)
+
+    console.log("channelMembers", channelMembers)
+
+    const { data: profilePics, error: profilePicError } = await supabase
+      .from("profiles")
+      .select("id, profile_pic")
+      .in("id", channelMembers)
+
+    if (profilePicError) {
+      console.error("Error fetching profile pics:", profilePicError)
+      return null
+    }
+
+    console.log("profilePics being read", profilePics.length)
+
+    console.log("profilePics", profilePics)
+
+    const channelMembersProfilePics = await Promise.all(
+      profilePics.map(async (pic) => {
+        const image = await readImage(pic.profile_pic)
+
+        return {
+          id: pic.id as string,
+          profile_pic: image as string,
+        }
+      })
+    )
+
+    console.log("channelMembersProfilePics", channelMembersProfilePics)
+
+    setChannelMembersProfilePics(channelMembersProfilePics)
+  } catch (error) {
+    console.error("Unexpected error in getChannelMembersProfilePics:", error)
+    return null
+  }
+}
+
 const ChannelMessageScreen = () => {
   const [initialLoading, setInitialLoading] = useState(true)
   const [loading, setLoading] = useState(false)
   const route = useRoute<RouteProp<RootStackParamList, "ChannelScreen">>()
   const channel = route.params.channelId
-
+  const [channelMembersProfilePics, setChannelMembersProfilePics] = useState<
+    ProfilePic[]
+  >([])
   const [serverMessages, setServerMessages] = useState<
-    CommunityChannelMessages[] | null
+    CommunityChannelMessageWithProfile[] | null
   >([])
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const [page, setPage] = useState(0)
@@ -90,7 +201,6 @@ const ChannelMessageScreen = () => {
       channel,
       currentUser?.first_name +
         (currentUser?.last_name ? " " + currentUser?.last_name : " "),
-      currentUser?.profile_pic,
       setLoadingSentMessage,
       setImage,
       setMessageToSend
@@ -146,43 +256,62 @@ const ChannelMessageScreen = () => {
   useEffect(() => {
     const getChannelSessionMessagesFunc = async () => {
       setInitialLoading(true)
-      await getChannelSessionMessages(
-        channel.id,
-        setServerMessages,
-        page,
-        setEndOfData,
-        false,
-        setLoading
-      )
-      const channelSubscription = supabase
-        .channel("schema-db-changes")
-        .on(
-          "postgres_changes",
-          {
-            event: "INSERT",
-            schema: "public",
-            table: "community_channel_messages",
-            filter: `channel_id=eq.${channel.id}`,
-          },
-          (payload) => {
-            setServerMessages(
-              (prevMessages: CommunityChannelMessages[] | null) =>
-                prevMessages
-                  ? [payload.new as CommunityChannelMessages, ...prevMessages]
-                  : [payload.new as CommunityChannelMessages]
-            )
-          }
+      try {
+        await getChannelMembersProfilePics(
+          channel.community,
+          setChannelMembersProfilePics
         )
-        .subscribe((status, error) => {
-          console.log("Subscription status:", status, error)
-        })
+        await getChannelSessionMessages(
+          channel.id,
+          setServerMessages,
+          page,
+          setEndOfData,
+          false,
+          setLoading
+        )
+        const channelSubscription = supabase
+          .channel("schema-db-changes")
+          .on(
+            "postgres_changes",
+            {
+              event: "INSERT",
+              schema: "public",
+              table: "community_channel_messages",
+              filter: `channel_id=eq.${channel.id}`,
+            },
+            async (payload) => {
+              const { data: senderProfile } = await supabase
+                .from("profiles")
+                .select("profile_pic")
+                .eq("id", payload.new.sender_id)
+                .single()
 
-      return () => {
-        supabase.removeChannel(channelSubscription)
+              const newMessage: CommunityChannelMessageWithProfile = {
+                ...(payload.new as CommunityChannelMessages),
+                sender_profile: {
+                  profile_pic: senderProfile?.profile_pic || null,
+                },
+              }
+              setServerMessages(
+                (prevMessages: CommunityChannelMessageWithProfile[] | null) =>
+                  prevMessages ? [newMessage, ...prevMessages] : [newMessage]
+              )
+            }
+          )
+          .subscribe((status, error) => {
+            console.log("Subscription status:", status, error)
+          })
+
+        return () => {
+          supabase.removeChannel(channelSubscription)
+        }
+      } catch (error) {
+        console.error("Error loading initial data:", error)
+      } finally {
+        setInitialLoading(false)
       }
     }
     getChannelSessionMessagesFunc()
-    setInitialLoading(false)
   }, [channel])
 
   const handleLoadMore = () => {
@@ -205,7 +334,12 @@ const ChannelMessageScreen = () => {
   }, [page])
 
   const renderMessage = useCallback(
-    ({ item }: { item: CommunityChannelMessages }) => {
+    ({ item }: { item: CommunityChannelMessageWithProfile }) => {
+      console.log("channelMembersProfilePics", channelMembersProfilePics)
+      const profilePic = channelMembersProfilePics?.find(
+        (pic) => pic.id === item.sender_id
+      )
+
       return (
         <MessageComponent
           eventId={item.eventId}
@@ -216,11 +350,11 @@ const ChannelMessageScreen = () => {
           id={item.sender_id}
           name={item.sender_name}
           imageUrl={item.image}
-          senderProfilePic={item.sender_profile_pic}
+          senderProfilePic={profilePic?.profile_pic || null}
         />
       )
     },
-    []
+    [channelMembersProfilePics]
   )
 
   const messageKeyExtractor = useCallback(

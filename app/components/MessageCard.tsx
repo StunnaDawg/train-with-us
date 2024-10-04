@@ -55,6 +55,8 @@ const MessageComponent = ({
     if (!communityId || isLink === false) return
     getSingleCommunity(setLoading, communityId, setCommunity)
   }, [communityId])
+
+  console.log("senderProfilePic", senderProfilePic)
   return (
     <View className="flex flex-row p-2 items-center my-1">
       <SinglePicCommunity
@@ -65,6 +67,7 @@ const MessageComponent = ({
         noAvatarRadius={100}
         allowExpand={true}
         allowCacheImage={false}
+        isMessagePic={true}
       />
       <View className="flex-1 ml-3">
         <View className="flex flex-row items-center">

@@ -2,8 +2,6 @@ import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import { MessageWithProfile } from "../../userSide/UserCommunities/components/MessageScreen"
 
-const PAGE_SIZE = 10
-
 const getChatSessionMessages = async (
   chatSessionId: string,
   setServerMessages: Dispatch<SetStateAction<MessageWithProfile[] | null>>,
@@ -38,6 +36,7 @@ const getChatSessionMessages = async (
       ? [...prevMessages, ...messagesWithProfiles]
       : messagesWithProfiles
   )
+
   setEndOfData(data.length < 20)
   setLoading(false)
 }

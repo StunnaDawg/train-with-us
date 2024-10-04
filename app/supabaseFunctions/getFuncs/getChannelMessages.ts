@@ -1,68 +1,47 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
-import { CommunityChannelMessages, Messages } from "../../@types/supabaseTypes"
-import { cacheStorage } from "../../utilFunctions/mmkvStorage"
+import { CommunityChannelMessageWithProfile } from "../../userSide/UserCommunities/components/ChannelMessages"
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 20
 
 const getChannelSessionMessages = async (
   channelId: string,
-  setMessages: Dispatch<SetStateAction<CommunityChannelMessages[] | null>>,
+  setMessages: Dispatch<
+    SetStateAction<CommunityChannelMessageWithProfile[] | null>
+  >,
   page: number,
-  setEndOfMessages: Dispatch<SetStateAction<boolean>>,
-  append: boolean = true,
+  setEndOfData: Dispatch<SetStateAction<boolean>>,
+  append: boolean,
   setLoading: Dispatch<SetStateAction<boolean>>
 ) => {
-  try {
-    setLoading(true)
-    // const cacheKey = `channel:${channelId}:page:${page}`
-    // const cachedMessages = cacheStorage.getString(cacheKey)
+  setLoading(true)
+  const { data, error } = await supabase
+    .from("community_channel_messages")
+    .select(
+      `
+      *,
+      sender_profile:profiles!inner(profile_pic)
+    `
+    )
+    .eq("channel_id", channelId)
+    .order("sent_at", { ascending: false })
+    .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1)
 
-    // if (cachedMessages) {
-    //   const messages: CommunityChannelMessages[] = JSON.parse(cachedMessages)
-    //   setMessages((prevItems: CommunityChannelMessages[] | null) =>
-    //     append ? [...(prevItems || []), ...messages] : messages
-    //   )
-    //   if (messages.length < PAGE_SIZE) {
-    //     setEndOfMessages(true)
-    //   }
-    //   return
-    // }
-
-    const from = page * PAGE_SIZE
-    const to = from + PAGE_SIZE - 1
-
-    const { data: messages, error } = await supabase
-      .from("community_channel_messages")
-      .select("*")
-      .eq("channel_id", channelId)
-      .order("sent_at", { ascending: false })
-      .range(from, to)
-
-    if (error) {
-      console.error("Failed to fetch messages:", error.message)
-      throw error // Or handle it according to your application's needs
-    } else {
-      if (messages.length < PAGE_SIZE) {
-        setEndOfMessages(true)
-      }
-
-      // cacheStorage.set(cacheKey, JSON.stringify(messages))
-
-      if (append) {
-        setMessages((prevItems: CommunityChannelMessages[] | null) =>
-          prevItems ? [...prevItems, ...messages] : messages
-        )
-      } else {
-        setMessages(messages)
-      }
-    }
-    return messages
-  } catch (error) {
-    console.log(error)
-  } finally {
+  if (error) {
+    console.error("Error fetching channel messages:", error)
     setLoading(false)
+    return
   }
+
+  const messagesWithProfiles = data as CommunityChannelMessageWithProfile[]
+
+  setMessages((prevMessages) =>
+    append && prevMessages
+      ? [...prevMessages, ...messagesWithProfiles]
+      : messagesWithProfiles
+  )
+  setEndOfData(data.length < PAGE_SIZE)
+  setLoading(false)
 }
 
 export default getChannelSessionMessages
