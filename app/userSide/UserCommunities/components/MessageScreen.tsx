@@ -136,6 +136,7 @@ const MessageScreen = () => {
 
   useEffect(() => {
     const fetchMessages = async () => {
+      setInitialLoading(true)
       if (otherUserId && user?.id) {
         try {
           await getDirectMessagesProfilePics(setDirectMessagesProfilePics, [
@@ -166,17 +167,14 @@ const MessageScreen = () => {
               table: "messages",
               filter: `chat_session=eq.${chatSession.id}`,
             },
-            async (payload) => {
-              const { data: senderProfile } = await supabase
-                .from("profiles")
-                .select("profile_pic")
-                .eq("id", payload.new.sender)
-                .single()
-
+            (payload) => {
               const newMessage: MessageWithProfile = {
                 ...(payload.new as Messages),
                 sender_profile: {
-                  profile_pic: senderProfile?.profile_pic || null,
+                  profile_pic:
+                    directMessagesProfilePics.find(
+                      (pic) => pic.id === payload.new.sender
+                    )?.profile_pic || null,
                 },
               }
 
@@ -197,7 +195,7 @@ const MessageScreen = () => {
       }
     }
     fetchMessages()
-  }, [chatSession])
+  }, [chatSession, otherUserId, user?.id])
 
   const handleLoadMore = () => {
     if (!loading && !endOfData) {

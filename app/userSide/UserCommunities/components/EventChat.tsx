@@ -33,14 +33,102 @@ import upsertEventChatSession from "../../../supabaseFunctions/updateFuncs/updat
 import sendEventChannelNotification from "../../../utilFunctions/sendEventChannelNotification"
 import { FlashList } from "@shopify/flash-list"
 
+export interface EventChatMessageWithProfile extends EventChatMessages {
+  sender_profile: {
+    profile_pic: string | null
+  }
+}
+
+type ProfilePic = {
+  id: string
+  profile_pic: string | null
+}
+
+const readImage = async (item: string) => {
+  try {
+    const { data, error } = await supabase.storage
+      .from("photos")
+      .download(`${item}`, {
+        transform: {
+          quality: 20,
+        },
+      })
+    if (error) {
+      throw error
+    }
+    return new Promise((resolve, reject) => {
+      const fr = new FileReader()
+      fr.onload = () => {
+        const imageDataUrl = fr.result as string
+        resolve(imageDataUrl)
+      }
+      fr.onerror = () => {
+        reject(new Error("Failed to read file"))
+      }
+      fr.readAsDataURL(data!)
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+const getEventChatMembersProfilePics = async (
+  eventChatId: string,
+  setEventChatProfilePics: Dispatch<SetStateAction<ProfilePic[]>>
+) => {
+  try {
+    const { data: channelMembersData, error: channelMembersError } =
+      await supabase
+        .from("events_users")
+        .select("*")
+        .eq("event_chat", eventChatId)
+
+    if (channelMembersError) {
+      console.error("Error fetching channel members:", channelMembersError)
+      return null
+    }
+
+    const channelMembers = channelMembersData.map((member) => member.user_id)
+
+    const { data: profilePics, error: profilePicError } = await supabase
+      .from("profiles")
+      .select("id, profile_pic")
+      .in("id", channelMembers)
+
+    if (profilePicError) {
+      console.error("Error fetching profile pics:", profilePicError)
+      return null
+    }
+
+    const channelMembersProfilePics = await Promise.all(
+      profilePics.map(async (pic) => {
+        const image = await readImage(pic.profile_pic)
+
+        return {
+          id: pic.id as string,
+          profile_pic: image as string,
+        }
+      })
+    )
+
+    setEventChatProfilePics(channelMembersProfilePics)
+  } catch (error) {
+    console.error("Unexpected error in getChannelMembersProfilePics:", error)
+    return null
+  }
+}
+
 const EventChat = () => {
   const [page, setPage] = useState(0)
-  const { setNewMessage } = useNewMessage()
+
   const [initialLoading, setInitialLoading] = useState(true)
   const [endOfData, setEndOfData] = useState(false)
   const [loading, setLoading] = useState(false)
   const [serverMessages, setServerMessages] = useState<
-    EventChatMessages[] | null
+    EventChatMessageWithProfile[] | null
+  >([])
+  const [eventChatProfilePics, setEventChatProfilePics] = useState<
+    ProfilePic[]
   >([])
   const { user, userProfile } = useAuth()
   const route = useRoute<RouteProp<RootStackParamList, "EventChat">>()
@@ -49,7 +137,6 @@ const EventChat = () => {
 
   useEffect(() => {
     const fetchMessages = async () => {
-      setNewMessage(false)
       setInitialLoading(true)
       if (!eventChat.id) {
         showAlert({
@@ -59,47 +146,64 @@ const EventChat = () => {
         navigation.goBack()
         return
       }
-      await getEventChatMessages(
-        eventChat.id,
-        setServerMessages,
-        page,
-        setEndOfData,
-        false,
-        setLoading
-      )
-      const channelSubscription = supabase
-        .channel("schema-db-changes")
-        .on(
-          "postgres_changes",
-          {
-            event: "INSERT",
-            schema: "public",
-            table: "event_messages",
-            filter: `event_chat=eq.${eventChat.id}`,
-          },
-          (payload) => {
-            setServerMessages((prevMessages: EventChatMessages[] | null) =>
-              prevMessages
-                ? [payload.new as EventChatMessages, ...prevMessages]
-                : [payload.new as EventChatMessages]
-            )
 
-            // cacheStorage.set(cacheKey, JSON.stringify(serverMessages))
-          }
+      try {
+        await getEventChatMembersProfilePics(
+          eventChat.id,
+          setEventChatProfilePics
         )
-        .subscribe((status, error) => {
-          console.log("Subscription status:", status)
-          if (error) {
-            console.error("Subscription error:", error)
-          }
-        })
+        await getEventChatMessages(
+          eventChat.id,
+          setServerMessages,
+          page,
+          setEndOfData,
+          false,
+          setLoading
+        )
+        const channelSubscription = supabase
+          .channel("schema-db-changes")
+          .on(
+            "postgres_changes",
+            {
+              event: "INSERT",
+              schema: "public",
+              table: "event_messages",
+              filter: `event_chat=eq.${eventChat.id}`,
+            },
+            async (payload) => {
+              const newMessage: EventChatMessageWithProfile = {
+                ...(payload.new as EventChatMessages),
+                sender_profile: {
+                  profile_pic:
+                    eventChatProfilePics.find(
+                      (pic) => pic.id === payload.new.sender_id
+                    )?.profile_pic || null,
+                },
+              }
+              setServerMessages((prevMessages) =>
+                prevMessages ? [newMessage, ...prevMessages] : [newMessage]
+              )
 
-      return () => {
-        supabase.removeChannel(channelSubscription)
+              // cacheStorage.set(cacheKey, JSON.stringify(serverMessages))
+            }
+          )
+          .subscribe((status, error) => {
+            console.log("Subscription status:", status)
+            if (error) {
+              console.error("Subscription error:", error)
+            }
+          })
+
+        return () => {
+          supabase.removeChannel(channelSubscription)
+        }
+      } catch (error) {
+        console.error("Error fetching profile pictures:", error)
+      } finally {
+        setInitialLoading(false)
       }
     }
     fetchMessages()
-    setInitialLoading(false)
   }, [eventChat])
 
   const handleLoadMore = () => {
@@ -173,18 +277,24 @@ const EventChat = () => {
     }
   }, [page])
 
-  const renderMessage = useCallback(({ item }: { item: EventChatMessages }) => {
-    return (
-      <MessageCard
-        sentAt={item.sent_at}
-        message={item.message}
-        id={item.sender_id}
-        name={item.sender_name}
-        imageUrl={item.image}
-        senderProfilePic={item.sender_profile_pic}
-      />
-    )
-  }, [])
+  const renderMessage = useCallback(
+    ({ item }: { item: EventChatMessages }) => {
+      const senderProfilePic = eventChatProfilePics.find(
+        (pic) => pic.id === item.sender_id
+      )?.profile_pic
+      return (
+        <MessageCard
+          sentAt={item.sent_at}
+          message={item.message}
+          id={item.sender_id}
+          name={item.sender_name}
+          imageUrl={item.image}
+          senderProfilePic={senderProfilePic || null}
+        />
+      )
+    },
+    [eventChatProfilePics]
+  )
 
   const messageKeyExtractor = useCallback(
     (item: EventChatMessages, index: number) => {

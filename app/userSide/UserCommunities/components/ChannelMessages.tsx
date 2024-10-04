@@ -259,17 +259,14 @@ const ChannelMessageScreen = () => {
               table: "community_channel_messages",
               filter: `channel_id=eq.${channel.id}`,
             },
-            async (payload) => {
-              const { data: senderProfile } = await supabase
-                .from("profiles")
-                .select("profile_pic")
-                .eq("id", payload.new.sender_id)
-                .single()
-
+            (payload) => {
               const newMessage: CommunityChannelMessageWithProfile = {
                 ...(payload.new as CommunityChannelMessages),
                 sender_profile: {
-                  profile_pic: senderProfile?.profile_pic || null,
+                  profile_pic:
+                    channelMembersProfilePics.find(
+                      (pic) => pic.id === payload.new.sender_id
+                    )?.profile_pic || null,
                 },
               }
               setServerMessages(

@@ -1,51 +1,46 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
-import { EventChatMessages, Messages } from "../../@types/supabaseTypes"
-import { cacheStorage } from "../../utilFunctions/mmkvStorage"
+import { EventChatMessageWithProfile } from "../../userSide/UserCommunities/components/EventChat"
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 20
 
 const getEventChatMessages = async (
   eventChatId: string,
-  setMessages: Dispatch<SetStateAction<EventChatMessages[] | null>>,
+  setMessages: Dispatch<SetStateAction<EventChatMessageWithProfile[] | null>>,
   page: number,
   setEndOfMessages: Dispatch<SetStateAction<boolean>>,
   append: boolean = true,
   setLoading: Dispatch<SetStateAction<boolean>>
 ) => {
+  setLoading(true)
   try {
-    setLoading(true)
-
-    const from = page * PAGE_SIZE
-    const to = from + PAGE_SIZE - 1
-
-    const { data: messages, error } = await supabase
+    const { data, error } = await supabase
       .from("event_messages")
-      .select("*")
+      .select(
+        `
+        *,
+        sender_profile:profiles!inner(profile_pic)
+      `
+      )
       .eq("event_chat", eventChatId)
       .order("sent_at", { ascending: false })
-      .range(from, to)
+      .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1)
 
     if (error) {
-      console.error("Failed to fetch messages:", error.message)
-      throw error
-    } else {
-      if (messages.length < PAGE_SIZE) {
-        setEndOfMessages(true)
-      }
-
-      // cacheStorage.set(cacheKey, JSON.stringify(messages))
-
-      if (append) {
-        setMessages((prevItems: EventChatMessages[] | null) =>
-          prevItems ? [...prevItems, ...messages] : messages
-        )
-      } else {
-        setMessages(messages)
-      }
+      console.error("Error fetching event chat messages:", error)
+      return
     }
+
+    const messagesWithProfiles = data as EventChatMessageWithProfile[]
+
+    setMessages((prevMessages) =>
+      append && prevMessages
+        ? [...prevMessages, ...messagesWithProfiles]
+        : messagesWithProfiles
+    )
+    setEndOfMessages(data.length < PAGE_SIZE)
   } catch (error) {
-    console.log(error)
+    console.error("Unexpected error in getEventChatMessages:", error)
   } finally {
     setLoading(false)
   }
