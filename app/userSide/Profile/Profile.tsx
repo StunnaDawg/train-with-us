@@ -49,19 +49,19 @@ const ProfileView = () => {
         showSearchCommunities={false}
         searchUsers={false}
       />
-      <ScrollView>
-        <View className="flex flex-row justify-center">
-          <Text className="text-white text-xl font-bold">
+      <ScrollView className="px-4 py-6">
+        <View className="flex items-center mb-6">
+          <Text className="text-white text-2xl font-bold">
             {userProfile?.first_name}
           </Text>
         </View>
-        <View className={`${"bg-white"} m-2 mx-10 rounded-lg p-2`}>
+        <View className="bg-white rounded-xl shadow-lg overflow-hidden">
           <Pressable
             onPressIn={() => handlePressedButtonIn("editProfile")}
             onPressOut={() => handlePressedButtonOut("editProfile")}
-            className={`border-b ${
-              pressedButton["editProfile"] ? "opacity-50" : null
-            } mx-2 p-3`}
+            className={`border-b border-gray-200 ${
+              pressedButton["editProfile"] ? "bg-gray-100" : ""
+            }`}
             onPress={() => {
               if (userProfile)
                 navigation.navigate("UserEditProfile", {
@@ -69,20 +69,22 @@ const ProfileView = () => {
                 })
             }}
           >
-            <View className="flex flex-row justify-between">
-              <View className="flex flex-row items-center">
-                <Text className="font-semibold  mx-1">Edit Profile</Text>
-                <FontAwesome6 name="edit" size={18} />
+            <View className="flex-row justify-between items-center p-4">
+              <View className="flex-row items-center">
+                <FontAwesome6 name="edit" size={20} color="#4B5563" />
+                <Text className="font-semibold text-gray-800 ml-3">
+                  Edit Profile
+                </Text>
               </View>
-              <FontAwesome6 name="chevron-right" size={18} />
+              <FontAwesome6 name="chevron-right" size={18} color="#9CA3AF" />
             </View>
           </Pressable>
           <Pressable
             onPressIn={() => handlePressedButtonIn("viewProfile")}
             onPressOut={() => handlePressedButtonOut("viewProfile")}
-            className={` border-b ${
-              pressedButton["viewProfile"] ? "opacity-50" : null
-            } mx-2 p-3`}
+            className={`border-b border-gray-200 ${
+              pressedButton["viewProfile"] ? "bg-gray-100" : ""
+            }`}
             onPress={() => {
               if (userProfile)
                 navigation.navigate("ViewFullUserProfile", {
@@ -90,27 +92,32 @@ const ProfileView = () => {
                 })
             }}
           >
-            <View className="flex flex-row justify-between">
-              <View className="flex flex-row items-center">
-                <Text className="font-semibold mx-1">View Profile</Text>
+            <View className="flex-row justify-between items-center p-4">
+              <View className="flex-row items-center">
+                <FontAwesome6 name="user" size={20} color="#4B5563" />
+                <Text className="font-semibold text-gray-800 ml-3">
+                  View Profile
+                </Text>
               </View>
-              <FontAwesome6 name="chevron-right" size={18} />
+              <FontAwesome6 name="chevron-right" size={18} color="#9CA3AF" />
             </View>
           </Pressable>
           <Pressable
             onPressIn={() => handlePressedButtonIn("accountSettings")}
             onPressOut={() => handlePressedButtonOut("accountSettings")}
             className={`${
-              pressedButton["accountSettings"] ? "opacity-50" : null
-            } mx-2 p-3`}
+              pressedButton["accountSettings"] ? "bg-gray-100" : ""
+            }`}
             onPress={() => navigation.navigate("UserSettings")}
           >
-            <View className="flex flex-row justify-between">
-              <View className="flex flex-row items-center">
-                <Text className="font-semibold  mx-1">Account Settings</Text>
-                <FontAwesome6 name="gear" size={18} />
+            <View className="flex-row justify-between items-center p-4">
+              <View className="flex-row items-center">
+                <FontAwesome6 name="gear" size={20} color="#4B5563" />
+                <Text className="font-semibold text-gray-800 ml-3">
+                  Account Settings
+                </Text>
               </View>
-              <FontAwesome6 name="chevron-right" size={18} />
+              <FontAwesome6 name="chevron-right" size={18} color="#9CA3AF" />
             </View>
           </Pressable>
         </View>

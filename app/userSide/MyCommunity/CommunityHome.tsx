@@ -19,27 +19,20 @@ const PressableItem: React.FC<PressableItemProps> = ({
   onPress,
   borderBottom = true,
 }) => {
-  const [pressed, setPressed] = useState<boolean>(false)
-
   return (
-    <View
-      className={`${borderBottom ? "border-b border-gray-300" : ""} py-3 px-4`}
+    <TouchableOpacity
+      onPress={onPress}
+      className={`py-4 px-4 ${borderBottom ? "border-b border-gray-200" : ""}`}
     >
-      <TouchableOpacity
-        onPress={onPress}
-        onPressIn={() => setPressed(true)}
-        onPressOut={() => setPressed(false)}
-      >
-        <View className="flex-row items-center justify-between">
-          <Text className="text-base font-semibold text-gray-800">{title}</Text>
-          <Text className="text-gray-500 text-xl">›</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
+      <View className="flex-row items-center justify-between">
+        <Text className="text-base font-semibold text-gray-800">{title}</Text>
+        <Text className="text-gray-500 text-xl">›</Text>
+      </View>
+    </TouchableOpacity>
   )
 }
 
-const CommunityHome: React.FC = () => {
+const CommunityHome = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [currentCommunity, setCurrentCommunity] = useState<Communities | null>(
     null
@@ -76,17 +69,15 @@ const CommunityHome: React.FC = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
-      <View className="flex flex-row justify-between px-5 pb-2 border-b items-center">
-        <View className="mb-1">
-          <BackButton size={22} colour="white" />
-        </View>
+      <View className="flex-row justify-between items-center px-4 py-2 bg-primary-800">
+        <BackButton size={22} colour="white" />
         <Text className="font-bold text-white text-xl">
-          {currentCommunity?.community_title} settings
+          {currentCommunity?.community_title || "Community"} Settings
         </Text>
-        <View />
+        <View style={{ width: 22 }} />
       </View>
-      <ScrollView>
-        <View className="border rounded-xl mx-3 py-3 mt-5 bg-white shadow-md">
+      <ScrollView className="flex-1 px-4 py-4">
+        <View className="bg-white rounded-xl shadow-md">
           <PressableItem
             title="Create Channel"
             onPress={() => navigateTo("CreateChannel")}
@@ -107,7 +98,6 @@ const CommunityHome: React.FC = () => {
             title="Preview Community Profile"
             onPress={() => navigateTo("ViewCommunitiesScreen")}
           />
-
           <PressableItem
             title="View Requests"
             onPress={() =>

@@ -5,6 +5,7 @@ import {
   TextInput,
   Pressable,
   Switch,
+  ScrollView,
 } from "react-native"
 import React, { useState } from "react"
 import { RouteProp, useRoute } from "@react-navigation/native"
@@ -82,57 +83,65 @@ const CreateChannel = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-gray-900">
+      <View className="flex-row justify-between items-center px-4 py-3 ">
+        <BackButton size={24} colour="white" />
+        <Text className="text-xl font-bold text-white">Create Channel</Text>
+        <Pressable
+          onPress={async () => {
+            await handleChannelCreation()
+            navigation.goBack()
+          }}
+          className="bg-blue-600 px-4 py-2 rounded-lg active:bg-blue-700"
+        >
+          <Text className="text-white font-bold">Save</Text>
+        </Pressable>
+      </View>
+
       {!loading ? (
-        <>
-          <View className="flex flex-row justify-between w-full p-3">
-            <View className="flex flex-row   items-center">
-              <BackButton />
-              <Text className="text-sm font-semibold mx-3">Create Channel</Text>
+        <ScrollView className="flex-1 px-4 py-6">
+          <View className="space-y-6">
+            <View>
+              <Text className="text-lg text-white font-bold mb-2">
+                Channel Name
+              </Text>
+              <TextInput
+                className="bg-gray-800 text-white px-4 py-3 rounded-lg"
+                value={channelName}
+                onChangeText={(text: string) => setChannelName(text)}
+                placeholder="Enter channel name"
+                placeholderTextColor="#9CA3AF"
+              />
             </View>
 
-            <Pressable
-              onPress={async () => {
-                await handleChannelCreation()
-                navigation.goBack()
-              }}
-            >
-              <Text className="text-lg font-bold underline">Save</Text>
-            </Pressable>
-          </View>
-
-          <View className="border mx-2 rounded-lg p-3">
-            <TextInput
-              value={channelName}
-              onChangeText={(text: string) => setChannelName(text)}
-              placeholder="new-channel"
-            />
-          </View>
-
-          <View className="flex flex-row justify-between m-2">
             <View>
-              <View className="flex flex-row items-center">
-                <Text className="text-sm font-bold mx-1">Private Channel</Text>
-                <FontAwesome6
-                  name={privateChannel ? "lock" : "unlock"}
-                  size={20}
-                  color="black"
-                />
-              </View>
-              {privateChannel ? (
-                <View>
-                  <Text className="text-xs font-semibold mx-1">
-                    Members will have to manually join
+              <Text className="text-lg text-white font-bold mb-2">
+                Channel Type
+              </Text>
+              <View className="flex-row justify-between items-center bg-gray-800 px-4 py-3 rounded-lg">
+                <View className="flex-row items-center">
+                  <FontAwesome6
+                    name={privateChannel ? "lock" : "unlock"}
+                    size={20}
+                    color="white"
+                  />
+                  <Text className="text-white font-semibold ml-3">
+                    Private Channel
                   </Text>
                 </View>
-              ) : null}
+                <Switch
+                  value={privateChannel}
+                  onValueChange={() => setPrivateChannel(!privateChannel)}
+                />
+              </View>
+              {privateChannel && (
+                <Text className="text-sm text-gray-300 mt-2">
+                  Members will have to manually join this channel
+                </Text>
+              )}
             </View>
-            <Switch
-              value={privateChannel}
-              onChange={() => setPrivateChannel(!privateChannel)}
-            />
           </View>
-        </>
+        </ScrollView>
       ) : (
         <Loading />
       )}

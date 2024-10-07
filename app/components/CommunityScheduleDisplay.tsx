@@ -2,9 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import React, { useEffect, useState } from "react"
 import { CommunitySchedule } from "../@types/supabaseTypes"
 import supabase from "../../lib/supabase"
-import { ca, se } from "date-fns/locale"
 import { FlatList, ScrollView } from "react-native-gesture-handler"
-import { format, parseISO } from "date-fns"
 import ClassDisplayCard from "./ClassDisplayCard"
 
 // So all we need to do is create Monday - Friday Headers then every class that includes that day
@@ -83,32 +81,56 @@ const CommunityScheduleDisplay = ({
   }
 
   return (
-    <View className="flex flex-1 h-full">
-      <View className="flex-1">
-        <View className="my-2">
-          <ScrollView indicatorStyle="white" horizontal={true}>
-            {daysOfWeek.map((day) => (
-              <TouchableOpacity
-                className={`${
-                  selectedDay === day ? "bg-yellow-500" : null
-                } p-2 rounded-md m-2`}
-                key={day}
-                onPress={() => setSelectedDay(day)}
+    <View className="flex-1 bg-gray-900">
+      <View className="py-4">
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 16 }}
+        >
+          {daysOfWeek.map((day) => (
+            <TouchableOpacity
+              key={day}
+              onPress={() => setSelectedDay(day)}
+              className={`px-4 py-2 rounded-full mr-2 ${
+                selectedDay === day ? "bg-blue-600" : "bg-gray-700"
+              }`}
+            >
+              <Text
+                className={`text-white font-semibold ${
+                  selectedDay === day ? "text-lg" : "text-base"
+                }`}
               >
-                <Text className="text-white text-xl">{day}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-        <View className="">
-          {/* Date Header FlatList, displays todays date first and then click next to see tomorrows classes? */}
+                {day}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+
+      <View className="flex-1 px-4">
+        {loading ? (
+          <View className="flex-1 justify-center items-center">
+            <Text className="text-white text-lg">Loading schedule...</Text>
+          </View>
+        ) : classesForSelectedDay.length > 0 ? (
           <FlatList
-            className="h-full"
             data={classesForSelectedDay}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={renderItem}
+            renderItem={({ item }) => (
+              <View className="mb-4">
+                <ClassDisplayCard communitySchedule={item} />
+              </View>
+            )}
+            showsVerticalScrollIndicator={false}
           />
-        </View>
+        ) : (
+          <View className="flex-1 justify-center items-center">
+            <Text className="text-white text-lg text-center">
+              No classes scheduled for {selectedDay}
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   )

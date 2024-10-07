@@ -183,103 +183,104 @@ const CreateNewsPost = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-primary-900">
-      <View className="flex flex-row justify-between items-center mx-1">
+    <SafeAreaView className="flex-1 bg-gray-900">
+      <View className="flex-row justify-between items-center px-4 py-3 ">
         <BackButton size={24} colour="white" />
-        <View>
-          <Text className="text-xl font-bold text-white">Create News Post</Text>
-        </View>
-
-        <View />
+        <Text className="text-xl font-bold text-white">Create News Post</Text>
+        <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView>
-        <View className="mx-2">
-          <Text className="text-lg text-white font-bold">Title</Text>
+      <ScrollView className="flex-1 px-4 py-6">
+        <View className="space-y-6">
           <View>
+            <Text className="text-lg text-white font-bold mb-2">Title</Text>
             <TextInput
-              className="h-8 px-1 bg-white border-4 rounded-md"
+              className="bg-white px-4 py-3 rounded-lg"
               onChangeText={(text) => setTitle(text)}
+              placeholder="Enter title"
+              placeholderTextColor="#9CA3AF"
             />
           </View>
-        </View>
 
-        <View className="mx-2">
-          <Text className="text-lg text-white font-bold">Content</Text>
-          <View className="border rounded-md">
+          <View>
+            <Text className="text-lg text-white font-bold mb-2">Content</Text>
             <TextInput
               multiline={true}
+              numberOfLines={6}
               onChangeText={(text) => setContent(text)}
-              className="h-56 bg-white border-4 px-1 rounded-md"
+              className="bg-white px-4 py-3 rounded-lg"
+              textAlignVertical="top"
+              placeholder="Enter content"
+              placeholderTextColor="#9CA3AF"
+            />
+          </View>
+
+          <View>
+            <Text className="text-lg text-white font-bold mb-2">
+              Link an Event
+            </Text>
+            <View className="flex-row items-center">
+              <Switch
+                value={eventSwitch}
+                onValueChange={(value) => {
+                  setEventSwitch(value)
+                  if (!value) setEventSelected(null)
+                  if (value && events === null) {
+                    getCommunityEvents(setLoading, communityId, setEvents)
+                  }
+                }}
+              />
+              <Text className="text-white ml-2">
+                {eventSwitch
+                  ? "Event linking enabled"
+                  : "Event linking disabled"}
+              </Text>
+            </View>
+          </View>
+
+          {eventSwitch && events && (
+            <View>
+              <Text className="text-lg text-white font-bold mb-2">
+                Select an Event
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {events.map((event) => (
+                  <TouchableOpacity
+                    key={event.id}
+                    onPress={() => setEventSelected(event.id)}
+                    className={`mr-4 p-3 rounded-lg ${
+                      eventSelected === event.id ? "bg-blue-600" : "bg-gray-700"
+                    }`}
+                  >
+                    <Text className="text-white font-semibold">
+                      {event.event_title}
+                    </Text>
+                    {eventSelected === event.id && (
+                      <FontAwesome6
+                        name="check"
+                        size={16}
+                        color="white"
+                        style={{ marginTop: 4 }}
+                      />
+                    )}
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+
+          <View>
+            <Text className="text-lg text-white font-bold mb-2">Add Photo</Text>
+            <NewPhoto
+              heightProp={200}
+              widthProp={200}
+              setProfilePic={setNewsPic}
             />
           </View>
         </View>
-
-        <View>
-          <Text className="text-lg text-white font-bold mx-2">
-            Link an Event
-          </Text>
-          <Switch
-            value={eventSwitch}
-            onChange={() => {
-              setEventSwitch(!eventSwitch)
-              if (eventSwitch) {
-                setEventSelected(null)
-              }
-              console.log(eventSwitch)
-              if (!eventSwitch && events === null) {
-                getCommunityEvents(setLoading, communityId, setEvents)
-              }
-            }}
-          />
-
-          {eventSwitch ? (
-            <View>
-              {events && events.length > 0 ? (
-                <View>
-                  <Text className="text-lg text-white font-bold mx-2">
-                    Select an Event
-                  </Text>
-                  {events.map((event) => (
-                    <TouchableOpacity
-                      className={`${
-                        eventSelected === event.id ? "bg-yellow-500" : null
-                      } p-2 rounded-md mx-2`}
-                      onPress={() => setEventSelected(event.id)}
-                      key={event.id}
-                    >
-                      <View className="flex flex-row justify-center">
-                        <Text className="text-lg text-white font-bold mx-2">
-                          {event.event_title}
-                        </Text>
-
-                        {eventSelected === event.id ? (
-                          <FontAwesome6 name="check" size={24} color="black" />
-                        ) : null}
-                      </View>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              ) : (
-                <View>
-                  <Text className="text-lg text-white font-bold mx-2">
-                    No Events
-                  </Text>
-                </View>
-              )}
-            </View>
-          ) : null}
-        </View>
-
-        <View>
-          <NewPhoto
-            heightProp={200}
-            widthProp={200}
-            setProfilePic={setNewsPic}
-          />
-        </View>
       </ScrollView>
-      <View className="flex flex-row justify-center">
+
+      <View className="px-4 py-3 ">
         <TouchableOpacity
           onPress={() =>
             showAlertFunc({
@@ -294,14 +295,14 @@ const CreateNewsPost = () => {
                 {
                   text: "No",
                   onPress: () => console.log("Cancel Pressed"),
-                  style: "destructive",
+                  style: "cancel",
                 },
               ],
             })
           }
-          className={`bg-white p-2 rounded-md mx-2 mt-2 w-56`}
+          className="bg-blue-600 p-4 rounded-lg active:bg-blue-700"
         >
-          <Text className="text-black text-center text-xl font-bold">
+          <Text className="text-white text-center text-lg font-bold">
             Create News Post
           </Text>
         </TouchableOpacity>

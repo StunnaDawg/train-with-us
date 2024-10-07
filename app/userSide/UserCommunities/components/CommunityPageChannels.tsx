@@ -138,8 +138,8 @@ const CommunityPageChannels = ({
   }
 
   return (
-    <ScrollView className="bg-primary-900 flex-1">
-      <View className="m-1">
+    <ScrollView className="bg-primary-900 flex-1 px-4 py-2">
+      <View className="space-y-3">
         {!loading && communityChannels && communityChannels.length > 0
           ? communityChannels.map((c) => {
               if (c.channel_type !== "Text") return null
@@ -150,8 +150,8 @@ const CommunityPageChannels = ({
                 <View
                   key={c.id}
                   className={`${
-                    pressedChannels[c.id] ? "opacity-40" : "opacity-100"
-                  } bg-slate-800 border p-3 flex-row justify-between items-center my-2 rounded-md`}
+                    pressedChannels[c.id] ? "opacity-80" : "opacity-100"
+                  } bg-slate-800 border border-slate-700 p-4 flex-row justify-between items-center rounded-lg shadow-md`}
                 >
                   <Pressable
                     onPressIn={() => handlePressIn(c.id)}
@@ -168,23 +168,19 @@ const CommunityPageChannels = ({
                         )
                       }
                     }}
-                    className="flex flex-row items-center"
+                    className="flex-1 mr-4"
                   >
-                    <View>
-                      <Text className="text-sm text-white font-bold mb-1">
-                        #{c.channel_title || "error loading channel title"}
-                      </Text>
-                      <Text className="text-xs text-white">
-                        <Text>
-                          {c.recent_message_sender
-                            ? `${c.recent_message_sender} said `
-                            : null}
+                    <Text className="text-base text-white font-bold mb-1">
+                      #{c.channel_title || "error loading channel title"}
+                    </Text>
+                    <Text className="text-sm text-gray-300">
+                      {c.recent_message_sender && (
+                        <Text className="font-semibold">
+                          {c.recent_message_sender} said:{" "}
                         </Text>
-                        {c.recent_message
-                          ? c.recent_message
-                          : "No Messages yet!"}
-                      </Text>
-                    </View>
+                      )}
+                      {c.recent_message || "No Messages yet!"}
+                    </Text>
                   </Pressable>
                   {c.private && !isMember && (
                     <Pressable
@@ -211,14 +207,17 @@ const CommunityPageChannels = ({
                           )
                         }
                       }}
-                      className="bg-blue-500 rounded-full p-2"
+                      className="bg-blue-500 rounded-full px-4 py-2"
                     >
-                      <Text className="text-white">Join</Text>
+                      <Text className="text-white font-semibold">Join</Text>
                     </Pressable>
                   )}
                   {(c.private === false || isMember) && (
-                    <Pressable onPress={() => pinChannel(c.id)}>
-                      <Entypo name="pin" size={16} color="white" />
+                    <Pressable
+                      onPress={() => pinChannel(c.id)}
+                      className="bg-gray-700 rounded-full p-2"
+                    >
+                      <Entypo name="pin" size={18} color="white" />
                     </Pressable>
                   )}
                 </View>

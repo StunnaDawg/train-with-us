@@ -6,14 +6,15 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
-  ScrollView,
   TextInput,
   Pressable,
+  ScrollView,
+  TouchableOpacity,
 } from "react-native"
 import React, { useEffect, useState } from "react"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
-import EditProfileTopBar from "../../components/TopBarEdit"
+import BackButton from "../../components/BackButton"
 import supabase from "../../../lib/supabase"
 import showAlert from "../../utilFunctions/showAlert"
 
@@ -69,7 +70,7 @@ const EditClass = () => {
       }
       if (data) {
         setClassName(data.class_name)
-        setClassAbout(data.class_about)
+        setClassAbout(data.description)
         setClassDuration(data.duration.toString())
         setSelectedActvities(data.class_tags)
       }
@@ -191,91 +192,103 @@ const EditClass = () => {
   }, [])
 
   return (
-    <SafeAreaView className="flex-1 bg-primary-900">
-      <EditProfileTopBar
-        text="Create Class"
-        doneButtonText="Update"
-        functionProp={() => EditClassFunc()}
-      />
-
-      <View className="pb-10 pt-1">
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
-        >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View className="flex flex-row mx-5">
-                <View className="w-full">
-                  <Text className="font-bold text-sm text-white">
-                    Class Name (Required)
-                  </Text>
-                  <View className="border rounded-lg p-2 w-full bg-white">
-                    <TextInput
-                      value={className} // Binds the TextInput value to the state
-                      onChangeText={setClassName}
-                    />
-                  </View>
-
-                  <Text className="font-bold text-sm text-white">
-                    Class Description
-                  </Text>
-                  <View className="border rounded-lg p-2 w-full bg-white">
-                    <TextInput
-                      value={classAbout}
-                      onChangeText={setClassAbout}
-                      placeholder="Description of your class..."
-                      multiline={true}
-                      numberOfLines={10}
-                      className="h-20"
-                    />
-                  </View>
-
-                  <Text className="font-bold text-sm text-white">
-                    Class Duration in minutes (Required)
-                  </Text>
-                  <View className="border rounded-lg p-2 w-full bg-white">
-                    <TextInput
-                      keyboardType="numeric"
-                      value={classDuration}
-                      onChangeText={setClassDuration}
-                    />
-                  </View>
-
-                  <View className="mb-4">
-                    <Text className="mb-2 text-white text-sm font-semibold text-gray">
-                      Class Tags
-                    </Text>
-                    <ScrollView showsVerticalScrollIndicator={false}>
-                      <View className="flex flex-row justify-center flex-wrap">
-                        {ActvitiesOptions.map((activity, index) => {
-                          const isSelected =
-                            selectedActvities.includes(activity)
-                          return (
-                            <Pressable
-                              onPress={() => handleSelectActivities(activity)}
-                              key={index}
-                              className={`border-2 rounded-full p-1 text-center mx-1 my-1 ${
-                                isSelected
-                                  ? "bg-yellow-300 border-yellow-400 shadow-xl"
-                                  : "bg-white border-gray-300"
-                              }`}
-                            >
-                              <Text className={`text-xs font-semibold`}>
-                                {activity}
-                              </Text>
-                            </Pressable>
-                          )
-                        })}
-                      </View>
-                    </ScrollView>
-                  </View>
-                </View>
-              </View>
-            </ScrollView>
-          </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+    <SafeAreaView className="flex-1 bg-gray-900">
+      <View className="flex-row justify-between items-center px-4 py-3">
+        <BackButton size={24} colour="white" />
+        <Text className="text-xl font-bold text-white">Edit Class</Text>
+        <TouchableOpacity onPress={EditClassFunc}>
+          <Text className="text-blue-500 font-semibold">Update</Text>
+        </TouchableOpacity>
       </View>
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1"
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            className="flex-1 px-4 py-6"
+            showsVerticalScrollIndicator={false}
+          >
+            <View className="space-y-6">
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">
+                  Class Name (Required)
+                </Text>
+                <TextInput
+                  value={className}
+                  onChangeText={setClassName}
+                  className="bg-white px-4 py-3 rounded-lg"
+                  placeholder="Enter class name"
+                  placeholderTextColor="#9CA3AF"
+                />
+              </View>
+
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">
+                  Class Description
+                </Text>
+                <TextInput
+                  value={classAbout}
+                  onChangeText={setClassAbout}
+                  placeholder="Description of your class..."
+                  multiline={true}
+                  numberOfLines={6}
+                  className="bg-white px-4 py-3 rounded-lg"
+                  textAlignVertical="top"
+                  placeholderTextColor="#9CA3AF"
+                />
+              </View>
+
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">
+                  Class Duration in minutes (Required)
+                </Text>
+                <TextInput
+                  keyboardType="numeric"
+                  value={classDuration}
+                  onChangeText={setClassDuration}
+                  className="bg-white px-4 py-3 rounded-lg"
+                  placeholder="Enter duration"
+                  placeholderTextColor="#9CA3AF"
+                />
+              </View>
+
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">
+                  Class Tags
+                </Text>
+                <ScrollView showsHorizontalScrollIndicator={false}>
+                  <View className="flex-row flex-wrap justify-center mb-8">
+                    {ActvitiesOptions.map((activity, index) => {
+                      const isSelected = selectedActvities.includes(activity)
+                      return (
+                        <Pressable
+                          onPress={() => handleSelectActivities(activity)}
+                          key={index}
+                          className={`border-2 rounded-full px-3 py-2 m-1 ${
+                            isSelected
+                              ? "bg-blue-600 border-blue-700"
+                              : "bg-gray-700 border-gray-600"
+                          }`}
+                        >
+                          <Text
+                            className={`text-sm font-semibold ${
+                              isSelected ? "text-white" : "text-gray-300"
+                            }`}
+                          >
+                            {activity}
+                          </Text>
+                        </Pressable>
+                      )
+                    })}
+                  </View>
+                </ScrollView>
+              </View>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }

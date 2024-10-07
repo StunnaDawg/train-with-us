@@ -1,36 +1,31 @@
-import { View, Text, SafeAreaView, TextInput, Pressable } from "react-native"
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Switch,
+} from "react-native"
 import React, { useEffect, useState } from "react"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import BackButton from "../../components/BackButton"
-import BouncyCheckbox from "react-native-bouncy-checkbox"
 import supabase from "../../../lib/supabase"
 import { CommunityChannel } from "../../@types/supabaseTypes"
-import GenericButton from "../../components/GenericButton"
-import EditChannelProfilePic from "../../components/EditChannelCoverPic"
 import showAlert from "../../utilFunctions/showAlert"
-
-type ChannelTypeOption = "Text" | "Annoucement" | "Forum"
 
 const EditChannel = () => {
   const [loading, setLoading] = useState<boolean>(false)
-  const [communityChannel, setCommunityChannel] =
-    useState<CommunityChannel | null>({} as CommunityChannel)
-  const [selectedChannelType, setChannelType] =
-    useState<ChannelTypeOption>("Text")
   const [channelName, setChannelName] = useState<string>("")
+  const [isPrivate, setIsPrivate] = useState<boolean>(false)
   const route = useRoute<RouteProp<RootStackParamList, "EditChannel">>()
   const channelId = route.params.channelId
-  const [singleImageFile, setSingleImageFile] = useState<
-    string | null | undefined
-  >(null)
   const navigation = useNavigation<NavigationType>()
-
-  const handleSelectType = (type: ChannelTypeOption) => {
-    setChannelType(selectedChannelType === type ? "Text" : type)
-  }
-
-  const channelOptions: ChannelTypeOption[] = ["Text", "Annoucement", "Forum"]
 
   const updateChannel = async () => {
     try {
@@ -41,7 +36,7 @@ const EditChannel = () => {
         .from("community_channels")
         .update({
           channel_title: channelName,
-          channel_type: selectedChannelType,
+          private: isPrivate,
         })
         .eq("id", channelId)
 
@@ -50,11 +45,16 @@ const EditChannel = () => {
       navigation.goBack()
       showAlert({
         title: "Channel Updated",
-        message: "Channel has been updated",
+        message: "Channel has been updated successfully",
         buttonText: "OK",
       })
     } catch (error) {
       console.log(error)
+      showAlert({
+        title: "Error",
+        message: "Failed to update channel",
+        buttonText: "OK",
+      })
     } finally {
       setLoading(false)
     }
@@ -67,17 +67,16 @@ const EditChannel = () => {
         .from("community_channels")
         .select("*")
         .eq("id", channelId)
+        .single()
 
       if (error) {
-        console.error("Error fetching community channels:", error.message)
+        console.error("Error fetching community channel:", error.message)
         return
       }
 
-      console.log("Community channels data", data)
       if (data) {
-        setCommunityChannel(data[0])
-      } else {
-        setCommunityChannel(null)
+        setChannelName(data.channel_title || "")
+        setIsPrivate(data.private || false)
       }
     } catch (error) {
       console.log(error)
@@ -90,40 +89,60 @@ const EditChannel = () => {
     getChannel()
   }, [channelId])
 
-  useEffect(() => {
-    if (communityChannel === null) return
-    setChannelName(communityChannel?.channel_title || "")
-  }, [communityChannel])
-
-  useEffect(() => {
-    setSingleImageFile(communityChannel?.channel_pic)
-  }, [communityChannel])
   return (
-    <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-between w-full p-3 items-center">
-        <BackButton />
-
-        <View>
-          <Text className="text-sm font-bold">Edit Channel</Text>
-        </View>
-
-        <Pressable
-          onPress={async () => {
-            await updateChannel()
-            navigation.goBack()
-          }}
-        >
-          <Text className="text-sm font-semibold underline">Update</Text>
-        </Pressable>
+    <SafeAreaView className="flex-1 bg-gray-900">
+      <View className="flex-row justify-between items-center px-4 py-3">
+        <BackButton size={24} colour="white" />
+        <Text className="text-xl font-bold text-white">Edit Channel</Text>
+        <TouchableOpacity onPress={updateChannel} disabled={loading}>
+          <Text className="text-blue-500 font-semibold">
+            {loading ? "Updating..." : "Update"}
+          </Text>
+        </TouchableOpacity>
       </View>
 
-      <View className="border mx-2 rounded-lg p-3">
-        <TextInput
-          value={channelName}
-          onChangeText={(text: string) => setChannelName(text)}
-          placeholder="new-channel"
-        />
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1"
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            className="flex-1 px-4 py-6"
+            showsVerticalScrollIndicator={false}
+          >
+            <View className="space-y-6">
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">
+                  Channel Name
+                </Text>
+                <TextInput
+                  value={channelName}
+                  onChangeText={setChannelName}
+                  className="bg-white px-4 py-3 rounded-lg"
+                  placeholder="Enter channel name"
+                  placeholderTextColor="#9CA3AF"
+                />
+              </View>
+
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">
+                  Private Channel
+                </Text>
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-white">Make this channel private?</Text>
+                  <Switch
+                    trackColor={{ false: "#767577", true: "#3b82f6" }}
+                    thumbColor={isPrivate ? "#60a5fa" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={setIsPrivate}
+                    value={isPrivate}
+                  />
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }

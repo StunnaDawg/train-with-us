@@ -64,28 +64,30 @@ const CommunityPage = () => {
     }
   }, [community, isFocused])
 
-  const GearIcon = ({ onPress }: { onPress: () => void }) => {
-    const [pressed, setPressed] = useState(false)
-
-    return (
-      <Pressable
-        className={`${pressed ? "opacity-50" : ""}`}
-        onPressIn={() => setPressed(true)}
-        onPressOut={() => setPressed(false)}
-        onPress={onPress}
-      >
-        <FontAwesome6 name="gear" size={22} color="white" />
-      </Pressable>
-    )
-  }
+  const GearIcon = ({ onPress }: { onPress: () => void }) => (
+    <Pressable className="active:opacity-50 p-2" onPress={onPress}>
+      <FontAwesome6 name="gear" size={22} color="white" />
+    </Pressable>
+  )
 
   const MemoizedTabNavigator = useMemo(
     () => (
       <Tab.Navigator
         screenOptions={{
-          tabBarStyle: { backgroundColor: "#00000", height: 32 },
+          tabBarStyle: {
+            backgroundColor: "#1F2937",
+            height: 48,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
           tabBarScrollEnabled: true,
-          tabBarIndicatorStyle: { backgroundColor: "blue" },
+          tabBarIndicatorStyle: { backgroundColor: "#3B82F6", height: 3 },
+          tabBarLabelStyle: {
+            color: "white",
+            fontSize: 14,
+            fontWeight: "bold",
+            textTransform: "none",
+          },
         }}
       >
         <Tab.Screen
@@ -180,45 +182,33 @@ const CommunityPage = () => {
   )
 
   return (
-    <SafeAreaView className="flex-1 bg-primary-900">
-      {/* {loading ? (
-        <CommunityPageSkeleton />
-      ) : ( */}
-      <>
-        <View className="flex flex-row m-2 items-center justify-between">
-          <BackButton colour="white" size={22} />
-          <View>
-            <Text className="text-2xl text-white font-bold">
-              {community.community_title}
+    <SafeAreaView className="flex-1 bg-gray-900">
+      <View className="flex-row items-center justify-between px-4 py-3 bg-primary-900">
+        <BackButton colour="white" size={24} />
+        <Text className="text-2xl text-white font-bold">
+          {community.community_title}
+        </Text>
+        <GearIcon onPress={handlePresentModalPress} />
+      </View>
+
+      {userProfile?.id === community.community_owner && (
+        <View className="px-4 py-2">
+          <Pressable
+            onPress={() =>
+              navigation.navigate("MyCommunityHome", {
+                communityId: community.id,
+              })
+            }
+            className="bg-blue-600 rounded-lg py-3 active:bg-blue-700"
+          >
+            <Text className="text-white font-bold text-center">
+              My Community Dashboard
             </Text>
-          </View>
-
-          <GearIcon onPress={handlePresentModalPress} />
+          </Pressable>
         </View>
+      )}
 
-        <View className="m-1">
-          {userProfile?.id === community.community_owner && (
-            <Pressable
-              onPressIn={handleCommunitySettingsPress}
-              onPressOut={handleCommunitySettingsPressCancel}
-              onPress={() =>
-                navigation.navigate("MyCommunityHome", {
-                  communityId: community.id,
-                })
-              }
-              className={`${
-                isSettingsCommunityButtonPressed ? "opacity-50" : null
-              } bg-slate-400/60 rounded-lg p-2 m-2`}
-            >
-              <Text className="text-white font-bold text-sm text-center">
-                My Community Dashboard
-              </Text>
-            </Pressable>
-          )}
-        </View>
-
-        {MemoizedTabNavigator}
-      </>
+      {MemoizedTabNavigator}
 
       <BottomSheetModal
         enablePanDownToClose={true}
@@ -226,6 +216,8 @@ const CommunityPage = () => {
         index={1}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
+        backgroundStyle={{ backgroundColor: "#1F2937" }}
+        handleIndicatorStyle={{ backgroundColor: "#9CA3AF" }}
       >
         <CommunityBottomModal community={community} dismiss={dismiss} />
       </BottomSheetModal>

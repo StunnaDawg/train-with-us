@@ -8,6 +8,8 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Keyboard,
+  Switch,
+  TouchableOpacity,
 } from "react-native"
 import React, { useEffect, useState } from "react"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
@@ -25,9 +27,7 @@ import supabase from "../../../lib/supabase"
 import showAlert from "../../utilFunctions/showAlert"
 import { FontAwesome6 } from "@expo/vector-icons"
 import BackButton from "../../components/BackButton"
-import { TouchableWithoutFeedback } from "react-native"
 import Loading from "../../components/Loading"
-import { Switch } from "react-native-gesture-handler"
 import showAlertFunc from "../../utilFunctions/showAlertFunc"
 
 type ActvitiesOption = string
@@ -207,44 +207,38 @@ const EditEvent = () => {
     "Archery 🏹",
   ]
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-gray-900">
+      <View className="flex-row justify-between items-center px-4 py-3">
+        <BackButton size={24} colour="white" />
+        <Text className="text-xl font-bold text-white">Edit Event</Text>
+        <TouchableOpacity
+          onPress={() => {
+            showAlertFunc({
+              title: "Delete Event",
+              message: "Are you sure you want to delete this event?",
+              buttons: [
+                { text: "Cancel", onPress: () => {}, style: "cancel" },
+                { text: "Delete", onPress: deleteEvent, style: "destructive" },
+              ],
+            })
+          }}
+        >
+          <FontAwesome6 name="trash" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+
       {!loading ? (
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+          className="flex-1"
         >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <ScrollView className=" p-4 bg-white">
-              <View className="flex flex-row justify-between items-center mb-8">
-                <BackButton />
-                <Text className="mx-1 text-lg font-semibold ">
-                  Update Event
-                </Text>
-                <Pressable
-                  onPress={() => {
-                    showAlertFunc({
-                      title: "Delete Event",
-                      message: "Are you sure you want to delete this event?",
-                      buttons: [
-                        {
-                          text: "Cancel",
-                          onPress: () => {},
-                          style: "cancel",
-                        },
-                        {
-                          text: "Delete",
-                          onPress: deleteEvent,
-                          style: "destructive",
-                        },
-                      ],
-                    })
-                  }}
-                >
-                  <FontAwesome6 name="trash" size={24} color="black" />
-                </Pressable>
-              </View>
-
+          <ScrollView className="flex-1 px-4 py-6">
+            <View className="space-y-6">
               <View>
+                <Text className="text-lg text-white font-bold mb-2">
+                  Event Photo
+                </Text>
                 <EventCoverPhotoEdit
                   eventId={eventId}
                   imageUrl={eventPicture}
@@ -253,161 +247,157 @@ const EditEvent = () => {
                 />
               </View>
 
-              <View className="mb-4">
-                <Text className="mb-2 text-sm font-semibold text-gray">
-                  Title
-                </Text>
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">Title</Text>
                 <TextInput
                   value={eventTitle}
                   onChangeText={setEventTitle}
                   placeholder="Add a Title"
-                  className="border  p-2 rounded-lg"
+                  placeholderTextColor="#9CA3AF"
+                  className="bg-gray-800 text-white px-4 py-3 rounded-lg"
                 />
               </View>
 
-              <View className="mb-4">
-                <Text className="mb-2 text-sm font-semibold text-gray">
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">
                   Description
                 </Text>
                 <TextInput
                   value={description}
                   onChangeText={setDescription}
                   placeholder="Event Description"
-                  className="border p-2 rounded-lg"
+                  placeholderTextColor="#9CA3AF"
+                  className="bg-gray-800 text-white px-4 py-3 rounded-lg"
                   multiline={true}
+                  numberOfLines={6}
+                  textAlignVertical="top"
                 />
               </View>
 
-              <View className="mb-4">
-                <Text className="mb-2 text-sm font-semibold text-gray">
-                  Date
-                </Text>
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">Date</Text>
                 <DateTimePicker
+                  themeVariant="dark"
                   testID="dateTimePicker"
                   value={date}
                   mode="date"
                   is24Hour={true}
                   display="default"
                   onChange={onChangeDate}
-                  className="mb-4"
+                  textColor="white"
                 />
               </View>
 
-              <View className="mb-4">
-                <Text className="mb-2 text-sm font-semibold text-gray">
-                  Time
-                </Text>
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">Time</Text>
                 <DateTimePicker
+                  themeVariant="dark"
                   testID="dateTimePicker"
                   value={date}
                   mode="time"
                   is24Hour={true}
                   display="default"
                   onChange={onChangeDate}
+                  textColor="white"
                 />
               </View>
 
-              <View className="mb-4">
-                <Text className="mb-2 text-sm font-semibold text-gray">
-                  Price
-                </Text>
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">Price</Text>
                 <TextInput
-                  value={price || ""}
+                  value={price}
                   onChangeText={setPrice}
                   placeholder="Set a Price"
-                  className="border  p-2 rounded-lg"
+                  placeholderTextColor="#9CA3AF"
+                  className="bg-gray-800 text-white px-4 py-3 rounded-lg"
                   keyboardType="numeric"
                 />
               </View>
 
-              <View className="mb-4">
-                <Text className="mb-2 text-sm font-semibold text-gray">
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">
                   Location
                 </Text>
                 <TextInput
-                  value={location || ""}
+                  value={location}
                   onChangeText={setLocation}
                   placeholder="Set Location"
-                  className="border  p-2 rounded-lg"
-                  keyboardType="numeric"
+                  placeholderTextColor="#9CA3AF"
+                  className="bg-gray-800 text-white px-4 py-3 rounded-lg"
                 />
               </View>
 
-              <View className="mb-4">
-                <Text className="mb-2 text-sm font-semibold text-gray">
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">
                   Event Style
                 </Text>
                 <TextInput
                   value={eventStyle}
                   onChangeText={setEventStyle}
                   placeholder="What's the event style? eg: Hyrox, Crossfit, etc."
-                  className="border  p-2 rounded-lg"
+                  placeholderTextColor="#9CA3AF"
+                  className="bg-gray-800 text-white px-4 py-3 rounded-lg"
                 />
               </View>
 
-              <View className="mb-4">
-                <Text className="mb-2 text-sm font-semibold text-gray">
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">
                   Event Tags
                 </Text>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                  <View className="flex flex-row justify-center flex-wrap">
-                    {ActvitiesOptions.map((activity, index) => {
-                      const isSelected = selectedActvities.includes(activity)
-                      return (
-                        <Pressable
-                          onPress={() => handleSelectActivities(activity)}
-                          key={index}
-                          className={`border-2 rounded-full p-1 text-center mx-1 my-1 ${
-                            isSelected
-                              ? "bg-yellow-300 border-yellow-400 shadow-xl"
-                              : "bg-white border-gray-300"
-                          }`}
-                        >
-                          <Text className={`text-xs font-semibold`}>
-                            {activity}
-                          </Text>
-                        </Pressable>
-                      )
-                    })}
-                  </View>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {ActvitiesOptions.map((activity, index) => {
+                    const isSelected = selectedActvities.includes(activity)
+                    return (
+                      <Pressable
+                        onPress={() => handleSelectActivities(activity)}
+                        key={index}
+                        className={`mr-2 px-3 py-2 rounded-full ${
+                          isSelected ? "bg-blue-600" : "bg-gray-700"
+                        }`}
+                      >
+                        <Text className="text-white font-semibold">
+                          {activity}
+                        </Text>
+                      </Pressable>
+                    )
+                  })}
                 </ScrollView>
               </View>
 
-              <View className="items-center mb-1">
-                <Text className="text-lg font-bold text-gray underline">
+              <View>
+                <Text className="text-lg text-white font-bold mb-2">
                   Advanced Settings
                 </Text>
-              </View>
-
-              <View className="mb-4">
-                <View className="flex flex-row justify-between items-center mb-2">
-                  <Text className=" text-sm font-semibold text-gray">
-                    Attendance Limit
-                  </Text>
-                  <Switch
-                    value={attendaceLimitSwitch}
-                    onChange={() =>
-                      setAttendaceLimitSwitch(!attendaceLimitSwitch)
-                    }
-                  />
+                <View className="space-y-4">
+                  <View className="flex-row justify-between items-center">
+                    <Text className="text-white font-semibold">
+                      Attendance Limit
+                    </Text>
+                    <Switch
+                      value={attendaceLimitSwitch}
+                      onValueChange={() =>
+                        setAttendaceLimitSwitch(!attendaceLimitSwitch)
+                      }
+                    />
+                  </View>
+                  {attendaceLimitSwitch && (
+                    <TextInput
+                      keyboardType="numeric"
+                      value={eventLimit}
+                      onChangeText={setEventLimit}
+                      placeholder="Attendance Limit"
+                      placeholderTextColor="#9CA3AF"
+                      className="bg-gray-800 text-white px-4 py-3 rounded-lg"
+                    />
+                  )}
                 </View>
-                {attendaceLimitSwitch ? (
-                  <TextInput
-                    keyboardType="numeric"
-                    value={eventLimit}
-                    onChangeText={setEventLimit}
-                    placeholder="Attendance Limit, leave blank for no limit"
-                    className="border  p-2 rounded-lg"
-                  />
-                ) : null}
               </View>
+            </View>
 
-              <Pressable
-                onPressIn={handleEventButtonPressedIn}
-                onPressOut={handleEventButtonPressedOut}
+            <View className="mt-6 mb-10">
+              <TouchableOpacity
                 onPress={async () => {
-                  setLoading(true) // Set loading to true immediately
-
+                  setLoading(true)
                   try {
                     if (!currentUser?.id && !currentUser?.community_created)
                       return
@@ -534,19 +524,17 @@ const EditEvent = () => {
                   } catch (error) {
                     console.error("Error updating event: ", error)
                   } finally {
-                    setLoading(false) // Set loading to false after everything is done
+                    setLoading(false)
                   }
                 }}
-                className={`${
-                  updateEventPressed ? "opacity-50" : null
-                } bg-black p-4 rounded-lg items-center mb-20`}
+                className="bg-blue-600 p-4 rounded-lg active:bg-blue-700"
               >
-                <Text className="text-white text-lg font-bold">
+                <Text className="text-white text-center text-lg font-bold">
                   Update Event
                 </Text>
-              </Pressable>
-            </ScrollView>
-          </TouchableWithoutFeedback>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </KeyboardAvoidingView>
       ) : (
         <Loading />

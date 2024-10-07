@@ -122,110 +122,101 @@ const CommunityRequestsPage = () => {
   }, [])
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
-      <View className="flex flex-row justify-between items-center mx-2">
+      <View className="flex-row justify-between items-center px-4 py-2 bg-primary-800">
         <BackButton colour="white" />
-        <View>
-          <Text className="font-bold text-xl text-white">Join Requests</Text>
-        </View>
-        <View />
+        <Text className="font-bold text-xl text-white">Join Requests</Text>
+        <View style={{ width: 32 }} />
       </View>
 
       <ScrollView
-        className="flex-1 "
+        className="flex-1 px-4 py-2"
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
         {loading ? (
-          <ActivityIndicator />
-        ) : communityRequests && communityRequests?.length > 0 ? (
-          communityRequests?.map((request) => {
-            return (
-              <View
-                key={request.id}
-                className="flex flex-row justify-between m-5"
-              >
-                <Pressable
-                  onPressIn={() => handleEyePressed(request.id)}
-                  onPressOut={handleEyeReleased}
-                  onPress={async () => {
-                    if (request.user_id) {
-                      const userProfile = await useCurrentUser(
-                        request.user_id,
-                        setViewUserProfile
-                      )
-                      if (userProfile) {
-                        navigation.navigate("ViewFullUserProfile", {
-                          user: userProfile,
-                        })
-                      }
+          <ActivityIndicator size="large" color="white" className="mt-8" />
+        ) : communityRequests && communityRequests.length > 0 ? (
+          communityRequests.map((request) => (
+            <View
+              key={request.id}
+              className="flex-row justify-between items-center bg-primary-800 rounded-lg mb-4 p-4"
+            >
+              <Pressable
+                onPressIn={() => handleEyePressed(request.id)}
+                onPressOut={handleEyeReleased}
+                onPress={async () => {
+                  if (request.user_id) {
+                    const userProfile = await useCurrentUser(
+                      request.user_id,
+                      setViewUserProfile
+                    )
+                    if (userProfile) {
+                      navigation.navigate("ViewFullUserProfile", {
+                        user: userProfile,
+                      })
                     } else {
                       showAlert({ title: "Error", message: "User not found" })
                     }
-                  }}
-                  className={` ${
-                    eyePressed === request.id ? "opacity-50" : ""
-                  } flex flex-row items-center`}
-                  key={request.user_id}
+                  }
+                }}
+                className={`flex-row items-center ${
+                  eyePressed === request.id ? "opacity-50" : ""
+                }`}
+              >
+                <Text className="text-lg text-white font-semibold mr-2">
+                  {request.first_name}
+                </Text>
+                <FontAwesome6 name="eye" size={20} color="white" />
+              </Pressable>
+              <View className="flex-row space-x-4">
+                <Pressable
+                  onPressIn={() => handleAcceptButtonPressed(request.id)}
+                  onPressOut={handleAcceptButtonReleased}
+                  onPress={async () => await acceptRequestFunc(request)}
+                  className={`p-2 rounded-lg bg-primary-700 ${
+                    acceptButtonPressed === request.id ? "opacity-50" : ""
+                  }`}
                 >
-                  <Text className="text-lg text-white font-semibold px-2">
-                    {request.first_name}
-                  </Text>
-                  <FontAwesome6 name="eye" size={24} color="white" />
+                  <FontAwesome6 name="check" size={24} color="green" />
                 </Pressable>
-                <View className="flex flex-row ">
-                  <Pressable
-                    onPressIn={() => handleAcceptButtonPressed(request.id)}
-                    onPressOut={handleAcceptButtonReleased}
-                    onPress={async () => {
-                      await acceptRequestFunc(request)
-                    }}
-                    className={`${
-                      acceptButtonPressed === request.id ? "opacity-50" : null
-                    } mx-5`}
-                  >
-                    <FontAwesome6 name="square-check" size={48} color="green" />
-                  </Pressable>
-                  <Pressable
-                    onPressIn={() => handleDenyButtonPressed(request.id)}
-                    onPressOut={handleDenyButtonReleased}
-                    onPress={() => {
-                      if (request.id)
-                        denyRequest(
-                          setLoading,
-                          request.id,
-                          request.expo_push_token,
-                          title
-                        )
-                      showAlert({
-                        title: "Request Denied",
-                        message: "User has been Denied Access",
-                      })
-                      setTimeout(() => {
-                        getCommunityRequests(
-                          setLoading,
-                          communityId,
-                          setCommunityRequests
-                        )
-                      }, 500)
-                    }}
-                    className={`${
-                      denyButtonPressed === request.id ? "opacity-50" : null
-                    }`}
-                  >
-                    <FontAwesome6 name="square-xmark" size={48} color="red" />
-                  </Pressable>
-                </View>
+                <Pressable
+                  onPressIn={() => handleDenyButtonPressed(request.id)}
+                  onPressOut={handleDenyButtonReleased}
+                  onPress={() => {
+                    if (request.id)
+                      denyRequest(
+                        setLoading,
+                        request.id,
+                        request.expo_push_token,
+                        title
+                      )
+                    showAlert({
+                      title: "Request Denied",
+                      message: "User has been Denied Access",
+                    })
+                    setTimeout(() => {
+                      getCommunityRequests(
+                        setLoading,
+                        communityId,
+                        setCommunityRequests
+                      )
+                    }, 500)
+                  }}
+                  className={`p-2 rounded-lg bg-primary-700 ${
+                    denyButtonPressed === request.id ? "opacity-50" : ""
+                  }`}
+                >
+                  <FontAwesome6 name="xmark" size={24} color="red" />
+                </Pressable>
               </View>
-            )
-          })
-        ) : (
-          <View className="flex-1 justify-center items-center">
-            <View className="flex flex-row justify-center">
-              <Text className="text-lg text-white font-semibold">
-                No requests at the moment
-              </Text>
             </View>
+          ))
+        ) : (
+          <View className="flex-1 justify-center items-center mt-8">
+            <Text className="text-lg text-white font-semibold">
+              No requests at the moment
+            </Text>
           </View>
         )}
       </ScrollView>

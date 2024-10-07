@@ -1,5 +1,12 @@
-import { View, Text, SafeAreaView, FlatList, Pressable } from "react-native"
-import React, { useCallback, useEffect, useState } from "react"
+import {
+  View,
+  Text,
+  SafeAreaView,
+  FlatList,
+  Pressable,
+  TouchableOpacity,
+} from "react-native"
+import React, { useCallback, useState } from "react"
 import {
   RouteProp,
   useFocusEffect,
@@ -7,17 +14,16 @@ import {
   useRoute,
 } from "@react-navigation/native"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
-import EditProfileTopBar from "../../components/TopBarEdit"
-import supabase from "../../../lib/supabase"
+import BackButton from "../../components/BackButton"
 import { CommunitySchedule } from "../../@types/supabaseTypes"
+import supabase from "../../../lib/supabase"
 import showAlert from "../../utilFunctions/showAlert"
-import CommunityScheduleDisplay from "../../components/CommunityScheduleDisplay"
 
 const ManageSchedules = () => {
-  const route = useRoute<RouteProp<RootStackParamList, "ManageClasses">>()
-  const [communityClasses, setCommunityClasses] = useState<CommunitySchedule[]>(
-    []
-  )
+  const [communitySchedules, setCommunitySchedules] = useState<
+    CommunitySchedule[]
+  >([])
+  const route = useRoute<RouteProp<RootStackParamList, "ManageSchedules">>()
   const community = route.params.community
   const navigation = useNavigation<NavigationType>()
 
@@ -36,7 +42,7 @@ const ManageSchedules = () => {
         throw error
       }
       if (data) {
-        setCommunityClasses(data)
+        setCommunitySchedules(data)
         console.log(data)
       }
     } catch (error) {
@@ -44,6 +50,7 @@ const ManageSchedules = () => {
         title: "Error",
         message: "Unexpected error",
       })
+      navigation.goBack()
     }
   }
 
@@ -58,34 +65,44 @@ const ManageSchedules = () => {
   )
 
   return (
-    <SafeAreaView className="flex-1 bg-primary-900">
-      <EditProfileTopBar
-        text="Manage Class Schedules"
-        cancelText={"Back"}
-        doneButtonText="Create"
-        functionProp={() =>
-          navigation.navigate("CreateSchedule", {
-            communityId: community.id,
-          })
-        }
-      />
+    <SafeAreaView className="flex-1 bg-gray-900">
+      <View className="flex-row justify-between items-center px-4 py-3">
+        <BackButton size={24} colour="white" />
+        <Text className="text-xl font-bold text-white">Manage Schedules</Text>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("CreateSchedule", {
+              communityId: community.id,
+            })
+          }
+        >
+          <Text className="text-blue-500 font-semibold">Create</Text>
+        </TouchableOpacity>
+      </View>
 
-      <FlatList
-        data={communityClasses}
-        renderItem={({ item }) => (
-          <Pressable
-            onPress={() => {
-              navigation.navigate("EditSchedule", {
-                schedule: item,
-                communityId: community.id,
-              })
-            }}
-          >
-            <Text className="text-white">{item.schedule_name}</Text>
-          </Pressable>
-        )}
-        keyExtractor={(item) => item.id}
-      />
+      <View className="flex-1 px-4 py-2">
+        <FlatList
+          data={communitySchedules}
+          renderItem={({ item }) => (
+            <Pressable
+              onPress={() => {
+                navigation.navigate("EditSchedule", {
+                  schedule: item,
+                  communityId: community.id,
+                })
+              }}
+              className="bg-gray-800 rounded-lg mb-2 p-4"
+            >
+              <Text className="text-white text-lg font-semibold">
+                {item.schedule_name}
+              </Text>
+              <Text className="text-gray-300 text-sm mt-1">Tap to edit</Text>
+            </Pressable>
+          )}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        />
+      </View>
     </SafeAreaView>
   )
 }
