@@ -243,66 +243,76 @@ const RequestCard = ({
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible)
-        }}
+        onRequestClose={() => setModalVisible(false)}
       >
-        <View className="flex-1 items-center justify-center">
-          <View className="m-4 p-5 bg-white rounded-lg border-2 border-gray-500 shadow-lg">
-            {!isRequester ? (
-              <Text className="mb-4 font-bold text-lg">
-                Request from {profile?.first_name}
-              </Text>
-            ) : (
-              <Text className="mb-4 font-bold text-lg">
-                Your Request to {profile?.first_name}
-              </Text>
-            )}
-            <Text className="font-semibold">You said {recentMessage}</Text>
-            <View className="flex flex-row justify-center items-center">
+        <View className="flex-1 items-center justify-center bg-black bg-opacity-50">
+          <View className="w-5/6 p-6 bg-white rounded-xl shadow-xl">
+            <Text className="mb-4 text-2xl font-bold text-center text-gray-800">
+              {!isRequester
+                ? `Request from ${profile?.first_name}`
+                : `Your Request to ${profile?.first_name}`}
+            </Text>
+            <Text className="mb-6 text-base text-center text-gray-600">
+              {recentMessage
+                ? `"${truncateMessage(recentMessage, 100)}"`
+                : "No message"}
+            </Text>
+            <View className="flex flex-row justify-center items-center space-x-4">
               {!isRequester ? (
-                <Pressable
-                  disabled={disableButton}
-                  className="mt-4 mx-1 bg-green-500 px-3 py-2 rounded-md"
-                  onPress={() => acceptRequest()}
-                >
-                  {disableButton ? (
-                    <ActivityIndicator />
-                  ) : (
-                    <Text className="text-white">Accept</Text>
-                  )}
-                </Pressable>
+                <>
+                  <Pressable
+                    disabled={disableButton}
+                    className={`flex-1 py-3 rounded-lg ${
+                      disableButton ? "bg-gray-400" : "bg-green-500"
+                    }`}
+                    onPress={acceptRequest}
+                  >
+                    {disableButton ? (
+                      <ActivityIndicator color="white" />
+                    ) : (
+                      <Text className="text-white text-center font-semibold">
+                        Accept
+                      </Text>
+                    )}
+                  </Pressable>
+                  <Pressable
+                    onPress={() => declineRequest(true)}
+                    className="flex-1 py-3 bg-red-500 rounded-lg"
+                  >
+                    <Text className="text-white text-center font-semibold">
+                      Decline
+                    </Text>
+                  </Pressable>
+                </>
               ) : (
                 <Pressable
-                  className="mt-4 mx-1 bg-green-500 px-3 py-2 rounded-md"
-                  onPress={() => setModalVisible(!modalVisible)}
+                  className="flex-1 py-3 bg-blue-500 rounded-lg"
+                  onPress={() => setModalVisible(false)}
                 >
-                  <Text className="text-white">Okay</Text>
+                  <Text className="text-white text-center font-semibold">
+                    Okay
+                  </Text>
                 </Pressable>
               )}
-              {!isRequester ? (
-                <Pressable
-                  onPress={() => declineRequest(true)}
-                  className="mt-4 bg-red-500 px-3 py-2 rounded-md"
-                >
-                  <Text className="text-white">Decline</Text>
-                </Pressable>
-              ) : null}
             </View>
-            <View className="flex flex-row justify-center">
+            <View className="mt-4">
               {!isRequester ? (
                 <Pressable
-                  className="mt-4 bg-red-500 px-3 py-2 rounded-md"
-                  onPress={() => setModalVisible(!modalVisible)}
+                  className="py-3 bg-gray-300 rounded-lg"
+                  onPress={() => setModalVisible(false)}
                 >
-                  <Text className="text-white">Ignore</Text>
+                  <Text className="text-gray-700 text-center font-semibold">
+                    Ignore
+                  </Text>
                 </Pressable>
               ) : (
                 <Pressable
-                  className="mt-4 bg-red-500 px-3 py-2 rounded-md"
+                  className="py-3 bg-red-500 rounded-lg"
                   onPress={() => deleteRequest(true)}
                 >
-                  <Text className="text-white">Delete Request</Text>
+                  <Text className="text-white text-center font-semibold">
+                    Delete Request
+                  </Text>
                 </Pressable>
               )}
             </View>
