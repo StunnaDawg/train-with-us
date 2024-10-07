@@ -115,7 +115,6 @@ const MessageScreen = () => {
     ProfilePic[]
   >([])
   const [initialLoading, setInitialLoading] = useState(true)
-  const [appending, setAppending] = useState(false)
   const [page, setPage] = useState(0)
   const [endOfData, setEndOfData] = useState(false)
   const [loading, setLoading] = useState(false)

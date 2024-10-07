@@ -38,6 +38,58 @@ const CommunityCard = ({
     setIsPressed(false)
   }
 
+  const compatibility = (communityProp: CommunityWithCompatibility) => {
+    const compatibilityScore = Math.round(communityProp.compatibility_score)
+    console.log(
+      "Compatibility score",
+      communityProp.community_title,
+      compatibilityScore
+    )
+
+    const CompatibilityBar = ({
+      filled,
+      color,
+    }: {
+      filled: boolean
+      color: string
+    }) => (
+      <View className={`w-1 h-3 mx-0.5 ${filled ? color : "bg-gray-300"}`} />
+    )
+
+    let text: string
+    let bars: JSX.Element[]
+
+    if (compatibilityScore >= 90) {
+      text = "High"
+      bars = [
+        <CompatibilityBar key={1} filled={true} color="bg-green-500" />,
+        <CompatibilityBar key={2} filled={true} color="bg-green-500" />,
+        <CompatibilityBar key={3} filled={true} color="bg-green-500" />,
+      ]
+    } else if (compatibilityScore >= 50) {
+      text = "Medium"
+      bars = [
+        <CompatibilityBar key={1} filled={true} color="bg-yellow-500" />,
+        <CompatibilityBar key={2} filled={true} color="bg-yellow-500" />,
+        <CompatibilityBar key={3} filled={false} color="bg-yellow-500" />,
+      ]
+    } else {
+      text = "Low"
+      bars = [
+        <CompatibilityBar key={1} filled={true} color="bg-red-500" />,
+        <CompatibilityBar key={2} filled={false} color="bg-red-500" />,
+        <CompatibilityBar key={3} filled={false} color="bg-red-500" />,
+      ]
+    }
+
+    return (
+      <View className="flex flex-row items-center">
+        <Text className="text-white mr-2">Compatibility: {text}</Text>
+        <View className="flex flex-row">{bars}</View>
+      </View>
+    )
+  }
+
   useEffect(() => {
     const fetchMemberCount = async () => {
       const { data, error } = await supabase
@@ -137,9 +189,8 @@ const CommunityCard = ({
           </View>
 
           <View className="border-b-2 border-b-white p-1" />
-          <Text className="text-white">
-            Compatibility {Math.round(community.compatibility_score)}%
-          </Text>
+
+          {compatibility(community)}
         </View>
       </View>
     </Pressable>
