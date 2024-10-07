@@ -1,19 +1,8 @@
-import {
-  View,
-  Text,
-  Pressable,
-  ScrollView,
-  SafeAreaView,
-  Modal,
-} from "react-native"
+import { View, Text, Pressable, ScrollView, SafeAreaView } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import getAllUserChatSessions from "../../../supabaseFunctions/getFuncs/getAllUserChatSessions"
-import {
-  ChatSession,
-  ConnectionRequest,
-  Profile,
-} from "../../../@types/supabaseTypes"
+import { ChatSession, ConnectionRequest } from "../../../@types/supabaseTypes"
 import { NavigationType } from "../../../@types/navigation"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import MessageCard from "./MessageCard"
@@ -31,12 +20,14 @@ type TabButtonProps = {
 const TabButton = ({ title, onPress, active }: TabButtonProps) => {
   return (
     <Pressable
-      className={`bg-white w-18 rounded-md items-center mx-1 p-1 ${
-        active ? "bg-slate-500" : ""
+      className={`py-2 px-4 rounded-full mx-1 ${
+        active ? "bg-yellow-500" : "bg-transparent"
       }`}
       onPress={onPress}
     >
-      <Text className={`font-bold text-black`}>{title}</Text>
+      <Text className={`font-bold ${active ? "text-white" : "text-gray-300"}`}>
+        {title}
+      </Text>
     </Pressable>
   )
 }
@@ -99,7 +90,7 @@ const Messages = () => {
       getAllUserChatSessions(user!.id, setChatSessions)
     }
 
-    if (user && activeTab === "Sent Requests") {
+    if (user && activeTab === "Pending") {
       try {
         const { data: requestData, error } = await supabase
           .from("connection_requests")
@@ -143,16 +134,17 @@ const Messages = () => {
   }
 
   return (
-    <SafeAreaView className="bg-primary-900 flex-1">
-      <View>
-        <View className=" m-2 flex flex-row justify-between">
+    <SafeAreaView className="flex-1 bg-primary-900">
+      <View className="flex-1">
+        {/* Try commenting out sections to isolate the error */}
+        <View className="flex-row justify-between items-center p-4">
           <BackButton colour="white" />
-          <Text className="font-bold text-lg text-white">My Messages</Text>
-          <View />
+          <Text className="font-bold text-xl text-white">My Messages</Text>
+          <View style={{ width: 24 }} />
         </View>
 
-        <View className="flex flex-row justify-center items-center">
-          {["Recent", "Requests", "All", "Sent Requests"].map((tab) => (
+        <View className="flex-row justify-between items-center">
+          {["Recent", "Requests", "All", "Pending"].map((tab) => (
             <TabButton
               key={tab}
               title={tab}
@@ -162,84 +154,70 @@ const Messages = () => {
           ))}
         </View>
 
-        {/* <View className="flex-grow">
-          <SearchBar
-            value={searchText}
-            onChange={(text) => handleSearch(text)}
-            placeholder="Search Messages"
-          />
-        </View> */}
-
-        <ScrollView className="h-full">
+        <ScrollView className="flex-1">
           {activeTab === "Recent" || activeTab === "All" ? (
             chatSessions?.length ? (
-              chatSessions.map((session, index) => {
+              chatSessions.map((session) => {
                 const otherUserId =
                   session.user1 === user?.id ? session.user2 : session.user1
                 return (
-                  <View
-                    className={` ${
-                      isPressed[session.id] ? "opacity-50" : null
-                    } flex-1  border-b-2 mx-2 p-1`}
+                  <Pressable
                     key={session.id}
+                    className={`border-b border-gray-700 mx-2 p-2 ${
+                      isPressed[session.id] ? "opacity-50" : ""
+                    }`}
+                    onPressIn={() => handlePressIn(session.id)}
+                    onPressOut={() => handlePressOut(session.id)}
+                    onPress={() =>
+                      navigation.navigate("MessagingScreen", {
+                        chatSession: session,
+                      })
+                    }
                   >
-                    <Pressable
-                      onPressIn={() => handlePressIn(session.id)}
-                      onPressOut={() => handlePressOut(session.id)}
-                      onPress={() =>
-                        navigation.navigate("MessagingScreen", {
-                          chatSession: session,
-                        })
-                      }
-                    >
-                      <MessageCard
-                        otherUserId={otherUserId}
-                        recentMessage={session.recent_message}
-                        updatedAt={session.updated_at}
-                      />
-                    </Pressable>
-                  </View>
+                    <MessageCard
+                      otherUserId={otherUserId}
+                      recentMessage={session.recent_message}
+                      updatedAt={session.updated_at}
+                    />
+                  </Pressable>
                 )
               })
             ) : (
-              <View className="flex-1 flex flex-row justify-center items-center m-2">
+              <View className="flex-1 justify-center items-center m-2">
                 <Text className="text-center font-semibold text-white">
                   You have no Messages!
                 </Text>
               </View>
             )
-          ) : activeTab === "Requests" || activeTab === "Sent Requests" ? (
+          ) : activeTab === "Requests" || activeTab === "Pending" ? (
             connectionRequest?.length ? (
               connectionRequest.map((request, index) => (
-                <View
-                  className={` ${
-                    isPressed[request.requested + index] ? "opacity-50" : null
-                  } flex-1 w-full`}
+                <Pressable
                   key={request.requested + index}
+                  className={`border-b border-gray-700 mx-2 p-2 ${
+                    isPressed[request.requested + index] ? "opacity-50" : ""
+                  }`}
+                  onPressIn={() => handlePressIn(request.requested + index)}
+                  onPressOut={() => handlePressOut(request.requested + index)}
+                  onPress={() => setModalVisible(true)}
                 >
-                  <Pressable
-                    onPressIn={() => handlePressIn(request.requested + index)}
-                    onPressOut={() => handlePressOut(request.requested + index)}
-                    onPress={() => setModalVisible(true)}
-                  >
-                    <RequestCard
-                      isRequester={activeTab === "Sent Requests"}
-                      otherUserId={
-                        activeTab === "Requests"
-                          ? request.requester
-                          : request.requested
-                      }
-                      recentMessage={request.message}
-                      updatedAt={request.request_sent}
-                      setModalVisible={setModalVisible}
-                      modalVisible={modalVisible}
-                      onPress={getUserMessages}
-                    />
-                  </Pressable>
-                </View>
+                  <RequestCard
+                    isRequester={activeTab === "Pending"}
+                    otherUserId={
+                      activeTab === "Requests"
+                        ? request.requester
+                        : request.requested
+                    }
+                    recentMessage={request.message}
+                    updatedAt={request.request_sent}
+                    setModalVisible={setModalVisible}
+                    modalVisible={modalVisible}
+                    onPress={getUserMessages}
+                  />
+                </Pressable>
               ))
             ) : (
-              <View className="flex-1 flex flex-row justify-center items-center m-2">
+              <View className="flex-1 justify-center items-center m-2">
                 <Text className="text-center font-semibold text-white">
                   You have no Message Requests!
                 </Text>
