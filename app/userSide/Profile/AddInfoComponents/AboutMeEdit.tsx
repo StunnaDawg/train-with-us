@@ -31,66 +31,45 @@ const AboutMeEdit = ({ currentUserId }: AboutMeEditProps) => {
     }, [currentUserId, setCurrentUserState])
   )
 
+  const renderInfoItem = (
+    label: string,
+    value: string | undefined,
+    onPress: () => void
+  ) => (
+    <Pressable
+      onPress={onPress}
+      className="flex-row justify-between items-center border-b border-gray-200 py-4"
+    >
+      <View>
+        <Text className="text-sm font-medium text-gray-600">{label}</Text>
+        <Text className="text-base font-semibold mt-1">{value || "Add"}</Text>
+      </View>
+      <FontAwesome6 name="chevron-right" size={16} color="gray" />
+    </Pressable>
+  )
+
   return (
-    <View className="m-3">
-      <View className="px-2">
-        <Text className="text-sm text-slate-400 font-bold">Basic Info</Text>
-      </View>
-      <View className="border-b border-black/45 p-2 py-3">
-        <Pressable
-          onPress={() => {
-            if (currentUserState) {
-              navigation.navigate("EditBio", {
-                userProfile: currentUserState,
-              })
-            }
-          }}
-          className="flex flex-row justify-between items-center"
-        >
-          <Text className=" font-bold text-xs">About Me</Text>
-          <FontAwesome6 name="edit" size={16} color="gray" />
-        </Pressable>
-      </View>
-
-      <View className="border-b border-black/45 p-2 py-3">
-        <Pressable className="flex flex-row justify-between items-center">
-          <Text className=" font-bold text-xs">
-            {!loading && currentUserState
-              ? formatBirthdate(currentUserState.birthday)
-              : "Add Birthday"}
-          </Text>
-        </Pressable>
-      </View>
-
-      <View className="border-b border-black/45 p-2 py-3">
-        <Pressable
-          onPress={() => navigation.navigate("EditGender")}
-          className="flex flex-row justify-between items-center"
-        >
-          <Text className=" font-bold text-xs">
-            Gender - {currentUserState?.gender || "Add Gender"}
-          </Text>
-          <FontAwesome6 name="edit" size={16} color="gray" />
-        </Pressable>
-      </View>
-
-      <View className="border-b border-black/45 p-2 py-3">
-        <Pressable
-          onPress={() => navigation.navigate("SexualityEdit")}
-          className="flex flex-row justify-between items-center"
-        >
-          <Text className=" font-bold text-xs">
-            Sexuality - {currentUserState?.sexuality || "Add Sexuality"}
-          </Text>
-          <FontAwesome6 name="edit" size={16} color="gray" />
-        </Pressable>
-      </View>
-
-      <View className="border-b border-black/45 p-2 py-3">
-        <Pressable className="flex flex-row justify-between items-center">
-          <Text className=" font-bold text-xs">Location - Halifax NS</Text>
-        </Pressable>
-      </View>
+    <View className="bg-white rounded-lg shadow-sm mx-4 my-2 p-4">
+      <Text className="text-lg font-bold mb-4">Basic Info</Text>
+      {renderInfoItem("About Me", currentUserState?.about || "", () => {
+        if (currentUserState) {
+          navigation.navigate("EditBio", { userProfile: currentUserState })
+        }
+      })}
+      {renderInfoItem(
+        "Birthday",
+        currentUserState
+          ? formatBirthdate(currentUserState.birthday)
+          : undefined,
+        () => {}
+      )}
+      {renderInfoItem("Gender", currentUserState?.gender || "", () =>
+        navigation.navigate("EditGender")
+      )}
+      {renderInfoItem("Sexuality", currentUserState?.sexuality || "", () =>
+        navigation.navigate("SexualityEdit")
+      )}
+      {renderInfoItem("Location", "Halifax NS", () => {})}
     </View>
   )
 }

@@ -1,142 +1,73 @@
-import { View, Text, ScrollView } from "react-native"
 import React, { useEffect, useState } from "react"
-import { NavigationType, RootStackParamList } from "../../../@types/navigation"
+import { View, SafeAreaView, Text, TouchableOpacity } from "react-native"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
-import { SafeAreaView } from "react-native-safe-area-context"
+import { NavigationType, RootStackParamList } from "../../../@types/navigation"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
-import NextButton from "../../../components/NextButton"
-import BouncyCheckbox from "react-native-bouncy-checkbox"
 import EnhancedTextInput from "../../../components/TextInput"
-import BackButton from "../../../components/BackButton"
 import EditProfileTopBar from "../../../components/TopBarEdit"
-
-type MusicOptions =
-  | "Pop"
-  | "Rock"
-  | "Jazz"
-  | "Classical"
-  | "Hip-Hop"
-  | "Electronic"
-  | "Country"
-  | "Reggae"
-  | "Blues"
-  | "Metal"
-  | "Punk"
-  | "Rap"
-  | "R&B"
-  | "Folk"
-  | "Indie"
-  | "Alternative"
-  | "Latin"
-  | "Soul"
-  | "Reggaeton"
-  | "K-Pop"
-  | "J-Pop"
-  | "Anime"
-  | "Gospel"
-  | "Christian"
-  | "Holiday"
-  | "Opera"
-  | "Ska"
-  | "Salsa"
-  | "Merengue"
-  | "Bachata"
-  | "Reggaeton"
-  | "Cumbia"
-  | "Vallenato"
-  | "any"
 
 const MusicPref = () => {
   const route = useRoute<RouteProp<RootStackParamList, "MusicPreference">>()
   const userProfile = route.params.userProfile
-
   const navigation = useNavigation<NavigationType>()
-
   const [musicPref, setMusicPref] = useState<string>("")
   const { user } = useAuth()
 
-  // const handleSelectMusic = (Music: MusicOptions) => {
-  //   if (!selectedMusic.includes(Music)) {
-  //     setSelectedMusic([...selectedMusic, Music])
-  //   }
-  // }
+  useEffect(() => {
+    if (userProfile?.music_pref) {
+      setMusicPref(userProfile.music_pref)
+    }
+  }, [userProfile])
 
   const handleUserUpdate = async () => {
     try {
       const { error } = await supabase
         .from("profiles")
-        .update({ music_pref: musicPref })
-        .eq("id", user?.id)
+        .upsert({ id: user?.id, music_pref: musicPref })
 
       if (error) throw error
 
-      // Navigate to the next preference page
       navigation.goBack()
     } catch (error) {
-      console.error("Failed to update community preferences:", error)
+      console.error("Failed to update music preferences:", error)
     }
   }
 
-  // useEffect(() => {
-  //   if (userProfile?.music_pref) {
-  //     setSelectedMusic(userProfile.music_pref)
-  //   }
-  // }, [userProfile])
-
-  const MusicOptions: MusicOptions[] = [
-    "Pop",
-    "Rock",
-    "Jazz",
-    "Classical",
-    "Hip-Hop",
-    "Electronic",
-    "Country",
-    "Reggae",
-    "Blues",
-    "Metal",
-    "Punk",
-    "Rap",
-    "R&B",
-    "Folk",
-    "Indie",
-    "Alternative",
-    "Latin",
-    "Soul",
-    "Reggaeton",
-    "K-Pop",
-    "J-Pop",
-    "Anime",
-    "Gospel",
-    "Christian",
-    "Holiday",
-    "Opera",
-    "Ska",
-    "Salsa",
-    "Merengue",
-    "Bachata",
-    "Cumbia",
-    "Vallenato",
-    "any",
-  ]
-
   return (
-    <SafeAreaView className="flex-1 bg-primary-900">
-      <View>
-        <View>
-          <EditProfileTopBar
-            text="Music Taste"
-            functionProp={async () => await handleUserUpdate()}
-          />
-
-          <View className="flex flex-row justify-center">
-            <EnhancedTextInput
-              text={musicPref}
-              setText={setMusicPref}
-              placeholder="I love old school hip-hop when working out!"
-            />
-          </View>
-        </View>
+    <SafeAreaView className="flex-1 bg-white">
+      <EditProfileTopBar
+        text="Music Taste"
+        onSave={handleUserUpdate}
+        saveText="Done"
+        primaryTextColor="text-gray-800"
+      />
+      <View className="flex-1 p-4">
+        <Text className="text-lg font-semibold mb-2 text-gray-800">
+          Share your music preferences
+        </Text>
+        <Text className="text-sm text-gray-600 mb-4">
+          Tell us about your favorite music genres, artists, or how music fits
+          into your life.
+        </Text>
+        <EnhancedTextInput
+          text={musicPref}
+          setText={setMusicPref}
+          label="Your Music Preferences"
+          placeholder="I love old school hip-hop when working out, and jazz for relaxing..."
+          maxLength={150}
+          multiline
+          numberOfLines={4}
+          inputStyle="h-36"
+        />
+        <TouchableOpacity
+          onPress={handleUserUpdate}
+          className="mt-6 bg-blue-500 py-3 px-6 rounded-full"
+        >
+          <Text className="text-white text-center font-semibold">
+            Save Music Preferences
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   )

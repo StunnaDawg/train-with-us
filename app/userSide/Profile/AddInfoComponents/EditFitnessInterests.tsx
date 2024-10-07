@@ -140,12 +140,21 @@ const EditFitnessInterests = () => {
   }, [userProfile])
 
   return (
-    <SafeAreaView className="flex-1 bg-primary-900">
+    <SafeAreaView className="flex-1 bg-white">
       <EditProfileTopBar
         text="Edit your Fitness Interests"
-        functionProp={handleUserUpdate}
+        saveText="Save"
+        onSave={handleUserUpdate}
+        primaryTextColor="text-gray-800"
       />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} className="px-4">
+        <Text className="text-lg font-semibold mb-2 text-gray-800 mt-1">
+          Select your fitness interests
+        </Text>
+        <Text className="text-sm text-gray-600 mb-4">
+          Choose the activities you enjoy or want to try. This helps us connect
+          you with like-minded individuals.
+        </Text>
         <View className="flex flex-row justify-center flex-wrap">
           {ActvitiesOptions.map((activity, index) => {
             const isSelected = selectedActvities.includes(activity)
@@ -153,13 +162,19 @@ const EditFitnessInterests = () => {
               <Pressable
                 onPress={() => handleSelectActivities(activity)}
                 key={index}
-                className={`border-2 rounded-full p-1 text-center mx-1 my-1 ${
+                className={`border-2 rounded-full p-2 m-1 ${
                   isSelected
-                    ? "bg-yellow-300 border-yellow-400 shadow-xl"
+                    ? "bg-blue-500 border-blue-600"
                     : "bg-white border-gray-300"
                 }`}
               >
-                <Text className={`text-xs font-semibold`}>{activity}</Text>
+                <Text
+                  className={`text-sm font-semibold ${
+                    isSelected ? "text-white" : "text-gray-800"
+                  }`}
+                >
+                  {activity}
+                </Text>
               </Pressable>
             )
           })}

@@ -1,8 +1,14 @@
-import { View, Text, ScrollView, TextInput } from "react-native"
+import {
+  View,
+  Text,
+  ScrollView,
+  TextInput,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native"
 import React, { useEffect, useState } from "react"
 import { NavigationType, RootStackParamList } from "../../../@types/navigation"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
-import { SafeAreaView } from "react-native-safe-area-context"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
 import NextButton from "../../../components/NextButton"
@@ -41,84 +47,61 @@ const Hobbies = () => {
 
   const [hobby, setHobby] = useState<string>("")
 
-  // const [selectedHobbies, setSelectedHobbies] = useState<
-  //   HobbiesOptions[] | string[]
-  // >([])
   const { user } = useAuth()
 
-  // const handleHobbies = (item: HobbiesOptions) => {
-  //   if (selectedHobbies.includes(item)) {
-  //     // Remove the item if it is already selected
-  //     setSelectedHobbies(selectedHobbies.filter((m) => m !== item))
-  //   } else {
-  //     // Add the item only if there are less than 5 items already selected
-  //     if (selectedHobbies.length < 5) {
-  //       setSelectedHobbies([...selectedHobbies, item])
-  //     }
-  //   }
-  // }
+  useEffect(() => {
+    if (userProfile?.hobbies) {
+      setHobby(userProfile.hobbies)
+    }
+  }, [userProfile])
 
   const handleUserUpdate = async () => {
     try {
       const { error } = await supabase
         .from("profiles")
-        .upsert({ id: user?.id, hobbies: hobby })
+        .upsert({ id: userProfile.id, hobbies: hobby })
 
       if (error) throw error
 
-      // Navigate to the next preference page
       navigation.goBack()
     } catch (error) {
-      console.error("Failed to update community preferences:", error)
+      console.error("Failed to update hobbies:", error)
     }
   }
 
-  // useEffect(() => {
-  //   if (userProfile?.hobbies) {
-  //     setSelectedHobbies(userProfile.hobbies)
-  //   }
-  // }, [userProfile])
-
-  const HobbiesOptionsArray: HobbiesOptions[] = [
-    "Gardening",
-    "Photography",
-    "Painting",
-    "Writing",
-    "Cooking",
-    "Baking",
-    "Woodworking",
-    "Knitting",
-    "Dancing",
-    "Playing Musical Instruments",
-    "Reading",
-    "Bird Watching",
-    "Fishing",
-    "Astronomy",
-    "Pottery Making",
-    "Sewing",
-    "Model Building",
-    "Scrapbooking",
-    "Drawing",
-    "Calligraphy",
-  ]
-
   return (
-    <SafeAreaView className="flex-1 bg-primary-900">
-      <View>
-        <View>
-          <EditProfileTopBar
-            text="Other hobbies"
-            functionProp={async () => await handleUserUpdate()}
-          />
-
-          <View className="flex flex-row justify-center">
-            <EnhancedTextInput
-              text={hobby}
-              setText={setHobby}
-              placeholder="I love to garden!"
-            />
-          </View>
-        </View>
+    <SafeAreaView className="flex-1 bg-white">
+      <EditProfileTopBar
+        text="Other hobbies"
+        onSave={handleUserUpdate}
+        saveText="Done"
+        primaryTextColor="text-gray-800"
+      />
+      <View className="flex-1 p-4">
+        <Text className="text-lg font-semibold mb-2 text-gray-800">
+          Share your hobbies
+        </Text>
+        <Text className="text-sm text-gray-600 mb-4">
+          Tell us about your favorite activities and interests outside of work.
+        </Text>
+        <EnhancedTextInput
+          text={hobby}
+          setText={setHobby}
+          label="Your Hobbies"
+          placeholder="I love gardening, photography, and playing the guitar..."
+          maxLength={150}
+          multiline
+          numberOfLines={4}
+          inputStyle="h-36"
+        />
+        <TouchableOpacity
+          onPress={handleUserUpdate}
+          className="mt-6 bg-blue-500 py-3 px-6 rounded-full"
+        >
+          <Text className="text-white text-center font-semibold">
+            Save Hobbies
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   )

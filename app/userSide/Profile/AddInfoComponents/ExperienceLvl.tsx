@@ -1,13 +1,10 @@
-import { View, Text, ScrollView, StyleSheet } from "react-native"
 import React, { useEffect, useState } from "react"
-import { NavigationType, RootStackParamList } from "../../../@types/navigation"
+import { View, Text, Pressable, StyleSheet } from "react-native"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
+import { NavigationType, RootStackParamList } from "../../../@types/navigation"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
 import supabase from "../../../../lib/supabase"
-import NextButton from "../../../components/NextButton"
-import BouncyCheckbox from "react-native-bouncy-checkbox"
-import BackButton from "../../../components/BackButton"
 import EditProfileTopBar from "../../../components/TopBarEdit"
 
 type LvlOptions =
@@ -17,17 +14,29 @@ type LvlOptions =
   | "Expert"
   | "Professional"
 
-const FitnessLevel = () => {
+const ExperienceLvl = () => {
   const route = useRoute<RouteProp<RootStackParamList, "FitnessLevel">>()
   const userProfile = route.params.userProfile
-
   const navigation = useNavigation<NavigationType>()
-
   const [selectedLvl, setSelectedLvl] = useState<LvlOptions | string>("")
   const { user } = useAuth()
 
+  const LvlOptions: LvlOptions[] = [
+    "Beginner",
+    "Intermediate",
+    "Advanced",
+    "Expert",
+    "Professional",
+  ]
+
+  useEffect(() => {
+    if (userProfile?.fitness_lvl) {
+      setSelectedLvl(userProfile.fitness_lvl)
+    }
+  }, [userProfile])
+
   const handleSelectLvl = (lvl: LvlOptions) => {
-    setSelectedLvl(selectedLvl === lvl ? "Beginner" : lvl)
+    setSelectedLvl(lvl)
   }
 
   const handleUserUpdate = async () => {
@@ -39,91 +48,48 @@ const FitnessLevel = () => {
 
       if (error) throw error
 
-      // Navigate to the next preference page
       navigation.goBack()
     } catch (error) {
-      console.error("Failed to update community preferences:", error)
+      console.error("Failed to update fitness level:", error)
     }
   }
 
-  useEffect(() => {
-    if (userProfile?.fitness_lvl) {
-      setSelectedLvl(userProfile.fitness_lvl)
-    }
-  }, [userProfile])
-
-  const LvlOptions: LvlOptions[] = [
-    "Beginner",
-    "Intermediate",
-    "Advanced",
-    "Expert",
-    "Professional",
-  ]
-
   return (
-    <SafeAreaView className="flex-1 bg-primary-900">
-      <View className="flex-1 justify-between">
-        <View>
-          <EditProfileTopBar
-            text="Experience Level"
-            functionProp={handleUserUpdate}
-          />
-
-          <View>
-            {LvlOptions.map((option, index) => (
-              <View key={index} style={styles.optionContainer}>
-                <Text style={styles.optionText}>{option}</Text>
-                <BouncyCheckbox
-                  fillColor="blue"
-                  unFillColor="#FFFFFF"
-                  isChecked={selectedLvl === option}
-                  onPress={() => handleSelectLvl(option)}
-                />
-              </View>
-            ))}
-          </View>
-        </View>
+    <SafeAreaView className="flex-1 bg-white">
+      <EditProfileTopBar
+        text="Experience Level"
+        onSave={handleUserUpdate}
+        primaryTextColor="text-gray-800"
+      />
+      <View className="flex-1 p-4">
+        <Text className="text-lg font-semibold mb-4 text-gray-800">
+          Select your fitness experience level:
+        </Text>
+        {LvlOptions.map((option, index) => (
+          <Pressable
+            key={index}
+            onPress={() => handleSelectLvl(option)}
+            className={`flex-row justify-between items-center p-4 mb-2 rounded-lg ${
+              selectedLvl === option ? "bg-blue-100" : "bg-gray-100"
+            }`}
+          >
+            <Text
+              className={`text-base ${
+                selectedLvl === option
+                  ? "font-semibold text-blue-600"
+                  : "text-gray-700"
+              }`}
+            >
+              {option}
+            </Text>
+            {selectedLvl === option && (
+              <View className="w-4 h-4 bg-blue-500 rounded-full" />
+            )}
+          </Pressable>
+        ))}
       </View>
     </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#1A1A1A",
-  },
-  innerContainer: {
-    flex: 1,
-    justifyContent: "space-between",
-  },
-  headerContainer: {
-    alignItems: "center",
-  },
-  headerText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#FFFFFF",
-  },
-  subHeaderText: {
-    fontSize: 14,
-    textAlign: "center",
-    color: "#FFFFFF",
-  },
-  optionContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-  },
-  optionText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#FFFFFF",
-  },
-  buttonContainer: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
-})
-export default FitnessLevel
+export default ExperienceLvl

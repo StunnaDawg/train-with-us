@@ -5,6 +5,7 @@ import {
   Pressable,
   ActivityIndicator,
   ScrollView,
+  TouchableOpacity,
 } from "react-native"
 import React, { useEffect, useState } from "react"
 import { useAuth } from "../supabaseFunctions/authcontext"
@@ -125,40 +126,28 @@ const ManageConnections = () => {
 
   useEffect(() => {}, [profiles])
   return (
-    <SafeAreaView className="flex-1">
-      <View className="flex flex-row justify-between items-center mx-1">
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex flex-row justify-between items-center px-4 py-2 border-b border-gray-200">
         <BackButton colour="black" size={24} />
-        <View>
-          <Text className="font-bold text-lg"> My Connections</Text>
-        </View>
-        <View />
+        <Text className="font-bold text-xl">My Connections</Text>
+        <View style={{ width: 24 }} />
       </View>
-      <View className="flex flex-row items-center ">
-        {/* <View className="flex-grow">
-          <SearchBar
-            value={userSearch}
-            onChange={setUserSearch}
-            placeholder="Search Connections"
-          />
-        </View> */}
-      </View>
-
-      <ScrollView>
+      <ScrollView className="flex-1">
         {loading ? (
-          <Text>Loading...</Text>
+          <ActivityIndicator size="large" color="#0000ff" className="mt-8" />
         ) : profiles && profiles.length > 0 ? (
           profiles.map((profile) => (
             <View
               key={profile.id}
-              className="flex flex-row justify-between items-center"
+              className="flex flex-row justify-between items-center px-4 py-3 border-b border-gray-100"
             >
               <MemberCard member={profile} />
-              <Pressable
+              <TouchableOpacity
                 onPressIn={() => handleOnPressIn(profile.id)}
                 onPressOut={handleOnPressOut}
-                className={`mx-2 ${
-                  pressedId === profile.id ? "opacity-50" : null
-                } border-2 rounded-full px-5 py-2`}
+                className={`${
+                  pressedId === profile.id ? "bg-red-100" : "bg-gray-100"
+                } rounded-full p-3`}
                 onPress={() => {
                   showAlertFunc({
                     title: "Confirm Delete",
@@ -180,12 +169,18 @@ const ManageConnections = () => {
                   })
                 }}
               >
-                <FontAwesome6 name="trash" size={16} color="black" />
-              </Pressable>
+                <FontAwesome6
+                  name="trash"
+                  size={16}
+                  color={pressedId === profile.id ? "red" : "gray"}
+                />
+              </TouchableOpacity>
             </View>
           ))
         ) : (
-          <Text>No connections found</Text>
+          <Text className="text-center text-gray-500 mt-8">
+            No connections found
+          </Text>
         )}
       </ScrollView>
     </SafeAreaView>

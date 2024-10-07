@@ -1,69 +1,67 @@
 import React from "react"
-import { Pressable, Text, View } from "react-native"
+import { Pressable, Text, TouchableOpacity, View } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../@types/navigation"
-import { useState } from "react"
 
 type EditProfileTopBarProps = {
   text: string
-  functionProp: () => void
-  doneButton?: boolean
+  onSave: () => void
+  onCancel?: () => void
   cancelText?: string
-  doneButtonText?: string
+  saveText?: string
+  showSaveButton?: boolean
+  customLeftComponent?: React.ReactNode
+  customRightComponent?: React.ReactNode
+  backgroundColor?: string
+  primaryTextColor?: string
 }
 
 const EditProfileTopBar = ({
   text,
-  functionProp,
-  doneButton = true,
-  doneButtonText = "Done",
+  onSave,
+  onCancel,
   cancelText = "Cancel",
+  saveText = "Save",
+  showSaveButton = true,
+  customLeftComponent,
+  customRightComponent,
+  backgroundColor = "bg-white",
+  primaryTextColor = "text-white",
 }: EditProfileTopBarProps) => {
   const navigation = useNavigation<NavigationType>()
-  const [isCancelPressed, setIsCancelPressed] = useState(false)
-  const [isDonePressed, setIsDonePressed] = useState(false)
 
-  const handleOnPressIn = () => {
-    setIsCancelPressed(true)
-  }
-
-  const handleOnPressOut = () => {
-    setIsCancelPressed(false)
-  }
-
-  const handleOnPressInDone = () => {
-    setIsDonePressed(true)
-  }
-
-  const handleOnPressOutDone = () => {
-    setIsDonePressed(false)
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel()
+    } else {
+      navigation.goBack()
+    }
   }
 
   return (
-    <View className="flex flex-row justify-between items-center border-b border-slate-300 p-2">
-      <Pressable
-        onPressIn={handleOnPressIn}
-        onPressOut={handleOnPressOut}
-        onPress={() => navigation.goBack()}
-        className={`${isCancelPressed ? "opacity-50" : null}`}
-      >
-        <Text className=" text-xs font-semibold text-white">{cancelText}</Text>
-      </Pressable>
-      <Text className="font-bold text-lg text-center text-white">{text}</Text>
-      {doneButton ? (
-        <Pressable
-          onPressIn={handleOnPressInDone}
-          onPressOut={handleOnPressOutDone}
-          onPress={functionProp}
-          className={`${isDonePressed ? "opacity-50" : null}`}
-        >
-          <Text className="text-xs font-semibold text-white">
-            {doneButtonText}
+    <View
+      className={`flex flex-row justify-between items-center border-b border-slate-300 p-4 ${backgroundColor}`}
+    >
+      {customLeftComponent || (
+        <TouchableOpacity onPress={handleCancel}>
+          <Text className="text-sm font-semibold text-blue-500">
+            {cancelText}
           </Text>
-        </Pressable>
-      ) : (
-        <View />
+        </TouchableOpacity>
       )}
+      <Text className={`font-bold text-lg text-center ${primaryTextColor}`}>
+        {text}
+      </Text>
+      {customRightComponent ||
+        (showSaveButton ? (
+          <TouchableOpacity onPress={onSave}>
+            <Text className="text-sm font-semibold text-blue-500">
+              {saveText}
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={{ width: 50 }} /> // Placeholder for alignment
+        ))}
     </View>
   )
 }

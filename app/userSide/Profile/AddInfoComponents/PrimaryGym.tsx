@@ -86,9 +86,10 @@ const PrimaryGym = () => {
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
       <EditProfileTopBar
+        backgroundColor="bg-primary-900"
         text="Primary Gym"
-        functionProp={() => console.log}
-        doneButton={false}
+        saveText=""
+        onSave={() => console.log("save")}
       />
       <ScrollView>
         {communities &&

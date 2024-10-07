@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   Alert,
   StyleSheet,
+  Pressable,
 } from "react-native"
 import React from "react"
 import { useState } from "react"
@@ -78,75 +79,53 @@ const SexualityEdit = () => {
     "Lesbian",
   ]
   return (
-    <SafeAreaView className="flex-1 bg-primary-900">
-      <View className="flex-1 justify-between">
-        <View>
-          <EditProfileTopBar text="Sexuality" functionProp={handleUserUpdate} />
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-1">
+        <EditProfileTopBar
+          text="Sexuality"
+          onSave={handleUserUpdate}
+          primaryTextColor="text-gray-800"
+        />
 
-          <View>
-            {SexualityOptions.map((option, index) => (
-              <View key={index} style={styles.optionContainer}>
-                <Text style={styles.optionText}>{option}</Text>
-                <BouncyCheckbox
-                  fillColor="blue"
-                  unFillColor="#FFFFFF"
-                  isChecked={selectedSexuality === option}
-                  onPress={() => handleSelectSexuality(option)}
-                />
-                {/* {option === "Specify other..." &&
-                  selectedGender === "Specify other..." && (
-                    <TextInput
-                      value={specifyInput}
-                      onChangeText={setSpecifyInput}
-                      placeholder="Specify your gender here..."
-                      className="h-9 border-2 w-48 rounded p-1"
-                    />
-                  )} */}
+        <View className="px-4 pt-4">
+          <Text className="text-lg font-semibold mb-2 text-gray-800">
+            How do you identify?
+          </Text>
+          <Text className="text-sm text-gray-600 mb-4">
+            Select the option that best describes your sexuality. This
+            information helps us create a more inclusive community.
+          </Text>
+
+          {SexualityOptions.map((option, index) => (
+            <Pressable
+              key={index}
+              onPress={() => handleSelectSexuality(option)}
+              className={`flex-row justify-between items-center p-4 mb-2 rounded-lg ${
+                selectedSexuality === option ? "bg-blue-100" : "bg-gray-100"
+              }`}
+            >
+              <Text className="text-base font-semibold text-gray-800">
+                {option}
+              </Text>
+              <View
+                className={`w-6 h-6 rounded-full border-2 ${
+                  selectedSexuality === option
+                    ? "bg-blue-500 border-blue-500"
+                    : "border-gray-400"
+                }`}
+              >
+                {selectedSexuality === option && (
+                  <View className="flex-1 items-center justify-center">
+                    <View className="w-3 h-3 rounded-full bg-white" />
+                  </View>
+                )}
               </View>
-            ))}
-          </View>
+            </Pressable>
+          ))}
         </View>
       </View>
     </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#1A1A1A",
-  },
-  innerContainer: {
-    flex: 1,
-    justifyContent: "space-between",
-  },
-  headerContainer: {
-    alignItems: "center",
-  },
-  headerText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#FFFFFF",
-  },
-  subHeaderText: {
-    fontSize: 14,
-    textAlign: "center",
-    color: "#FFFFFF",
-  },
-  optionContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-  },
-  optionText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#FFFFFF",
-  },
-  buttonContainer: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
-})
 export default SexualityEdit

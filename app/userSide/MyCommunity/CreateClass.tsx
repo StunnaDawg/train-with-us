@@ -192,8 +192,9 @@ const CreateClass = () => {
     <SafeAreaView className="flex-1 bg-primary-900">
       <EditProfileTopBar
         text="Create Class"
-        doneButtonText="Create"
-        functionProp={() => CreateClassFunc()}
+        onSave={CreateClassFunc}
+        saveText="Create"
+        backgroundColor="bg-primary-900"
       />
 
       <View className="pb-10 pt-1">

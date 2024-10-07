@@ -50,40 +50,36 @@ const EditProfile = () => {
   }, [user])
 
   return (
-    <SafeAreaView className="flex-1 mb-2">
-      <View className="items-center flex flex-row px-1">
-        <View className="">
-          <BackButton size={28} />
-        </View>
+    <SafeAreaView className="flex-1 bg-gray-50">
+      <View className="flex-row justify-between items-center px-4 py-2 bg-white border-b border-gray-200">
+        <BackButton size={28} />
+        <Text className="text-xl font-bold">Edit Profile</Text>
+        <Pressable
+          onPressIn={handleSettingsPressedIn}
+          onPressOut={handleSettingsPressedOut}
+        >
+          <FontAwesome6
+            name="gear"
+            size={24}
+            color={settingsPressed ? "gray" : "black"}
+          />
+        </Pressable>
       </View>
 
       {!loading && currentUser ? (
-        <>
-          <ScrollView className="flex-1">
-            <View>
-              <View>
-                <Text className="text-lg font-bold text-center ">Pictures</Text>
-              </View>
-              <View>
-                <ImageGrid currentUser={currentUser} />
-              </View>
-            </View>
-            <View className="flex flex-row justify-center">
-              <View>
-                <View>
-                  <Text className="text-lg font-bold text-center mt-4">
-                    Profile Picture
-                  </Text>
-                </View>
+        <ScrollView className="flex-1">
+          <View className="bg-white rounded-lg shadow-sm mx-4 my-2 p-4">
+            <Text className="text-lg font-bold mb-4">Pictures</Text>
+            <ImageGrid currentUser={currentUser} />
+          </View>
 
-                <View>
-                  <ProfilePicture currentUser={currentUser} />
-                </View>
-              </View>
-            </View>
-            <AddMoreInfo />
-          </ScrollView>
-        </>
+          <View className="bg-white rounded-lg shadow-sm mx-4 my-2 p-4">
+            <Text className="text-lg font-bold mb-4">Profile Picture</Text>
+            <ProfilePicture currentUser={currentUser} />
+          </View>
+
+          <AddMoreInfo />
+        </ScrollView>
       ) : (
         <EditProfileSkeleton />
       )}

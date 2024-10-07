@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   TextInput,
   Alert,
-  StyleSheet,
 } from "react-native"
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import { useNavigation } from "@react-navigation/native"
@@ -74,75 +73,62 @@ const EditGender = () => {
     "Specify other...",
   ]
   return (
-    <SafeAreaView className="flex-1 bg-primary-900">
-      <View className="flex-1 justify-between">
-        <View>
-          <EditProfileTopBar text="Gender" functionProp={handleUserUpdate} />
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-1">
+        <EditProfileTopBar
+          text="Gender"
+          onSave={handleUserUpdate}
+          primaryTextColor="text-gray-800"
+        />
 
-          <View>
-            {genderOptions.map((gender, index) => (
-              <View key={index} style={styles.optionContainer}>
-                <Text style={styles.optionText}>{gender}</Text>
-                <BouncyCheckbox
-                  fillColor="blue"
-                  unFillColor="#FFFFFF"
-                  isChecked={selectedGender === gender}
-                  onPress={() => handleSelectGender(gender)}
-                />
-                {gender === "Specify other..." &&
-                  selectedGender === "Specify other..." && (
-                    <TextInput
-                      value={specifyInput}
-                      onChangeText={setSpecifyInput}
-                      placeholder="Specify your gender here..."
-                      className="h-9 border-2 w-48 rounded p-1"
-                    />
-                  )}
+        <View className="px-4 pt-4">
+          <Text className="text-lg font-semibold mb-2 text-gray-800">
+            What's your gender?
+          </Text>
+          <Text className="text-sm text-gray-600 mb-4">
+            Select the option that best describes your gender identity. Your
+            choice helps us create a more inclusive environment.
+          </Text>
+
+          {genderOptions.map((gender, index) => (
+            <Pressable
+              key={index}
+              onPress={() => handleSelectGender(gender)}
+              className={`flex-row justify-between items-center p-4 mb-2 rounded-lg ${
+                selectedGender === gender ? "bg-blue-100" : "bg-gray-100"
+              }`}
+            >
+              <Text className="text-base font-semibold text-gray-800">
+                {gender}
+              </Text>
+              <View
+                className={`w-6 h-6 rounded-full border-2 ${
+                  selectedGender === gender
+                    ? "bg-blue-500 border-blue-500"
+                    : "border-gray-400"
+                }`}
+              >
+                {selectedGender === gender && (
+                  <View className="flex-1 items-center justify-center">
+                    <View className="w-3 h-3 rounded-full bg-white" />
+                  </View>
+                )}
               </View>
-            ))}
-          </View>
+            </Pressable>
+          ))}
+
+          {selectedGender === "Specify other..." && (
+            <TextInput
+              value={specifyInput}
+              onChangeText={setSpecifyInput}
+              placeholder="Specify your gender here..."
+              className="mt-2 p-3 border border-gray-300 rounded-lg text-gray-800"
+            />
+          )}
         </View>
       </View>
     </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#1A1A1A",
-  },
-  innerContainer: {
-    flex: 1,
-    justifyContent: "space-between",
-  },
-  headerContainer: {
-    alignItems: "center",
-  },
-  headerText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#FFFFFF",
-  },
-  subHeaderText: {
-    fontSize: 14,
-    textAlign: "center",
-    color: "#FFFFFF",
-  },
-  optionContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-  },
-  optionText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#FFFFFF",
-  },
-  buttonContainer: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
-})
 export default EditGender
