@@ -1,11 +1,10 @@
 import {
   View,
   Text,
-  Pressable,
+  TouchableOpacity,
   ActivityIndicator,
   ScrollView,
   Alert,
-  TouchableOpacity,
 } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
 import supabase from "../../../../lib/supabase"
@@ -179,81 +178,74 @@ const PinnedChannels = React.memo(() => {
 
   const renderPinnedChannels = useCallback(() => {
     return communityChannels?.map((c) => (
-      <View
+      <TouchableOpacity
         key={c.id}
-        className="mx-2 w-full border-b-slate-400 p-4 flex flex-row justify-between items-center border-b-2"
+        onLongPress={() => removePinChannel(c.id)}
+        onPress={() => navigation.navigate("ChannelScreen", { channelId: c })}
+        className="mb-2 bg-primary-900 rounded-lg overflow-hidden"
       >
-        <TouchableOpacity
-          onLongPress={() => {
-            removePinChannel(c.id)
-          }}
-          onPress={() => {
-            navigation.navigate("ChannelScreen", { channelId: c })
-          }}
-          className={pressedChannels[c.id] ? "opacity-50" : ""}
-        >
-          <View>
-            <Text className="font-bold text-white">
-              #{c.channel_title || "Error loading channel title"} in{" "}
-              {c.community_name}
-            </Text>
-            <Text className="text-xs text-white">
-              <Text>{`${c.recent_message_sender} said `}</Text>
+        <View className="flex-row justify-between items-center p-3">
+          <View className="flex-1 mr-2">
+            <View className="flex-row items-center">
+              <Text className="font-bold text-white text-base mx-1 mb-1">
+                #{c.channel_title || "Error loading channel title"}
+              </Text>
+              <Text className="text-gray-300 text-xs">{c.community_name}</Text>
+            </View>
+            <Text className="text-gray-400 text-xs mt-1" numberOfLines={1}>
+              <Text className="font-semibold">{`${c.recent_message_sender}: `}</Text>
               {c.recent_message || "No Messages yet!"}
             </Text>
           </View>
-        </TouchableOpacity>
-        <Pressable onPress={() => removePinChannel(c.id)}>
-          <MaterialCommunityIcons
-            name="dots-vertical"
-            size={20}
-            color="white"
-          />
-        </Pressable>
-      </View>
+          <TouchableOpacity
+            onPress={() => removePinChannel(c.id)}
+            className="p-2"
+          >
+            <MaterialCommunityIcons
+              name="dots-vertical"
+              size={20}
+              color="white"
+            />
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
     ))
-  }, [communityChannels, navigation, removePinChannel, pressedChannels])
+  }, [communityChannels, navigation, removePinChannel])
 
   const renderEventChats = useCallback(() => {
     return eventChats?.map((eventChat) => (
-      <View
+      <TouchableOpacity
         key={eventChat.id}
-        className="mx-2 w-full border-b-slate-400 p-4 flex flex-row justify-between items-center border-b-2"
+        onPress={() =>
+          navigation.navigate("EventChat", { eventChat: eventChat })
+        }
+        className="mb-2 bg-primary-900 rounded-lg overflow-hidden"
       >
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("EventChat", {
-              eventChat: eventChat,
-            })
-          }}
-        >
-          <View>
-            <Text className="font-bold text-white">
-              {eventChat.event_chat_name}
-            </Text>
-            <Text className="text-xs text-white">
-              <Text>{`${eventChat.recent_sender_name} said `}</Text>
-              {eventChat.recent_message || "No Messages yet!"}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+        <View className="p-3">
+          <Text className="font-bold text-white text-base mb-1">
+            {eventChat.event_chat_name}
+          </Text>
+          <Text className="text-gray-400 text-xs" numberOfLines={1}>
+            <Text className="font-semibold">{`${eventChat.recent_sender_name}: `}</Text>
+            {eventChat.recent_message || "No Messages yet!"}
+          </Text>
+        </View>
+      </TouchableOpacity>
     ))
   }, [eventChats, navigation])
 
   return (
     <View className=" bg-primary-900">
-      {/* Tabs */}
-      <View className="flex-row justify-around bg-gray-800">
+      <View className="flex-row justify-around bg-primary-800 mb-2">
         <TouchableOpacity
           onPress={() => setSelectedTab("pinned")}
-          className={`items-center py-4 ${
+          className={`items-center py-3 px-4 ${
             selectedTab === "pinned" ? "border-b-2 border-blue-500" : ""
           }`}
         >
           <Text
             className={`text-white ${
-              selectedTab === "pinned" ? "font-extrabold" : "font-semibold"
+              selectedTab === "pinned" ? "font-bold" : "font-semibold"
             }`}
           >
             Pinned Channels
@@ -261,13 +253,13 @@ const PinnedChannels = React.memo(() => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setSelectedTab("events")}
-          className={` items-center py-4 ${
+          className={`items-center py-3 px-4 ${
             selectedTab === "events" ? "border-b-2 border-blue-500" : ""
           }`}
         >
           <Text
             className={`text-white ${
-              selectedTab === "events" ? "font-extrabold" : "font-semibold"
+              selectedTab === "events" ? "font-bold" : "font-semibold"
             }`}
           >
             Event Chats
@@ -275,40 +267,28 @@ const PinnedChannels = React.memo(() => {
         </TouchableOpacity>
       </View>
 
-      {/* Content */}
-      <ScrollView className=" h-full bg-gray-900">
+      <ScrollView className="h-full px-4">
         {selectedTab === "pinned" ? (
           <>
             {!loading && communityChannels && communityChannels.length > 0 ? (
               renderPinnedChannels()
             ) : loading ? (
-              <ActivityIndicator />
+              <ActivityIndicator color="white" className="mt-4" />
             ) : (
-              <View className="flex flex-row justify-center items-center p-4">
-                <View>
-                  <Text className="text-white font-bold text-center">
-                    Join a Community to pin
-                  </Text>
-                  <Text className="text-white font-bold text-center">
-                    favourite channels!
-                  </Text>
-                </View>
-                <Pressable
-                  onPressIn={handleOnPressIn}
-                  onPressOut={handleOnPressOut}
-                  onPress={() => {
-                    navigation.navigate("Communities")
-                  }}
-                  className={`m-2 ${
-                    isDashPressed ? "bg-black" : "bg-white"
-                  } rounded-full p-2 items-center`}
+              <View className="flex items-center justify-center mt-8">
+                <Text className="text-white font-bold text-center mb-4">
+                  Join a Community to pin favourite channels!
+                </Text>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Communities")}
+                  className="bg-blue-500 rounded-full p-3"
                 >
                   <FontAwesome6
                     name="magnifying-glass"
-                    size={36}
-                    color={isDashPressed ? "white" : "black"}
+                    size={24}
+                    color="white"
                   />
-                </Pressable>
+                </TouchableOpacity>
               </View>
             )}
           </>
@@ -317,7 +297,7 @@ const PinnedChannels = React.memo(() => {
             {eventChats && eventChats.length > 0 ? (
               renderEventChats()
             ) : (
-              <View className="flex items-center justify-center p-4">
+              <View className="flex items-center justify-center mt-8">
                 <Text className="text-white font-bold text-center">
                   No Event Chats available.
                 </Text>

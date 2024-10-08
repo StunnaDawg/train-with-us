@@ -1,4 +1,11 @@
-import { View, Text, SafeAreaView, ScrollView } from "react-native"
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  FlatList,
+  Dimensions,
+} from "react-native"
 import React, { useEffect, useRef, useState } from "react"
 
 import PrimaryGymCard from "../../Connections/components/PrimaryGymCard"
@@ -13,7 +20,6 @@ import calculateAge from "../../../utilFunctions/calculateAge"
 import ActivityTags from "../../../components/AcvitivityTags"
 import MessageButton from "../../Connections/components/MessageButton"
 import BackButton from "../../../components/BackButton"
-import { FlatList } from "react-native-gesture-handler"
 
 const ViewFullUserProfileFromMessages = () => {
   const { user } = useAuth()
@@ -63,13 +69,25 @@ const ViewFullUserProfileFromMessages = () => {
     setImageFiles(currentProfile?.photos_url)
   }, [currentProfile])
 
+  const renderProfileSection = (title: string, content: string | undefined) => {
+    if (!content) return null
+    return (
+      <View className="mb-4">
+        <Text className="text-lg font-semibold text-gray-700 mb-2">
+          {title}
+        </Text>
+        <Text className="text-gray-600">{content}</Text>
+      </View>
+    )
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
-      <View className="p-2">
+      <View className="p-4">
         <BackButton colour="white" />
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="bg-white p-2 rounded-xl">
+      <ScrollView showsVerticalScrollIndicator={false} className="px-4">
+        <View className="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
           <FlatList
             showsHorizontalScrollIndicator={false}
             initialNumToRender={3}
@@ -95,106 +113,95 @@ const ViewFullUserProfileFromMessages = () => {
             onViewableItemsChanged={onViewableItemsChanged}
             viewabilityConfig={viewabilityConfig}
           />
-          <View className="flex flex-row justify-center mt-2">
+          <View className="flex flex-row justify-center mt-3 mb-4">
             {currentProfile?.photos_url?.map((_, index) => (
               <View
                 key={index}
-                style={{
-                  width: 50,
-                  height: 10,
-                  borderRadius: 5,
-                  backgroundColor: index === currentIndex ? "black" : "gray",
-                  margin: 5,
-                }}
+                className={`w-2 h-2 rounded-full mx-1 ${
+                  index === currentIndex ? "bg-black" : "bg-gray-300"
+                }`}
               />
             ))}
           </View>
-          <View className="flex flex-row justify-between items-center mt-4">
-            <Text className="text-2xl font-bold">
-              {currentProfile?.first_name} {currentProfile?.last_name}
-            </Text>
-            <View>
-              {currentProfile?.birthday ? (
-                <Text className="text-2xl font-bold">
-                  {calculateAge(currentProfile?.birthday)}
-                </Text>
-              ) : null}
-              <Text>{currentProfile?.gender}</Text>
+          <View className="px-4 pb-6">
+            <View className="flex flex-row justify-between items-center mb-4">
+              <Text className="text-3xl font-bold text-gray-800">
+                {currentProfile?.first_name} {currentProfile?.last_name}
+              </Text>
+              {currentProfile?.birthday && (
+                <View className="bg-primary-100 px-3 py-1 rounded-full">
+                  <Text className="text-xl font-semibold text-primary-600">
+                    {calculateAge(currentProfile.birthday)}
+                  </Text>
+                  <Text className="text-sm text-primary-500 text-center">
+                    {currentProfile.gender}
+                  </Text>
+                </View>
+              )}
             </View>
+
+            {currentProfile?.about &&
+              renderProfileSection("About me", currentProfile?.about)}
+
+            {currentProfile?.activities &&
+              currentProfile.activities.length > 0 && (
+                <View className="mb-4">
+                  <Text className="text-lg font-semibold text-gray-700 mb-2">
+                    Activities
+                  </Text>
+                  <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                  >
+                    <View className="flex flex-row">
+                      {currentProfile.activities.map((activity) => (
+                        <ActivityTags key={activity} activity={activity} />
+                      ))}
+                    </View>
+                  </ScrollView>
+                </View>
+              )}
+
+            {primaryGym && (
+              <View className="mb-4">
+                <Text className="text-lg font-semibold text-gray-700 mb-2">
+                  My Primary Gym
+                </Text>
+                <View className="bg-gray-50 rounded-xl p-3">
+                  <PrimaryGymCard
+                    community={primaryGym}
+                    addPrimary={false}
+                    userId={user!.id}
+                  />
+                </View>
+              </View>
+            )}
+
+            {currentProfile?.actvitiy_time &&
+              renderProfileSection(
+                "My preferred workout time",
+                currentProfile?.actvitiy_time
+              )}
+            {currentProfile?.bucket_list &&
+              renderProfileSection(
+                "My Fitness bucket list",
+                currentProfile?.bucket_list
+              )}
+            {currentProfile?.hobbies &&
+              renderProfileSection(
+                "Outside of the gym I enjoy",
+                currentProfile?.hobbies
+              )}
+            {currentProfile?.music_pref &&
+              renderProfileSection(
+                "During my workout I love to listen to",
+                currentProfile?.music_pref
+              )}
           </View>
-          <View className="flex flex-row justify-center mt-1 mb-2">
-            <View className="bg-white rounded-xl p-2">
-              <Text className="font-semibold">About me</Text>
-              <Text>{currentProfile?.about}</Text>
-            </View>
-          </View>
-          {currentProfile?.activities &&
-          currentProfile.activities.length > 0 ? (
-            <ScrollView horizontal={true}>
-              <View className="flex flex-row flex-wrap  ">
-                {currentProfile.activities.map((activity) => (
-                  <ActivityTags key={activity} activity={activity} />
-                ))}
-              </View>
-            </ScrollView>
-          ) : null}
-          {primaryGym ? (
-            <View className="bg-white border-2 rounded-xl mt-2 mb-2 p-3">
-              <View className="border-b">
-                <Text className="font-semibold">My Primary Gym</Text>
-              </View>
-              <View className="mx-1">
-                <PrimaryGymCard
-                  community={primaryGym}
-                  addPrimary={false}
-                  userId={user!.id}
-                />
-              </View>
-            </View>
-          ) : null}
-          {currentProfile?.actvitiy_time ? (
-            <View className="flex flex-row justify-start mt-1 mb-2">
-              <View className="bg-white rounded-xl p-2 w-full">
-                <Text className="font-semibold">My preferred workout time</Text>
-                <Text>{currentProfile.actvitiy_time}</Text>
-              </View>
-            </View>
-          ) : null}
-
-          {currentProfile?.bucket_list ? (
-            <View className="flex flex-row mt-1 mb-2 justify-start items-center">
-              <View className="bg-white rounded-xl p-2 w-full">
-                <Text className="font-semibold">My Fitness bucket list</Text>
-                <Text>{currentProfile.bucket_list}</Text>
-              </View>
-            </View>
-          ) : null}
-
-          {currentProfile?.hobbies ? (
-            <View className="flex flex-row mt-1 mb-2 justify-start items-center">
-              <View className="bg-white rounded-xl p-2 w-full">
-                <Text className="font-semibold">
-                  Outside of the gym I enjoy
-                </Text>
-                <Text>{currentProfile.hobbies}</Text>
-              </View>
-            </View>
-          ) : null}
-
-          {currentProfile?.music_pref ? (
-            <View className="flex flex-row mt-1 mb-2 justify-start items-center">
-              <View className="bg-white rounded-xl p-2 w-full">
-                <Text className="font-semibold">
-                  During my workout I love to listen to
-                </Text>
-                <Text>{currentProfile.music_pref}</Text>
-              </View>
-            </View>
-          ) : null}
         </View>
       </ScrollView>
-      <View>
-        {currentProfile?.id !== user?.id ? (
+      <View className="px-4 pb-4">
+        {currentProfile?.id !== user?.id && (
           <MessageButton
             setLoading={setLoading}
             loading={loading}
@@ -202,7 +209,7 @@ const ViewFullUserProfileFromMessages = () => {
             coach={false}
             profilePic={currentProfile?.profile_pic || ""}
           />
-        ) : null}
+        )}
       </View>
     </SafeAreaView>
   )

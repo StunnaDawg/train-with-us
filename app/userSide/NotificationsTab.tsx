@@ -3,7 +3,6 @@ import {
   Text,
   SafeAreaView,
   Pressable,
-  ScrollView,
   FlatList,
   ActivityIndicator,
 } from "react-native"
@@ -30,7 +29,6 @@ const NotificationsCard = ({
   createdAt,
   data,
   description,
-
   notificationType,
   title,
   image,
@@ -38,21 +36,16 @@ const NotificationsCard = ({
   const [isPressed, setIsPressed] = useState<boolean>(false)
   const navigation = useNavigation<NavigationType>()
 
-  const handlePressIn = () => {
-    setIsPressed(true)
-  }
-
-  const handlePressOut = () => {
-    setIsPressed(false)
-  }
+  const handlePressIn = () => setIsPressed(true)
+  const handlePressOut = () => setIsPressed(false)
 
   return (
     <Pressable
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      className={`${
-        isPressed ? "opacity-50" : null
-      } bg-white border rounded-lg p-2 m-2`}
+      className={`bg-white border border-gray-200 rounded-lg p-3 mb-2 ${
+        isPressed ? "opacity-50" : ""
+      }`}
       onPress={() => {
         console.log("notificationType", notificationType)
         if (notificationType === "MessageNotification") {
@@ -101,23 +94,24 @@ const NotificationsCard = ({
         }
       }}
     >
-      <View className="flex flex-row items-center">
-        <View className="mr-2">
+      <View className="flex-row items-center">
+        <View className="mr-3">
           <SinglePicCommunity
             item={image}
             size={50}
-            avatarRadius={100}
-            noAvatarRadius={100}
+            avatarRadius={25}
+            noAvatarRadius={25}
             allowCacheImage={true}
           />
         </View>
         <View className="flex-1 justify-center">
-          <Text className="font-semibold">{title}</Text>
-          <Text>{description}</Text>
+          <Text className="font-semibold text-gray-800 mb-1">{title}</Text>
+          <Text className="text-gray-600 text-sm">{description}</Text>
         </View>
-
-        <View>
-          <Text>{formatTimestampShort(createdAt)}</Text>
+        <View className="ml-2">
+          <Text className="text-xs text-gray-500">
+            {formatTimestampShort(createdAt)}
+          </Text>
         </View>
       </View>
     </Pressable>
@@ -183,37 +177,32 @@ const NotificationsTab = () => {
 
   const renderFooter = () => {
     if (!loading) return null
-    return <ActivityIndicator size="large" color="#0000ff" />
+    return <ActivityIndicator size="large" className="py-4" color="#0000ff" />
   }
 
   const renderNotification = useCallback(
-    ({ item }: { item: SupaNotification }) => {
-      return (
-        <NotificationsCard
-          key={item.id}
-          createdAt={item.created_at}
-          data={item.data}
-          description={item.description}
-          notificationType={item.notification_type}
-          title={item.title}
-          image={item.image}
-        />
-      )
-    },
+    ({ item }: { item: SupaNotification }) => (
+      <NotificationsCard
+        key={item.id}
+        createdAt={item.created_at}
+        data={item.data}
+        description={item.description}
+        notificationType={item.notification_type}
+        title={item.title}
+        image={item.image}
+      />
+    ),
     []
   )
 
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
-      <View className="flex flex-row items-center mx-2">
-        <View className="mx-2">
-          <BackButton colour="white" size={18} />
-        </View>
-        <View>
-          <Text className="text-white text-xl font-bold">Notifications</Text>
-        </View>
+      <View className="flex-row items-center px-4 py-3 border-b border-white/10">
+        <BackButton colour="white" size={18} />
+        <Text className="text-white text-xl font-bold ml-4">Notifications</Text>
       </View>
       <FlatList
+        className="px-4 pt-2"
         initialNumToRender={10}
         maxToRenderPerBatch={10}
         renderItem={renderNotification}
