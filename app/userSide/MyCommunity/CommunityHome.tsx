@@ -77,7 +77,7 @@ const CommunityHome = () => {
         <View style={{ width: 22 }} />
       </View>
       <ScrollView className="flex-1 px-4 py-4">
-        <View className="bg-white rounded-xl shadow-md">
+        <View className="bg-white rounded-xl shadow-md mb-12">
           <PressableItem
             title="Create Channel"
             onPress={() => navigateTo("CreateChannel")}

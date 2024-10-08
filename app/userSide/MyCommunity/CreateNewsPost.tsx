@@ -278,35 +278,34 @@ const CreateNewsPost = () => {
             />
           </View>
         </View>
+        <View className="px-4 py-3 pb-12">
+          <TouchableOpacity
+            onPress={() =>
+              showAlertFunc({
+                title: "Create News Post",
+                message: "Are you sure you want to create this news post?",
+                buttons: [
+                  {
+                    text: "Yes",
+                    onPress: () => handleCreateNewsPost(),
+                    style: "default",
+                  },
+                  {
+                    text: "No",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel",
+                  },
+                ],
+              })
+            }
+            className="bg-blue-600 p-4 rounded-lg active:bg-blue-700"
+          >
+            <Text className="text-white text-center text-lg font-bold">
+              Create News Post
+            </Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
-
-      <View className="px-4 py-3 ">
-        <TouchableOpacity
-          onPress={() =>
-            showAlertFunc({
-              title: "Create News Post",
-              message: "Are you sure you want to create this news post?",
-              buttons: [
-                {
-                  text: "Yes",
-                  onPress: () => handleCreateNewsPost(),
-                  style: "default",
-                },
-                {
-                  text: "No",
-                  onPress: () => console.log("Cancel Pressed"),
-                  style: "cancel",
-                },
-              ],
-            })
-          }
-          className="bg-blue-600 p-4 rounded-lg active:bg-blue-700"
-        >
-          <Text className="text-white text-center text-lg font-bold">
-            Create News Post
-          </Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   )
 }

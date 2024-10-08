@@ -26,18 +26,18 @@ const MyEvents = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
-      <View className="px-4 py-6">
+      <View className=" py-6">
         <Text className="text-2xl font-bold text-white text-center mb-6">
           Upcoming Events
         </Text>
 
         {userEvents && userEvents.length > 0 ? (
-          <ScrollView className="pb-24">
-            <View className="flex-row flex-wrap justify-between">
+          <ScrollView horizontal className="pb-24">
+            <View className="flex-row flex-wrap justify-center">
               {userEvents.map((event) => (
                 <Pressable
                   key={event.id}
-                  className="w-[48%] mb-4"
+                  className="mb-1"
                   onPress={() =>
                     navigation.navigate("ViewEvent", { eventId: event.id })
                   }
