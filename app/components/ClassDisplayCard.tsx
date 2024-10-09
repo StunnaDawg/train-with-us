@@ -1,8 +1,7 @@
-import { View, Text, TouchableOpacity, Pressable } from "react-native"
+import { View, Text, TouchableOpacity } from "react-native"
 import React, { useEffect, useState } from "react"
 import { CommunityClasses, CommunitySchedule } from "../@types/supabaseTypes"
 import supabase from "../../lib/supabase"
-import { get } from "mongoose"
 import { format, parseISO } from "date-fns"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../@types/navigation"
@@ -50,22 +49,25 @@ const ClassDisplayCard = ({ communitySchedule }: ClassDisplayProps) => {
 
   return (
     <TouchableOpacity
-      className="m-2 p-2 border-b border-white border-opacity-50"
+      className="bg-white/5 rounded-lg overflow-hidden"
       onPress={() =>
         navigation.navigate("ClassInformationPage", {
           class: classData,
         })
       }
     >
-      <View className="flex">
-        <View className="flex flex-row">
-          <Text className="text-white font-semibold mx-1">
+      <View className="p-4">
+        <View className="flex-row justify-between items-center mb-2">
+          <Text className="text-white text-lg font-bold">
+            {classData.class_name}
+          </Text>
+          <Text className="text-white/70 text-sm">
             {formatTime(communitySchedule.start_time)}
           </Text>
-          <Text className="text-white font-bold">{classData.class_name}</Text>
         </View>
-        <View className="flex flex-row ">
-          <Text className="text-white mx-1 font-semibold">
+        <View className="flex-row items-center">
+          <View className="bg-blue-500 rounded-full w-2 h-2 mr-2" />
+          <Text className="text-white/80 text-sm">
             {classData.duration} minutes
           </Text>
         </View>

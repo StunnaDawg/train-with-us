@@ -81,8 +81,8 @@ const CommunityScheduleDisplay = ({
   }
 
   return (
-    <View className="flex-1 bg-gray-900">
-      <View className="py-4">
+    <View className="flex-1 bg-primary-900">
+      <View className="py-4 mb-4">
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -92,8 +92,8 @@ const CommunityScheduleDisplay = ({
             <TouchableOpacity
               key={day}
               onPress={() => setSelectedDay(day)}
-              className={`px-4 py-2 rounded-full mr-2 ${
-                selectedDay === day ? "bg-blue-600" : "bg-gray-700"
+              className={`px-5 py-3 rounded-full mr-3 ${
+                selectedDay === day ? "bg-blue-600" : "bg-white/10"
               }`}
             >
               <Text
@@ -101,7 +101,7 @@ const CommunityScheduleDisplay = ({
                   selectedDay === day ? "text-lg" : "text-base"
                 }`}
               >
-                {day}
+                {day.slice(0, 3)}
               </Text>
             </TouchableOpacity>
           ))}
@@ -123,6 +123,7 @@ const CommunityScheduleDisplay = ({
               </View>
             )}
             showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 20 }}
           />
         ) : (
           <View className="flex-1 justify-center items-center">
