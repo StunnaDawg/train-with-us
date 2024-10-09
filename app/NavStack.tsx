@@ -104,6 +104,7 @@ import CreateSchedule from "./userSide/MyCommunity/CreateSchedule"
 import EditSchedule from "./userSide/MyCommunity/EditSchedule"
 import ClassInformationPage from "./userSide/UserCommunities/ClassInformationPage"
 import EventChat from "./userSide/UserCommunities/components/EventChat"
+import Waitlist from "./userSide/Events/components/Waitlist"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -348,6 +349,12 @@ const NavStack = () => {
                 options={{ headerShown: false }}
                 name="ViewFullUserProfileFromMessages"
                 component={ViewFullUserProfileFromMessages}
+              />
+
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="ViewEventWaitlist"
+                component={Waitlist}
               />
 
               <Stack.Screen

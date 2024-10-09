@@ -160,11 +160,13 @@ const ViewEventDetails = ({
       </Pressable>
 
       <Pressable
-        className={`${isPressed["attendees"] ? "opacity-50" : null}`}
-        onPressIn={() => handlePressIn("attendees")}
-        onPressOut={() => handlePressOut("attendees")}
+        className={`${isPressed["waitlist"] ? "opacity-50" : null}`}
+        onPressIn={() => handlePressIn("waitlist")}
+        onPressOut={() => handlePressOut("waitlist")}
         onPress={() => {
-          navigation.navigate("ViewEventAttendees", { profile: eventProfiles })
+          navigation.navigate("ViewEventWaitlist", {
+            profile: waitlistProfiles,
+          })
         }}
       >
         <View className="flex flex-row  justify-between items-center mb-1 mt-2">

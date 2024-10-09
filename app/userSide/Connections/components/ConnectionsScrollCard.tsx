@@ -16,7 +16,6 @@ import React, {
 import { Profile } from "../../../@types/supabaseTypes"
 import ActivityTags from "../../../components/AcvitivityTags"
 import calculateAge from "../../../utilFunctions/calculateAge"
-import { FontAwesome6, Foundation, FontAwesome5 } from "@expo/vector-icons"
 import MessageButton from "./MessageButton"
 import supabase from "../../../../lib/supabase"
 
@@ -99,7 +98,6 @@ const ConnectionsScrollCard = ({
     }
   }
 
-  // require("../../../../assets/images/TWU-Logo.png")
   return (
     <View style={{ height: windowHeight }}>
       <ImageBackground

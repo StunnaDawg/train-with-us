@@ -252,6 +252,10 @@ export type RootStackParamList = {
   EventChat: {
     eventChat: EventChat
   }
+
+  ViewEventWaitlist: {
+    profile: Profile[] | null
+  }
 }
 
 export type NavigationType = NativeStackNavigationProp<RootStackParamList>

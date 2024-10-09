@@ -47,20 +47,21 @@ const ClassInformationPage = () => {
 
   const renderItem = ({ item }: { item: CommunitySchedule }) => {
     return (
-      <View className="flex flex-row m-2">
-        <View>
-          <View className="flex flex-row justify-center">
-            <Text className="text-white font-bold mx-1">
-              {formatTime(item.start_time)} Class
+      <View className="border border-white/20 rounded-lg p-4 mb-3">
+        <View className="flex flex-row items-center justify-center">
+          <Text className="text-white font-bold text-lg">
+            {formatTime(item.start_time)}
+          </Text>
+          <Text className="text-white/70 font-semibold mx-1 text-lg">
+            Class
+          </Text>
+        </View>
+        <View className="flex flex-row flex-wrap mt-2">
+          {item.selected_days_of_week.map((day) => (
+            <Text key={day} className="text-white/60 mr-3 mb-1">
+              {day}
             </Text>
-          </View>
-          <View className="flex flex-row flex-wrap">
-            {item.selected_days_of_week.map((day) => (
-              <Text key={day} className="text-white mx-1 font-semibold">
-                {day}
-              </Text>
-            ))}
-          </View>
+          ))}
         </View>
       </View>
     )
@@ -71,45 +72,42 @@ const ClassInformationPage = () => {
   }, [classObject])
 
   return (
-    <SafeAreaView className="flex-1 bg-primary-900 ">
-      <View className="flex flex-row justify-between items-center border-b border-slate-300 p-2">
+    <SafeAreaView className="flex-1 bg-primary-900">
+      <View className="flex flex-row justify-between items-center border-b border-white/10 p-4">
         <BackButton colour="white" />
-        <Text className="font-bold text-lg text-center text-white">
+        <Text className="font-bold text-2xl text-white flex-1 text-center mr-8">
           {classObject.class_name}
         </Text>
-        <View />
       </View>
 
-      <View className="p-2">
-        <Text className="text-white font-semibold text-lg">
-          {" "}
-          {classObject.description}
-        </Text>
-        <ScrollView
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          className="mt-1"
-        >
-          {classObject.class_tags && classObject.class_tags.length > 0
-            ? classObject.class_tags.map((tag) => (
-                <View key={tag} className="mb-1">
-                  <ActivityTags activity={`${tag}`} />
-                </View>
-              ))
-            : null}
-        </ScrollView>
-      </View>
+      <ScrollView className="flex-1">
+        <View className="p-6">
+          <Text className="text-white font-semibold text-lg mb-4">
+            {classObject.description}
+          </Text>
+          <View className="flex flex-row flex-wrap">
+            {classObject.class_tags && classObject.class_tags.length > 0
+              ? classObject.class_tags.map((tag) => (
+                  <View key={tag} className="mr-3">
+                    <ActivityTags activity={`${tag}`} />
+                  </View>
+                ))
+              : null}
+          </View>
+        </View>
 
-      <View>
-        <Text className="text-white text-xl font-semibold"> Schedule</Text>
-        <View className="flex flex-row">
+        <View className="px-6">
+          <Text className="text-white text-xl font-semibold mb-4">
+            Schedule
+          </Text>
           <FlatList
             keyExtractor={(item) => item.id.toString()}
             data={classSchedule}
             renderItem={renderItem}
+            contentContainerStyle={{ paddingBottom: 24 }}
           />
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }

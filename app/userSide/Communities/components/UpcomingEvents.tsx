@@ -24,17 +24,17 @@ const UpcomingCommunityEvents = ({
   }, [community])
   return (
     <View className="flex-1">
+      <View className="flex-row justify-center">
+        <Text
+          className={`text-xl font-bold m-4 ${
+            textColour ? textColour : "text-white"
+          }`}
+        >
+          Upcoming Events
+        </Text>
+      </View>
       <ScrollView>
-        <View className="flex-row justify-center">
-          <Text
-            className={`text-xl font-bold m-4 ${
-              textColour ? textColour : "text-white"
-            }`}
-          >
-            Upcoming Events
-          </Text>
-        </View>
-        <View className="flex flex-row flex-wrap">
+        <View className="flex flex-row justify-center flex-wrap">
           {loading ? (
             <ActivityIndicator />
           ) : upcomingEvents && upcomingEvents?.length > 0 ? (
