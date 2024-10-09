@@ -35,7 +35,6 @@ export default function SinglePicCommunity({
   allowCacheImage = true,
   isMessagePic = false,
 }: SinglePicProps) {
-  const [showPlaceholder, setPlaceholder] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
   const [avatarUrl, setAvatarUrl] = useState<string>("")
   const [modalVisible, setModalVisible] = useState<boolean>(false)
@@ -51,13 +50,15 @@ export default function SinglePicCommunity({
       setLoading(false)
       setAvatarUrl(item || "")
     }
+    return () => {
+      isMounted.current = false
+    }
   }, [item])
 
   const readImage = async () => {
     setLoading(true)
 
     const cacheKey = `image:${item}`
-
     const cachedImage = cacheStorage.getString(cacheKey)
 
     if (cachedImage && allowCacheImage && cacheKey === "image:" + item) {
@@ -74,13 +75,8 @@ export default function SinglePicCommunity({
             quality: 20,
           },
         })
-      if (error) {
-        setPlaceholder(true)
+      if (error) throw error
 
-        if (isMounted.current) {
-          setLoading(false)
-        }
-      }
       const fr = new FileReader()
       fr.readAsDataURL(data!)
       fr.onload = () => {
@@ -91,11 +87,11 @@ export default function SinglePicCommunity({
           if (allowCacheImage) {
             cacheStorage.set(cacheKey, imageDataUrl)
           }
+          setLoading(false)
         }
       }
     } catch (error) {
-      setPlaceholder(true)
-    } finally {
+      console.error("Error loading image:", error)
       setLoading(false)
     }
   }
@@ -152,21 +148,18 @@ export default function SinglePicCommunity({
       >
         {loading ? (
           <Skeleton radius={skeletonRadius} height={size} width={size} />
-        ) : avatarUrl !== "" ? (
+        ) : (
           <Image
-            source={{ uri: avatarUrl }}
+            source={
+              avatarUrl
+                ? { uri: avatarUrl }
+                : require("../../assets/images/TWU-Logo.png")
+            }
             accessibilityLabel="Avatar"
             style={[avatarSize, styles.avatar, styles.image]}
             cachePolicy="memory-disk"
           />
-        ) : showPlaceholder ? (
-          <Image
-            source={require("../../assets/images/TWU-Logo.png")}
-            accessibilityLabel="Avatar"
-            style={[avatarSize, styles.avatar, styles.image]}
-            cachePolicy="memory-disk"
-          />
-        ) : null}
+        )}
         <Modal
           visible={modalVisible}
           transparent={true}
