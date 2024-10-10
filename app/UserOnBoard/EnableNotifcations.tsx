@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Alert } from "react-native"
+import { View, Text, SafeAreaView, Alert, Image } from "react-native"
 import GenericButton from "../components/GenericButton"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../@types/navigation"
@@ -16,7 +16,7 @@ Notifications.setNotificationHandler({
   }),
 })
 
-const EnableNotifcations = () => {
+const EnableNotifications = () => {
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
 
@@ -98,48 +98,50 @@ const EnableNotifcations = () => {
     navigation.navigate("Location")
   }
   return (
-    <SafeAreaView className="flex-1 justify-center items-center bg-primary-900 ">
-      <View className="flex flex-col justify-center items-center">
-        <View className="m-2">
-          <Text className="text-xl text-white font-bold text-center">
+    <SafeAreaView className="flex-1 bg-primary-900">
+      <View className="flex-1 justify-between py-10 px-6">
+        <View className="items-center">
+          <Text className="text-3xl text-white font-bold text-center mb-4">
+            Stay Connected
+          </Text>
+          <Text className="text-xl text-white text-center mb-8">
             Enable notifications to stay up to date with your community
           </Text>
         </View>
-        <View>
-          <View className="mb-3">
+
+        <View className="space-y-6">
+          <View className="my-1">
             <GenericButton
               text="Enable notifications"
-              buttonFunction={() => handleEnableNotifications()}
+              buttonFunction={handleEnableNotifications}
               colourDefault="bg-white"
               colourPressed="bg-yellow-300"
-              borderColourDefault="border-black"
-              borderColourPressed="border-black"
-              textSize="text-lg"
-              roundness="rounded-lg"
-              width={300}
-              padding="p-2"
-            />
-          </View>
-          <View className="mb-3">
-            <GenericButton
-              text="skip for now"
-              textColour={"text-white"}
-              buttonFunction={() => skip()}
-              colourDefault="bg-opacity-0"
-              colourPressed="bg-opacity-0"
               borderColourDefault="border-transparent"
-              borderColourPressed="border-transparent"
+              borderColourPressed="border-yellow-400"
               textSize="text-lg"
-              roundness="rounded-lg"
-              width={300}
-              padding="p-2"
-              textColourPressed={"text-black"}
+              roundness="rounded-full"
+              width={250}
+              padding="py-4"
+              textColour="text-gray-800"
             />
           </View>
+          <GenericButton
+            text="Skip for now"
+            buttonFunction={skip}
+            colourDefault="bg-transparent"
+            colourPressed="bg-white bg-opacity-10"
+            borderColourDefault="border-white"
+            borderColourPressed="border-white"
+            textSize="text-lg"
+            roundness="rounded-full"
+            width={200}
+            padding="py-4"
+            textColour="text-white"
+          />
         </View>
       </View>
     </SafeAreaView>
   )
 }
 
-export default EnableNotifcations
+export default EnableNotifications

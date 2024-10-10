@@ -1,54 +1,49 @@
 import {
   View,
   Text,
-  TextInput,
   SafeAreaView,
   ScrollView,
   Pressable,
+  Alert,
 } from "react-native"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigation } from "@react-navigation/native"
-import { useState } from "react"
 import { NavigationType } from "../../@types/navigation"
-import GenericButton from "../../components/GenericButton"
 import supabase from "../../../lib/supabase"
-import CreateCommunityTopBar from "./components/TopBar"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { Profile } from "../../@types/supabaseTypes"
+import GenericButton from "../../components/GenericButton"
+import CreateCommunityTopBar from "./components/TopBar"
 import showAlert from "../../utilFunctions/showAlert"
 
-type ActvitiesOption = string
+type ActivitiesOption = string
 
 const ChooseCommunityActivities = () => {
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
-  const [selectedActvities, setSelectedActvities] = useState<ActvitiesOption[]>(
-    []
-  )
-  const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
+  const [selectedActivities, setSelectedActivities] = useState<
+    ActivitiesOption[]
+  >([])
+  const [currentUser, setCurrentUser] = useState<Profile | null>(null)
 
-  const handleSelectActivities = (activity: ActvitiesOption) => {
-    if (!selectedActvities.includes(activity)) {
-      setSelectedActvities([...selectedActvities, activity])
+  const handleSelectActivities = (activity: ActivitiesOption) => {
+    if (!selectedActivities.includes(activity)) {
+      setSelectedActivities([...selectedActivities, activity])
     } else {
       handleDeselectActivities(activity)
     }
   }
 
-  const handleDeselectActivities = (activity: ActvitiesOption) => {
-    const index = selectedActvities.indexOf(activity)
-    if (index > -1) {
-      selectedActvities.splice(index, 1)
-    }
-    setSelectedActvities([...selectedActvities])
+  const handleDeselectActivities = (activity: ActivitiesOption) => {
+    setSelectedActivities(selectedActivities.filter((a) => a !== activity))
   }
 
   const handleCommunityUpdate = async () => {
     try {
       const { error } = await supabase.from("communities").upsert({
         id: currentUser?.community_created,
-        community_tags: selectedActvities,
+        community_tags: selectedActivities,
       })
       if (error) throw error
       if (currentUser?.community_created) {
@@ -63,7 +58,7 @@ const ChooseCommunityActivities = () => {
     }
   }
 
-  const ActvitiesOptions: ActvitiesOption[] = [
+  const ActivitiesOptions: ActivitiesOption[] = [
     "Aerobics 🏃‍♀️",
     "Boxing 🥊",
     "CrossFit 🏋️‍♂️",
@@ -137,6 +132,7 @@ const ChooseCommunityActivities = () => {
     "Canoeing 🛶",
     "Horseback Riding 🐎",
     "Archery 🏹",
+    // ... (other activities)
   ]
 
   useEffect(() => {
@@ -157,39 +153,55 @@ const ChooseCommunityActivities = () => {
         }}
       />
 
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="flex flex-row justify-center flex-wrap">
-          {ActvitiesOptions.map((activity, index) => {
-            const isSelected = selectedActvities.includes(activity)
-            return (
-              <Pressable
-                onPress={() => handleSelectActivities(activity)}
-                key={index}
-                className={`border-2 rounded-full p-1 text-center mx-1 my-1 ${
-                  isSelected
-                    ? "bg-yellow-300 border-yellow-400 shadow-xl"
-                    : "bg-white border-gray-300"
-                }`}
-              >
-                <Text className={`text-xs font-semibold`}>{activity}</Text>
-              </Pressable>
-            )
-          })}
+      <View className="flex-1 px-4 pt-4 pb-2">
+        <Text className="text-lg text-white mb-4 text-center">
+          Select activities that best represent your community
+        </Text>
+
+        <ScrollView
+          className="flex-1 mb-4"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        >
+          <View className="flex-row flex-wrap justify-center">
+            {ActivitiesOptions.map((activity, index) => {
+              const isSelected = selectedActivities.includes(activity)
+              return (
+                <Pressable
+                  onPress={() => handleSelectActivities(activity)}
+                  key={index}
+                  className={`m-1 px-3 py-2 rounded-full ${
+                    isSelected ? "bg-yellow-400" : "bg-gray-700"
+                  }`}
+                >
+                  <Text
+                    className={`text-sm font-semibold ${
+                      isSelected ? "text-primary-900" : "text-white"
+                    }`}
+                  >
+                    {activity}
+                  </Text>
+                </Pressable>
+              )
+            })}
+          </View>
+        </ScrollView>
+
+        <View className=" flex flex-row justify-centermb-2">
+          <GenericButton
+            text="Continue"
+            buttonFunction={handleCommunityUpdate}
+            colourDefault="bg-white"
+            colourPressed="bg-yellow-300"
+            borderColourDefault="border-transparent"
+            borderColourPressed="border-yellow-400"
+            textSize="text-lg"
+            roundness="rounded-full"
+            width={300}
+            padding="py-4"
+            textColour="text-gray-800"
+          />
         </View>
-      </ScrollView>
-      <View className="flex flex-row justify-center m-4">
-        <GenericButton
-          text="Continue"
-          buttonFunction={() => handleCommunityUpdate()}
-          colourDefault="bg-white"
-          colourPressed="bg-yellow-300"
-          borderColourDefault="border-black"
-          borderColourPressed="border-black"
-          textSize="text-lg"
-          roundness="rounded-lg"
-          width={300}
-          padding="p-2"
-        />
       </View>
     </SafeAreaView>
   )

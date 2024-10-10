@@ -4,17 +4,13 @@ import {
   Pressable,
   ImageBackground,
   StyleSheet,
-  ActivityIndicator,
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import React, { useEffect, useState } from "react"
 import { NavigationType } from "../../../@types/navigation"
-import getSingleCommunity from "../../../supabaseFunctions/getFuncs/getSingleCommunity"
-import { Communities } from "../../../@types/supabaseTypes"
 import supabase from "../../../../lib/supabase"
 import formatBirthdate from "../../../utilFunctions/calculateDOB"
 import { Skeleton } from "moti/skeleton"
-import { se } from "date-fns/locale"
 
 type EventCardProps = {
   eventId: number
@@ -75,6 +71,44 @@ const EventCard = ({
         }
       })
   }
+
+  const CompatibilityBar = ({
+    score,
+  }: {
+    score: number | null | undefined
+  }) => {
+    if (score === null || score === undefined) return null
+    const compatibilityScore = Math.round(score)
+
+    const Bar = ({ filled, color }: { filled: boolean; color: string }) => (
+      <View className={`w-1 h-3 mx-0.5 ${filled ? color : "bg-gray-300"}`} />
+    )
+
+    let bars: JSX.Element[]
+
+    if (compatibilityScore >= 90) {
+      bars = [
+        <Bar key={1} filled={true} color="bg-green-500" />,
+        <Bar key={2} filled={true} color="bg-green-500" />,
+        <Bar key={3} filled={true} color="bg-green-500" />,
+      ]
+    } else if (compatibilityScore >= 50) {
+      bars = [
+        <Bar key={1} filled={true} color="bg-yellow-500" />,
+        <Bar key={2} filled={true} color="bg-yellow-500" />,
+        <Bar key={3} filled={false} color="bg-yellow-500" />,
+      ]
+    } else {
+      bars = [
+        <Bar key={1} filled={true} color="bg-red-500" />,
+        <Bar key={2} filled={false} color="bg-red-500" />,
+        <Bar key={3} filled={false} color="bg-red-500" />,
+      ]
+    }
+
+    return <View className="flex flex-row">{bars}</View>
+  }
+
   const styles = StyleSheet.create({
     container: {
       width: 175,
@@ -88,17 +122,6 @@ const EventCard = ({
     image: {
       height: 175,
       resizeMode: "cover",
-    },
-
-    text: {
-      backgroundColor: "white",
-      fontWeight: "bold",
-      color: "black",
-    },
-    subText: {
-      fontWeight: "bold",
-
-      color: "white",
     },
     price: {
       fontWeight: "bold",
@@ -125,23 +148,24 @@ const EventCard = ({
           style={styles.container}
           imageStyle={styles.image}
         >
-          <View className="m-1">
+          <View className="m-1 rounded-lg">
             <Text className="" style={styles.price}>
               {eventPrice ? `$${eventPrice.toString()}` : "Free"}
             </Text>
           </View>
           <View style={[{ flex: 1, justifyContent: "flex-end" }]}>
-            <Text className="text-sm" style={styles.text}>
-              {title}
-            </Text>
-            <Text className="text-xs" style={styles.text}>
+            <View className="flex-row items-center justify-between bg-white px-1 py-0.5">
+              <Text
+                className="text-sm font-bold text-black flex-1 mr-1"
+                numberOfLines={1}
+              >
+                {title}
+              </Text>
+              <CompatibilityBar score={eventCompatibility} />
+            </View>
+            <Text className="text-xs bg-white px-1 py-0.5 text-black">
               {formatBirthdate(date)}
             </Text>
-            {eventCompatibility || eventCompatibility === 0 ? (
-              <Text className="text-xs" style={styles.text}>
-                {Math.round(eventCompatibility)}% compatibility score
-              </Text>
-            ) : null}
           </View>
         </ImageBackground>
       </Pressable>

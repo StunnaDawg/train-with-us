@@ -601,3 +601,120 @@ as permissive
 for delete
 to authenticated
 using ((( SELECT auth.uid() AS uid) = event_host));
+
+alter table "public"."communities" add column "classes" boolean not null default false;
+
+alter table "public"."community_channel_messages" drop column "sender_profile_pic";
+
+alter table "public"."event_chat" add column "event_chat_name" text not null default ''::text;
+
+alter table "public"."event_chat" add column "event_creator" uuid not null;
+
+alter table "public"."event_chat" add column "recent_message" text;
+
+alter table "public"."event_chat" add column "recent_sender_name" text;
+
+alter table "public"."event_chat" add column "updated_at" timestamp with time zone;
+
+alter table "public"."events" add column "event_chat" uuid;
+
+alter table "public"."events_users" add column "event_chat" uuid;
+
+alter table "public"."events_users" add column "expo_push_token" text;
+
+alter table "public"."messages" drop column "sender_profile_pic";
+
+alter table "public"."news_posts" add column "author_profile_pic" text;
+
+alter table "public"."news_posts" add column "event_link" bigint;
+
+alter table "public"."news_posts" add column "likes" text[];
+
+alter table "public"."news_posts" add column "news_image" text;
+
+alter table "public"."event_chat" add constraint "public_event_chat_event_creator_fkey" FOREIGN KEY (event_creator) REFERENCES profiles(id) ON DELETE CASCADE not valid;
+
+alter table "public"."event_chat" validate constraint "public_event_chat_event_creator_fkey";
+
+alter table "public"."events" add constraint "public_events_event_chat_fkey" FOREIGN KEY (event_chat) REFERENCES event_chat(id) not valid;
+
+alter table "public"."events" validate constraint "public_events_event_chat_fkey";
+
+alter table "public"."events_users" add constraint "public_events_users_event_chat_fkey" FOREIGN KEY (event_chat) REFERENCES event_chat(id) not valid;
+
+alter table "public"."events_users" validate constraint "public_events_users_event_chat_fkey";
+
+alter table "public"."news_posts" add constraint "public_news_posts_event_link_fkey" FOREIGN KEY (event_link) REFERENCES events(id) ON DELETE CASCADE not valid;
+
+alter table "public"."news_posts" validate constraint "public_news_posts_event_link_fkey";
+
+set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION public.get_compatible_communities(user_id uuid)
+ RETURNS TABLE(id bigint, community_title text, community_tags text[], community_profile_pic text, compatibility_score numeric)
+ LANGUAGE plpgsql
+AS $function$BEGIN
+    RETURN QUERY
+    SELECT 
+        c.id, 
+        c.community_title, 
+        c.community_tags, 
+        c.community_profile_pic,
+        -- Example of compatibility score calculation
+        (SELECT COUNT(*) FROM unnest(c.community_tags) tag WHERE tag = ANY(p.activities))::NUMERIC / NULLIF(array_length(p.activities, 1), 0) * 500 AS compatibility_score
+    FROM communities c
+    JOIN profiles p ON p.id = user_id -- Compare profile tags with community tags
+    ORDER BY compatibility_score DESC;
+END;$function$
+;
+
+CREATE OR REPLACE FUNCTION public.get_compatible_events(user_id uuid)
+ RETURNS TABLE(id bigint, event_title text, event_tags text[], event_cover_photo text, date timestamp without time zone, price numeric, compatibility_score numeric)
+ LANGUAGE plpgsql
+AS $function$BEGIN
+    RETURN QUERY
+    SELECT 
+        e.id, 
+        e.event_title, 
+        e.event_tags, 
+        e.event_cover_photo,
+        e.date::TIMESTAMP,
+        e.price,
+        -- Example of compatibility score calculation
+        (SELECT COUNT(*) FROM unnest(e.event_tags) tag WHERE tag = ANY(p.activities))::NUMERIC / NULLIF(array_length(p.activities, 1), 0) * 500 AS compatibility_score
+    FROM events e
+    JOIN profiles p ON p.id = user_id -- Compare profile tags with community tags
+    ORDER BY compatibility_score DESC;
+END;$function$
+;
+
+create policy "Enable insert for authenticated users only"
+on "public"."event_chat"
+as permissive
+for insert
+to authenticated
+with check (true);
+
+
+create policy "Enable read access for all users"
+on "public"."event_chat"
+as permissive
+for select
+to public
+using (true);
+
+
+create policy "event recent message update"
+on "public"."event_chat"
+as permissive
+for update
+to public
+using (true);
+
+
+create policy "update"
+on "public"."news_posts"
+as permissive
+for update
+to public
+using (true);

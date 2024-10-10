@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   ImageBackground,
+  TouchableOpacity,
 } from "react-native"
 import React, {
   Dispatch,
@@ -13,11 +14,14 @@ import React, {
   useRef,
   useState,
 } from "react"
+import { FontAwesome6 } from "@expo/vector-icons"
 import { Profile } from "../../../@types/supabaseTypes"
 import ActivityTags from "../../../components/AcvitivityTags"
 import calculateAge from "../../../utilFunctions/calculateAge"
 import MessageButton from "./MessageButton"
 import supabase from "../../../../lib/supabase"
+import { useNavigation } from "@react-navigation/native"
+import { NavigationType } from "../../../@types/navigation"
 
 type ConnectionsScrollCardProps = {
   profile: Profile
@@ -34,7 +38,7 @@ const ConnectionsScrollCard = ({
   const [avatarUrl, setAvatarUrl] = useState<string>("")
   const [communityTitle, setCommunityTitle] = useState<string>("")
   const windowHeight = Dimensions.get("window").height
-
+  const navigation = useNavigation<NavigationType>()
   const isMounted = useRef(true)
 
   const returnCommunityName = async (communityId: number) => {
@@ -123,13 +127,23 @@ const ConnectionsScrollCard = ({
 
         {/* Middle Section */}
         <View style={styles.middleSection}>
-          <MessageButton
-            setLoading={setLoading}
-            loading={loading}
-            profileId={profile?.id}
-            coach={false}
-            profilePic={profile?.profile_pic || ""}
-          />
+          <View className="items-center">
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("ViewFullUserProfile", { user: profile })
+              }}
+              className="bg-white rounded-full w-16 h-10 items-center justify-center shadow-md"
+            >
+              <FontAwesome6 name="chevron-right" size={26} color="#07182d" />
+            </TouchableOpacity>
+            <MessageButton
+              setLoading={setLoading}
+              loading={loading}
+              profileId={profile?.id}
+              coach={false}
+              profilePic={profile?.profile_pic || ""}
+            />
+          </View>
         </View>
 
         {/* Bottom Section */}
@@ -186,6 +200,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     marginRight: 20,
+    marginTop: 20,
   },
   bottomSection: {
     marginHorizontal: 15,

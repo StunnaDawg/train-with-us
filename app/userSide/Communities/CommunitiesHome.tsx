@@ -5,7 +5,7 @@ import {
   ActivityIndicator,
   SafeAreaView,
 } from "react-native"
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { CommunityWithCompatibility } from "../../@types/supabaseTypes"
 import CommunityCard from "./components/CommunityCard"
 import { useAuth } from "../../supabaseFunctions/authcontext"
@@ -15,6 +15,9 @@ import supabase from "../../../lib/supabase"
 import BackButton from "../../components/BackButton"
 import getCompatibleCommunities from "../../supabaseFunctions/getFuncs/getCompatibleCommunity"
 import showAlert from "../../utilFunctions/showAlert"
+import { FlashList } from "@shopify/flash-list"
+
+import { Dispatch, SetStateAction } from "react"
 
 const CommunitiesHome = () => {
   const { user } = useAuth()
@@ -25,9 +28,8 @@ const CommunitiesHome = () => {
   const [page, setPage] = useState<number>(0)
   const [endOfData, setEndOfData] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
-  const PAGE_SIZE = 10
 
-  const fetchCommunities = async (pageState: number, searchQuery: string) => {
+  const fetchCommunities = async (pageState: number) => {
     setLoading(true)
 
     if (user?.id !== undefined) {
@@ -46,8 +48,18 @@ const CommunitiesHome = () => {
     }
   }
 
+  const filteredCommunities = useMemo(() => {
+    return communities.filter((community) => {
+      if (community.community_title) {
+        return community.community_title
+          .toLowerCase()
+          .includes(searchText.toLowerCase())
+      }
+    })
+  }, [communities, searchText])
+
   useEffect(() => {
-    fetchCommunities(page, searchText)
+    fetchCommunities(page)
   }, [page, searchText])
 
   const loadMoreCommunties = () => {
@@ -74,7 +86,6 @@ const CommunitiesHome = () => {
 
   const handleSearch = (text: string) => {
     setSearchText(text)
-    setPage(0)
   }
 
   return (
@@ -98,8 +109,9 @@ const CommunitiesHome = () => {
           <View className="flex-grow">
             <SearchBar
               value={searchText}
-              onChange={(text) => handleSearch(text)}
+              onChange={handleSearch}
               placeholder="Search Communities"
+              onClear={() => setSearchText("")}
             />
           </View>
         </View>
@@ -109,10 +121,9 @@ const CommunitiesHome = () => {
         </View>
       </View>
       <View className="flex-1">
-        <FlatList
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          data={communities}
+        <FlashList
+          estimatedItemSize={100}
+          data={filteredCommunities}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           ListFooterComponent={renderFooter}

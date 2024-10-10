@@ -1,18 +1,20 @@
 import {
   View,
   Text,
-  Pressable,
   SafeAreaView,
   TextInput,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import React, { useState } from "react"
 import { NavigationType } from "../@types/navigation"
-import NextButton from "../components/NextButton"
 import supabase from "../../lib/supabase"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import GenericButton from "../components/GenericButton"
+import { Ionicons } from "@expo/vector-icons"
 
 const Question1 = () => {
   const [first_name, setFirstName] = useState<string>("")
@@ -77,49 +79,68 @@ const Question1 = () => {
   }
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
-      <View className="flex-1 justify-center mx-8">
-        <View className="items-start w-full">
-          <View className="mt-5">
-            <Text className="font-bold text-xl text-white">
-              What's your name?
-            </Text>
-          </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1 justify-between py-10 px-6"
+      >
+        <View>
+          <Text className="font-bold text-3xl text-white mb-8">
+            What's your name?
+          </Text>
 
-          <View className="w-full">
-            <View className="border py-2 rounded-lg bg-white my-2">
+          <View className="mb-6">
+            <Text className="text-white text-lg mb-2">First Name</Text>
+            <View className="border-b border-gray-400 py-2 flex-row items-center">
               <TextInput
-                className="w-full text-lg font-bold px-2"
-                placeholder="First Name (Required)"
+                className="flex-1 text-lg font-semibold text-white"
+                placeholder="Required"
+                placeholderTextColor="#a0aec0"
                 onChangeText={(text) => setFirstName(text)}
                 value={first_name}
               />
+              {first_name.length > 0 && (
+                <TouchableOpacity onPress={() => setFirstName("")}>
+                  <Ionicons name="close-circle" size={24} color="#a0aec0" />
+                </TouchableOpacity>
+              )}
             </View>
+          </View>
 
-            <View className="border py-2 rounded-lg bg-white">
+          <View>
+            <Text className="text-white text-lg mb-2">Last Name</Text>
+            <View className="border-b border-gray-400 py-2 flex-row items-center">
               <TextInput
-                className="w-full  text-lg font-bold px-2"
-                placeholder="Last Name"
+                className="flex-1 text-lg font-semibold text-white"
+                placeholder="Optional"
+                placeholderTextColor="#a0aec0"
                 onChangeText={(text) => setLastName(text)}
                 value={last_name}
               />
+              {last_name.length > 0 && (
+                <TouchableOpacity onPress={() => setLastName("")}>
+                  <Ionicons name="close-circle" size={24} color="#a0aec0" />
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </View>
-      </View>
-      <View className="flex flex-row justify-center m-4">
-        <GenericButton
-          text="Continue"
-          buttonFunction={() => handleUserUpdate()}
-          colourDefault="bg-white"
-          colourPressed="bg-yellow-300"
-          borderColourDefault="border-black"
-          borderColourPressed="border-black"
-          textSize="text-lg"
-          roundness="rounded-lg"
-          width={300}
-          padding="p-2"
-        />
-      </View>
+
+        <View className="mb-2">
+          <GenericButton
+            text="Continue"
+            buttonFunction={handleUserUpdate}
+            colourDefault="bg-white"
+            colourPressed="bg-yellow-300"
+            borderColourDefault="border-transparent"
+            borderColourPressed="border-yellow-400"
+            textSize="text-lg"
+            roundness="rounded-full"
+            width={200}
+            padding="py-4"
+            textColour="text-gray-800"
+          />
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }

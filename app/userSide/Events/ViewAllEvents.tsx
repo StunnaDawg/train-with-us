@@ -1,33 +1,29 @@
-import { View, Text, ActivityIndicator, SafeAreaView } from "react-native"
 import React, { useEffect, useState } from "react"
-import EventCard from "./components/EventCard"
+import {
+  View,
+  Text,
+  SafeAreaView,
+  FlatList,
+  TouchableOpacity,
+} from "react-native"
 import { Events } from "../../@types/supabaseTypes"
-import getAllEvents from "../../supabaseFunctions/getFuncs/getAllEvents"
-import { ScrollView } from "react-native-gesture-handler"
+import EventCard from "./components/EventCard"
 import SearchBar from "./components/SearchBar"
-import searchEventsFunction from "../../supabaseFunctions/getFuncs/searchEventsFunction"
-import GenericButton from "../../components/GenericButton"
-import getUpcomingEvents from "../../supabaseFunctions/getFuncs/getUpcomingEvents"
-import getNewEvents from "../../supabaseFunctions/getFuncs/getNewEvents"
-import getTmrwEvents from "../../supabaseFunctions/getFuncs/getTmrwEvents"
 import BackButton from "../../components/BackButton"
 import { Skeleton } from "moti/skeleton"
 import { MotiView } from "moti"
+import getAllEvents from "../../supabaseFunctions/getFuncs/getAllEvents"
+import searchEventsFunction from "../../supabaseFunctions/getFuncs/searchEventsFunction"
+import getUpcomingEvents from "../../supabaseFunctions/getFuncs/getUpcomingEvents"
+import { FlashList } from "@shopify/flash-list"
+
+const tabs = ["All Events", "Upcoming"]
 
 const ViewAllEvents = () => {
   const [searchText, setSearchText] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(true)
   const [allEvents, setAllEvents] = useState<Events[] | null>([])
-
-  const currentDate = new Date()
-  const tomorrow = new Date(currentDate)
-  tomorrow.setDate(currentDate.getDate() + 1)
-
-  const dayAfterTomorrow = new Date(currentDate)
-  dayAfterTomorrow.setDate(currentDate.getDate() + 2)
-
-  const tomorrowDate = tomorrow.toISOString().split("T")[0]
-  const dayAfterTomorrowDate = dayAfterTomorrow.toISOString().split("T")[0]
+  const [activeTab, setActiveTab] = useState<string>("All Events")
   const colorMode = "dark"
 
   const handleSearch = (text: string) => {
@@ -35,189 +31,110 @@ const ViewAllEvents = () => {
     searchEventsFunction(text, setAllEvents, setLoading)
   }
 
+  const handleTabPress = (tab: string) => {
+    setActiveTab(tab)
+    setLoading(true)
+    if (tab === "All Events") {
+      getAllEvents(setLoading, setAllEvents, 30)
+    } else if (tab === "Upcoming") {
+      getUpcomingEvents(setLoading, setAllEvents, 30)
+    }
+  }
+
   useEffect(() => {
     if (searchText === "") {
       getAllEvents(setLoading, setAllEvents, 30)
     }
   }, [searchText])
+
+  const renderEventCard = ({ item }: { item: Events }) => (
+    <View className="mb-4">
+      <EventCard
+        eventId={item.id}
+        title={item.event_title}
+        date={item.date}
+        communityId={item.community_host}
+        eventCoverPhoto={item.event_cover_photo}
+        eventPrice={item.price}
+      />
+    </View>
+  )
+
+  const renderSkeletons = () => (
+    <MotiView
+      transition={{ type: "timing" }}
+      className="flex-row flex-wrap justify-center"
+      animate={{ backgroundColor: "#07182d" }}
+    >
+      {[...Array(6)].map((_, index) => (
+        <View key={index} className="m-2">
+          <Skeleton
+            colorMode={colorMode}
+            radius="square"
+            height={150}
+            width={150}
+          />
+        </View>
+      ))}
+    </MotiView>
+  )
+
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
-      <View className="flex flex-row items-center ">
-        <View className="mx-1">
+      <View className="px-4 pt-2">
+        <View className="flex-row items-center mb-4">
           <BackButton colour="white" size={28} />
-        </View>
-        <View className="flex-grow">
-          <SearchBar
-            value={searchText}
-            onChange={(text) => handleSearch(text)}
-            placeholder="Search for events"
-          />
-        </View>
-      </View>
-
-      <View className="flex flex-row justify-center flex-wrap my-1">
-        <View className="mx-1 my-1">
-          <GenericButton
-            text="Show All"
-            textSize="text-sm"
-            width={100}
-            colourDefault="bg-white"
-            colourPressed="bg-blue-500"
-            borderColourDefault="border-black"
-            borderColourPressed="border-black"
-            buttonFunction={() => {
-              getAllEvents(setLoading, setAllEvents, 30)
-            }}
-            roundness="rounded-lg"
-          />
-        </View>
-
-        <View className="mx-1 my-1">
-          <GenericButton
-            text="Upcoming"
-            textSize="text-sm"
-            width={100}
-            colourDefault="bg-white"
-            colourPressed="bg-blue-500"
-            borderColourDefault="border-black"
-            borderColourPressed="border-black"
-            buttonFunction={() => {
-              getUpcomingEvents(setLoading, setAllEvents, 30)
-            }}
-            roundness="rounded-lg"
-          />
-        </View>
-
-        <View className="mx-1 my-1">
-          <GenericButton
-            text="Just Added"
-            textSize="text-sm"
-            width={100}
-            colourDefault="bg-white"
-            colourPressed="bg-blue-500"
-            borderColourDefault="border-black"
-            borderColourPressed="border-black"
-            buttonFunction={() => {
-              getNewEvents(setLoading, setAllEvents, 10)
-            }}
-            roundness="rounded-lg"
-          />
-        </View>
-
-        <View className="mx-1">
-          <GenericButton
-            text="Tommorrow"
-            textSize="text-sm"
-            width={110}
-            colourDefault="bg-white"
-            colourPressed="bg-blue-500"
-            borderColourDefault="border-black"
-            borderColourPressed="border-black"
-            buttonFunction={() => {
-              getTmrwEvents(
-                setLoading,
-                setAllEvents,
-                10,
-                tomorrowDate,
-                dayAfterTomorrowDate
-              )
-            }}
-            roundness="rounded-lg"
-          />
-        </View>
-      </View>
-
-      <View className="flex-1">
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View className="flex flex-row flex-wrap justify-center">
-            {loading ? (
-              <MotiView
-                transition={{
-                  type: "timing",
-                }}
-                className="items-center mx-3 flex flex-row justify-center"
-                animate={{ backgroundColor: "#07182d" }}
-              >
-                <View className="flex flex-row justify-center flex-wrap items-center">
-                  <View className=" my-2 mx-2">
-                    <Skeleton
-                      colorMode={colorMode}
-                      radius="square"
-                      height={150}
-                      width={150}
-                    />
-                  </View>
-                  <View className=" my-2 mx-1">
-                    <Skeleton
-                      colorMode={colorMode}
-                      radius="square"
-                      height={150}
-                      width={150}
-                    />
-                  </View>
-                  <View className="my-2 mx-2">
-                    <Skeleton
-                      colorMode={colorMode}
-                      radius="square"
-                      height={150}
-                      width={150}
-                    />
-                  </View>
-                  <View className="my-2 mx-2">
-                    <Skeleton
-                      colorMode={colorMode}
-                      radius="square"
-                      height={150}
-                      width={150}
-                    />
-                  </View>
-                  <View className="my-2 mx-2">
-                    <Skeleton
-                      colorMode={colorMode}
-                      radius="square"
-                      height={150}
-                      width={150}
-                    />
-                  </View>
-                  <View className="my-2 mx-2">
-                    <Skeleton
-                      colorMode={colorMode}
-                      radius="square"
-                      height={150}
-                      width={150}
-                    />
-                  </View>
-                </View>
-              </MotiView>
-            ) : allEvents && allEvents?.length > 0 ? (
-              allEvents?.map(
-                (event) => (
-                  console.log(
-                    "event cover photo allEvents",
-                    event.event_cover_photo
-                  ),
-                  (
-                    <View key={event.id} className="mt-3 mb-1">
-                      <EventCard
-                        eventId={event.id}
-                        title={event.event_title}
-                        date={event.date}
-                        communityId={event.community_host}
-                        eventCoverPhoto={event.event_cover_photo}
-                        eventPrice={event.price}
-                      />
-                    </View>
-                  )
-                )
-              )
-            ) : (
-              <Text className="text-white">
-                No search results for {searchText}
-              </Text>
-            )}
+          <View className="flex-1 ml-2">
+            <SearchBar
+              value={searchText}
+              onChange={handleSearch}
+              placeholder="Search for events"
+              onClear={() => setSearchText("")}
+            />
           </View>
-        </ScrollView>
+        </View>
+
+        <View className="flex-row justify-around mb-4">
+          {tabs.map((tab) => (
+            <TouchableOpacity
+              key={tab}
+              onPress={() => handleTabPress(tab)}
+              className={`py-2 px-4 rounded-full ${
+                activeTab === tab ? "bg-blue-600" : "bg-gray-700"
+              }`}
+            >
+              <Text
+                className={`text-sm ${
+                  activeTab === tab ? "text-white font-bold" : "text-gray-300"
+                }`}
+              >
+                {tab}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
+
+      {loading ? (
+        renderSkeletons()
+      ) : (
+        <View className="flex flex-row flex-wrap justify-center">
+          <FlashList
+            estimatedItemSize={150}
+            data={allEvents}
+            renderItem={renderEventCard}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={{ paddingHorizontal: 16 }}
+            showsVerticalScrollIndicator={false}
+            numColumns={2}
+            ListEmptyComponent={
+              <Text className="text-white text-center mt-4">
+                No events found for "{searchText}"
+              </Text>
+            }
+          />
+        </View>
+      )}
     </SafeAreaView>
   )
 }

@@ -1,13 +1,15 @@
 import {
   View,
-  Text,
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   TextInput,
+  TouchableOpacity,
   Alert,
+  Keyboard,
 } from "react-native"
 import React, { useState } from "react"
+import { Ionicons } from "@expo/vector-icons"
 import BackButton from "../components/BackButton"
 import GenericButton from "../components/GenericButton"
 import supabase from "../../lib/supabase"
@@ -17,6 +19,7 @@ import showAlert from "../utilFunctions/showAlert"
 const SignUpWithEmail = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
 
   async function signUpWithEmail() {
     const {
@@ -48,26 +51,40 @@ const SignUpWithEmail = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
       >
-        <View className="border-b py-2 mx-2">
+        <View className="border-b border-gray-400 py-2 mx-4 mb-4">
           <TextInput
-            placeholderTextColor={"white"}
+            placeholderTextColor={"#a0aec0"}
             className="w-full text-lg font-bold px-2 text-white"
             onChangeText={(text: string) => setEmail(text)}
             value={email}
-            placeholder="email@address.com"
+            placeholder="Email"
             autoCapitalize={"none"}
+            keyboardType="email-address"
+            autoComplete="email"
+            textContentType="emailAddress"
+            onSubmitEditing={() => {
+              Keyboard.dismiss()
+            }}
           />
         </View>
-        <View className="border-b py-2 mx-2">
+        <View className="border-b border-gray-400 py-2 mx-4 mb-4 flex-row items-center">
           <TextInput
-            placeholderTextColor={"white"}
-            className="w-full text-lg font-bold px-2 text-white"
+            placeholderTextColor={"#a0aec0"}
+            className="flex-1 text-lg font-bold px-2 text-white"
             onChangeText={(text: string) => setPassword(text)}
             value={password}
-            secureTextEntry={true}
+            secureTextEntry={!showPassword}
             placeholder="Password"
             autoCapitalize={"none"}
+            textContentType="newPassword"
           />
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            <Ionicons
+              name={showPassword ? "eye-off" : "eye"}
+              size={24}
+              color="white"
+            />
+          </TouchableOpacity>
         </View>
 
         <View className="flex flex-row justify-center m-5">

@@ -1,16 +1,13 @@
 import {
   View,
   Text,
-  TextInput,
   SafeAreaView,
   ScrollView,
   Pressable,
+  Alert,
 } from "react-native"
-import React, { useEffect } from "react"
-import NextButton from "../components/NextButton"
+import React, { useEffect, useState } from "react"
 import { useNavigation } from "@react-navigation/native"
-import { useState } from "react"
-import BouncyCheckbox from "react-native-bouncy-checkbox"
 import { NavigationType } from "../@types/navigation"
 import { useAuth } from "../supabaseFunctions/authcontext"
 import supabase from "../../lib/supabase"
@@ -19,37 +16,37 @@ import { Profile } from "../@types/supabaseTypes"
 import useCurrentUser from "../supabaseFunctions/getFuncs/useCurrentUser"
 import GenericButton from "../components/GenericButton"
 
-type ActvitiesOption = string
+type ActivitiesOption = string
 
 const FitnessInterests = () => {
   const navigation = useNavigation<NavigationType>()
-  const [selectedActvities, setSelectedActvities] = useState<ActvitiesOption[]>(
-    []
-  )
+  const [selectedActivities, setSelectedActivities] = useState<
+    ActivitiesOption[]
+  >([])
   const [profile, setProfile] = useState<Profile | null>(null)
   const { user } = useAuth()
 
-  const handleSelectActivities = (activity: ActvitiesOption) => {
-    if (!selectedActvities.includes(activity)) {
-      setSelectedActvities([...selectedActvities, activity])
+  const handleSelectActivities = (activity: ActivitiesOption) => {
+    if (!selectedActivities.includes(activity)) {
+      setSelectedActivities([...selectedActivities, activity])
     } else {
       handleDeselectActivities(activity)
     }
   }
 
-  const handleDeselectActivities = (activity: ActvitiesOption) => {
-    const index = selectedActvities.indexOf(activity)
-    if (index > -1) {
-      selectedActvities.splice(index, 1)
-    }
-    setSelectedActvities([...selectedActvities])
+  const handleDeselectActivities = (activity: ActivitiesOption) => {
+    setSelectedActivities(selectedActivities.filter((a) => a !== activity))
   }
 
   const handleUserUpdate = async () => {
+    if (selectedActivities.length === 0) {
+      Alert.alert("Please select at least one activity")
+      return
+    }
     try {
       const { error } = await supabase.from("profiles").upsert({
         id: user?.id,
-        activities: selectedActvities,
+        activities: selectedActivities,
       })
 
       if (error) throw error
@@ -57,10 +54,11 @@ const FitnessInterests = () => {
       navigation.navigate("EndOnBoarding")
     } catch (error) {
       console.log(error)
+      Alert.alert("Error", "Failed to update profile. Please try again.")
     }
   }
 
-  const ActvitiesOptions: ActvitiesOption[] = [
+  const ActivitiesOptions: ActivitiesOption[] = [
     "Aerobics 🏃‍♀️",
     "Boxing 🥊",
     "CrossFit 🏋️‍♂️",
@@ -143,57 +141,64 @@ const FitnessInterests = () => {
 
   useEffect(() => {
     if (profile && profile.activities) {
-      setSelectedActvities(profile.activities)
-      console.log(profile.activities)
+      setSelectedActivities(profile.activities)
     }
   }, [profile])
 
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
-      <View className="flex flex-row justify-between items-center my-1">
-        <View className="mx-1">
+      <View className="flex-1 px-4 py-6">
+        <View className="flex-row items-center mb-6">
           <BackButton colour="white" />
-        </View>
-        <View>
-          <Text className="font-bold text-white text-xl">
-            What are your fitness interests
+          <Text className="flex-1 text-2xl font-bold text-white text-center mr-8">
+            Fitness Interests
           </Text>
         </View>
-        <View />
-      </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="flex flex-row justify-center flex-wrap">
-          {ActvitiesOptions.map((activity, index) => {
-            const isSelected = selectedActvities.includes(activity)
-            return (
-              <Pressable
-                onPress={() => handleSelectActivities(activity)}
-                key={index}
-                className={`border-2 rounded-full p-1 text-center mx-1 my-1 ${
-                  isSelected
-                    ? "bg-yellow-300 border-yellow-400 shadow-xl"
-                    : "bg-white border-gray-300"
-                }`}
-              >
-                <Text className={`text-xs font-semibold`}>{activity}</Text>
-              </Pressable>
-            )
-          })}
+
+        <Text className="text-lg text-white mb-4 text-center">
+          Select your fitness interests
+        </Text>
+
+        <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+          <View className="flex-row flex-wrap justify-center">
+            {ActivitiesOptions.map((activity, index) => {
+              const isSelected = selectedActivities.includes(activity)
+              return (
+                <Pressable
+                  onPress={() => handleSelectActivities(activity)}
+                  key={index}
+                  className={`m-1 px-3 py-2 rounded-full ${
+                    isSelected ? "bg-yellow-400" : "bg-gray-700"
+                  }`}
+                >
+                  <Text
+                    className={`text-sm font-semibold ${
+                      isSelected ? "text-primary-900" : "text-white"
+                    }`}
+                  >
+                    {activity}
+                  </Text>
+                </Pressable>
+              )
+            })}
+          </View>
+        </ScrollView>
+
+        <View className="mt-6 flex flex-row justify-center">
+          <GenericButton
+            text="Continue"
+            buttonFunction={handleUserUpdate}
+            colourDefault="bg-white"
+            colourPressed="bg-yellow-300"
+            borderColourDefault="border-transparent"
+            borderColourPressed="border-yellow-400"
+            textSize="text-lg"
+            roundness="rounded-full"
+            width={250}
+            padding="py-4"
+            textColour="text-gray-800"
+          />
         </View>
-      </ScrollView>
-      <View className="flex flex-row justify-center m-4">
-        <GenericButton
-          text="Continue"
-          buttonFunction={() => handleUserUpdate()}
-          colourDefault="bg-white"
-          colourPressed="bg-yellow-300"
-          borderColourDefault="border-black"
-          borderColourPressed="border-black"
-          textSize="text-lg"
-          roundness="rounded-lg"
-          width={300}
-          padding="p-2"
-        />
       </View>
     </SafeAreaView>
   )

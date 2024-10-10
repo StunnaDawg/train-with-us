@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView } from "react-native"
+import { View, Text, SafeAreaView, Image, Alert } from "react-native"
 import React from "react"
 import GenericButton from "../components/GenericButton"
 import supabase from "../../lib/supabase"
@@ -10,54 +10,63 @@ const EndOnBoard = () => {
 
   const finishOnBoard = async () => {
     if (!user?.id) return
-    const { error } = await supabase
-      .from("profiles")
-      .update({ onboard: true })
-      .eq("id", user?.id)
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ onboard: true })
+        .eq("id", user?.id)
 
-    if (error) throw error
-    await Updates.reloadAsync()
+      if (error) throw error
+      await Updates.reloadAsync()
+    } catch (error) {
+      console.error("Error finishing onboarding:", error)
+      Alert.alert("Error", "Failed to update profile. Please try again.")
+    }
   }
+
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
-      <View className="flex-1">
-        <View className="flex flex-row  m-9">
-          <Text className="text-xl font-bold text-white">
-            You're all ready!
-          </Text>
-        </View>
-        <View className="flex flex-row mb-9 mx-9">
-          <Text className="text-lg font-semibold text-white">
-            Browse Event in your area and join the fun.
+      <View className="flex-1 justify-between py-10 px-6">
+        <View className="items-center">
+          <Text className="text-3xl font-bold text-white text-center mb-8">
+            You're all set!
           </Text>
         </View>
 
-        <View className="flex flex-row mb-9 mx-9">
-          <Text className="text-lg font-semibold text-white">
-            Connect with your community and stay up to date with events.
-          </Text>
+        <View className="space-y-6">
+          <View className="bg-gray-800 rounded-xl p-6">
+            <Text className="text-xl font-semibold text-white mb-4">
+              What's next?
+            </Text>
+            <View className="space-y-4">
+              <Text className="text-lg text-white">
+                • Browse events in your area
+              </Text>
+              <Text className="text-lg text-white">
+                • Connect with your community
+              </Text>
+              <Text className="text-lg text-white">
+                • Make new fitness friends
+              </Text>
+            </View>
+          </View>
         </View>
 
-        <View className="flex flex-row mb-9 mx-9">
-          <Text className="text-lg font-semibold text-white">
-            Connect with like-minded people and make new fitness friends.
-          </Text>
+        <View className="mt-6 flex flex-row justify-center">
+          <GenericButton
+            text="Let's Go!"
+            buttonFunction={finishOnBoard}
+            colourDefault="bg-white"
+            colourPressed="bg-yellow-300"
+            borderColourDefault="border-transparent"
+            borderColourPressed="border-yellow-400"
+            textSize="text-lg"
+            roundness="rounded-full"
+            width={250}
+            padding="py-4"
+            textColour="text-primary-900"
+          />
         </View>
-      </View>
-
-      <View className="flex flex-row justify-center m-4">
-        <GenericButton
-          text="Jump In!"
-          buttonFunction={() => finishOnBoard()}
-          colourDefault="bg-white"
-          colourPressed="bg-yellow-300"
-          borderColourDefault="border-black"
-          borderColourPressed="border-black"
-          textSize="text-lg"
-          roundness="rounded-lg"
-          width={300}
-          padding="p-2"
-        />
       </View>
     </SafeAreaView>
   )
