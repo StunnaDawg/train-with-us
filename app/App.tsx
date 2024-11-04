@@ -10,6 +10,7 @@ import { enableScreens } from "react-native-screens"
 import { LoadingProvider } from "./context/LoadingContext"
 import { NewNotificationProvider } from "./context/NewNotification"
 import { NewMessageProvider } from "./context/NewMessage"
+import { LocationProvider } from "./context/LocationContext"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -19,60 +20,62 @@ export default function App() {
     <LoadingProvider>
       <NewMessageProvider>
         <NewNotificationProvider>
-          <AuthProvider>
-            <NavigationContainer
-              linking={{
-                prefixes: ["https://myapp.io"],
-                config: {
-                  screens: {
-                    MessageScreen: "notifications/message/:id",
+          <LocationProvider>
+            <AuthProvider>
+              <NavigationContainer
+                linking={{
+                  prefixes: ["https://myapp.io"],
+                  config: {
+                    screens: {
+                      MessageScreen: "notifications/message/:id",
+                    },
                   },
-                },
-                async getInitialURL() {
-                  const url = await Linking.getInitialURL()
+                  async getInitialURL() {
+                    const url = await Linking.getInitialURL()
 
-                  if (url != null) {
-                    return url
-                  }
+                    if (url != null) {
+                      return url
+                    }
 
-                  const response =
-                    await Notifications.getLastNotificationResponseAsync()
+                    const response =
+                      await Notifications.getLastNotificationResponseAsync()
 
-                  return response?.notification.request.content.data.url
-                },
-                subscribe(listener) {
-                  const onReceiveURL = ({ url }: { url: string }) =>
-                    listener(url)
+                    return response?.notification.request.content.data.url
+                  },
+                  subscribe(listener) {
+                    const onReceiveURL = ({ url }: { url: string }) =>
+                      listener(url)
 
-                  const eventListenerSubscription = Linking.addEventListener(
-                    "url",
-                    onReceiveURL
-                  )
-
-                  const subscription =
-                    Notifications.addNotificationResponseReceivedListener(
-                      (response) => {
-                        const url =
-                          response.notification.request.content.data.url
-
-                        listener(url)
-                      }
+                    const eventListenerSubscription = Linking.addEventListener(
+                      "url",
+                      onReceiveURL
                     )
 
-                  return () => {
-                    eventListenerSubscription.remove()
-                    subscription.remove()
-                  }
-                },
-              }}
-            >
-              <GestureHandlerRootView style={{ flex: 1 }}>
-                <BottomSheetModalProvider>
-                  <NavStack />
-                </BottomSheetModalProvider>
-              </GestureHandlerRootView>
-            </NavigationContainer>
-          </AuthProvider>
+                    const subscription =
+                      Notifications.addNotificationResponseReceivedListener(
+                        (response) => {
+                          const url =
+                            response.notification.request.content.data.url
+
+                          listener(url)
+                        }
+                      )
+
+                    return () => {
+                      eventListenerSubscription.remove()
+                      subscription.remove()
+                    }
+                  },
+                }}
+              >
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                  <BottomSheetModalProvider>
+                    <NavStack />
+                  </BottomSheetModalProvider>
+                </GestureHandlerRootView>
+              </NavigationContainer>
+            </AuthProvider>
+          </LocationProvider>
         </NewNotificationProvider>
       </NewMessageProvider>
     </LoadingProvider>

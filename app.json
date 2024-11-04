@@ -15,6 +15,14 @@
     "plugins": [
       "expo-apple-authentication",
       [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location to show your current position.",
+          "locationAlwaysPermission": "Allow $(PRODUCT_NAME) to use your location to show your current position.",
+          "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location to show your current position."
+        }
+      ],
+      [
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
@@ -40,7 +48,10 @@
       "usesAppleSignIn": true,
       "infoPlist": {
         "LSApplicationQueriesSchemes": ["tel", "telprompt"],
-        "NSContactsUsageDescription": "This app uses your contacts to send email."
+        "NSContactsUsageDescription": "This app uses your contacts to send email.",
+        "NSLocationWhenInUseUsageDescription": "We need your location to find nearby connections and communities.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app needs access to your location to show your current position.",
+        "NSLocationAlwaysUsageDescription": "This app needs access to your location to show your current position."
       }
     },
     "android": {
