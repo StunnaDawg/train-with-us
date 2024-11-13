@@ -998,7 +998,9 @@ export type Database = {
           id: string
           ignored_users: string[] | null
           intentions: string | null
+          last_location_update: string | null
           last_name: string | null
+          location: unknown | null
           music_pref: string | null
           new_update_modal: boolean
           onboard: boolean
@@ -1006,6 +1008,7 @@ export type Database = {
           pinned_channels: string[] | null
           primary_gym: number | null
           profile_pic: string | null
+          radius: number | null
           secondary_gym: number | null
           sexuality: string | null
           username: string | null
@@ -1032,7 +1035,9 @@ export type Database = {
           id: string
           ignored_users?: string[] | null
           intentions?: string | null
+          last_location_update?: string | null
           last_name?: string | null
+          location?: unknown | null
           music_pref?: string | null
           new_update_modal?: boolean
           onboard?: boolean
@@ -1040,6 +1045,7 @@ export type Database = {
           pinned_channels?: string[] | null
           primary_gym?: number | null
           profile_pic?: string | null
+          radius?: number | null
           secondary_gym?: number | null
           sexuality?: string | null
           username?: string | null
@@ -1065,7 +1071,9 @@ export type Database = {
           id?: string
           ignored_users?: string[] | null
           intentions?: string | null
+          last_location_update?: string | null
           last_name?: string | null
+          location?: unknown | null
           music_pref?: string | null
           new_update_modal?: boolean
           onboard?: boolean
@@ -1073,6 +1081,7 @@ export type Database = {
           pinned_channels?: string[] | null
           primary_gym?: number | null
           profile_pic?: string | null
+          radius?: number | null
           secondary_gym?: number | null
           sexuality?: string | null
           username?: string | null
@@ -1137,6 +1146,19 @@ export type Database = {
         }
         Returns: string
       }
+      get_communities_with_search: {
+        Args: {
+          user_id: string
+          search_term: string
+        }
+        Returns: {
+          id: string
+          community_title: string
+          community_tags: string[]
+          community_profile_pic: string
+          compatibility_score: number
+        }[]
+      }
       get_compatible_communities: {
         Args: {
           user_id: string
@@ -1188,7 +1210,9 @@ export type Database = {
           id: string
           ignored_users: string[] | null
           intentions: string | null
+          last_location_update: string | null
           last_name: string | null
+          location: unknown | null
           music_pref: string | null
           new_update_modal: boolean
           onboard: boolean
@@ -1196,6 +1220,7 @@ export type Database = {
           pinned_channels: string[] | null
           primary_gym: number | null
           profile_pic: string | null
+          radius: number | null
           secondary_gym: number | null
           sexuality: string | null
           username: string | null

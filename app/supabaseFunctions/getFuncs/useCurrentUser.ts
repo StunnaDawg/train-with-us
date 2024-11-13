@@ -7,7 +7,6 @@ const useCurrentUser = async (
   setUserProfile: Dispatch<SetStateAction<Profile | null>>
 ) => {
   try {
-    const startTime = Date.now()
     const { data: profiles, error } = await supabase
       .from("profiles")
       .select()
@@ -18,8 +17,6 @@ const useCurrentUser = async (
     const profile = profiles[0] ?? null
 
     setUserProfile(profile)
-    const endTime = Date.now()
-    console.log(`getProfile took ${endTime - startTime} ms`)
     return profile
   } catch (error) {
     console.log(error)

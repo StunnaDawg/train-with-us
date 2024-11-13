@@ -16,6 +16,8 @@ import getAllEvents from "../../supabaseFunctions/getFuncs/getAllEvents"
 import searchEventsFunction from "../../supabaseFunctions/getFuncs/searchEventsFunction"
 import getUpcomingEvents from "../../supabaseFunctions/getFuncs/getUpcomingEvents"
 import { FlashList } from "@shopify/flash-list"
+import { useLocationContext } from "../../context/LocationContext"
+import { useFocusEffect } from "@react-navigation/native"
 
 const tabs = ["All Events", "Upcoming"]
 

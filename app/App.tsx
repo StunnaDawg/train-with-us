@@ -20,8 +20,8 @@ export default function App() {
     <LoadingProvider>
       <NewMessageProvider>
         <NewNotificationProvider>
-          <LocationProvider>
-            <AuthProvider>
+          <AuthProvider>
+            <LocationProvider>
               <NavigationContainer
                 linking={{
                   prefixes: ["https://myapp.io"],
@@ -74,8 +74,8 @@ export default function App() {
                   </BottomSheetModalProvider>
                 </GestureHandlerRootView>
               </NavigationContainer>
-            </AuthProvider>
-          </LocationProvider>
+            </LocationProvider>
+          </AuthProvider>
         </NewNotificationProvider>
       </NewMessageProvider>
     </LoadingProvider>
