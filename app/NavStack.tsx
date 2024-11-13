@@ -237,7 +237,6 @@ const NavStack = () => {
   }, [])
 
   useEffect(() => {
-    console.log("userProfile", userProfile, user)
     if (userProfile) {
       setAppReady(true)
       setTimeout(() => {

@@ -51,14 +51,13 @@ const EventCard = ({
   }
 
   useEffect(() => {
-    console.log("eventCoverPhoto", eventCoverPhoto)
     readImage()
   }, [eventCoverPhoto])
 
   const readImage = () => {
     setLoading(true)
     if (eventCoverPhoto === undefined) return
-    console.log("reading", `${eventCoverPhoto}`)
+
     supabase.storage
       .from("photos")
       .download(`${eventCoverPhoto}`)
