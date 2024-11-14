@@ -46,7 +46,6 @@ export const LocationProvider = ({
     if (userProfile?.location) {
       const coords = parsePostGISPoint(userProfile.location)
       if (coords) {
-        // Create a Location.LocationObject from the coordinates
         const locationObject: Location.LocationObject = {
           coords: {
             latitude: coords.latitude,
@@ -62,36 +61,11 @@ export const LocationProvider = ({
             : Date.now(),
         }
         setLocation(locationObject)
-        console.log("Set initial location from userProfile:", locationObject)
+      } else {
+        fetchLocation()
       }
     }
   }, [userProfile?.location])
-
-  // useEffect(() => {
-  //   if (user?.id) {
-  //     ;(async () => {
-  //       try {
-  //         let { status } = await Location.requestForegroundPermissionsAsync()
-  //         if (status !== "granted") {
-  //           console.log("Permission to access location was denied")
-  //           return
-  //         }
-
-  //         let currentLocation = await Location.getCurrentPositionAsync({})
-
-  //         await updateSupabaseLocation(currentLocation)
-
-  //         setLocation(currentLocation)
-  //       } catch (error) {
-  //         console.error("Error fetching initial location:", error)
-  //       }
-  //     })()
-  //   }
-  // }, [user?.id])
-
-  useEffect(() => {
-    fetchLocation()
-  }, [])
 
   const updateSupabaseLocation = async (
     newLocation: Location.LocationObject
@@ -156,6 +130,8 @@ export const LocationProvider = ({
     oldLocation: any,
     threshold: number = 0.01
   ): boolean => {
+    if (!oldLocation && !userProfile?.location) return true
+
     let oldCoords
 
     if (typeof oldLocation === "string") {
