@@ -12,19 +12,33 @@ type LocationContextType = {
   >
 }
 
-const parsePostGISPoint = (
+const parsePostGISPoint = async (
   pointString: any
-): { latitude: number; longitude: number } | null => {
-  if (!pointString) return null
+): Promise<{ latitude: number; longitude: number } | null> => {
+  if (!pointString) {
+    console.log("didn't work")
+    return null
+  }
 
-  // POINT(longitude latitude) -> extract numbers
-  const matches = pointString.match(/POINT\(([-\d.]+) ([-\d.]+)\)/)
-  if (!matches) return null
+  try {
+    // Use Supabase function to convert WKB to text
+    const { data, error } = await supabase.rpc("st_astext", {
+      wkb: pointString,
+    })
 
-  // matches[1] is longitude, matches[2] is latitude
-  return {
-    latitude: parseFloat(matches[2]),
-    longitude: parseFloat(matches[1]),
+    if (error) throw error
+
+    // Now parse the POINT format
+    const matches = data.match(/POINT\(([-\d.]+) ([-\d.]+)\)/)
+    if (!matches) return null
+
+    return {
+      latitude: parseFloat(matches[2]),
+      longitude: parseFloat(matches[1]),
+    }
+  } catch (error) {
+    console.error("Error parsing location:", error)
+    return null
   }
 }
 
@@ -40,32 +54,45 @@ export const LocationProvider = ({
   children: React.ReactNode
 }) => {
   const [location, setLocation] = useState<Location.LocationObject | null>(null)
+  const [initialized, setInitialized] = useState(false)
   const { user, userProfile } = useAuth()
 
   useEffect(() => {
-    if (userProfile?.location) {
-      const coords = parsePostGISPoint(userProfile.location)
-      if (coords) {
-        const locationObject: Location.LocationObject = {
-          coords: {
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-            altitude: null,
-            accuracy: null,
-            altitudeAccuracy: null,
-            heading: null,
-            speed: null,
-          },
-          timestamp: userProfile?.last_location_update
-            ? new Date(userProfile.last_location_update).getTime()
-            : Date.now(),
+    const initializeLocation = async () => {
+      if (!initialized && userProfile) {
+        if (userProfile.location) {
+          console.log("trying to parse coords")
+          const coords = await parsePostGISPoint(userProfile.location)
+          if (coords) {
+            console.log("there are coords", coords.latitude, coords.longitude)
+
+            const locationObject: Location.LocationObject = {
+              coords: {
+                latitude: coords.latitude,
+                longitude: coords.longitude,
+                altitude: null,
+                accuracy: null,
+                altitudeAccuracy: null,
+                heading: null,
+                speed: null,
+              },
+              timestamp: userProfile?.last_location_update
+                ? new Date(userProfile.last_location_update).getTime()
+                : Date.now(),
+            }
+            setLocation(locationObject)
+            console.log("no need to fetch location")
+          } else {
+            await fetchLocation()
+          }
+        } else {
+          await fetchLocation()
         }
-        setLocation(locationObject)
-      } else {
-        fetchLocation()
+        setInitialized(true)
       }
     }
-  }, [userProfile?.location])
+    initializeLocation()
+  }, [userProfile, initialized])
 
   const updateSupabaseLocation = async (
     newLocation: Location.LocationObject
@@ -75,13 +102,35 @@ export const LocationProvider = ({
       return
     }
 
-    if (!isLocationSignificantlyDifferent(newLocation, location)) {
+    let oldCoords = location?.coords
+    if (!oldCoords && userProfile?.location) {
+      const parsed = await parsePostGISPoint(userProfile.location)
+      if (parsed) {
+        oldCoords = {
+          latitude: parsed.latitude,
+          longitude: parsed.longitude,
+          altitude: null,
+          accuracy: null,
+          altitudeAccuracy: null,
+          heading: null,
+          speed: null,
+        }
+      }
+    }
+
+    const oldLocation = oldCoords
+      ? {
+          coords: oldCoords,
+          timestamp: Date.now(),
+        }
+      : null
+
+    if (!isLocationSignificantlyDifferent(newLocation, oldLocation)) {
       console.log("not big enough difference")
       return
     }
 
     try {
-      console.log("trying to update location for user", user.id)
       const pointString = `POINT(${newLocation.coords.longitude.toString()} ${newLocation.coords.latitude.toString()})`
 
       const { data, error } = await supabase
@@ -112,7 +161,6 @@ export const LocationProvider = ({
       }
 
       let currentLocation = await Location.getCurrentPositionAsync({})
-      console.log("current Location", currentLocation.coords)
 
       await updateSupabaseLocation(currentLocation)
 
@@ -132,28 +180,46 @@ export const LocationProvider = ({
     oldLocation: any,
     threshold: number = 0.01
   ): boolean => {
-    if (!oldLocation && !userProfile?.location) return true
+    console.log("isLocationSignificantlyDifferent checking:", {
+      newLocation: newLocation?.coords,
+      oldLocation: oldLocation?.coords || "null",
+      userProfileLocation: userProfile?.location || "null",
+    })
 
-    let oldCoords
-
-    if (!oldLocation && userProfile?.location) {
-      const parsed = parsePostGISPoint(oldLocation)
-      if (!parsed) return true
-      oldCoords = parsed
-    } else if (typeof oldLocation === "string") {
-      const parsed = parsePostGISPoint(oldLocation)
-      if (!parsed) return true
-      oldCoords = parsed
-    } else if (oldLocation?.coords) {
-      oldCoords = oldLocation.coords
-    } else {
+    if (!oldLocation?.coords && !userProfile?.location) {
+      console.log("No previous location data available")
       return true
     }
 
-    return (
-      Math.abs(newLocation.coords.latitude - oldCoords.latitude) > threshold ||
-      Math.abs(newLocation.coords.longitude - oldCoords.longitude) > threshold
-    )
+    let oldCoords = oldLocation?.coords
+
+    if (!oldCoords && userProfile?.location) {
+      console.log("trying to parse", userProfile.location)
+      const parsed = parsePostGISPoint(userProfile.location)
+      if (!parsed) {
+        console.log("Failed to parse userProfile location")
+        return true
+      }
+      oldCoords = parsed
+    }
+
+    // If we still don't have old coordinates, consider it different
+    if (!oldCoords) {
+      console.log("No old coordinates available after parsing")
+      return true
+    }
+
+    const latDiff = Math.abs(newLocation.coords.latitude - oldCoords.latitude)
+    const lngDiff = Math.abs(newLocation.coords.longitude - oldCoords.longitude)
+
+    console.log("Location difference:", {
+      latDiff,
+      lngDiff,
+      threshold,
+      isDifferent: latDiff > threshold || lngDiff > threshold,
+    })
+
+    return latDiff > threshold || lngDiff > threshold
   }
 
   return (
