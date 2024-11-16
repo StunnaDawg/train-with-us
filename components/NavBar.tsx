@@ -9,6 +9,12 @@ import { useNewNotification } from "../app/context/NewNotification"
 import { useNewMessage } from "../app/context/NewMessage"
 import supabase from "../lib/supabase"
 import { useAuth } from "../app/supabaseFunctions/authcontext"
+import ProfilePicture from "../app/userSide/Profile/editProfileComponents/ProfilePicture"
+import SinglePicCommunity from "../app/components/SinglePicCommunity"
+import { geoLocationName } from "../app/utilFunctions/geoLocationName"
+import { useLocationContext } from "../app/context/LocationContext"
+import parsePostGISPoint from "../app/utilFunctions/parsePostGISPoint"
+import * as Location from "expo-location"
 
 type NavBarProps = {
   navBar?: boolean
@@ -36,12 +42,42 @@ const NavBar = ({
   searchUsers,
 }: NavBarProps) => {
   const { isNewNotification, setNewNotification } = useNewNotification()
-  const { user } = useAuth()
+  const { user, userProfile } = useAuth()
   const { isNewMessage, setNewMessage } = useNewMessage()
+  const [cityName, setCityName] = useState<string>("")
   const navigationTab = useNavigation<TabNavigationType>()
   const navigation = useNavigation<NavigationType>()
 
   const [isPressed, setIsPressed] = useState<{ [key: string]: boolean }>({})
+  let locationCoords: Location.LocationObject["coords"] | null
+
+  useEffect(() => {
+    const getUsersLocation = async () => {
+      if (userProfile?.location) {
+        const parsed = await parsePostGISPoint(userProfile.location)
+        if (parsed) {
+          locationCoords = {
+            latitude: parsed.latitude,
+            longitude: parsed.longitude,
+            altitude: null,
+            accuracy: null,
+            altitudeAccuracy: null,
+            heading: null,
+            speed: null,
+          }
+        }
+
+        setCityName(
+          await geoLocationName(
+            locationCoords?.latitude,
+            locationCoords?.longitude
+          )
+        )
+      }
+    }
+
+    getUsersLocation()
+  }, [userProfile])
 
   const handlePressIn = (key: string) => {
     setIsPressed((prevState) => ({ ...prevState, [key]: true }))
@@ -94,13 +130,35 @@ const NavBar = ({
         className={`flex flex-row justify-between items-center ${bgColour}`}
       >
         <View className="flex flex-row items-center">
-          <Pressable onPress={() => navigationTab.navigate("Events")}>
-            <Image
-              source={require("../assets/images/TWU-Logo.png")}
-              style={{ width: 50, height: 50 }}
+          <Pressable onPress={() => navigationTab.navigate("Profile")}>
+            <SinglePicCommunity
+              size={50}
+              avatarRadius={100}
+              noAvatarRadius={100}
+              item={userProfile?.profile_pic}
             />
           </Pressable>
-          <Text className={`font-bold text-lg ${textColour}`}>{title}</Text>
+          <View className="flex flex-row justify-center m-1">
+            <View>
+              <View className="flex flex-row justify-center">
+                <View className="mx-1">
+                  <Text className={`font-bold text-xl ${textColour}`}>
+                    {userProfile?.first_name}
+                  </Text>
+                </View>
+                <View>
+                  <Text className={`font-bold text-xl ${textColour}`}>
+                    {userProfile?.last_name}
+                  </Text>
+                </View>
+              </View>
+              <View>
+                <Text className={`font-bold text-xl ${textColour}`}>
+                  {cityName}
+                </Text>
+              </View>
+            </View>
+          </View>
         </View>
         <View className="flex flex-row justify-center mx-2 items-center">
           {searchUsers ? (
