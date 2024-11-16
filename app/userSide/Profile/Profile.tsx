@@ -1,6 +1,5 @@
 import { View, Text, ScrollView, Pressable, SafeAreaView } from "react-native"
 import React, { useCallback, useState } from "react"
-import UserProfilePic from "./components/UserProfilePic"
 import { Profile } from "../../@types/supabaseTypes"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { useAuth } from "../../supabaseFunctions/authcontext"
@@ -9,7 +8,6 @@ import { NavigationType } from "../../@types/navigation"
 import { FontAwesome6 } from "@expo/vector-icons"
 import MyEvents from "../Events/MyEvents"
 import { NavBar } from "../../../components"
-import { is } from "date-fns/locale"
 
 const ProfileView = () => {
   const { user } = useAuth()

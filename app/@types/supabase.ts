@@ -1241,6 +1241,12 @@ export type Database = {
           expo_push_token: string
         }[]
       }
+      st_astext: {
+        Args: {
+          wkb: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
