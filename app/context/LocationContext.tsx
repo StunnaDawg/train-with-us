@@ -54,45 +54,13 @@ export const LocationProvider = ({
   children: React.ReactNode
 }) => {
   const [location, setLocation] = useState<Location.LocationObject | null>(null)
-  const [initialized, setInitialized] = useState(false)
   const { user, userProfile } = useAuth()
 
   useEffect(() => {
-    const initializeLocation = async () => {
-      if (!initialized && userProfile) {
-        if (userProfile.location) {
-          console.log("trying to parse coords")
-          const coords = await parsePostGISPoint(userProfile.location)
-          if (coords) {
-            console.log("there are coords", coords.latitude, coords.longitude)
-
-            const locationObject: Location.LocationObject = {
-              coords: {
-                latitude: coords.latitude,
-                longitude: coords.longitude,
-                altitude: null,
-                accuracy: null,
-                altitudeAccuracy: null,
-                heading: null,
-                speed: null,
-              },
-              timestamp: userProfile?.last_location_update
-                ? new Date(userProfile.last_location_update).getTime()
-                : Date.now(),
-            }
-            setLocation(locationObject)
-            console.log("no need to fetch location")
-          } else {
-            await fetchLocation()
-          }
-        } else {
-          await fetchLocation()
-        }
-        setInitialized(true)
-      }
+    if (userProfile) {
+      fetchLocation()
     }
-    initializeLocation()
-  }, [userProfile, initialized])
+  }, [userProfile])
 
   const updateSupabaseLocation = async (
     newLocation: Location.LocationObject
