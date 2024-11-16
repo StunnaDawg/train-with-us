@@ -46,7 +46,6 @@ export const LocationProvider = ({
     if (userProfile?.location) {
       const coords = parsePostGISPoint(userProfile.location)
       if (coords) {
-        // Create a Location.LocationObject from the coordinates
         const locationObject: Location.LocationObject = {
           coords: {
             latitude: coords.latitude,
@@ -62,36 +61,11 @@ export const LocationProvider = ({
             : Date.now(),
         }
         setLocation(locationObject)
-        console.log("Set initial location from userProfile:", locationObject)
+      } else {
+        fetchLocation()
       }
     }
   }, [userProfile?.location])
-
-  // useEffect(() => {
-  //   if (user?.id) {
-  //     ;(async () => {
-  //       try {
-  //         let { status } = await Location.requestForegroundPermissionsAsync()
-  //         if (status !== "granted") {
-  //           console.log("Permission to access location was denied")
-  //           return
-  //         }
-
-  //         let currentLocation = await Location.getCurrentPositionAsync({})
-
-  //         await updateSupabaseLocation(currentLocation)
-
-  //         setLocation(currentLocation)
-  //       } catch (error) {
-  //         console.error("Error fetching initial location:", error)
-  //       }
-  //     })()
-  //   }
-  // }, [user?.id])
-
-  useEffect(() => {
-    fetchLocation()
-  }, [])
 
   const updateSupabaseLocation = async (
     newLocation: Location.LocationObject
@@ -129,7 +103,6 @@ export const LocationProvider = ({
     }
   }
 
-  // Function to get current location
   const fetchLocation = async () => {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync()
@@ -139,11 +112,14 @@ export const LocationProvider = ({
       }
 
       let currentLocation = await Location.getCurrentPositionAsync({})
-      console.log("current Location", currentLocation)
+      console.log("current Location", currentLocation.coords)
 
       await updateSupabaseLocation(currentLocation)
 
-      setLocation(currentLocation)
+      if (currentLocation) {
+        setLocation(currentLocation)
+      }
+
       return currentLocation
     } catch (error) {
       console.error("Error fetching location:", error)
@@ -156,14 +132,22 @@ export const LocationProvider = ({
     oldLocation: any,
     threshold: number = 0.01
   ): boolean => {
+    if (!oldLocation && !userProfile?.location) return true
+
     let oldCoords
 
-    if (typeof oldLocation === "string") {
+    if (!oldLocation && userProfile?.location) {
       const parsed = parsePostGISPoint(oldLocation)
       if (!parsed) return true
       oldCoords = parsed
-    } else {
+    } else if (typeof oldLocation === "string") {
+      const parsed = parsePostGISPoint(oldLocation)
+      if (!parsed) return true
+      oldCoords = parsed
+    } else if (oldLocation?.coords) {
       oldCoords = oldLocation.coords
+    } else {
+      return true
     }
 
     return (
