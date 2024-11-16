@@ -103,7 +103,6 @@ export const LocationProvider = ({
     }
   }
 
-  // Function to get current location
   const fetchLocation = async () => {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync()
@@ -113,11 +112,14 @@ export const LocationProvider = ({
       }
 
       let currentLocation = await Location.getCurrentPositionAsync({})
-      console.log("current Location", currentLocation)
+      console.log("current Location", currentLocation.coords)
 
       await updateSupabaseLocation(currentLocation)
 
-      setLocation(currentLocation)
+      if (currentLocation) {
+        setLocation(currentLocation)
+      }
+
       return currentLocation
     } catch (error) {
       console.error("Error fetching location:", error)
@@ -134,12 +136,18 @@ export const LocationProvider = ({
 
     let oldCoords
 
-    if (typeof oldLocation === "string") {
+    if (!oldLocation && userProfile?.location) {
       const parsed = parsePostGISPoint(oldLocation)
       if (!parsed) return true
       oldCoords = parsed
-    } else {
+    } else if (typeof oldLocation === "string") {
+      const parsed = parsePostGISPoint(oldLocation)
+      if (!parsed) return true
+      oldCoords = parsed
+    } else if (oldLocation?.coords) {
       oldCoords = oldLocation.coords
+    } else {
+      return true
     }
 
     return (
