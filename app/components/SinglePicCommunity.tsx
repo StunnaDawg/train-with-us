@@ -91,7 +91,6 @@ export default function SinglePicCommunity({
         }
       }
     } catch (error) {
-      console.error("Error loading image:", error)
       setLoading(false)
     }
   }

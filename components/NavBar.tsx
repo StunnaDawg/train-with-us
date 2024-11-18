@@ -17,6 +17,7 @@ import Entypo from "@expo/vector-icons/Entypo"
 import parsePostGISPoint from "../app/utilFunctions/parsePostGISPoint"
 import * as Location from "expo-location"
 import Ionicons from "@expo/vector-icons/Ionicons"
+import { TouchableOpacity } from "react-native-gesture-handler"
 
 type NavBarProps = {
   navBar?: boolean
@@ -108,9 +109,11 @@ const NavBar = ({
 
   return (
     <>
-      <SafeAreaView
-        style={{ paddingTop: Platform.OS === "android" ? 20 : 0 }}
-        className={`flex flex-row justify-between items-center bg-slate-900`}
+      <View
+        style={{
+          paddingTop: Platform.OS === "android" ? 20 : 0,
+        }}
+        className={`flex flex-row justify-between items-center bg-primary-900`}
       >
         <View className="flex flex-row items-center">
           <Pressable onPress={() => navigationTab.navigate("Profile")}>
@@ -145,7 +148,7 @@ const NavBar = ({
           </View>
         </View>
         <View className="flex flex-row justify-center mx-2 items-center">
-          <Pressable
+          <TouchableOpacity
             className="mx-2"
             onPressIn={() => handlePressIn("message")}
             onPressOut={() => handlePressOut("message")}
@@ -155,7 +158,7 @@ const NavBar = ({
               navigation.navigate("DirectMessageTab")
             }}
           >
-            <Ionicons name="chatbubbles-outline" size={36} color="white" />
+            <Ionicons name="chatbubbles-outline" size={28} color="white" />
             {isNewMessage ? ( // This is the red dot for notifications
               <View
                 style={{
@@ -169,9 +172,9 @@ const NavBar = ({
                 }}
               />
             ) : null}
-          </Pressable>
+          </TouchableOpacity>
 
-          <Pressable
+          <TouchableOpacity
             className="mx-2"
             onPressIn={() => handlePressIn("settings")}
             onPressOut={() => handlePressOut("settings")}
@@ -180,7 +183,7 @@ const NavBar = ({
               navigation.navigate("NotificationsTab")
             }}
           >
-            <Ionicons name="notifications-outline" size={36} color="white" />
+            <Ionicons name="notifications-outline" size={28} color="white" />
             {isNewNotification ? ( // This is the red dot for notifications
               <View
                 style={{
@@ -194,9 +197,17 @@ const NavBar = ({
                 }}
               />
             ) : null}
-          </Pressable>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("UserSettings")
+            }}
+          >
+            <Ionicons name="ellipsis-vertical" size={28} color="white" />
+          </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </View>
     </>
   )
 }
