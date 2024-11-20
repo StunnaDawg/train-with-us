@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, Pressable, SafeAreaView } from "react-native"
-import React, { useCallback, useState } from "react"
-import { Profile } from "../../@types/supabaseTypes"
+import React, { useCallback, useEffect, useState } from "react"
+import { Communities, Profile } from "../../@types/supabaseTypes"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
@@ -9,6 +9,8 @@ import Ionicons from "@expo/vector-icons/Ionicons"
 import { NavBar } from "../../../components"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import SinglePicCommunity from "../../components/SinglePicCommunity"
+import supabase from "../../../lib/supabase"
+import getAllUsersCommunities from "../../supabaseFunctions/getFuncs/getUsersCommunities"
 
 type CommunityButtonProps = {
   backGroundColour: string
@@ -58,6 +60,26 @@ const CommunityButton = ({
   )
 }
 
+const getFriendsLength = async (userId: string): Promise<number> => {
+  try {
+    const { data: chatSessions, error } = await supabase
+      .from("chat_sessions")
+      .select("*")
+      .or(`user1.eq.${userId},user2.eq.${userId}`)
+
+    if (error) throw error
+
+    if (chatSessions.length <= 0) {
+      return 0
+    }
+
+    return chatSessions.length
+  } catch (error) {
+    console.error("Error fetching chat session:", error)
+    return 0
+  }
+}
+
 const EventProfileTabView = ({
   eventTitle,
   eventDate,
@@ -91,33 +113,24 @@ const EventProfileTabView = ({
 }
 
 const ProfileView = () => {
-  const { user } = useAuth()
-  const [userProfile, setUserProfile] = useState<Profile | null>(null)
-  const [pressedButton, setPressedButton] = useState<{
-    [key: string]: boolean
-  }>({})
+  const { user, userProfile } = useAuth()
+  const [friendsList, setFriendsList] = useState<number>(0)
+  const [communties, setCommunities] = useState<Communities[] | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
+
   const navigation = useNavigation<NavigationType>()
 
-  const handlePressedButtonIn = (buttonName: string) => {
-    setPressedButton((prev) => ({ ...prev, [buttonName]: true }))
-  }
-  const handlePressedButtonOut = (buttonName: string) => {
-    setPressedButton((prev) => ({ ...prev, [buttonName]: false }))
-  }
-  const fetchCurrentUser = async () => {
-    if (!user) return
-    setUserProfile(null)
-    await useCurrentUser(user?.id, setUserProfile)
-  }
-  useFocusEffect(
-    useCallback(() => {
-      let isMounted = true
-      fetchCurrentUser()
-      return () => {
-        isMounted = false
+  useEffect(() => {
+    const getUsersFriends = async () => {
+      if (user?.id) {
+        const listLength = await getFriendsLength(user.id)
+        await getAllUsersCommunities(user.id, setLoading, setCommunities)
+
+        setFriendsList(listLength)
       }
-    }, [user])
-  )
+    }
+    getUsersFriends()
+  }, [user])
 
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
@@ -150,22 +163,12 @@ const ProfileView = () => {
                     <Text className="text-blue-600">Primary Location</Text>
                   </TouchableOpacity>
                 </View>
-                {/*<View className="flex flex-row justify-between">
-                  <View className="flex flex-1 rounded-lg bg-primary-300 mx-2 my-4 p-4">
-                    <Text className="text-blue-200 font-bold text-2xl">12</Text>
-                    <Text className="text-white font-semibold">Friends</Text>
-                  </View>
-                  <View className=" flex flex-1 rounded-lg bg-primary-300 mx-2 my-4 p-4">
-                    <Text className="text-blue-200 font-bold text-2xl">12</Text>
-                    <Text className="text-white font-semibold">Friends</Text>
-                  </View>
-                </View>*/}
               </View>
             </View>
           </View>
 
           {/* Training partners box */}
-          <View className="bg-primary-700 flex-1 pt-2 h-full">
+          <View className="bg-primary-700 flex-1 pt-2 h-full pb-24">
             <View>
               <View className="bg-primary-300 flex rounded-lg m-6 ">
                 <View className=" flex flex-row justify-between items-center p-4">
@@ -186,14 +189,20 @@ const ProfileView = () => {
 
                 <View className="flex flex-row">
                   <View className=" flex flex-1 rounded-lg bg-blue-700 mx-2 p-4 mb-4">
-                    <Text className="text-blue-200 font-bold text-2xl">12</Text>
+                    <Text className="text-blue-200 font-bold text-2xl">
+                      {friendsList}
+                    </Text>
                     <Text className="text-white font-semibold">Friends</Text>
+                    <Text className="text-xs text-slate-300">
+                      Your Training Network
+                    </Text>
                   </View>
 
-                  <View className=" flex flex-1 rounded-lg bg-blue-700 mx-2 p-4 mb-4">
-                    <Text className="text-blue-200 font-bold text-2xl">12</Text>
-                    <Text className="text-white font-semibold">Friends</Text>
-                  </View>
+                  {/*<View className=" flex flex-1 rounded-lg bg-blue-700 mx-2 p-4 mb-4">
+                    <Text className="text-blue-200 font-bold text-2xl">8</Text>
+                    <Text className="text-white font-semibold">Matches</Text>
+                    <Text className="text-xs text-slate-300">Over 80%</Text>
+                  </View>*/}
                 </View>
               </View>
 
@@ -216,7 +225,9 @@ const ProfileView = () => {
                 <View className="flex">
                   <View className="flex flex-row items-center px-2">
                     <View className="border-slate-400 border rounded-lg px-3 mx-1">
-                      <Text className="font-bold text-xl text-blue-200">3</Text>
+                      <Text className="font-bold text-xl text-blue-200">
+                        {communties?.length}
+                      </Text>
                     </View>
                     <View className="mx-1">
                       <Text className="text-white font-bold">
@@ -226,24 +237,20 @@ const ProfileView = () => {
                   </View>
                   <View className=" flex flex-1 mx-2 px-4 py-2">
                     <View>
-                      <CommunityButton
-                        backGroundColour="bg-blue-700"
-                        communityName="Blended Athletics"
-                        numberOfFriends="12"
-                        numberOfMatches="5"
-                      />
-                      <CommunityButton
-                        backGroundColour="bg-blue-700"
-                        communityName="Blended Athletics"
-                        numberOfFriends="12"
-                        numberOfMatches="5"
-                      />
-                      <CommunityButton
-                        backGroundColour="bg-blue-700"
-                        communityName="Blended Athletics"
-                        numberOfFriends="12"
-                        numberOfMatches="5"
-                      />
+                      {communties?.map((community) => {
+                        if (community.community_title) {
+                          return (
+                            <View key={community.id}>
+                              <CommunityButton
+                                backGroundColour="bg-blue-700"
+                                communityName={community.community_title}
+                                numberOfFriends="12"
+                                numberOfMatches="5"
+                              />
+                            </View>
+                          )
+                        }
+                      })}
                     </View>
                   </View>
 
