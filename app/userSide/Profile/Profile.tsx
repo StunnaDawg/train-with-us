@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, Pressable, SafeAreaView } from "react-native"
 import React, { useCallback, useEffect, useState } from "react"
-import { Communities, Profile } from "../../@types/supabaseTypes"
+import { Communities, Events, Profile } from "../../@types/supabaseTypes"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
@@ -12,6 +12,8 @@ import SinglePicCommunity from "../../components/SinglePicCommunity"
 import supabase from "../../../lib/supabase"
 import getAllUsersCommunities from "../../supabaseFunctions/getFuncs/getUsersCommunities"
 import getFriendCount from "../../utilFunctions/getFriendCount"
+import getUsersEvents from "../../supabaseFunctions/getFuncs/getUsersEvents"
+import formatTimestampShort from "../../utilFunctions/formatTimeStampShort"
 
 type CommunityButtonProps = {
   backGroundColour: string
@@ -105,6 +107,7 @@ const EventProfileTabView = ({
       <View className="flex flex-row justify-between">
         <View>
           <Text className="text-blue-200 font-bold text-sm">{eventTitle}</Text>
+
           <Text className="text-white text-xs font-semibold">{eventDate}</Text>
         </View>
         <View className="items-center">
@@ -117,7 +120,7 @@ const EventProfileTabView = ({
       <View className="flex flex-row justify-end mt-4">
         <View>
           <Text className="text-xs font-semibold text-slate-300">
-            {friendsGoing} Friends | {matchesGoing} Matches
+            {friendsGoing} Friends
           </Text>
         </View>
       </View>
@@ -129,10 +132,14 @@ const ProfileView = () => {
   const { user, userProfile } = useAuth()
   const [friendsList, setFriendsList] = useState<number>(0)
   const [communties, setCommunities] = useState<Communities[] | null>(null)
+  const [events, setEvents] = useState<Events[] | null>(null)
   const [suggestedCommunities, setSuggestedCommunities] = useState<
     Communities[] | null
   >(null)
   const [communityFriendCounts, setCommunityFriendCounts] = useState<{
+    [key: number]: number
+  }>({})
+  const [eventFriendCounts, setEventFriendCounts] = useState<{
     [key: number]: number
   }>({})
   const [loading, setLoading] = useState<boolean>(false)
@@ -171,10 +178,31 @@ const ProfileView = () => {
   }, [communties, suggestedCommunities, user?.id])
 
   useEffect(() => {
+    const loadEventFriendCounts = async () => {
+      if (user?.id && events) {
+        const counts: { [key: number]: number } = {}
+        for (const event of events) {
+          const { data, error } = await supabase.rpc("get_event_friend_count", {
+            user_id: user.id,
+            event_id: event.id,
+          })
+          if (error) throw error
+          counts[event.id] = data || 0
+        }
+
+        setEventFriendCounts(counts)
+      }
+    }
+
+    loadEventFriendCounts()
+  }, [events, user?.id])
+
+  useEffect(() => {
     const getUsersData = async () => {
       if (user?.id) {
         const listLength = await getFriendsLength(user.id)
         await getAllUsersCommunities(user.id, setLoading, setCommunities)
+        await getUsersEvents(user.id, setEvents)
 
         setFriendsList(listLength)
 
@@ -372,27 +400,25 @@ const ProfileView = () => {
                 </View>
                 <View className=" flex flex-1 mx-2 px-4 py-2">
                   <View>
-                    <EventProfileTabView
-                      eventTitle="Hyrox Event"
-                      eventDate="Wednesday, Nov 24th 6:15pm"
-                      profileGoingTag="Going"
-                      friendsGoing="12"
-                      matchesGoing="1"
-                    />
-                    <EventProfileTabView
-                      eventTitle="Hyrox Event"
-                      eventDate="Wednesday, Nov 24th 6:15pm"
-                      profileGoingTag="Going"
-                      friendsGoing="12"
-                      matchesGoing="1"
-                    />
-                    <EventProfileTabView
-                      eventTitle="Hyrox Event"
-                      eventDate="Wednesday, Nov 24th 6:15pm"
-                      profileGoingTag="Going"
-                      friendsGoing="12"
-                      matchesGoing="1"
-                    />
+                    {events?.map((event) => {
+                      if (event.event_title) {
+                        return (
+                          <View key={event.id}>
+                            <EventProfileTabView
+                              eventTitle={event.event_title}
+                              eventDate={formatTimestampShort(event.date)}
+                              profileGoingTag="Going"
+                              friendsGoing={
+                                eventFriendCounts[event.id]
+                                  ? eventFriendCounts[event.id].toString()
+                                  : "0"
+                              }
+                              matchesGoing="1"
+                            />
+                          </View>
+                        )
+                      }
+                    })}
                   </View>
                 </View>
               </View>
