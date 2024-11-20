@@ -11,12 +11,16 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import SinglePicCommunity from "../../components/SinglePicCommunity"
 import supabase from "../../../lib/supabase"
 import getAllUsersCommunities from "../../supabaseFunctions/getFuncs/getUsersCommunities"
+import getFriendCount from "../../utilFunctions/getFriendCount"
 
 type CommunityButtonProps = {
   backGroundColour: string
   communityName: string
   numberOfFriends: string
   numberOfMatches: string
+  community: Communities | null
+  communityId: number | null
+  suggested: boolean
 }
 
 type EventProfileTabViewProps = {
@@ -32,31 +36,40 @@ const CommunityButton = ({
   communityName,
   numberOfFriends,
   numberOfMatches,
+  community,
+  communityId,
+  suggested,
 }: CommunityButtonProps) => {
+  const navigation = useNavigation<NavigationType>()
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => {
+        if (community && !suggested) {
+          navigation.navigate("CommunityPage", {
+            community: community,
+          })
+        } else if (communityId && suggested) {
+          navigation.navigate("ViewCommunitiesScreen", {
+            communityId: communityId,
+          })
+        }
+      }}
       className={`${backGroundColour} border-transparent rounded-lg mb-1 p-3`}
     >
-      <View className="flex flex-row justify-between">
-        <View>
+      <View className="flex flex-row">
+        <View className="flex-[2]">
           <Text className="text-blue-200 text-xs font-bold">
             {communityName}
           </Text>
         </View>
 
-        <View>
+        <View className="flex-1 items-center">
           <Text className="text-blue-200 text-xs font-bold">
             {numberOfFriends} Friends
           </Text>
         </View>
-
-        <View>
-          <Text className="text-blue-200 text-xs font-bold">
-            {numberOfMatches} Matches
-          </Text>
-        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
@@ -116,20 +129,59 @@ const ProfileView = () => {
   const { user, userProfile } = useAuth()
   const [friendsList, setFriendsList] = useState<number>(0)
   const [communties, setCommunities] = useState<Communities[] | null>(null)
+  const [suggestedCommunities, setSuggestedCommunities] = useState<
+    Communities[] | null
+  >(null)
+  const [communityFriendCounts, setCommunityFriendCounts] = useState<{
+    [key: number]: number
+  }>({})
   const [loading, setLoading] = useState<boolean>(false)
 
-  const navigation = useNavigation<NavigationType>()
+  const fetchSuggestedCommunities = async () => {
+    const { data: communities, error } = await supabase
+      .rpc("get_compatible_communities", { user_id: user?.id })
+      .range(0, 2)
+
+    if (error) throw error
+
+    setSuggestedCommunities(communities)
+  }
 
   useEffect(() => {
-    const getUsersFriends = async () => {
+    const loadFriendCounts = async () => {
+      if (user?.id) {
+        const counts: { [key: number]: number } = {}
+
+        if (communties) {
+          for (const community of communties) {
+            counts[community.id] = await getFriendCount(community.id, user.id)
+          }
+        }
+
+        if (suggestedCommunities) {
+          for (const community of suggestedCommunities) {
+            counts[community.id] = await getFriendCount(community.id, user.id)
+          }
+        }
+
+        setCommunityFriendCounts(counts)
+      }
+    }
+    loadFriendCounts()
+  }, [communties, suggestedCommunities, user?.id])
+
+  useEffect(() => {
+    const getUsersData = async () => {
       if (user?.id) {
         const listLength = await getFriendsLength(user.id)
         await getAllUsersCommunities(user.id, setLoading, setCommunities)
 
         setFriendsList(listLength)
+
+        await fetchSuggestedCommunities()
       }
     }
-    getUsersFriends()
+    getUsersData()
   }, [user])
 
   return (
@@ -242,9 +294,18 @@ const ProfileView = () => {
                           return (
                             <View key={community.id}>
                               <CommunityButton
+                                suggested={false}
+                                communityId={community.id}
+                                community={community}
                                 backGroundColour="bg-blue-700"
                                 communityName={community.community_title}
-                                numberOfFriends="12"
+                                numberOfFriends={
+                                  communityFriendCounts[community.id]
+                                    ? communityFriendCounts[
+                                        community.id
+                                      ].toString()
+                                    : "0"
+                                }
                                 numberOfMatches="5"
                               />
                             </View>
@@ -265,18 +326,29 @@ const ProfileView = () => {
                   </View>
                   <View className=" flex flex-1 mx-2 px-4 mb-4">
                     <View>
-                      <CommunityButton
-                        backGroundColour="bg-primary-700"
-                        communityName="Blended Athletics"
-                        numberOfFriends="12"
-                        numberOfMatches="5"
-                      />
-                      <CommunityButton
-                        backGroundColour="bg-primary-700"
-                        communityName="Blended Athletics"
-                        numberOfFriends="12"
-                        numberOfMatches="5"
-                      />
+                      {suggestedCommunities?.map((community) => {
+                        if (community.community_title) {
+                          return (
+                            <View key={community.id}>
+                              <CommunityButton
+                                suggested={true}
+                                community={community}
+                                communityId={community.id}
+                                backGroundColour="bg-primary-700"
+                                communityName={community.community_title}
+                                numberOfFriends={
+                                  communityFriendCounts[community.id]
+                                    ? communityFriendCounts[
+                                        community.id
+                                      ].toString()
+                                    : "0"
+                                }
+                                numberOfMatches="5"
+                              />
+                            </View>
+                          )
+                        }
+                      })}
                     </View>
                   </View>
                 </View>
