@@ -31,6 +31,7 @@ type EventProfileTabViewProps = {
   profileGoingTag: string
   friendsGoing: string
   matchesGoing: string
+  eventId: number
 }
 
 const CommunityButton = ({
@@ -101,9 +102,18 @@ const EventProfileTabView = ({
   profileGoingTag,
   friendsGoing,
   matchesGoing,
+  eventId,
 }: EventProfileTabViewProps) => {
+  const navigation = useNavigation<NavigationType>()
   return (
-    <View className=" flex flex-1 rounded-lg bg-blue-700 mx-2 p-4 mb-4">
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("ViewEvent", {
+          eventId: eventId,
+        })
+      }}
+      className=" flex flex-1 rounded-lg bg-blue-700 mx-2 p-4 mb-4"
+    >
       <View className="flex flex-row justify-between">
         <View>
           <Text className="text-blue-200 font-bold text-sm">{eventTitle}</Text>
@@ -124,7 +134,7 @@ const EventProfileTabView = ({
           </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
@@ -405,6 +415,7 @@ const ProfileView = () => {
                         return (
                           <View key={event.id}>
                             <EventProfileTabView
+                              eventId={event.id}
                               eventTitle={event.event_title}
                               eventDate={formatTimestampShort(event.date)}
                               profileGoingTag="Going"
