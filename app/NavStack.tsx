@@ -167,10 +167,10 @@ const UserFooter = () => {
         tabBarInactiveTintColor: "gray",
       })}
     >
+      <Tab.Screen name="Profile" component={ProfileView} />
       <Tab.Screen name="Events" component={EventsComponent} />
       <Tab.Screen name="Connections" component={ConnectionsScroll} />
       <Tab.Screen name="Community" component={CommunitiesDash} />
-      <Tab.Screen name="Profile" component={ProfileView} />
     </Tab.Navigator>
   )
 }

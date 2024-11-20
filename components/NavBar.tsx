@@ -116,7 +116,7 @@ const NavBar = ({
         className={`flex flex-row justify-between items-center bg-primary-900`}
       >
         <View className="flex flex-row items-center">
-          <Pressable onPress={() => navigationTab.navigate("Profile")}>
+          <Pressable onPress={() => navigationTab.navigate("")}>
             <SinglePicCommunity
               size={50}
               avatarRadius={100}
@@ -148,6 +148,45 @@ const NavBar = ({
           </View>
         </View>
         <View className="flex flex-row justify-center mx-2 items-center">
+          <TouchableOpacity
+            className="mx-2"
+            onPressIn={() => handlePressIn("message")}
+            onPressOut={() => handlePressOut("message")}
+            onPress={() => {
+              setNewMessage(false)
+
+              navigation.navigate("UserEditProfile", {
+                userProfile: userProfile,
+              })
+            }}
+          >
+            <Ionicons name="pencil-outline" size={24} color="white" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            className="mx-2"
+            onPressIn={() => handlePressIn("settings")}
+            onPressOut={() => handlePressOut("settings")}
+            onPress={() => {
+              setNewNotification(false)
+              navigation.navigate("NotificationsTab")
+            }}
+          >
+            <Ionicons name="notifications-outline" size={28} color="white" />
+            {isNewNotification ? ( // This is the red dot for notifications
+              <View
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  top: 0,
+                  backgroundColor: "red",
+                  borderRadius: 10,
+                  width: 10,
+                  height: 10,
+                }}
+              />
+            ) : null}
+          </TouchableOpacity>
           <TouchableOpacity
             className="mx-2"
             onPressIn={() => handlePressIn("message")}
