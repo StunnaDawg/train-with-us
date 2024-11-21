@@ -165,30 +165,6 @@ const NavBar = ({
 
           <TouchableOpacity
             className="mx-2"
-            onPressIn={() => handlePressIn("settings")}
-            onPressOut={() => handlePressOut("settings")}
-            onPress={() => {
-              setNewNotification(false)
-              navigation.navigate("NotificationsTab")
-            }}
-          >
-            <Ionicons name="notifications-outline" size={28} color="white" />
-            {isNewNotification ? ( // This is the red dot for notifications
-              <View
-                style={{
-                  position: "absolute",
-                  right: 0,
-                  top: 0,
-                  backgroundColor: "red",
-                  borderRadius: 10,
-                  width: 10,
-                  height: 10,
-                }}
-              />
-            ) : null}
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="mx-2"
             onPressIn={() => handlePressIn("message")}
             onPressOut={() => handlePressOut("message")}
             onPress={() => {
