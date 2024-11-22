@@ -18,10 +18,12 @@ import getUpcomingEvents from "../../supabaseFunctions/getFuncs/getUpcomingEvent
 import { FlashList } from "@shopify/flash-list"
 import { useLocationContext } from "../../context/LocationContext"
 import { useFocusEffect } from "@react-navigation/native"
+import { useAuth } from "../../supabaseFunctions/authcontext"
 
 const tabs = ["All Events", "Upcoming"]
 
 const ViewAllEvents = () => {
+  const { userProfile } = useAuth()
   const [searchText, setSearchText] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(true)
   const [allEvents, setAllEvents] = useState<Events[] | null>([])
@@ -59,6 +61,7 @@ const ViewAllEvents = () => {
         eventCoverPhoto={item.event_cover_photo}
         eventPrice={item.price}
         eventAddress={item.location}
+        userLocation={userProfile?.location}
       />
     </View>
   )

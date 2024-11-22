@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons"
 import { FontAwesome5 } from "@expo/vector-icons"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
 import formatEventTime from "../../../utilFunctions/formatEventTime"
+import getDistanceFromUserWithAddress from "../../../utilFunctions/getDistanceFromUserWithAddress"
 
 type EventCardProps = {
   eventId: number
@@ -25,6 +26,7 @@ type EventCardProps = {
   eventPrice: number | null
   eventCompatibility?: number | null
   eventAddress: string | null
+  userLocation: any
 }
 
 const EventCard = ({
@@ -36,8 +38,10 @@ const EventCard = ({
   eventAddress,
   eventPrice,
   eventCompatibility,
+  userLocation,
 }: EventCardProps) => {
   const [loading, setLoading] = useState<boolean>(false)
+  const [distance, setDistance] = useState<number>(0)
   const [isPressed, setIsPressed] = useState<boolean>(false)
   const navigation = useNavigation<NavigationType>()
 
@@ -47,6 +51,19 @@ const EventCard = ({
   const handlePressOut = () => {
     setIsPressed(false)
   }
+
+  useEffect(() => {
+    if (eventAddress && userLocation) {
+      const getDistance = async () => {
+        const distance = await getDistanceFromUserWithAddress(
+          userLocation,
+          eventAddress
+        )
+        setDistance(distance)
+      }
+      getDistance()
+    }
+  }, [eventAddress, userLocation])
 
   return (
     <Skeleton show={loading}>
@@ -115,7 +132,9 @@ const EventCard = ({
               {eventAddress && (
                 <View className="flex-row items-center gap-1 p-1">
                   <Ionicons name="location-outline" size={12} color="white" />
-                  <Text className="text-xs text-white">{eventAddress}</Text>
+                  <Text className="text-xs text-white">
+                    {distance.toFixed(1)} km {eventAddress}
+                  </Text>
                 </View>
               )}
             </View>

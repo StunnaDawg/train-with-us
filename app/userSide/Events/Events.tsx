@@ -18,7 +18,7 @@ import { useAuth } from "../../supabaseFunctions/authcontext"
 import Ionicons from "@expo/vector-icons/Ionicons"
 
 const EventsComponent = () => {
-  const { user } = useAuth()
+  const { user, userProfile } = useAuth()
   const [loading, setLoading] = useState<boolean>(false)
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const [page, setPage] = useState<number>(0)
@@ -35,7 +35,7 @@ const EventsComponent = () => {
   const fetchEvents = async (pageState: number) => {
     setLoading(true)
     if (user?.id === undefined) return
-    getCompatibleEvents(
+    await getCompatibleEvents(
       user?.id,
       page,
       setLoading,
@@ -56,20 +56,24 @@ const EventsComponent = () => {
   }
 
   const renderItem = useCallback(
-    ({ item }: { item: EventWithCompatibility }) => (
-      <View className="mt-1">
-        <EventCard
-          eventId={item.id}
-          title={item.event_title}
-          date={item.date}
-          communityId={item.community_host}
-          eventCoverPhoto={item.event_cover_photo}
-          eventPrice={item.price}
-          eventCompatibility={item.compatibility_score}
-          eventAddress={item.location}
-        />
-      </View>
-    ),
+    ({ item }: { item: EventWithCompatibility }) => {
+      console.log("EVENT RENDERED", item)
+      return (
+        <View key={item.id} className="mt-1">
+          <EventCard
+            eventId={item.id}
+            title={item.event_title}
+            date={item.date}
+            communityId={item.community_host}
+            eventCoverPhoto={item.event_cover_photo}
+            eventPrice={item.price}
+            eventCompatibility={item.compatibility_score}
+            eventAddress={item.location}
+            userLocation={userProfile?.location}
+          />
+        </View>
+      )
+    },
     []
   )
 
@@ -150,7 +154,7 @@ const EventsComponent = () => {
             </View>
           </View>
         </View>
-        <View className="items-center">
+        <View className="items-center pb-28">
           <FlatList
             showsVerticalScrollIndicator={false}
             initialNumToRender={10}
