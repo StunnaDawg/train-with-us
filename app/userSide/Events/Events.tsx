@@ -66,6 +66,7 @@ const EventsComponent = () => {
           eventCoverPhoto={item.event_cover_photo}
           eventPrice={item.price}
           eventCompatibility={item.compatibility_score}
+          eventAddress={item.location}
         />
       </View>
     ),
@@ -151,6 +152,7 @@ const EventsComponent = () => {
         </View>
         <View className="items-center">
           <FlatList
+            showsVerticalScrollIndicator={false}
             initialNumToRender={10}
             maxToRenderPerBatch={10}
             data={upcomingEvents}

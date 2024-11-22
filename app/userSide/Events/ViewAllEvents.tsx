@@ -58,6 +58,7 @@ const ViewAllEvents = () => {
         communityId={item.community_host}
         eventCoverPhoto={item.event_cover_photo}
         eventPrice={item.price}
+        eventAddress={item.location}
       />
     </View>
   )
