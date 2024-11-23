@@ -9,8 +9,7 @@ import {
 import React, { useCallback, useEffect, useState } from "react"
 import ViewEventTitle from "./components/ViewEventTitle"
 import ViewEventDetails from "./components/ViewEventDetails"
-import AboutViewEvent from "./components/AboutViewEvent"
-import Checkout from "./components/Checkout"
+
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
@@ -18,12 +17,8 @@ import { Events, Profile } from "../../@types/supabaseTypes"
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native"
 import getSingleEvent from "../../supabaseFunctions/getFuncs/getSingleEvent"
 import checkIfAttending from "../../supabaseFunctions/checkIfAttending"
-import BackButton from "../../components/BackButton"
-import LeaveEvent from "./components/LeaveEvent"
-import { Text } from "react-native"
-import ShareButton from "../../components/ShareButton"
 import Spacer from "../../components/Spacer"
-import CommunityEventCard from "./components/CommunityEventCard"
+
 import { MotiView } from "moti"
 import { Skeleton } from "moti/skeleton"
 import getEventAttendees from "../../supabaseFunctions/getFuncs/getEventAttendees"
@@ -134,7 +129,7 @@ const ViewEvent = () => {
               <View className="">
                 <ViewEventDetails
                   date={event?.date}
-                  eventId={eventId}
+                  event={event}
                   location={event?.location}
                   price={event?.price}
                   attendanceLimit={event?.event_limit}
@@ -144,22 +139,6 @@ const ViewEvent = () => {
                 />
               </View>
             </ScrollView>
-
-            {!isAttending && !isWaitList ? (
-              <Checkout // this is used to buy a ticket and attend the event not yet implemented just adds user to events
-                ticketPrice={event?.price ? event.price : 0}
-                event={event}
-                eventProfiles={eventProfiles}
-                setIsWaitList={setIsWaitList}
-              />
-            ) : (
-              <LeaveEvent
-                eventId={eventId}
-                userId={user?.id}
-                isWaitList={isWaitList}
-                setIsWaitList={setIsWaitList}
-              />
-            )}
           </>
         )}
       </View>
