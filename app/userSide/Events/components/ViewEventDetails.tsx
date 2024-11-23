@@ -1,14 +1,8 @@
 import { View, Text, Platform, Pressable } from "react-native"
 import React, { useEffect, useState } from "react"
-import AddEventToCalendar from "./AddEventToCalendar"
-import { FontAwesome6 } from "@expo/vector-icons"
-import openInMaps from "../../../utilFunctions/openMaps"
-import openInGoogleMaps from "../../../utilFunctions/openGoogleMaps"
-import getEventAttendees from "../../../supabaseFunctions/getFuncs/getEventAttendees"
 import { Profile } from "../../../@types/supabaseTypes"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
-import SinglePicCommunity from "../../../components/SinglePicCommunity"
 
 type ViewEventDetailsProps = {
   date: string | null | undefined
@@ -18,6 +12,7 @@ type ViewEventDetailsProps = {
   attendanceLimit: number | null | undefined
   eventProfiles: Profile[] | null
   waitlistProfiles: Profile[] | null
+  description: string | null | undefined
 }
 
 const ViewEventDetails = ({
@@ -55,147 +50,29 @@ const ViewEventDetails = ({
   }
 
   return (
-    <View>
-      <AddEventToCalendar eventId={eventId} date={date} />
-
-      {/* Location */}
-      {Platform.OS === "ios" ? (
-        <Pressable
-          className={`${isPressed["location"] ? "opacity-50" : null}`}
-          onPressIn={() => handlePressIn("location")}
-          onPressOut={() => handlePressOut("location")}
-          onPress={() => {
-            if (location) {
-              openInMaps(location)
-            }
-          }}
-        >
-          <View className=" mb-2 mt-2">
-            <View className="flex flex-row justify-between items-center">
-              <View className="flex flex-row items-center">
-                <FontAwesome6 name="location-arrow" size={20} color="white" />
-                <Text className="font-bold text-sm text-white mx-1 ">
-                  {/* {String.fromCodePoint("&#128205")}{" "} */}
-                  {location ? location : "No Street Address"}
-                </Text>
-              </View>
-
-              <FontAwesome6 name="chevron-right" size={20} color="white" />
-            </View>
-          </View>
-        </Pressable>
-      ) : (
-        <Pressable
-          className={`${isPressed["locationAndroid"] ? "opacity-50" : null}`}
-          onPressIn={() => handlePressIn("locationAndroid")}
-          onPressOut={() => handlePressOut("locationAndroid")}
-          onPress={() => {
-            if (location) {
-              openInGoogleMaps(location)
-            }
-          }}
-        >
-          <View className=" mb-1 mt-2">
-            <View className="flex flex-row justify-between items-center">
-              <View className="flex flex-row items-center">
-                <FontAwesome6 name="location-arrow" size={20} color="white" />
-                <Text className="font-bold text-sm text-white mx-1 ">
-                  {/* {String.fromCodePoint("&#128205")}{" "} */}
-                  {location ? location : "No Street Address"}
-                </Text>
-              </View>
-
-              <FontAwesome6 name="chevron-right" size={20} color="white" />
-            </View>
-          </View>
-        </Pressable>
-      )}
-
-      <View className="flex flex-row  justify-between items-center mb-2 mt-2">
+    <View className="flex flex-row justify-around">
+      <View className=" flex flex-row  flex-grow  bg-primary-300 rounded-lg px-2 py-1 mx-1">
         <View className="flex flex-row items-center">
-          <FontAwesome6 name="dollar-sign" size={20} color="white" />
-          <Text className="font-bold text-sm text-white mx-1  ">
-            {price === 0 ? "Free" : price?.toString()}
+          <Text className="text-white/80 text-sm font-bold">65 </Text>
+          <Text className="text-white/80 text-[10px] font-semibold">Going</Text>
+        </View>
+      </View>
+      <View className="flex flex-row  flex-grow  bg-blue-600 rounded-lg px-2 py-1 mx-1">
+        <View className="flex flex-row items-center">
+          <Text className="text-white/80 text-sm font-bold">10 </Text>
+          <Text className="text-white/80 text-[10px] font-semibold">
+            Friends
           </Text>
         </View>
       </View>
-
-      <Pressable
-        className={`${isPressed["attendees"] ? "opacity-50" : null}`}
-        onPressIn={() => handlePressIn("attendees")}
-        onPressOut={() => handlePressOut("attendees")}
-        onPress={() => {
-          navigation.navigate("ViewEventAttendees", { profile: eventProfiles })
-        }}
-      >
-        <View className="flex flex-row  justify-between items-center mb-1 mt-2">
-          <View>
-            <Text className="font-bold text-sm text-white mx-1  ">
-              Attendees{" "}
-              {attendanceLimit && eventProfiles
-                ? `(${eventProfiles?.length}/${attendanceLimit})`
-                : ""}
-            </Text>
-          </View>
-
-          <View className="flex flex-row items-center">
-            {displayProfiles?.map((profile) => (
-              <SinglePicCommunity
-                key={profile.id}
-                item={profile.profile_pic}
-                size={30}
-                avatarRadius={100}
-                noAvatarRadius={100}
-              />
-            ))}
-            <View>
-              {additionalCount && additionalCount > 0 ? (
-                <Text className="font-bold text-sm text-white mx-1  ">
-                  +{additionalCount} more
-                </Text>
-              ) : null}
-            </View>
-          </View>
+      <View className="flex flex-row  flex-grow bg-green-600 rounded-lg px-2 py-1 mx-1">
+        <View className="flex flex-row items-center">
+          <Text className="text-white/80 text-sm font-bold">8 </Text>
+          <Text className="text-white/80 text-[10px] font-semibold">
+            Matches
+          </Text>
         </View>
-      </Pressable>
-
-      <Pressable
-        className={`${isPressed["waitlist"] ? "opacity-50" : null}`}
-        onPressIn={() => handlePressIn("waitlist")}
-        onPressOut={() => handlePressOut("waitlist")}
-        onPress={() => {
-          navigation.navigate("ViewEventWaitlist", {
-            profile: waitlistProfiles,
-          })
-        }}
-      >
-        <View className="flex flex-row  justify-between items-center mb-1 mt-2">
-          <View>
-            <Text className="font-bold text-sm text-white mx-1  ">
-              Waitlist
-            </Text>
-          </View>
-
-          <View className="flex flex-row items-center">
-            {waitlistDisplayProfiles?.map((profile) => (
-              <SinglePicCommunity
-                key={profile.id}
-                item={profile.profile_pic}
-                size={30}
-                avatarRadius={100}
-                noAvatarRadius={100}
-              />
-            ))}
-            <View>
-              {additionalWaitlistCount && additionalWaitlistCount > 0 ? (
-                <Text className="font-bold text-sm text-white mx-1  ">
-                  +{additionalWaitlistCount} more
-                </Text>
-              ) : null}
-            </View>
-          </View>
-        </View>
-      </Pressable>
+      </View>
     </View>
   )
 }

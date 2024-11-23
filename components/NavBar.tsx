@@ -18,6 +18,7 @@ import parsePostGISPoint from "../app/utilFunctions/parsePostGISPoint"
 import * as Location from "expo-location"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import BackButton from "../app/components/BackButton"
 
 type NavBarProps = {
   navBar?: boolean
@@ -26,6 +27,7 @@ type NavBarProps = {
   bgColour?: string
   textColour?: string
   iconColour?: string
+  event?: boolean
   showFriends: boolean
   showSettings?: boolean
   showSearchCommunities: boolean
@@ -38,6 +40,7 @@ const NavBar = ({
   userProp,
   bgColour,
   textColour,
+  event = false,
   iconColour,
   showFriends,
   showSettings = false,
@@ -115,38 +118,44 @@ const NavBar = ({
         }}
         className={`flex flex-row justify-between items-center bg-primary-900`}
       >
-        <View className="flex flex-row items-center">
-          <Pressable onPress={() => navigationTab.navigate("")}>
-            <SinglePicCommunity
-              size={50}
-              avatarRadius={100}
-              noAvatarRadius={100}
-              item={userProfile?.profile_pic}
-            />
-          </Pressable>
-          <View className="flex flex-row justify-center m-1">
-            <View>
-              <View className="flex flex-row justify-center">
-                <View className="mx-1">
-                  <Text className={`font-bold text-xl ${textColour}`}>
-                    {userProfile?.first_name}
+        {!event ? (
+          <View className="flex flex-row items-center">
+            <Pressable onPress={() => navigationTab.navigate("")}>
+              <SinglePicCommunity
+                size={50}
+                avatarRadius={100}
+                noAvatarRadius={100}
+                item={userProfile?.profile_pic}
+              />
+            </Pressable>
+            <View className="flex flex-row justify-center m-1">
+              <View>
+                <View className="flex flex-row justify-center">
+                  <View className="mx-1">
+                    <Text className={`font-bold text-xl ${textColour}`}>
+                      {userProfile?.first_name}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text className={`font-bold text-xl ${textColour}`}>
+                      {userProfile?.last_name}
+                    </Text>
+                  </View>
+                </View>
+                <View className="flex flex-row justify-start items-center">
+                  <Entypo name="location-pin" size={24} color="blue" />
+                  <Text className={`font-bold text-sm ${textColour}`}>
+                    {cityName}
                   </Text>
                 </View>
-                <View>
-                  <Text className={`font-bold text-xl ${textColour}`}>
-                    {userProfile?.last_name}
-                  </Text>
-                </View>
-              </View>
-              <View className="flex flex-row justify-start items-center">
-                <Entypo name="location-pin" size={24} color="blue" />
-                <Text className={`font-bold text-sm ${textColour}`}>
-                  {cityName}
-                </Text>
               </View>
             </View>
           </View>
-        </View>
+        ) : (
+          <View className="flex flex-row justify-center m-1 items-center">
+            <BackButton size={22} colour="white" />
+          </View>
+        )}
         <View className="flex flex-row justify-center mx-2 items-center">
           <TouchableOpacity
             className="mx-2"

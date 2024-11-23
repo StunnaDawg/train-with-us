@@ -29,6 +29,7 @@ import { Skeleton } from "moti/skeleton"
 import getEventAttendees from "../../supabaseFunctions/getFuncs/getEventAttendees"
 import checkIfWaitlisted from "../../supabaseFunctions/checkIfWaitlisted"
 import getWaitListUsers from "../../supabaseFunctions/getFuncs/getWaitlistUsers"
+import { NavBar } from "../../../components"
 
 const ViewEvent = () => {
   const [loading, setLoading] = useState<boolean>(true)
@@ -78,8 +79,16 @@ const ViewEvent = () => {
   }, [userProfile])
 
   return (
-    <View className="flex-1" style={{ backgroundColor: "#07182d" }}>
-      <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-primary-900">
+      <NavBar
+        textColour="text-white"
+        title={event?.event_title || "Event"}
+        showFriends={false}
+        showSearchCommunities={false}
+        searchUsers={false}
+        event={true}
+      />
+      <View className="flex-1 bg-primary-700">
         {loading ? (
           <View>
             <MotiView
@@ -111,33 +120,18 @@ const ViewEvent = () => {
           </View>
         ) : (
           <>
-            <View className="flex flex-row justify-between items-center mx-3 p-2">
-              <BackButton size={22} colour="white" />
-              <Text className="text-white text-lg font-bold">
-                {event?.event_title || "Event"}
-              </Text>
-              <ShareButton eventId={eventId} userId={user?.id} />
-            </View>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              className="flex-1"
+              className="flex-1 px-2"
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
             >
               <View>
-                <ViewEventTitle
-                  userId={user?.id}
-                  eventId={event?.id}
-                  title={event?.event_title}
-                  date={event?.date}
-                  eventCommunityTitle={event?.community_host_name}
-                  eventPhoto={event?.event_cover_photo}
-                  eventStyle={event?.event_style}
-                />
+                <ViewEventTitle title={event?.event_title} />
               </View>
 
-              <View className="mx-5 mt-2">
+              <View className="">
                 <ViewEventDetails
                   date={event?.date}
                   eventId={eventId}
@@ -146,21 +140,9 @@ const ViewEvent = () => {
                   attendanceLimit={event?.event_limit}
                   eventProfiles={eventProfiles}
                   waitlistProfiles={waitlistProfiles}
+                  description={event?.event_description}
                 />
               </View>
-
-              <View>
-                <AboutViewEvent description={event?.event_description} />
-              </View>
-
-              {event?.community_host ? (
-                <View className="mx-2">
-                  <CommunityEventCard
-                    communityId={event?.community_host}
-                    userId={user?.id}
-                  />
-                </View>
-              ) : null}
             </ScrollView>
 
             {!isAttending && !isWaitList ? (
@@ -180,8 +162,8 @@ const ViewEvent = () => {
             )}
           </>
         )}
-      </SafeAreaView>
-    </View>
+      </View>
+    </SafeAreaView>
   )
 }
 
