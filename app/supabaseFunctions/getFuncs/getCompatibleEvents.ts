@@ -18,7 +18,7 @@ const getCompatibleEvents = async (
     const to = from + PAGE_SIZE - 1
 
     const { data: events, error } = await supabase
-      .rpc("get_compatible_events", { user_id: userId })
+      .rpc("get_events_with_compatibility", { user_id: userId })
       .range(from, to)
       .gte("date", currentDate)
 

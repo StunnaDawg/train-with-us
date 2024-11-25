@@ -1,202 +1,203 @@
-import { View, Text, Platform, Pressable } from "react-native"
+import { View, Text } from "react-native"
 import React, { useEffect, useState } from "react"
-import AddEventToCalendar from "./AddEventToCalendar"
-import { FontAwesome6 } from "@expo/vector-icons"
-import openInMaps from "../../../utilFunctions/openMaps"
-import openInGoogleMaps from "../../../utilFunctions/openGoogleMaps"
-import getEventAttendees from "../../../supabaseFunctions/getFuncs/getEventAttendees"
-import { Profile } from "../../../@types/supabaseTypes"
+import { Events, Profile } from "../../../@types/supabaseTypes"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
-import SinglePicCommunity from "../../../components/SinglePicCommunity"
+import Checkout from "./Checkout"
+import Ionicons from "@expo/vector-icons/Ionicons"
+import { useLocationContext } from "../../../context/LocationContext"
+import parsePostGISPoint from "../../../utilFunctions/parsePostGISPoint"
+import * as Location from "expo-location"
+import getDistanceFromUserWithAddress from "../../../utilFunctions/getDistanceFromUserWithAddress"
 
 type ViewEventDetailsProps = {
   date: string | null | undefined
-  eventId: number
+  event: Events | null
   location: string | null | undefined
   price: number | null | undefined
   attendanceLimit: number | null | undefined
   eventProfiles: Profile[] | null
   waitlistProfiles: Profile[] | null
+  description: string | null | undefined
+  userProfile: Profile | null | undefined
+}
+
+// Going to need to update data in backend to get the actual schedule
+// Add a section to add schedule instructions
+const ScheduleCard = () => {
+  return (
+    <View className="rounded-lg bg-primary-300 p-4">
+      <View className="flex flex-row justify-between items-center">
+        <View>
+          <View>
+            <Text className="text-white text-[14px] font-bold">Friday</Text>
+          </View>
+          <View>
+            <Text className="text-white/80 text-[12px] font-normal">
+              November, 23rd
+            </Text>
+          </View>
+        </View>
+        <View>
+          <Text className=" text-orange-500 text-[12px] font-normal">
+            8:00 PM - 10:00 PM
+          </Text>
+        </View>
+      </View>
+
+      <View className="my-4">
+        <View>
+          <View className="mb-2">
+            <Text className="text-white/80 text-[12px] font-normal">
+              - Check-in starts 30 minutes before the event
+            </Text>
+          </View>
+
+          <View className="mb-2">
+            <Text className="text-white/80 text-[12px] font-normal">
+              - Welcome and Walkthrough
+            </Text>
+          </View>
+
+          <View className="mb-2">
+            <Text className="text-white/80 text-[12px] font-normal">
+              - Socializing and Networking
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  )
 }
 
 const ViewEventDetails = ({
   date,
-  eventId,
+  event,
   location,
   price,
   attendanceLimit,
   eventProfiles,
   waitlistProfiles,
+  description,
+  userProfile,
 }: ViewEventDetailsProps) => {
   const navigation = useNavigation<NavigationType>()
-  const [loading, setLoading] = useState<boolean>(false)
-  const [isPressed, setIsPressed] = useState<{ [key: string]: boolean }>({})
-  const maxDisplayCount = 2
+  const [distance, setDistance] = useState<number | null>(null)
 
-  const displayProfiles =
-    eventProfiles && eventProfiles?.slice(0, maxDisplayCount)
-
-  const waitlistDisplayProfiles =
-    waitlistProfiles && waitlistProfiles?.slice(0, maxDisplayCount)
-
-  const additionalCount =
-    eventProfiles && eventProfiles!.length - maxDisplayCount
-
-  const additionalWaitlistCount =
-    waitlistProfiles && waitlistProfiles!.length - maxDisplayCount
-
-  const handlePressIn = (name: string) => {
-    setIsPressed((prev) => ({ ...prev, [name]: true }))
-  }
-
-  const handlePressOut = (name: string) => {
-    setIsPressed((prev) => ({ ...prev, [name]: false }))
-  }
+  useEffect(() => {
+    if (location && userProfile?.location) {
+      const getDistance = async () => {
+        const distance = await getDistanceFromUserWithAddress(
+          userProfile?.location,
+          location
+        )
+        setDistance(distance)
+      }
+      getDistance()
+    }
+  }, [location, userProfile?.location])
 
   return (
-    <View>
-      <AddEventToCalendar eventId={eventId} date={date} />
-
-      {/* Location */}
-      {Platform.OS === "ios" ? (
-        <Pressable
-          className={`${isPressed["location"] ? "opacity-50" : null}`}
-          onPressIn={() => handlePressIn("location")}
-          onPressOut={() => handlePressOut("location")}
-          onPress={() => {
-            if (location) {
-              openInMaps(location)
-            }
-          }}
-        >
-          <View className=" mb-2 mt-2">
-            <View className="flex flex-row justify-between items-center">
-              <View className="flex flex-row items-center">
-                <FontAwesome6 name="location-arrow" size={20} color="white" />
-                <Text className="font-bold text-sm text-white mx-1 ">
-                  {/* {String.fromCodePoint("&#128205")}{" "} */}
-                  {location ? location : "No Street Address"}
-                </Text>
-              </View>
-
-              <FontAwesome6 name="chevron-right" size={20} color="white" />
-            </View>
+    <>
+      <View className="flex flex-row justify-around">
+        <View className=" flex flex-row  flex-grow  bg-primary-300 rounded-lg px-2 py-1 mx-1">
+          <View className="flex flex-row items-center">
+            <Text className="text-white/80 text-sm font-bold">
+              {eventProfiles?.length}{" "}
+              <Text className="text-white/80 text-[10px] font-semibold">
+                {""}Going
+              </Text>
+              {""}
+            </Text>
           </View>
-        </Pressable>
-      ) : (
-        <Pressable
-          className={`${isPressed["locationAndroid"] ? "opacity-50" : null}`}
-          onPressIn={() => handlePressIn("locationAndroid")}
-          onPressOut={() => handlePressOut("locationAndroid")}
-          onPress={() => {
-            if (location) {
-              openInGoogleMaps(location)
-            }
-          }}
-        >
-          <View className=" mb-1 mt-2">
-            <View className="flex flex-row justify-between items-center">
-              <View className="flex flex-row items-center">
-                <FontAwesome6 name="location-arrow" size={20} color="white" />
-                <Text className="font-bold text-sm text-white mx-1 ">
-                  {/* {String.fromCodePoint("&#128205")}{" "} */}
-                  {location ? location : "No Street Address"}
-                </Text>
-              </View>
-
-              <FontAwesome6 name="chevron-right" size={20} color="white" />
-            </View>
+        </View>
+        <View className="flex flex-row  flex-grow  bg-blue-600 rounded-lg px-2 py-1 mx-1">
+          <View className="flex flex-row items-center">
+            {/* TODO: Add friends count using backend rpc function */}
+            <Text className="text-white/80 text-sm font-bold">
+              10{" "}
+              <Text className="text-white/80 text-[10px] font-semibold">
+                Friends
+              </Text>
+            </Text>
           </View>
-        </Pressable>
-      )}
-
-      <View className="flex flex-row  justify-between items-center mb-2 mt-2">
-        <View className="flex flex-row items-center">
-          <FontAwesome6 name="dollar-sign" size={20} color="white" />
-          <Text className="font-bold text-sm text-white mx-1  ">
-            {price === 0 ? "Free" : price?.toString()}
-          </Text>
+        </View>
+        <View className="flex flex-row  flex-grow bg-green-600 rounded-lg px-2 py-1 mx-1">
+          <View className="flex flex-row items-center">
+            {/* TODO: Add matches count */}
+            <Text className="text-white/80 text-sm font-bold">
+              8{" "}
+              <Text className="text-white/80 text-[10px] font-semibold">
+                Matches
+              </Text>
+            </Text>
+          </View>
         </View>
       </View>
 
-      <Pressable
-        className={`${isPressed["attendees"] ? "opacity-50" : null}`}
-        onPressIn={() => handlePressIn("attendees")}
-        onPressOut={() => handlePressOut("attendees")}
-        onPress={() => {
-          navigation.navigate("ViewEventAttendees", { profile: eventProfiles })
-        }}
-      >
-        <View className="flex flex-row  justify-between items-center mb-1 mt-2">
-          <View>
-            <Text className="font-bold text-sm text-white mx-1  ">
-              Attendees{" "}
-              {attendanceLimit && eventProfiles
-                ? `(${eventProfiles?.length}/${attendanceLimit})`
-                : ""}
+      <View className="my-4">
+        <Checkout
+          ticketPrice={price ? price : 0}
+          event={event}
+          eventProfiles={eventProfiles}
+        />
+      </View>
+
+      <View className="my-4">
+        <View className="flex">
+          <View className="mb-3">
+            <Text className="text-white/80 text-sm font-bold">
+              About This Event
             </Text>
           </View>
+          <View>
+            <Text className="text-white/80 text-xs font-normal">
+              {description}
+            </Text>
+          </View>
+        </View>
+      </View>
 
-          <View className="flex flex-row items-center">
-            {displayProfiles?.map((profile) => (
-              <SinglePicCommunity
-                key={profile.id}
-                item={profile.profile_pic}
-                size={30}
-                avatarRadius={100}
-                noAvatarRadius={100}
-              />
-            ))}
-            <View>
-              {additionalCount && additionalCount > 0 ? (
-                <Text className="font-bold text-sm text-white mx-1  ">
-                  +{additionalCount} more
-                </Text>
-              ) : null}
+      <View className="rounded-lg bg-primary-300 p-4">
+        <View>
+          <View>
+            <View className="mb-1">
+              <Text className="text-white text-[16px] font-bold">
+                {location}
+              </Text>
+            </View>
+
+            {/*<View className="mb-1">
+              <Text className="text-white/80 text-xs font-normal">
+                {location}
+              </Text>
+            </View> */}
+
+            <View className="flex flex-row items-center mb-1">
+              <Ionicons name="location-outline" size={16} color="white" />
+              <Text className="text-white/80 text-xs font-normal">
+                {distance ? distance.toFixed(1) : 0} km away
+              </Text>
             </View>
           </View>
         </View>
-      </Pressable>
+      </View>
 
-      <Pressable
-        className={`${isPressed["waitlist"] ? "opacity-50" : null}`}
-        onPressIn={() => handlePressIn("waitlist")}
-        onPressOut={() => handlePressOut("waitlist")}
-        onPress={() => {
-          navigation.navigate("ViewEventWaitlist", {
-            profile: waitlistProfiles,
-          })
-        }}
-      >
-        <View className="flex flex-row  justify-between items-center mb-1 mt-2">
-          <View>
-            <Text className="font-bold text-sm text-white mx-1  ">
-              Waitlist
-            </Text>
-          </View>
-
-          <View className="flex flex-row items-center">
-            {waitlistDisplayProfiles?.map((profile) => (
-              <SinglePicCommunity
-                key={profile.id}
-                item={profile.profile_pic}
-                size={30}
-                avatarRadius={100}
-                noAvatarRadius={100}
-              />
-            ))}
-            <View>
-              {additionalWaitlistCount && additionalWaitlistCount > 0 ? (
-                <Text className="font-bold text-sm text-white mx-1  ">
-                  +{additionalWaitlistCount} more
-                </Text>
-              ) : null}
-            </View>
-          </View>
+      <View className="my-4">
+        <View className="mb-3">
+          <Text className="text-white/80 text-xs font-bold">Schedule</Text>
         </View>
-      </Pressable>
-    </View>
+        <ScheduleCard />
+      </View>
+
+      <View className="my-4">
+        <Checkout
+          ticketPrice={price ? price : 0}
+          event={event}
+          eventProfiles={eventProfiles}
+        />
+      </View>
+    </>
   )
 }
 

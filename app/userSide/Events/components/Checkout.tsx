@@ -14,17 +14,12 @@ type CheckoutProps = {
   ticketPrice: number
   event: Events | null
   eventProfiles: Profile[] | null
-  setIsWaitList: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Checkout = ({
-  ticketPrice,
-  event,
-  eventProfiles,
-  setIsWaitList,
-}: CheckoutProps) => {
+const Checkout = ({ ticketPrice, event, eventProfiles }: CheckoutProps) => {
   const [currentUser, setCurrentUser] = useState<Profile | null>({} as Profile)
   const [eventHostState, setEventHost] = useState<Profile | null>({} as Profile)
+  const [isWaitList, setIsWaitList] = useState<boolean>(false)
   const { user } = useAuth()
   const navigation = useNavigation<NavigationType>()
   const [isPressed, setIsPressed] = useState<boolean>(false)
@@ -178,37 +173,42 @@ const Checkout = ({
   }, [event?.event_host])
 
   return (
-    <View className="flex flex-row justify-center">
-      <View className="items-center">
-        {event?.event_limit !== eventProfiles?.length ? (
-          <Pressable
-            onPressIn={handleOnPressIn}
-            onPressOut={handleOnPressOut}
-            onPress={() => {
-              alert()
-            }}
-            className={` ${
-              isPressed ? "bg-slate-500" : "bg-white"
-            } border rounded-lg px-20 my-2 py-2`}
-          >
-            <Text className="font-bold text-sm">
-              {ticketPrice > 0 ? "Purchase Ticket" : "RVSP for Event"}
-            </Text>
-          </Pressable>
-        ) : (
-          <Pressable
-            onPressIn={handleOnPressIn}
-            onPressOut={handleOnPressOut}
-            onPress={() => {
-              waitlistAlert()
-            }}
-            className={` ${
-              isPressed ? "bg-slate-500" : "bg-white"
-            } border rounded-lg px-20 my-2 py-2`}
-          >
-            <Text className="font-bold text-sm">Join WaitList</Text>
-          </Pressable>
-        )}
+    <View className="flex flex-row justify-between bg-primary-300 rounded-lg p-6">
+      <View>
+        <View className="flex flex-row items-center">
+          <Text className="text-[10px] font-semibold text-white/80">Price</Text>
+        </View>
+        <View className="flex flex-row items-center">
+          <Text className="text-white/80 text-xl font-semibold">
+            {ticketPrice ? "$" + ticketPrice : "Free"}
+          </Text>
+        </View>
+      </View>
+      <View className="flex flex-row items-center">
+        <Pressable
+          className="mx-1 bg-yellow-200 rounded-lg px-2 py-2"
+          onPressIn={handleOnPressIn}
+          onPressOut={handleOnPressOut}
+          onPress={() => {
+            alert()
+          }}
+        >
+          <Text className="font-semibold text-xs text-yellow-600">
+            Interested
+          </Text>
+        </Pressable>
+        <Pressable
+          className="mx-1 bg-blue-600 rounded-lg px-2 py-2"
+          onPressIn={handleOnPressIn}
+          onPressOut={handleOnPressOut}
+          onPress={() => {
+            alert()
+          }}
+        >
+          <Text className="font-semibold text-xs text-white/80">
+            Register Now
+          </Text>
+        </Pressable>
       </View>
     </View>
   )
