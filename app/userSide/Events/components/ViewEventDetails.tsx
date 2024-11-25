@@ -1,10 +1,14 @@
 import { View, Text } from "react-native"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Events, Profile } from "../../../@types/supabaseTypes"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import Checkout from "./Checkout"
 import Ionicons from "@expo/vector-icons/Ionicons"
+import { useLocationContext } from "../../../context/LocationContext"
+import parsePostGISPoint from "../../../utilFunctions/parsePostGISPoint"
+import * as Location from "expo-location"
+import getDistanceFromUserWithAddress from "../../../utilFunctions/getDistanceFromUserWithAddress"
 
 type ViewEventDetailsProps = {
   date: string | null | undefined
@@ -15,8 +19,11 @@ type ViewEventDetailsProps = {
   eventProfiles: Profile[] | null
   waitlistProfiles: Profile[] | null
   description: string | null | undefined
+  userProfile: Profile | null | undefined
 }
 
+// Going to need to update data in backend to get the actual schedule
+// Add a section to add schedule instructions
 const ScheduleCard = () => {
   return (
     <View className="rounded-lg bg-primary-300 p-4">
@@ -72,56 +79,57 @@ const ViewEventDetails = ({
   eventProfiles,
   waitlistProfiles,
   description,
+  userProfile,
 }: ViewEventDetailsProps) => {
   const navigation = useNavigation<NavigationType>()
-  const [loading, setLoading] = useState<boolean>(false)
-  const [isPressed, setIsPressed] = useState<{ [key: string]: boolean }>({})
-  const maxDisplayCount = 2
+  const [distance, setDistance] = useState<number | null>(null)
 
-  const displayProfiles =
-    eventProfiles && eventProfiles?.slice(0, maxDisplayCount)
-
-  const waitlistDisplayProfiles =
-    waitlistProfiles && waitlistProfiles?.slice(0, maxDisplayCount)
-
-  const additionalCount =
-    eventProfiles && eventProfiles!.length - maxDisplayCount
-
-  const additionalWaitlistCount =
-    waitlistProfiles && waitlistProfiles!.length - maxDisplayCount
-
-  const handlePressIn = (name: string) => {
-    setIsPressed((prev) => ({ ...prev, [name]: true }))
-  }
-
-  const handlePressOut = (name: string) => {
-    setIsPressed((prev) => ({ ...prev, [name]: false }))
-  }
+  useEffect(() => {
+    if (location && userProfile?.location) {
+      const getDistance = async () => {
+        const distance = await getDistanceFromUserWithAddress(
+          userProfile?.location,
+          location
+        )
+        setDistance(distance)
+      }
+      getDistance()
+    }
+  }, [location, userProfile?.location])
 
   return (
     <>
       <View className="flex flex-row justify-around">
         <View className=" flex flex-row  flex-grow  bg-primary-300 rounded-lg px-2 py-1 mx-1">
           <View className="flex flex-row items-center">
-            <Text className="text-white/80 text-sm font-bold">65 </Text>
-            <Text className="text-white/80 text-[10px] font-semibold">
-              Going
+            <Text className="text-white/80 text-sm font-bold">
+              {eventProfiles?.length}{" "}
+              <Text className="text-white/80 text-[10px] font-semibold">
+                {""}Going
+              </Text>
+              {""}
             </Text>
           </View>
         </View>
         <View className="flex flex-row  flex-grow  bg-blue-600 rounded-lg px-2 py-1 mx-1">
           <View className="flex flex-row items-center">
-            <Text className="text-white/80 text-sm font-bold">10 </Text>
-            <Text className="text-white/80 text-[10px] font-semibold">
-              Friends
+            {/* TODO: Add friends count using backend rpc function */}
+            <Text className="text-white/80 text-sm font-bold">
+              10{" "}
+              <Text className="text-white/80 text-[10px] font-semibold">
+                Friends
+              </Text>
             </Text>
           </View>
         </View>
         <View className="flex flex-row  flex-grow bg-green-600 rounded-lg px-2 py-1 mx-1">
           <View className="flex flex-row items-center">
-            <Text className="text-white/80 text-sm font-bold">8 </Text>
-            <Text className="text-white/80 text-[10px] font-semibold">
-              Matches
+            {/* TODO: Add matches count */}
+            <Text className="text-white/80 text-sm font-bold">
+              8{" "}
+              <Text className="text-white/80 text-[10px] font-semibold">
+                Matches
+              </Text>
             </Text>
           </View>
         </View>
@@ -155,20 +163,20 @@ const ViewEventDetails = ({
           <View>
             <View className="mb-1">
               <Text className="text-white text-[16px] font-bold">
-                Spartan Grounds
-              </Text>
-            </View>
-
-            <View className="mb-1">
-              <Text className="text-white/80 text-xs font-normal">
                 {location}
               </Text>
             </View>
 
+            {/*<View className="mb-1">
+              <Text className="text-white/80 text-xs font-normal">
+                {location}
+              </Text>
+            </View> */}
+
             <View className="flex flex-row items-center mb-1">
               <Ionicons name="location-outline" size={16} color="white" />
               <Text className="text-white/80 text-xs font-normal">
-                8.0 km away
+                {distance ? distance.toFixed(1) : 0} km away
               </Text>
             </View>
           </View>

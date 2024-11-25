@@ -28,8 +28,7 @@ import { NavBar } from "../../../components"
 
 const ViewEvent = () => {
   const [loading, setLoading] = useState<boolean>(true)
-  const { user } = useAuth()
-  const [userProfile, setUserProfile] = useState<Profile | null>(null)
+  const { userProfile } = useAuth()
   const [isAttending, setIsAttending] = useState<boolean>(false)
   const [isWaitList, setIsWaitList] = useState<boolean>(false)
   const [event, setEvent] = useState<Events | null>(null)
@@ -47,14 +46,6 @@ const ViewEvent = () => {
     setTimeout(() => {
       setRefreshing(false)
     }, 2000)
-  }, [])
-
-  useEffect(() => {
-    const getUser = async () => {
-      if (!user) return
-      await useCurrentUser(user?.id, setUserProfile)
-    }
-    getUser()
   }, [])
 
   useEffect(() => {
@@ -136,6 +127,7 @@ const ViewEvent = () => {
                   eventProfiles={eventProfiles}
                   waitlistProfiles={waitlistProfiles}
                   description={event?.event_description}
+                  userProfile={userProfile}
                 />
               </View>
             </ScrollView>
