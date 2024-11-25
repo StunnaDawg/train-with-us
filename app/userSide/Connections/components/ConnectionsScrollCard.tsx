@@ -6,6 +6,7 @@ import {
   Dimensions,
   ImageBackground,
   TouchableOpacity,
+  Pressable,
 } from "react-native"
 import React, {
   Dispatch,
@@ -17,6 +18,7 @@ import React, {
 import { FontAwesome6 } from "@expo/vector-icons"
 import { Profile } from "../../../@types/supabaseTypes"
 import ActivityTags from "../../../components/AcvitivityTags"
+import { FontAwesome5 } from "@expo/vector-icons"
 import calculateAge from "../../../utilFunctions/calculateAge"
 import MessageButton from "./MessageButton"
 import supabase from "../../../../lib/supabase"
@@ -110,102 +112,64 @@ const ConnectionsScrollCard = ({
             ? { uri: avatarUrl }
             : require("../../../../assets/images/TWU-Logo.png")
         }
-        style={styles.imageBackground}
-        imageStyle={styles.image} // Style for the image inside the ImageBackground
+        className="flex-1 "
       >
-        <View style={styles.overlay} />
-
-        {/* Top Section */}
-        <View style={styles.topSection}>
-          <Text className="font-bold text-2xl text-white">
-            {profile.first_name} {profile.last_name}
-          </Text>
-          <Text className="font-bold text-3xl text-center mx-1 text-white">
-            {calculateAge(profile.birthday)}
-          </Text>
-        </View>
-
-        {/* Middle Section */}
-        <View style={styles.middleSection}>
-          <View className="items-center">
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("ViewFullUserProfile", { user: profile })
-              }}
-              className="bg-white rounded-full w-16 h-10 items-center justify-center shadow-md"
-            >
-              <FontAwesome6 name="chevron-right" size={26} color="#07182d" />
-            </TouchableOpacity>
-            <MessageButton
-              setLoading={setLoading}
-              loading={loading}
-              profileId={profile?.id}
-              coach={false}
-              profilePic={profile?.profile_pic || ""}
-            />
-          </View>
-        </View>
-
         {/* Bottom Section */}
-        <View style={styles.bottomSection}>
-          {profile.primary_gym ? (
-            <View>
-              <Text className="text-white font-bold">{communityTitle}</Text>
+        <View className="flex-1 justify-end">
+          <View className=" rounded-t-2xl bg-primary-700 p-6">
+            <View className="flex-row justify-between items-center ">
+              <View>
+                <Text className=" text-4xl text-white">
+                  {profile.first_name}
+                </Text>
+                <Text className=" text-4xl text-white">
+                  {profile.last_name}
+                </Text>
+              </View>
+              <View className="flex-row items-center">
+                <Text className="text-white font-semibold">
+                  {calculateAge(profile.birthday)}
+                </Text>
+              </View>
             </View>
-          ) : null}
-          <View className="m-2">
-            <Text className="text-white font-bold">{profile.about}</Text>
-          </View>
+            <View className="flex-row justify-between">
+              <Text className="text-white/70 font-medium">
+                "{profile.about}"
+              </Text>
+            </View>
 
-          <ScrollView
-            showsHorizontalScrollIndicator={false}
-            horizontal={true}
-            className="mt-1"
-          >
-            {profile?.activities && profile.activities.length > 0
-              ? profile.activities.map((tag) => (
-                  <View key={tag} className="mb-1">
-                    <ActivityTags activity={`${tag}`} />
-                  </View>
-                ))
-              : null}
-          </ScrollView>
+            <View
+              className={`flex-row justify-between items-center mt-2 ${
+                windowHeight < 700 ? "pb-14" : "pb-20"
+              }`}
+            >
+              <Pressable className="bg-blue-600 p-1 rounded-lg flex-row items-center">
+                <FontAwesome5 name="user" size={16} color="white" />
+                <Text className="text-white text-xs mx-1 font-semibold">
+                  View Profile
+                </Text>
+              </Pressable>
+
+              <View className="flex flex-row items-center">
+                <Pressable className="bg-primary-300 p-1 rounded-lg flex-row items-center mr-2">
+                  <FontAwesome5 name="running" size={16} color="green" />
+                  <Text className="text-green-400 text-sm mx-1 font-semibold">
+                    6
+                  </Text>
+                </Pressable>
+                <Pressable className="bg-primary-300 p-1 rounded-lg flex-row items-center">
+                  <FontAwesome5 name="fire-alt" size={16} color="green" />
+                  <Text className="text-green-400 text-sm mx-1 font-semibold">
+                    98%
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
         </View>
       </ImageBackground>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  imageBackground: {
-    flex: 1,
-    justifyContent: "space-between",
-  },
-  image: {
-    borderRadius: 10,
-    objectFit: "cover",
-    opacity: 0.8,
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  topSection: {
-    marginHorizontal: 15,
-    marginTop: 50,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  middleSection: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    marginRight: 20,
-    marginTop: 20,
-  },
-  bottomSection: {
-    marginHorizontal: 15,
-    marginBottom: 100,
-  },
-})
 
 export default React.memo(ConnectionsScrollCard)
