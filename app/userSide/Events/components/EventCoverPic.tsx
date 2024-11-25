@@ -106,7 +106,6 @@ export default function EventCoverPic({
       {!loading && avatarUrl !== "" ? (
         <View>
           <Image
-            className="rounded-xl"
             source={{ uri: avatarUrl }}
             accessibilityLabel="Avatar"
             style={[avatarSize, styles.avatar, styles.image]}
