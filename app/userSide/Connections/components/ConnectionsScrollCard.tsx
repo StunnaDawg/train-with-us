@@ -133,7 +133,7 @@ const ConnectionsScrollCard = ({
               </View>
             </View>
             <View className="flex-row justify-between">
-              <Text className="text-white/70 font-medium">
+              <Text className="text-white/70 font-medium text-xs">
                 "{profile.about}"
               </Text>
             </View>

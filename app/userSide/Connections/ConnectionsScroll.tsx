@@ -20,11 +20,12 @@ const ConnectionsScroll = () => {
   const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
   const [page, setPage] = useState(1) // Track the current page
 
-  const imageWidth = 363
-  const itemMargin = 0
+  const [hasMore, setHasMore] = useState(true) // Add this to track if more data is available
+  const [isLoading, setIsLoading] = useState(false)
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
+  const windowWidth = Dimensions.get("window").width
   const windowHeight = Dimensions.get("window").height
 
   const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
@@ -37,12 +38,50 @@ const ConnectionsScroll = () => {
     itemVisiblePercentThreshold: 50,
   }
 
+  const handleScroll = useCallback(
+    ({ nativeEvent }: any) => {
+      const { contentOffset, layoutMeasurement, contentSize } = nativeEvent
+
+      // Calculate how close to the end we are
+      const isCloseToEnd =
+        contentOffset.x + layoutMeasurement.width >=
+        contentSize.width - layoutMeasurement.width * 0.5 // Load when within 50% of the end
+
+      if (isCloseToEnd && !isLoading && hasMore) {
+        fetchMoreProfiles()
+      }
+    },
+    [isLoading, hasMore]
+  )
+
   const fetchMoreProfiles = async () => {
-    if (loadingMore || loading || !user) return // Prevent multiple fetches
-    setLoadingMore(true)
-    await getConnectionProfiles(setLoading, user.id, appendProfiles, page)
-    setPage((prevPage) => prevPage + 1)
-    setLoadingMore(false)
+    // Add more strict conditions for fetching
+    if (!user || isLoading || !hasMore || loadingMore) return
+
+    try {
+      setIsLoading(true)
+      setLoadingMore(true)
+
+      const newProfiles = await getConnectionProfiles(
+        setLoading,
+        user.id,
+        appendProfiles,
+        page
+      )
+
+      // Check if we received any new profiles
+      if (newProfiles && newProfiles.length === 0) {
+        setHasMore(false)
+        return
+      }
+
+      setPage((prevPage) => prevPage + 1)
+    } catch (error) {
+      console.error("Error fetching more profiles:", error)
+    } finally {
+      setIsLoading(false)
+      setLoadingMore(false)
+    }
   }
 
   const appendProfiles = (newProfiles: Profile[]) => {
@@ -67,9 +106,13 @@ const ConnectionsScroll = () => {
     fetchConnectionProfiles()
   }, [])
 
+  useEffect(() => {
+    fetchMoreProfiles()
+  }, [currentIndex])
+
   const renderCard = useCallback(({ item }: { item: Profile }) => {
     return (
-      <View style={{ height: windowHeight }}>
+      <View style={{ height: windowHeight, width: windowWidth }}>
         <ConnectionsScrollCard
           profile={item}
           loading={loading}
@@ -101,20 +144,20 @@ const ConnectionsScroll = () => {
         )}
       </View>
       <FlatList
+        horizontal={true}
         initialNumToRender={1}
         disableIntervalMomentum={true}
         snapToAlignment="center"
         pagingEnabled={true}
         decelerationRate="fast"
-        snapToInterval={windowHeight}
+        scrollEventThrottle={16}
+        snapToInterval={windowWidth}
         data={connectionProfiles}
         keyExtractor={cardKeyExtractor}
         renderItem={renderCard}
-        onEndReached={fetchMoreProfiles}
-        onEndReachedThreshold={0.5}
+        onScroll={handleScroll}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
-        showsVerticalScrollIndicator={false}
       />
     </View>
   )
