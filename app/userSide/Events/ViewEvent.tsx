@@ -13,7 +13,7 @@ import ViewEventDetails from "./components/ViewEventDetails"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { NavigationType, RootStackParamList } from "../../@types/navigation"
 import useCurrentUser from "../../supabaseFunctions/getFuncs/useCurrentUser"
-import { Events, Profile } from "../../@types/supabaseTypes"
+import { Communities, Events, Profile } from "../../@types/supabaseTypes"
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native"
 import getSingleEvent from "../../supabaseFunctions/getFuncs/getSingleEvent"
 import checkIfAttending from "../../supabaseFunctions/checkIfAttending"
@@ -25,6 +25,7 @@ import getEventAttendees from "../../supabaseFunctions/getFuncs/getEventAttendee
 import checkIfWaitlisted from "../../supabaseFunctions/checkIfWaitlisted"
 import getWaitListUsers from "../../supabaseFunctions/getFuncs/getWaitlistUsers"
 import { NavBar } from "../../../components"
+import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommunity"
 
 const ViewEvent = () => {
   const [loading, setLoading] = useState<boolean>(true)
@@ -37,6 +38,7 @@ const ViewEvent = () => {
   const [waitlistProfiles, setWaitlistProfiles] = useState<Profile[] | null>(
     null
   )
+  const [communityHost, setCommunityHost] = useState<Communities | null>(null)
   const route = useRoute<RouteProp<RootStackParamList, "ViewEvent">>()
   const eventId = route.params.eventId
   const colorMode = "dark"
@@ -63,6 +65,11 @@ const ViewEvent = () => {
     checkIfAttending(eventId, userProfile.id, setIsAttending)
     checkIfWaitlisted(eventId, userProfile.id, setIsWaitList)
   }, [userProfile])
+
+  useEffect(() => {
+    if (!event?.community_host) return
+    getSingleCommunity(setLoading, event.community_host, setCommunityHost)
+  }, [event])
 
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
@@ -114,7 +121,10 @@ const ViewEvent = () => {
               }
             >
               <View>
-                <ViewEventTitle title={event?.event_title} />
+                <ViewEventTitle
+                  title={event?.event_title}
+                  communityHost={communityHost}
+                />
               </View>
 
               <View className="">

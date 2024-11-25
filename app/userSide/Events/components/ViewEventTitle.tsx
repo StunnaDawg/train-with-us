@@ -2,12 +2,14 @@ import { View, Text, Dimensions } from "react-native"
 import React, { useEffect, useState } from "react"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import SinglePicCommunity from "../../../components/SinglePicCommunity"
+import { Communities } from "../../../@types/supabaseTypes"
 
 type ViewEventTitleProps = {
   title: string | null | undefined
+  communityHost: Communities | null
 }
 
-const ViewEventTitle = ({ title }: ViewEventTitleProps) => {
+const ViewEventTitle = ({ title, communityHost }: ViewEventTitleProps) => {
   return (
     <View>
       <View className=" my-5">
@@ -16,15 +18,17 @@ const ViewEventTitle = ({ title }: ViewEventTitleProps) => {
         </View>
 
         <View className="flex flex-row items-center">
-          <SinglePicCommunity
-            size={45}
-            avatarRadius={100}
-            noAvatarRadius={100}
-            item={""}
-          />
-          <View>
+          <View className="">
+            <SinglePicCommunity
+              size={45}
+              avatarRadius={100}
+              noAvatarRadius={100}
+              item={communityHost?.community_profile_pic}
+            />
+          </View>
+          <View className="ml-2">
             <Text className="text-white text-sm font-bold">
-              Blended Athletics
+              {communityHost?.community_title}
             </Text>
             <Text className="text-white text-[10px] underline">
               Your Primary Location
