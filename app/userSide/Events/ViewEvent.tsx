@@ -115,7 +115,7 @@ const ViewEvent = () => {
           <>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              className="flex-1 px-2"
+              className="flex-1"
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
@@ -124,10 +124,11 @@ const ViewEvent = () => {
                 <ViewEventTitle
                   title={event?.event_title}
                   communityHost={communityHost}
+                  event={event}
                 />
               </View>
 
-              <View className="">
+              <View className="px-2">
                 <ViewEventDetails
                   date={event?.date}
                   event={event}

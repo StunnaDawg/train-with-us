@@ -22,8 +22,7 @@ export default function EventCoverPic({
 }: SinglePicProps) {
   const [avatarUrl, setAvatarUrl] = useState<string>("")
   const [loading, setLoading] = useState<boolean>()
-  const screenWidth = Dimensions.get("window").width - 56
-  const avatarSize = { height: height, width: screenWidth }
+  const avatarSize = { height: height, width: width }
 
   useEffect(() => {
     readImage()
@@ -70,13 +69,13 @@ export default function EventCoverPic({
     avatar: {
       borderRadius: avatarRadius,
       overflow: "hidden",
-      maxWidth: screenWidth,
+      maxWidth: width,
     },
     image: {
       objectFit: "cover",
       paddingTop: 0,
       overflow: "hidden",
-      maxWidth: screenWidth,
+      maxWidth: width,
     },
     noImage: {
       backgroundColor: "#333",
@@ -102,7 +101,7 @@ export default function EventCoverPic({
       style={avatarSize}
     >
       {loading && (
-        <Skeleton colorMode={"dark"} radius={25} height={200} width={300} />
+        <Skeleton colorMode={"dark"} radius={0} height={height} width={width} />
       )}
       {!loading && avatarUrl !== "" ? (
         <View>
