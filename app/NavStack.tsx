@@ -108,66 +108,61 @@ import Waitlist from "./userSide/Events/components/Waitlist"
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<TabParamList>()
-const { width } = Dimensions.get("window")
 
 const UserFooter = () => {
   const insets = useSafeAreaInsets()
+  const { height } = Dimensions.get("window")
+  const tabBarHeight = height < 700 ? 65 : 85
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarStyle: {
-          height: 60,
-          borderRadius: 30,
-          position: "absolute",
-          bottom: 20,
-          left: (width - (width - 80)) / 2, // Center horizontally
-          right: (width - (width - 80)) / 2, // Center horizontally
-          width: width - 80, // Fixed width for the tab bar
+          height: tabBarHeight,
           backgroundColor: "white",
-          elevation: 10,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          position: "absolute",
+          bottom: 0,
+          paddingBottom: insets.bottom,
           shadowColor: "#000",
-          shadowOffset: { width: 0, height: 5 },
-          shadowOpacity: 0.3,
-          shadowRadius: 10,
-          paddingBottom: 0, // Remove any bottom padding
-          paddingTop: 0, // Remove any top padding
-          marginBottom: 0,
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
         },
         tabBarItemStyle: {
-          flex: 1,
-          alignContent: "center",
-          justifyContent: "center", // Center icons vertically
-          alignItems: "center",
+          paddingTop: 10,
         },
-        tabBarIconStyle: {
-          flex: 1,
-          alignContent: "center",
-          justifyContent: "center", // Ensure the icon itself is centered
-          alignItems: "center",
-        },
-
         headerShown: false,
-        tabBarShowLabel: false,
-        tabBarIcon: ({ color }) => {
+        tabBarIcon: ({ color, focused }) => {
           let iconName
 
           if (route.name === "Events") {
-            iconName = "calendar-day"
-          } else if (route.name === "Profile") {
-            iconName = "user-large"
+            iconName = "rocket"
           } else if (route.name === "Connections") {
-            iconName = "people-group"
+            iconName = "stopwatch"
           } else if (route.name === "Community") {
-            iconName = "link"
+            iconName = "users"
+          } else if (route.name === "Dashboard") {
+            iconName = "chart-line"
           }
 
-          return <FontAwesome6 name={iconName} size={20} color={color} />
+          return (
+            <FontAwesome6
+              name={iconName}
+              size={22}
+              color={focused ? "#4B6BFB" : "#64748B"}
+            />
+          )
         },
-        tabBarActiveTintColor: "#07182d",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: "#4B6BFB",
+        tabBarInactiveTintColor: "#64748B",
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: "500",
+        },
       })}
     >
-      <Tab.Screen name="Profile" component={ProfileView} />
+      <Tab.Screen name="Dashboard" component={ProfileView} />
       <Tab.Screen name="Events" component={EventsComponent} />
       <Tab.Screen name="Connections" component={ConnectionsScroll} />
       <Tab.Screen name="Community" component={CommunitiesDash} />
