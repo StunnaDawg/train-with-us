@@ -261,13 +261,35 @@ const ConnectionsScrollCard = ({
                 </>
               ) : (
                 // Detailed view
-                <ScrollView className="flex-1 space-y-4">
+                <ScrollView className="flex-1">
                   <Pressable
                     className="bg-primary-600 p-2 rounded-lg self-start mb-4"
                     onPress={toggleDetailView}
                   >
-                    <FontAwesome5 name="arrow-left" size={16} color="white" />
+                    <FontAwesome5 name="times" size={16} color="white" />
                   </Pressable>
+
+                  <View className="flex ">
+                    <View>
+                      <View className="flex flex-row items-center justify-between">
+                        <View>
+                          <Text className=" text-4xl text-white">
+                            {profile.first_name}
+                          </Text>
+                        </View>
+                        <View>
+                          <Text className="text-white font-semibold">
+                            {calculateAge(profile.birthday)}
+                          </Text>
+                        </View>
+                      </View>
+                      <View>
+                        <Text className=" text-4xl text-white">
+                          {profile.last_name}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
 
                   {/* Additional profile details */}
 
@@ -277,6 +299,14 @@ const ConnectionsScrollCard = ({
                       title="Activities"
                       string={null}
                       icon="person-running"
+                    />
+                  )}
+                  {profile.actvitiy_time && (
+                    <ProfileDetailsCard
+                      string={profile.actvitiy_time}
+                      title="Time spent in activities"
+                      stringArray={null}
+                      icon="clock"
                     />
                   )}
 
