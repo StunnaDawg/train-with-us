@@ -6,125 +6,108 @@ import {
   FlatList,
   Dimensions,
 } from "react-native"
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useState, useMemo } from "react"
 import { NavBar } from "../../../components"
 import ConnectionsScrollCard from "./components/ConnectionsScrollCard"
 import getConnectionProfiles from "../../supabaseFunctions/getFuncs/getConnectionsProfiles"
 import { useAuth } from "../../supabaseFunctions/authcontext"
 import { Profile } from "../../@types/supabaseTypes"
 
+const PAGE_SIZE = 5 // Define constant for page size
+
 const ConnectionsScroll = () => {
   const { user } = useAuth()
-  const [loadingMore, setLoadingMore] = useState(false)
-  const [loading, setLoading] = useState(false)
   const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
-  const [page, setPage] = useState(1) // Track the current page
-
-  const [hasMore, setHasMore] = useState(true) // Add this to track if more data is available
-  const [isLoading, setIsLoading] = useState(false)
-
+  const [loading, setLoading] = useState(false)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const [page, setPage] = useState(0)
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const windowWidth = Dimensions.get("window").width
   const windowHeight = Dimensions.get("window").height
 
-  const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
-    if (viewableItems.length > 0) {
-      setCurrentIndex(viewableItems[0].index)
-    }
-  }).current
-
-  const viewabilityConfig = {
-    itemVisiblePercentThreshold: 50,
-  }
-
-  const handleScroll = useCallback(
-    ({ nativeEvent }: any) => {
-      const { contentOffset, layoutMeasurement, contentSize } = nativeEvent
-
-      // Calculate how close to the end we are
-      const isCloseToEnd =
-        contentOffset.x + layoutMeasurement.width >=
-        contentSize.width - layoutMeasurement.width * 0.5 // Load when within 50% of the end
-
-      if (isCloseToEnd && !isLoading && hasMore) {
-        fetchMoreProfiles()
-      }
-    },
-    [isLoading, hasMore]
+  const getItemLayout = useCallback(
+    (data: any, index: number) => ({
+      length: windowWidth,
+      offset: windowWidth * index,
+      index,
+    }),
+    [windowWidth]
   )
 
-  const fetchMoreProfiles = async () => {
-    // Add more strict conditions for fetching
-    if (!user || isLoading || !hasMore || loadingMore) return
+  const loadMoreProfiles = useCallback(async () => {
+    if (!user || loadingMore || !hasMore || loading) return
 
     try {
-      setIsLoading(true)
       setLoadingMore(true)
+      console.log("Loading more profiles, page:", page) // Debug log
 
       const newProfiles = await getConnectionProfiles(
         setLoading,
         user.id,
-        appendProfiles,
+        (profiles) => {
+          setConnectionProfiles((prev) => [...prev, ...profiles])
+        },
         page
       )
 
-      // Check if we received any new profiles
-      if (newProfiles && newProfiles.length === 0) {
+      if (!newProfiles || newProfiles.length < PAGE_SIZE) {
+        console.log("No more profiles to load") // Debug log
         setHasMore(false)
-        return
+      } else {
+        setPage((prev) => prev + 1)
       }
-
-      setPage((prevPage) => prevPage + 1)
     } catch (error) {
-      console.error("Error fetching more profiles:", error)
+      console.error("Error loading more profiles:", error)
     } finally {
-      setIsLoading(false)
       setLoadingMore(false)
     }
-  }
+  }, [user, loadingMore, hasMore, loading, page])
 
-  const appendProfiles = (newProfiles: Profile[]) => {
-    setConnectionProfiles((prevProfiles) => [...prevProfiles, ...newProfiles])
-  }
+  const viewabilityConfig = useMemo(
+    () => ({
+      itemVisiblePercentThreshold: 50,
+      minimumViewTime: 0,
+    }),
+    []
+  )
 
-  const fetchConnectionProfiles = async () => {
-    if (user) {
-      setLoading(true)
-      await getConnectionProfiles(
-        setLoading,
-        user.id,
-        setConnectionProfiles,
-        0 // Initial page
-      )
+  const onViewableItemsChanged = useCallback(
+    ({ viewableItems }: any) => {
+      if (viewableItems.length > 0) {
+        const newIndex = viewableItems[0].index
+        setCurrentIndex(newIndex)
 
-      setLoading(false)
+        // Load more when user is within 2 items of the end
+        if (newIndex >= connectionProfiles.length - 2) {
+          console.log("Near end of list, loading more...") // Debug log
+          loadMoreProfiles()
+        }
+      }
+    },
+    [connectionProfiles.length, loadMoreProfiles]
+  )
+
+  // Initial load
+  useEffect(() => {
+    if (user && connectionProfiles.length === 0) {
+      loadMoreProfiles()
     }
-  }
+  }, [user])
 
-  useEffect(() => {
-    fetchConnectionProfiles()
-  }, [])
-
-  useEffect(() => {
-    fetchMoreProfiles()
-  }, [currentIndex])
-
-  const renderCard = useCallback(({ item }: { item: Profile }) => {
-    return (
-      <View style={{ height: windowHeight, width: windowWidth }}>
+  const renderCard = useCallback(
+    ({ item }: { item: Profile }) => (
+      <View style={{ width: windowWidth, height: windowHeight }}>
         <ConnectionsScrollCard
           profile={item}
           loading={loading}
           setLoading={setLoading}
         />
       </View>
-    )
-  }, [])
-
-  const cardKeyExtractor = useCallback((item: Profile, index: number) => {
-    return item.id + index.toString()
-  }, [])
+    ),
+    [windowWidth, windowHeight]
+  )
 
   return (
     <View className="bg-black" style={{ flex: 1 }}>
@@ -138,26 +121,37 @@ const ConnectionsScroll = () => {
           searchUsers={true}
         /> */}
         {loadingMore && (
-          <View className="flex-1">
+          <View className="absolute top-0 left-0 right-0 z-50 items-center">
             <ActivityIndicator size="large" color="#FFFFFF" />
           </View>
         )}
       </View>
+
       <FlatList
-        horizontal={true}
-        initialNumToRender={1}
-        disableIntervalMomentum={true}
-        snapToAlignment="center"
-        pagingEnabled={true}
-        decelerationRate="fast"
-        scrollEventThrottle={16}
-        snapToInterval={windowWidth}
+        horizontal
         data={connectionProfiles}
-        keyExtractor={cardKeyExtractor}
         renderItem={renderCard}
-        onScroll={handleScroll}
+        keyExtractor={(item) => item.id}
+        pagingEnabled
+        snapToInterval={windowWidth}
+        snapToAlignment="center"
+        scrollEventThrottle={16}
+        decelerationRate={0}
+        initialNumToRender={2}
+        maxToRenderPerBatch={3}
+        windowSize={3}
+        disableIntervalMomentum={true}
+        showsHorizontalScrollIndicator={false}
+        removeClippedSubviews={true}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
+        maintainVisibleContentPosition={{
+          minIndexForVisible: 0,
+        }}
+        getItemLayout={getItemLayout}
+        snapToOffsets={connectionProfiles.map(
+          (_, index) => index * windowWidth
+        )}
       />
     </View>
   )
