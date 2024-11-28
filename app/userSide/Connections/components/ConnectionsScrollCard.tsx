@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Pressable,
   Easing,
+  SafeAreaView,
 } from "react-native"
 import React, {
   Dispatch,
@@ -175,6 +176,39 @@ const ConnectionsScrollCard = ({
 
   return (
     <View style={{ height: windowHeight }}>
+      {isDetailView && (
+        <SafeAreaView
+          className="absolute top-0 left-0 right-0 z-50 bg-primary-900"
+          style={{ elevation: 5 }} // for Android
+        >
+          <View className="flex-row justify-between items-center p-4">
+            <View className="flex-row items-center">
+              <TouchableOpacity
+                onPress={() => {
+                  console.log("Back button pressed") // Debug log
+                  toggleDetailView()
+                }}
+                className="bg-primary-700 p-2 rounded-lg mx-2"
+                activeOpacity={0.7} // Optional: adds visual feedback
+              >
+                <FontAwesome5 name="arrow-left" size={16} color="white" />
+              </TouchableOpacity>
+              <Text className="text-white text-center text-md font-semibold">
+                Partner Profile
+              </Text>
+            </View>
+            <TouchableOpacity
+              className="rounded bg-blue-600 p-2"
+              activeOpacity={0.7}
+              onPress={() => console.log("Send request pressed")}
+            >
+              <Text className="text-white text-center text-xs font-semibold">
+                Send Partner Request
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      )}
       <ImageBackground
         source={
           !showPlaceholder && avatarUrl
