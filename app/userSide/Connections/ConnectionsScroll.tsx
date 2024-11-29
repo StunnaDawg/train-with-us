@@ -18,11 +18,12 @@ const PAGE_SIZE = 5 // Define constant for page size
 const ConnectionsScroll = () => {
   const { user } = useAuth()
   const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
-  const [loading, setLoading] = useState(false)
-  const [loadingMore, setLoadingMore] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
-  const [page, setPage] = useState(0)
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [loadingMore, setLoadingMore] = useState<boolean>(false)
+  const [hasMore, setHasMore] = useState<boolean>(true)
+  const [page, setPage] = useState<number>(0)
+  const [currentIndex, setCurrentIndex] = useState<number>(0)
+  const [stopScroll, setStopScroll] = useState<boolean>(false)
 
   const windowWidth = Dimensions.get("window").width
   const windowHeight = Dimensions.get("window").height
@@ -103,6 +104,7 @@ const ConnectionsScroll = () => {
           profile={item}
           loading={loading}
           setLoading={setLoading}
+          stopScroll={setStopScroll}
         />
       </View>
     ),
@@ -128,6 +130,7 @@ const ConnectionsScroll = () => {
       </View>
 
       <FlatList
+        scrollEnabled={!stopScroll}
         horizontal
         data={connectionProfiles}
         renderItem={renderCard}

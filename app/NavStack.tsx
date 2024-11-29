@@ -23,7 +23,7 @@ import getUserId from "./supabaseFunctions/getFuncs/getUserId"
 import { Database } from "./@types/supabase"
 import CommunitiesHome from "./userSide/Communities/CommunitiesHome"
 import CommunitiesDash from "./userSide/UserCommunities/CommunitiesDash"
-import Connections from "./userSide/Connections/Connections"
+
 import MessageScreen from "./userSide/UserCommunities/components/MessageScreen"
 import ViewEvent from "./userSide/Events/ViewEvent"
 import EventCheckout from "./userSide/Events/EventCheckout"

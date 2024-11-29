@@ -27,12 +27,6 @@ import { NavigationType } from "../../../@types/navigation"
 import { Image } from "expo-image"
 import { LinearGradient } from "expo-linear-gradient"
 
-type ConnectionsScrollCardProps = {
-  profile: Profile
-  loading: boolean
-  setLoading: Dispatch<SetStateAction<boolean>>
-}
-
 const ProfileDetailsCard = ({
   string,
   stringArray,
@@ -69,10 +63,18 @@ const ProfileDetailsCard = ({
   )
 }
 
+type ConnectionsScrollCardProps = {
+  profile: Profile
+  loading: boolean
+  setLoading: Dispatch<SetStateAction<boolean>>
+  stopScroll: Dispatch<SetStateAction<boolean>>
+}
+
 const ConnectionsScrollCard = ({
   profile,
   loading,
   setLoading,
+  stopScroll,
 }: ConnectionsScrollCardProps) => {
   const [showPlaceholder, setPlaceholder] = useState<boolean>(false)
   const [avatarUrl, setAvatarUrl] = useState<string>("")
@@ -174,6 +176,14 @@ const ConnectionsScrollCard = ({
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (isDetailView) {
+      stopScroll(true)
+    } else {
+      stopScroll(false)
+    }
+  }, [isDetailView])
 
   return (
     <View style={{ height: windowHeight }}>
