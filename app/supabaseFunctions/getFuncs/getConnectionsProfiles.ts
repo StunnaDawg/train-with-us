@@ -10,7 +10,7 @@ const getConnectionProfiles = async (
   offSet: number
 ): Promise<Profile[]> => {
   try {
-    const PAGE_COUNT = 5
+    const PAGE_COUNT = 20
     const from = offSet * PAGE_COUNT
     const to = from + PAGE_COUNT - 1
     setLoading(true)
@@ -19,7 +19,12 @@ const getConnectionProfiles = async (
     const [connections, { data: profiles, error: profilesError }] =
       await Promise.all([
         getConnectedIgnoredProfiles(userId),
-        supabase.from("profiles").select("*").neq("id", userId).range(from, to),
+        supabase
+          .from("profiles")
+          .select("*")
+          .neq("id", userId)
+          .not("photos_url", "is", null)
+          .range(from, to),
       ])
 
     if (profilesError) throw profilesError
