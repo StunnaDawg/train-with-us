@@ -2,7 +2,6 @@ import {
   View,
   Text,
   ScrollView,
-  StyleSheet,
   Dimensions,
   ImageBackground,
   TouchableOpacity,
@@ -20,13 +19,13 @@ import React, {
 import { Animated } from "react-native"
 import { FontAwesome6 } from "@expo/vector-icons"
 import { Profile } from "../../../@types/supabaseTypes"
-import ActivityTags from "../../../components/AcvitivityTags"
 import { FontAwesome5 } from "@expo/vector-icons"
 import calculateAge from "../../../utilFunctions/calculateAge"
-import MessageButton from "./MessageButton"
 import supabase from "../../../../lib/supabase"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
+import { Image } from "expo-image"
+import { LinearGradient } from "expo-linear-gradient"
 
 type ConnectionsScrollCardProps = {
   profile: Profile
@@ -85,6 +84,8 @@ const ConnectionsScrollCard = ({
   const [isDetailView, setIsDetailView] = useState(false)
   const fadeAnim = useRef(new Animated.Value(1)).current
   const slideAnim = useRef(new Animated.Value(0)).current
+
+  const scrollY = useRef(new Animated.Value(0)).current
 
   const toggleDetailView = () => {
     // Fade out current view
@@ -177,156 +178,138 @@ const ConnectionsScrollCard = ({
   return (
     <View style={{ height: windowHeight }}>
       {isDetailView && (
-        <SafeAreaView
-          className="absolute top-0 left-0 right-0 z-50 bg-primary-900"
-          style={{ elevation: 5 }} // for Android
-        >
-          <View className="flex-row justify-between items-center p-4">
-            <View className="flex-row items-center">
+        <>
+          <SafeAreaView
+            className="absolute top-0 left-0 right-0 z-50 bg-primary-900"
+            style={{ elevation: 5 }}
+          >
+            <View className="flex-row justify-between items-center p-4">
+              <View className="flex-row items-center">
+                <TouchableOpacity
+                  onPress={toggleDetailView}
+                  className="bg-primary-700 p-2 rounded-lg mx-2"
+                >
+                  <FontAwesome5 name="arrow-left" size={16} color="white" />
+                </TouchableOpacity>
+                <Text className="text-white text-center text-md font-semibold">
+                  Partner Profile
+                </Text>
+              </View>
               <TouchableOpacity
-                onPress={() => {
-                  console.log("Back button pressed") // Debug log
-                  toggleDetailView()
-                }}
-                className="bg-primary-700 p-2 rounded-lg mx-2"
-                activeOpacity={0.7} // Optional: adds visual feedback
+                className="rounded bg-blue-600 p-2"
+                activeOpacity={0.7}
+                onPress={() => console.log("Send request pressed")}
               >
-                <FontAwesome5 name="arrow-left" size={16} color="white" />
+                <Text className="text-white text-center text-xs font-semibold">
+                  Send Partner Request
+                </Text>
               </TouchableOpacity>
-              <Text className="text-white text-center text-md font-semibold">
-                Partner Profile
-              </Text>
             </View>
-            <TouchableOpacity
-              className="rounded bg-blue-600 p-2"
-              activeOpacity={0.7}
-              onPress={() => console.log("Send request pressed")}
+          </SafeAreaView>
+
+          <View style={{ flex: 1, marginTop: 80 }}>
+            <Animated.View
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: windowHeight * 0.6,
+                transform: [
+                  {
+                    translateY: scrollY.interpolate({
+                      inputRange: [-windowHeight * 0.3, 0],
+                      outputRange: [windowHeight * 0.1, 0],
+                      extrapolate: "clamp",
+                    }),
+                  },
+                  {
+                    scale: scrollY.interpolate({
+                      inputRange: [-windowHeight * 0.3, 0],
+                      outputRange: [1.1, 1],
+                      extrapolate: "clamp",
+                    }),
+                  },
+                ],
+              }}
             >
-              <Text className="text-white text-center text-xs font-semibold">
-                Send Partner Request
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-      )}
-      <ImageBackground
-        source={
-          !showPlaceholder && avatarUrl
-            ? { uri: avatarUrl }
-            : require("../../../../assets/images/TWU-Logo.png")
-        }
-        style={{ flex: 1 }}
-        resizeMode="cover"
-      >
-        <Animated.View
-          className="flex-1"
-          style={{
-            opacity: fadeAnim,
-            transform: [
-              {
-                translateY: slideAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0, -50],
-                }),
-              },
-            ],
-          }}
-        >
-          <View className="flex-1 justify-end">
-            <View
-              className={`rounded-t-2xl bg-primary-900 p-6 ${
-                isDetailView ? "h-1/2" : ""
-              }`}
+              <Image
+                source={
+                  !showPlaceholder && avatarUrl
+                    ? { uri: avatarUrl }
+                    : require("../../../../assets/images/TWU-Logo.png")
+                }
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+                contentFit="cover"
+              />
+
+              <View
+                className={`absolute ${
+                  windowHeight < 700
+                    ? "top-2" // iPhone SE
+                    : windowHeight < 800
+                    ? "top-8" // Regular iPhone + iPhone Mini .... probably
+                    : "top-12" // iPhone Max
+                } right-4 bg-primary-700/80 px-3 py-2 rounded-lg flex-row items-center`}
+              >
+                <FontAwesome5 name="fire-alt" size={16} color="#22c55e" />
+                <Text className="text-white text-xl font-semibold ml-2">
+                  98%
+                </Text>
+              </View>
+
+              <LinearGradient
+                colors={["transparent", "rgba(0,0,0,0.7)"]}
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: 200,
+                }}
+              />
+            </Animated.View>
+
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              className="flex-1"
+              contentContainerStyle={{
+                paddingTop: windowHeight * 0.45,
+              }}
+              onScroll={(event) => {
+                const offsetY = event.nativeEvent.contentOffset.y
+                scrollY.setValue(offsetY)
+              }}
+              scrollEventThrottle={16}
+              bounces={true}
             >
-              {!isDetailView ? (
-                // Original card view
-                <>
-                  <View className="flex-row justify-between items-center ">
-                    <View>
-                      <Text className=" text-4xl text-white">
-                        {profile.first_name}
-                      </Text>
-                      <Text className=" text-4xl text-white">
-                        {profile.last_name}
-                      </Text>
+              <View className="bg-primary-900 rounded-t-3xl min-h-screen">
+                <View className="p-4 pb-20">
+                  {/* Name and close button section */}
+                  <View>
+                    <View className="flex flex-row items-center justify-between">
+                      <View>
+                        <Text className="text-4xl text-white">
+                          {profile.first_name}
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        className="p-1"
+                        onPress={toggleDetailView}
+                        activeOpacity={0.7}
+                      >
+                        <FontAwesome5 name="times" size={16} color="white" />
+                      </TouchableOpacity>
                     </View>
-                    <View className="flex-row items-center">
-                      <Text className="text-white font-semibold">
-                        {calculateAge(profile.birthday)}
-                      </Text>
-                    </View>
-                  </View>
-                  <View className="flex-row justify-between">
-                    <Text className="text-white/70 font-medium text-xs">
-                      "{profile.about}"
+                    <Text className="text-4xl text-white">
+                      {profile.last_name}
                     </Text>
                   </View>
 
-                  <View
-                    className={`flex-row justify-between items-center mt-2 ${
-                      windowHeight < 700 ? "pb-14" : "pb-20"
-                    }`}
-                  >
-                    <Pressable
-                      className="bg-blue-600 p-1 rounded-lg flex-row items-center"
-                      onPress={toggleDetailView}
-                    >
-                      <FontAwesome5 name="user" size={16} color="white" />
-                      <Text className="text-white text-xs mx-1 font-semibold">
-                        View Profile
-                      </Text>
-                    </Pressable>
-
-                    <View className="flex flex-row items-center">
-                      <Pressable className="bg-primary-300 p-1 rounded-lg flex-row items-center mr-2">
-                        <FontAwesome5 name="running" size={16} color="green" />
-                        <Text className="text-green-400 text-sm mx-1 font-semibold">
-                          6
-                        </Text>
-                      </Pressable>
-                      <Pressable className="bg-primary-300 p-1 rounded-lg flex-row items-center">
-                        <FontAwesome5 name="fire-alt" size={16} color="green" />
-                        <Text className="text-green-400 text-sm mx-1 font-semibold">
-                          98%
-                        </Text>
-                      </Pressable>
-                    </View>
-                  </View>
-                </>
-              ) : (
-                // Detailed view
-                <ScrollView className="flex-1">
-                  <Pressable
-                    className="bg-primary-600 p-2 rounded-lg self-start mb-4"
-                    onPress={toggleDetailView}
-                  >
-                    <FontAwesome5 name="times" size={16} color="white" />
-                  </Pressable>
-
-                  <View className="flex ">
-                    <View>
-                      <View className="flex flex-row items-center justify-between">
-                        <View>
-                          <Text className=" text-4xl text-white">
-                            {profile.first_name}
-                          </Text>
-                        </View>
-                        <View>
-                          <Text className="text-white font-semibold">
-                            {calculateAge(profile.birthday)}
-                          </Text>
-                        </View>
-                      </View>
-                      <View>
-                        <Text className=" text-4xl text-white">
-                          {profile.last_name}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-
-                  {/* Additional profile details */}
-
+                  {/* Profile details cards */}
                   {profile.activities && (
                     <ProfileDetailsCard
                       stringArray={profile.activities}
@@ -370,12 +353,189 @@ const ConnectionsScrollCard = ({
                       icon="mug-hot"
                     />
                   )}
-                </ScrollView>
-              )}
-            </View>
+                </View>
+              </View>
+            </ScrollView>
           </View>
+        </>
+      )}
+      {!isDetailView && (
+        <Animated.View
+          style={{
+            flex: 1,
+            opacity: fadeAnim,
+            transform: [
+              {
+                translateY: slideAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, -50],
+                }),
+              },
+            ],
+          }}
+        >
+          <ImageBackground
+            source={
+              !showPlaceholder && avatarUrl
+                ? { uri: avatarUrl }
+                : require("../../../../assets/images/TWU-Logo.png")
+            }
+            style={{ flex: 1 }}
+            resizeMode="cover"
+          >
+            <View className="flex-1 justify-end">
+              <View
+                className={`rounded-t-2xl bg-primary-900 p-6 ${
+                  isDetailView ? "h-1/2" : ""
+                }`}
+              >
+                {!isDetailView ? (
+                  // Original card view
+                  <>
+                    <View className="flex-row justify-between items-center ">
+                      <View>
+                        <Text className=" text-4xl text-white">
+                          {profile.first_name}
+                        </Text>
+                        <Text className=" text-4xl text-white">
+                          {profile.last_name}
+                        </Text>
+                      </View>
+                      <View className="flex-row items-center">
+                        <Text className="text-white font-semibold">
+                          {calculateAge(profile.birthday)}
+                        </Text>
+                      </View>
+                    </View>
+                    <View className="flex-row justify-between">
+                      <Text className="text-white/70 font-medium text-xs">
+                        "{profile.about}"
+                      </Text>
+                    </View>
+
+                    <View
+                      className={`flex-row justify-between items-center mt-2 ${
+                        windowHeight < 700 ? "pb-14" : "pb-20"
+                      }`}
+                    >
+                      <Pressable
+                        className="bg-blue-600 p-1 rounded-lg flex-row items-center"
+                        onPress={toggleDetailView}
+                      >
+                        <FontAwesome5 name="user" size={16} color="white" />
+                        <Text className="text-white text-xs mx-1 font-semibold">
+                          View Profile
+                        </Text>
+                      </Pressable>
+
+                      <View className="flex flex-row items-center">
+                        <Pressable className="bg-primary-300 p-1 rounded-lg flex-row items-center mr-2">
+                          <FontAwesome5
+                            name="running"
+                            size={16}
+                            color="green"
+                          />
+                          <Text className="text-green-400 text-sm mx-1 font-semibold">
+                            6
+                          </Text>
+                        </Pressable>
+                        <Pressable className="bg-primary-300 p-1 rounded-lg flex-row items-center">
+                          <FontAwesome5
+                            name="fire-alt"
+                            size={16}
+                            color="green"
+                          />
+                          <Text className="text-green-400 text-sm mx-1 font-semibold">
+                            98%
+                          </Text>
+                        </Pressable>
+                      </View>
+                    </View>
+                  </>
+                ) : (
+                  // Detailed view
+                  <ScrollView className="flex-1">
+                    <Pressable
+                      className="bg-primary-600 p-2 rounded-lg self-start mb-4"
+                      onPress={toggleDetailView}
+                    >
+                      <FontAwesome5 name="times" size={16} color="white" />
+                    </Pressable>
+
+                    <View className="flex ">
+                      <View>
+                        <View className="flex flex-row items-center justify-between">
+                          <View>
+                            <Text className=" text-4xl text-white">
+                              {profile.first_name}
+                            </Text>
+                          </View>
+                          <View>
+                            <Text className="text-white font-semibold">
+                              {calculateAge(profile.birthday)}
+                            </Text>
+                          </View>
+                        </View>
+                        <View>
+                          <Text className=" text-4xl text-white">
+                            {profile.last_name}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+
+                    {/* Additional profile details */}
+
+                    {profile.activities && (
+                      <ProfileDetailsCard
+                        stringArray={profile.activities}
+                        title="Activities"
+                        string={null}
+                        icon="person-running"
+                      />
+                    )}
+                    {profile.actvitiy_time && (
+                      <ProfileDetailsCard
+                        string={profile.actvitiy_time}
+                        title="Time spent in activities"
+                        stringArray={null}
+                        icon="clock"
+                      />
+                    )}
+
+                    {profile.about && (
+                      <ProfileDetailsCard
+                        string={profile.about}
+                        title="About Me"
+                        stringArray={null}
+                        icon="user"
+                      />
+                    )}
+
+                    {profile.bucket_list && (
+                      <ProfileDetailsCard
+                        stringArray={null}
+                        title="Bucket List"
+                        string={profile.bucket_list}
+                        icon="bucket"
+                      />
+                    )}
+
+                    {profile.hobbies && (
+                      <ProfileDetailsCard
+                        stringArray={null}
+                        title="Outside of the gym I enjoy..."
+                        string={profile.hobbies}
+                        icon="mug-hot"
+                      />
+                    )}
+                  </ScrollView>
+                )}
+              </View>
+            </View>
+          </ImageBackground>
         </Animated.View>
-      </ImageBackground>
+      )}
     </View>
   )
 }
