@@ -150,6 +150,19 @@ const ConnectionsScroll = () => {
         bounces={true}
         bouncesZoom={true}
         initialScrollIndex={currentIndex}
+        onTouchMove={(e) => {
+          const currentX = e.nativeEvent.pageX
+          const diff = touchStartX.current - currentX
+
+          // Only allow forward movement (left swipes)
+          if (diff <= 0) {
+            const offset = currentIndex * windowWidth - diff
+            flatListRef.current?.scrollToOffset({
+              offset: offset,
+              animated: false,
+            })
+          }
+        }}
         onTouchStart={(e) => {
           touchStartX.current = e.nativeEvent.pageX
         }}
@@ -158,14 +171,16 @@ const ConnectionsScroll = () => {
           const diff = touchStartX.current - touchEndX
 
           if (Math.abs(diff) > 50) {
-            // Minimum swipe distance
-            if (diff > 0 && currentIndex < connectionProfiles.length - 1) {
-              // Swipe left -> next item
+            // Only proceed if swiping left AND not at the last card
+            if (diff <= 0 && currentIndex < connectionProfiles.length - 1) {
               scrollToIndex(currentIndex + 1)
-            } else if (diff < 0 && currentIndex > 0) {
-              // Swipe right -> previous item Not allowed to go back in stack
+            } else {
+              // Return to current position if swiping right
               scrollToIndex(currentIndex - 0)
             }
+          } else {
+            // Return to current position if swipe wasn't far enough
+            scrollToIndex(currentIndex)
           }
         }}
       />
