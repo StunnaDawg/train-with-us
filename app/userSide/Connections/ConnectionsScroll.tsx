@@ -5,8 +5,9 @@ import {
   ActivityIndicator,
   FlatList,
   Dimensions,
+  Platform,
 } from "react-native"
-import React, { useCallback, useEffect, useState, useMemo } from "react"
+import React, { useCallback, useEffect, useState, useMemo, useRef } from "react"
 import ConnectionsScrollCard from "./components/ConnectionsScrollCard"
 import getConnectionProfiles from "../../supabaseFunctions/getFuncs/getConnectionsProfiles"
 import { useAuth } from "../../supabaseFunctions/authcontext"
@@ -68,8 +69,8 @@ const ConnectionsScroll = () => {
 
   const viewabilityConfig = useMemo(
     () => ({
-      itemVisiblePercentThreshold: 50,
-      minimumViewTime: 0,
+      itemVisiblePercentThreshold: 100,
+      minimumViewTime: 2000,
     }),
     []
   )
@@ -110,6 +111,16 @@ const ConnectionsScroll = () => {
     [windowWidth, windowHeight]
   )
 
+  const flatListRef = useRef<FlatList>(null)
+  const touchStartX = useRef(0)
+
+  const scrollToIndex = (index: number) => {
+    if (index >= 0 && index < connectionProfiles.length) {
+      flatListRef.current?.scrollToIndex({ index, animated: true })
+      setCurrentIndex(index)
+    }
+  }
+
   return (
     <View className="bg-black" style={{ flex: 1 }}>
       <View className="mb-1">
@@ -129,31 +140,34 @@ const ConnectionsScroll = () => {
       </View>
 
       <FlatList
-        scrollEnabled={!stopScroll}
+        ref={flatListRef}
+        scrollEnabled={false}
         horizontal
         data={connectionProfiles}
         renderItem={renderCard}
         keyExtractor={(item) => item.id}
-        pagingEnabled
-        snapToInterval={windowWidth}
-        snapToAlignment="center"
-        scrollEventThrottle={16}
-        decelerationRate={0}
-        initialNumToRender={2}
-        maxToRenderPerBatch={3}
-        windowSize={3}
-        disableIntervalMomentum={true}
-        showsHorizontalScrollIndicator={false}
-        removeClippedSubviews={true}
-        // onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
-        maintainVisibleContentPosition={{
-          minIndexForVisible: 0,
-        }}
         getItemLayout={getItemLayout}
-        snapToOffsets={connectionProfiles.map(
-          (_, index) => index * windowWidth
-        )}
+        bounces={true}
+        bouncesZoom={true}
+        initialScrollIndex={currentIndex}
+        onTouchStart={(e) => {
+          touchStartX.current = e.nativeEvent.pageX
+        }}
+        onTouchEnd={(e) => {
+          const touchEndX = e.nativeEvent.pageX
+          const diff = touchStartX.current - touchEndX
+
+          if (Math.abs(diff) > 50) {
+            // Minimum swipe distance
+            if (diff > 0 && currentIndex < connectionProfiles.length - 1) {
+              // Swipe left -> next item
+              scrollToIndex(currentIndex + 1)
+            } else if (diff < 0 && currentIndex > 0) {
+              // Swipe right -> previous item Not allowed to go back in stack
+              scrollToIndex(currentIndex - 0)
+            }
+          }
+        }}
       />
     </View>
   )
