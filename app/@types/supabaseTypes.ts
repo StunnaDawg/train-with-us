@@ -79,3 +79,9 @@ export type CommunityWithCompatibility = Communities & {
 export type EventWithCompatibility = Events & {
   compatibility_score: number
 }
+
+export type ProfileWithCompatibility = Profile & {
+  compatibility_score: number
+  matching_activities_count: number
+  total_activities: number
+}

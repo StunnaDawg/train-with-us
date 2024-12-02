@@ -1,8 +1,9 @@
 import { Dispatch, SetStateAction } from "react"
 import supabase from "../../../lib/supabase"
 import getConnectedIgnoredProfiles from "./getConnectedIgnoredProfiles"
-import { Profile } from "../../@types/supabaseTypes"
+import { ProfileWithCompatibility } from "../../@types/supabaseTypes"
 
+/*
 const getConnectionProfiles = async (
   setLoading: Dispatch<SetStateAction<boolean>>,
   userId: string,
@@ -44,6 +45,38 @@ const getConnectionProfiles = async (
     return []
   } finally {
     setLoading(false)
+  }
+}
+*/
+
+const getConnectionProfiles = async (
+  setLoading: Dispatch<SetStateAction<boolean>>,
+  userId: string,
+  appendProfiles: (newProfiles: ProfileWithCompatibility[]) => void,
+  setEndOfData: Dispatch<SetStateAction<boolean>>
+): Promise<ProfileWithCompatibility[]> => {
+  try {
+    const PAGE_COUNT = 20
+
+    const { data: profiles, error: profilesError } = await supabase
+      .rpc("get_user_compatibility", { current_user_id: userId })
+      .limit(PAGE_COUNT)
+
+    if (profilesError) throw profilesError
+
+    if (profiles.length < PAGE_COUNT) {
+      setEndOfData(true)
+    }
+
+    if (profiles.length > 0) {
+      appendProfiles(profiles)
+    }
+    setLoading(false)
+
+    return profiles
+  } catch (error) {
+    console.error("Error in getting profiles:", error)
+    return []
   }
 }
 

@@ -11,20 +11,23 @@ import React, { useCallback, useEffect, useState, useMemo, useRef } from "react"
 import ConnectionsScrollCard from "./components/ConnectionsScrollCard"
 import getConnectionProfiles from "../../supabaseFunctions/getFuncs/getConnectionsProfiles"
 import { useAuth } from "../../supabaseFunctions/authcontext"
-import { Profile } from "../../@types/supabaseTypes"
+import { ProfileWithCompatibility } from "../../@types/supabaseTypes"
 import supabase from "../../../lib/supabase"
 
 const PAGE_SIZE = 5 // Define constant for page size
 
 const ConnectionsScroll = () => {
   const { user } = useAuth()
-  const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
+  const [connectionProfiles, setConnectionProfiles] = useState<
+    ProfileWithCompatibility[]
+  >([])
   const [loading, setLoading] = useState<boolean>(false)
-  const [loadingMore, setLoadingMore] = useState<boolean>(false)
+
   const [hasMore, setHasMore] = useState<boolean>(true)
   const [page, setPage] = useState<number>(0)
   const [currentIndex, setCurrentIndex] = useState<number>(0)
   const [stopScroll, setStopScroll] = useState<boolean>(false)
+  const [endOfData, setEndOfData] = useState<boolean>(false)
 
   const windowWidth = Dimensions.get("window").width
   const windowHeight = Dimensions.get("window").height
@@ -93,12 +96,17 @@ const ConnectionsScroll = () => {
   // Initial load
   useEffect(() => {
     if (user && connectionProfiles.length === 0) {
-      getConnectionProfiles(setLoading, user.id, setConnectionProfiles, page)
+      getConnectionProfiles(
+        setLoading,
+        user.id,
+        setConnectionProfiles,
+        setEndOfData
+      )
     }
   }, [user])
 
   const renderCard = useCallback(
-    ({ item }: { item: Profile }) => (
+    ({ item }: { item: ProfileWithCompatibility }) => (
       <View key={item.id} style={{ width: windowWidth, height: windowHeight }}>
         <ConnectionsScrollCard
           profile={item}
@@ -132,11 +140,6 @@ const ConnectionsScroll = () => {
           showSearchCommunities={false}
           searchUsers={true}
         /> */}
-        {loadingMore && (
-          <View className="absolute top-0 left-0 right-0 z-50 items-center">
-            <ActivityIndicator size="large" color="#FFFFFF" />
-          </View>
-        )}
       </View>
 
       <FlatList
@@ -154,6 +157,7 @@ const ConnectionsScroll = () => {
           const currentX = e.nativeEvent.pageX
           const diff = touchStartX.current - currentX
 
+          if (stopScroll) return
           // Only allow forward movement (left swipes)
           if (diff <= 0) {
             const offset = currentIndex * windowWidth - diff
@@ -164,13 +168,16 @@ const ConnectionsScroll = () => {
           }
         }}
         onTouchStart={(e) => {
+          if (stopScroll) return
           touchStartX.current = e.nativeEvent.pageX
         }}
         onTouchEnd={(e) => {
+          if (stopScroll) return
           const touchEndX = e.nativeEvent.pageX
           const diff = touchStartX.current - touchEndX
 
-          if (Math.abs(diff) > 50) {
+          //
+          if (Math.abs(diff) > 175) {
             // Only proceed if swiping left AND not at the last card
             if (diff <= 0 && currentIndex < connectionProfiles.length - 1) {
               scrollToIndex(currentIndex + 1)
