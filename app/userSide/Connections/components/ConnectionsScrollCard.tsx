@@ -18,7 +18,10 @@ import React, {
 } from "react"
 import { Animated } from "react-native"
 import { FontAwesome6 } from "@expo/vector-icons"
-import { Profile } from "../../../@types/supabaseTypes"
+import {
+  Profile,
+  ProfileWithCompatibility,
+} from "../../../@types/supabaseTypes"
 import { FontAwesome5 } from "@expo/vector-icons"
 import calculateAge from "../../../utilFunctions/calculateAge"
 import supabase from "../../../../lib/supabase"
@@ -64,7 +67,7 @@ const ProfileDetailsCard = ({
 }
 
 type ConnectionsScrollCardProps = {
-  profile: Profile
+  profile: ProfileWithCompatibility
   loading: boolean
   setLoading: Dispatch<SetStateAction<boolean>>
   stopScroll: Dispatch<SetStateAction<boolean>>
@@ -267,7 +270,10 @@ const ConnectionsScrollCard = ({
               >
                 <FontAwesome5 name="fire-alt" size={16} color="#22c55e" />
                 <Text className="text-white text-xl font-semibold ml-2">
-                  98%
+                  {Math.round(profile.compatibility_score) > 100
+                    ? 100
+                    : Math.round(profile.compatibility_score)}
+                  %
                 </Text>
               </View>
 
@@ -446,7 +452,7 @@ const ConnectionsScrollCard = ({
                             color="green"
                           />
                           <Text className="text-green-400 text-sm mx-1 font-semibold">
-                            6
+                            {profile.matching_activities_count}
                           </Text>
                         </Pressable>
                         <Pressable className="bg-primary-300 p-1 rounded-lg flex-row items-center">
@@ -456,7 +462,10 @@ const ConnectionsScrollCard = ({
                             color="green"
                           />
                           <Text className="text-green-400 text-sm mx-1 font-semibold">
-                            98%
+                            {Math.round(profile.compatibility_score) > 100
+                              ? 100
+                              : Math.round(profile.compatibility_score)}
+                            %
                           </Text>
                         </Pressable>
                       </View>
