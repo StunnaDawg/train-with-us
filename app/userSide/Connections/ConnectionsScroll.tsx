@@ -5,83 +5,131 @@ import {
   ActivityIndicator,
   FlatList,
   Dimensions,
+  Platform,
 } from "react-native"
-import React, { useCallback, useEffect, useRef, useState } from "react"
-import { NavBar } from "../../../components"
+import React, { useCallback, useEffect, useState, useMemo, useRef } from "react"
 import ConnectionsScrollCard from "./components/ConnectionsScrollCard"
 import getConnectionProfiles from "../../supabaseFunctions/getFuncs/getConnectionsProfiles"
 import { useAuth } from "../../supabaseFunctions/authcontext"
-import { Profile } from "../../@types/supabaseTypes"
+import { ProfileWithCompatibility } from "../../@types/supabaseTypes"
+import supabase from "../../../lib/supabase"
+
+const PAGE_SIZE = 5 // Define constant for page size
 
 const ConnectionsScroll = () => {
   const { user } = useAuth()
-  const [loadingMore, setLoadingMore] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([])
-  const [page, setPage] = useState(1) // Track the current page
+  const [connectionProfiles, setConnectionProfiles] = useState<
+    ProfileWithCompatibility[]
+  >([])
+  const [loading, setLoading] = useState<boolean>(false)
 
-  const imageWidth = 363
-  const itemMargin = 0
+  const [hasMore, setHasMore] = useState<boolean>(true)
+  const [page, setPage] = useState<number>(0)
+  const [currentIndex, setCurrentIndex] = useState<number>(0)
+  const [stopScroll, setStopScroll] = useState<boolean>(false)
+  const [endOfData, setEndOfData] = useState<boolean>(false)
 
-  const [currentIndex, setCurrentIndex] = useState(0)
-
+  const windowWidth = Dimensions.get("window").width
   const windowHeight = Dimensions.get("window").height
 
-  const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
-    if (viewableItems.length > 0) {
-      setCurrentIndex(viewableItems[0].index)
-    }
-  }).current
+  const getItemLayout = useCallback(
+    (data: any, index: number) => ({
+      length: windowWidth,
+      offset: windowWidth * index,
+      index,
+    }),
+    [windowWidth]
+  )
 
-  const viewabilityConfig = {
-    itemVisiblePercentThreshold: 50,
-  }
+  // const loadMoreProfiles = useCallback(async () => {
+  //   if (!user || loadingMore || !hasMore || loading) return
 
-  const fetchMoreProfiles = async () => {
-    if (loadingMore || loading || !user) return // Prevent multiple fetches
-    setLoadingMore(true)
-    await getConnectionProfiles(setLoading, user.id, appendProfiles, page)
-    setPage((prevPage) => prevPage + 1)
-    setLoadingMore(false)
-  }
+  //   try {
+  //     setLoadingMore(true)
+  //     console.log("Loading more profiles, page:", page) // Debug log
 
-  const appendProfiles = (newProfiles: Profile[]) => {
-    setConnectionProfiles((prevProfiles) => [...prevProfiles, ...newProfiles])
-  }
+  //     const newProfiles = await getConnectionProfiles(
+  //       setLoading,
+  //       user.id,
+  //       (profiles) => {
+  //         setConnectionProfiles((prev) => [...prev, ...profiles])
+  //       },
+  //       page
+  //     )
 
-  const fetchConnectionProfiles = async () => {
-    if (user) {
-      setLoading(true)
-      await getConnectionProfiles(
+  //     if (!newProfiles || newProfiles.length < PAGE_SIZE) {
+  //       console.log("No more profiles to load") // Debug log
+  //       setHasMore(false)
+  //     } else {
+  //       setPage((prev) => prev + 1)
+  //     }
+  //   } catch (error) {
+  //     console.error("Error loading more profiles:", error)
+  //   } finally {
+  //     setLoadingMore(false)
+  //   }
+  // }, [user, loadingMore, hasMore, loading, page])
+
+  const viewabilityConfig = useMemo(
+    () => ({
+      itemVisiblePercentThreshold: 100,
+      minimumViewTime: 2000,
+    }),
+    []
+  )
+  // const onViewableItemsChanged = useCallback(
+  //   ({ viewableItems }: any) => {
+  //     if (viewableItems.length > 0) {
+  //       const newIndex = viewableItems[0].index
+  //       setCurrentIndex(newIndex)
+
+  //       // Load more when user is within 2 items of the end
+  //       if (newIndex >= connectionProfiles.length - 2) {
+  //         console.log("Near end of list, loading more...") // Debug log
+  //         loadMoreProfiles()
+  //       }
+  //     }
+  //   },
+  //   [connectionProfiles.length, loadMoreProfiles]
+  // )
+
+  // Initial load
+  useEffect(() => {
+    if (user && connectionProfiles.length === 0) {
+      getConnectionProfiles(
         setLoading,
         user.id,
         setConnectionProfiles,
-        0 // Initial page
+        setEndOfData
       )
-
-      setLoading(false)
     }
-  }
+  }, [user])
 
-  useEffect(() => {
-    fetchConnectionProfiles()
-  }, [])
-
-  const renderCard = useCallback(({ item }: { item: Profile }) => {
-    return (
-      <View style={{ height: windowHeight }}>
+  const renderCard = useCallback(
+    ({ item }: { item: ProfileWithCompatibility }) => (
+      <View key={item.id} style={{ width: windowWidth, height: windowHeight }}>
         <ConnectionsScrollCard
           profile={item}
           loading={loading}
           setLoading={setLoading}
+          stopScroll={setStopScroll}
+          indexRef={currentIndex}
+          scrollFunction={scrollToIndex}
         />
       </View>
-    )
-  }, [])
+    ),
+    [windowWidth, windowHeight]
+  )
 
-  const cardKeyExtractor = useCallback((item: Profile, index: number) => {
-    return item.id + index.toString()
-  }, [])
+  const flatListRef = useRef<FlatList>(null)
+  const touchStartX = useRef(0)
+
+  const scrollToIndex = (index: number) => {
+    if (index >= 0 && index < connectionProfiles.length) {
+      flatListRef.current?.scrollToIndex({ index, animated: true })
+      setCurrentIndex(index)
+    }
+  }
 
   return (
     <View className="bg-black" style={{ flex: 1 }}>
@@ -94,27 +142,56 @@ const ConnectionsScroll = () => {
           showSearchCommunities={false}
           searchUsers={true}
         /> */}
-        {loadingMore && (
-          <View className="flex-1">
-            <ActivityIndicator size="large" color="#FFFFFF" />
-          </View>
-        )}
       </View>
+
       <FlatList
-        initialNumToRender={1}
-        disableIntervalMomentum={true}
-        snapToAlignment="center"
-        pagingEnabled={true}
-        decelerationRate="fast"
-        snapToInterval={windowHeight}
+        ref={flatListRef}
+        scrollEnabled={false}
+        horizontal
         data={connectionProfiles}
-        keyExtractor={cardKeyExtractor}
         renderItem={renderCard}
-        onEndReached={fetchMoreProfiles}
-        onEndReachedThreshold={0.5}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
-        showsVerticalScrollIndicator={false}
+        keyExtractor={(item) => item.id}
+        getItemLayout={getItemLayout}
+        bounces={true}
+        bouncesZoom={true}
+        initialScrollIndex={currentIndex}
+        onTouchMove={(e) => {
+          const currentX = e.nativeEvent.pageX
+          const diff = touchStartX.current - currentX
+
+          if (stopScroll) return
+          // Only allow forward movement (left swipes)
+          if (diff <= 0) {
+            const offset = currentIndex * windowWidth - diff
+            flatListRef.current?.scrollToOffset({
+              offset: offset,
+              animated: false,
+            })
+          }
+        }}
+        onTouchStart={(e) => {
+          if (stopScroll) return
+          touchStartX.current = e.nativeEvent.pageX
+        }}
+        onTouchEnd={(e) => {
+          if (stopScroll) return
+          const touchEndX = e.nativeEvent.pageX
+          const diff = touchStartX.current - touchEndX
+
+          //
+          if (Math.abs(diff) > 175) {
+            // Only proceed if swiping left AND not at the last card
+            if (diff <= 0 && currentIndex < connectionProfiles.length - 1) {
+              scrollToIndex(currentIndex + 1)
+            } else {
+              // Return to current position if swiping right
+              scrollToIndex(currentIndex - 0)
+            }
+          } else {
+            // Return to current position if swipe wasn't far enough
+            scrollToIndex(currentIndex)
+          }
+        }}
       />
     </View>
   )
