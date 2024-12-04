@@ -4,6 +4,10 @@ import {
   Pressable,
   TextInput,
   KeyboardAvoidingView,
+  TouchableOpacity,
+  useWindowDimensions,
+  ScrollView,
+  Keyboard,
 } from "react-native"
 import React, {
   Dispatch,
@@ -15,15 +19,17 @@ import React, {
   useState,
 } from "react"
 import { useAuth } from "../../../supabaseFunctions/authcontext"
-import { BottomSheetModal, useBottomSheetModal } from "@gorhom/bottom-sheet"
-import { FontAwesome6 } from "@expo/vector-icons"
+import {
+  BottomSheetModal,
+  BottomSheetView,
+  useBottomSheetModal,
+} from "@gorhom/bottom-sheet"
+import { FontAwesome5 } from "@expo/vector-icons"
 
 import { ChatSession, Profile } from "../../../@types/supabaseTypes"
 import requestConnection from "../../../supabaseFunctions/addFuncs/requestConnection"
 import useCurrentUser from "../../../supabaseFunctions/getFuncs/useCurrentUser"
 import supabase from "../../../../lib/supabase"
-import { useNavigation } from "@react-navigation/native"
-import { NavigationType } from "../../../@types/navigation"
 
 type MessageButtonProps = {
   coach: boolean
@@ -31,6 +37,30 @@ type MessageButtonProps = {
   loading: boolean
   setLoading: Dispatch<SetStateAction<boolean>>
   profilePic: string
+  indexRef: number
+  scrollFunction: (index: number) => void
+}
+
+const DefaultMessageButton = ({
+  text,
+  onPress,
+  inputRef,
+}: {
+  text: string
+  onPress: (text: string) => void
+  inputRef: React.RefObject<TextInput>
+}) => {
+  return (
+    <TouchableOpacity
+      className="border border-gray-600 rounded-full p-1 px-3 mx-1"
+      onPress={() => {
+        inputRef.current?.focus()
+        onPress(text)
+      }}
+    >
+      <Text className="text-white text-sm">{text}</Text>
+    </TouchableOpacity>
+  )
 }
 
 const MessageButton = ({
@@ -39,23 +69,19 @@ const MessageButton = ({
   setLoading,
   loading,
   profilePic,
+  indexRef,
+  scrollFunction,
 }: MessageButtonProps) => {
-  const [isPressed, setIsPressed] = useState<boolean>(false)
   const [message, setMessageToSend] = useState<string>("")
-  const [session, setSession] = useState<ChatSession | null>(null)
   const [isAlreadyConnected, setIsAlreadyConnected] = useState<boolean>(true)
   const { user } = useAuth()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const { dismiss } = useBottomSheetModal()
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
-  const navigation = useNavigation<NavigationType>()
+  const height = useWindowDimensions().height
+  const inputRef = useRef<TextInput>(null)
 
-  const handlePressIn = () => {
-    setIsPressed(true)
-  }
-  const handlePressOut = () => {
-    setIsPressed(false)
-  }
+  const DefaultMessages = ["Hello!", "How are you?", "What do you do?", "👋"]
 
   const getChatSession = async (
     userId: string,
@@ -63,7 +89,6 @@ const MessageButton = ({
     setBooleanState: Dispatch<SetStateAction<boolean>>
   ) => {
     try {
-      console.log(`user1.eq.${userId}.user2.eq.${user2Id}`)
       const { data: chatSessions, error } = await supabase
         .from("chat_sessions")
         .select()
@@ -79,7 +104,6 @@ const MessageButton = ({
       if (chatSessions.length > 0) {
         console.log("Chat session found", chatSessions)
         setBooleanState(true)
-        setSession(chatSessions[0])
       }
     } catch (error) {
       console.error("Error fetching chat session:", error)
@@ -87,7 +111,10 @@ const MessageButton = ({
     }
   }
 
-  const snapPoints = useMemo(() => ["25%", "50%"], [])
+  const snapPoints = useMemo(
+    () => ["25%", height > 700 ? "51%" : "58%"],
+    [height]
+  )
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present()
@@ -106,79 +133,95 @@ const MessageButton = ({
     getChatSession(user.id, profileId, setIsAlreadyConnected)
   }, [user, profileId])
 
+  useEffect(() => {
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        dismiss()
+      }
+    )
+
+    return () => {
+      keyboardDidHideListener.remove()
+    }
+  }, [dismiss])
+
   return (
     <>
-      <View className="flex flex-row justify-center m-1">
-        <View className="flex flex-row">
-          <Pressable
-            onPressIn={handlePressIn}
-            onPressOut={handlePressOut}
-            onPress={() => {
-              console.log("Pressed message button PLEASE WORK")
-              if (!isAlreadyConnected || !session) {
-                handlePresentModalPress()
-              } else {
-                console.log("Navigating to chat session")
-                if (!session) return
-                navigation.navigate("MessagingScreen", {
-                  chatSession: session,
-                })
-              }
-            }}
-            className={` ${
-              isPressed ? "bg-black" : "bg-white"
-            } border-2 rounded-full px-5 py-2 mx-1`}
-          >
-            <FontAwesome6
-              name="message"
-              size={26}
-              color={`${isPressed ? "white" : "black"}`}
-            />
-          </Pressable>
-        </View>
-      </View>
+      <TouchableOpacity
+        className="rounded bg-blue-600 p-2"
+        activeOpacity={0.7}
+        onPress={() => handlePresentModalPress()}
+      >
+        <Text className="text-white text-center text-xs font-semibold">
+          Send Partner Request
+        </Text>
+      </TouchableOpacity>
 
       <BottomSheetModal
         ref={bottomSheetModalRef}
         index={1}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
+        enablePanDownToClose={true}
+        backgroundStyle={{ backgroundColor: "#1b1d1f" }}
       >
-        <KeyboardAvoidingView className="flex flex-row justify-center pt-2 border-t items-center">
-          <TextInput
-            onSubmitEditing={async () => {
-              dismiss()
-            }}
-            autoFocus={true}
-            placeholder={loading ? "sending..." : "Send a Message"}
-            className=" flex-1 border rounded-xl h-8 w-64 p-2 "
-            value={message}
-            onChangeText={(message: string) => {
-              setMessageToSend(message)
-            }}
-          />
-          <Pressable
-            className="mx-2"
-            onPress={async () => {
-              setLoading(true)
-              if (!profileId || !user) return
-              console.log("profileId", profileId)
+        <BottomSheetView style={{ flex: 1 }}>
+          <KeyboardAvoidingView className="flex flex-row justify-center pt-2 border-t items-center">
+            <View className="flex-1">
+              <View className="flex-row justify-end items-center mx-2">
+                <TouchableOpacity onPress={() => dismiss()}>
+                  <FontAwesome5 name="times" size={24} color="white" />
+                </TouchableOpacity>
+              </View>
+              <ScrollView
+                keyboardShouldPersistTaps="always"
+                horizontal
+                className="m-1 z-10"
+              >
+                {DefaultMessages.map((message) => (
+                  <DefaultMessageButton
+                    key={message}
+                    text={message}
+                    onPress={(text: string) => setMessageToSend(text)}
+                    inputRef={inputRef}
+                  />
+                ))}
+              </ScrollView>
+              <View className="flex-row justify-center items-center">
+                <TextInput
+                  ref={inputRef}
+                  autoFocus={true}
+                  placeholder={loading ? "sending..." : "Send a Message"}
+                  className="flex-1 border rounded-xl h-8 w-64 p-2 mx-1 bg-white"
+                  value={message}
+                  onChangeText={setMessageToSend}
+                />
+                <Pressable
+                  className="mx-2"
+                  onPress={async () => {
+                    setLoading(true)
+                    if (!profileId || !user) return
 
-              await requestConnection(
-                currentUser?.first_name,
-                message,
-                user.id,
-                profileId,
-                profilePic
-              )
+                    await requestConnection(
+                      currentUser?.first_name,
+                      message,
+                      user.id,
+                      profileId,
+                      profilePic
+                    )
 
-              setLoading(false)
-              dismiss()
-            }}
-          >
-            <Text className="font-bold text-lg">Send</Text>
-          </Pressable>
-        </KeyboardAvoidingView>
+                    setLoading(false)
+                    dismiss()
+                    scrollFunction(indexRef + 1)
+                  }}
+                >
+                  <Text className="font-bold text-lg text-white">Send</Text>
+                </Pressable>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+        </BottomSheetView>
       </BottomSheetModal>
     </>
   )

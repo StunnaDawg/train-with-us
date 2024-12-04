@@ -113,6 +113,8 @@ const ConnectionsScroll = () => {
           loading={loading}
           setLoading={setLoading}
           stopScroll={setStopScroll}
+          indexRef={currentIndex}
+          scrollFunction={scrollToIndex}
         />
       </View>
     ),
