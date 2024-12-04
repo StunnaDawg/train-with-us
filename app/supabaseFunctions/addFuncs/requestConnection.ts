@@ -1,8 +1,8 @@
 import { FunctionsHttpError } from "@supabase/supabase-js"
 import supabase from "../../../lib/supabase"
-import showAlert from "../../utilFunctions/showAlert"
 import getUserToken from "../getFuncs/getUserExpoToken"
 import addNotification from "./addNotification"
+import { Dispatch, SetStateAction } from "react"
 
 const sendNotification = async (
   token: string,
@@ -50,7 +50,8 @@ const requestConnection = async (
   message: string,
   userId: string,
   user2Id: string,
-  user2ProfilePic: string | null
+  user2ProfilePic: string | null,
+  setShowAcceptedModal: Dispatch<SetStateAction<boolean>>
 ) => {
   try {
     const { error } = await supabase.from("connection_requests").insert([
@@ -67,11 +68,6 @@ const requestConnection = async (
       throw error
     }
 
-    showAlert({
-      title: "Request sent",
-      message: "Your connection request has been sent.",
-    })
-
     const expoPushToken = await getUserToken(user2Id)
 
     await sendNotification(
@@ -81,6 +77,7 @@ const requestConnection = async (
       user2Id,
       user2ProfilePic
     )
+    setShowAcceptedModal(true)
   } catch (error) {
     console.log(error)
   } finally {

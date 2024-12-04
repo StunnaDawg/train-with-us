@@ -8,6 +8,7 @@ import {
   useWindowDimensions,
   ScrollView,
   Keyboard,
+  Modal,
 } from "react-native"
 import React, {
   Dispatch,
@@ -39,6 +40,28 @@ type MessageButtonProps = {
   profilePic: string
   indexRef: number
   scrollFunction: (index: number) => void
+}
+
+const AcceptedModal = ({
+  showAcceptedModal,
+  setShowAcceptedModal,
+}: {
+  showAcceptedModal: boolean
+  setShowAcceptedModal: Dispatch<SetStateAction<boolean>>
+}) => {
+  return (
+    <Modal visible={showAcceptedModal} transparent={true} animationType="slide">
+      <View className="flex-1 justify-center items-center bg-primary-900 m-12 my-48 rounded-xl">
+        <Text className="text-white text-2xl font-bold">Request Sent!</Text>
+        <TouchableOpacity
+          onPress={() => setShowAcceptedModal(false)}
+          className="bg-blue-600 p-2 rounded-lg flex-row items-center"
+        >
+          <Text className="text-white text-lg font-bold">Close</Text>
+        </TouchableOpacity>
+      </View>
+    </Modal>
+  )
 }
 
 const DefaultMessageButton = ({
@@ -77,6 +100,7 @@ const MessageButton = ({
   const { user } = useAuth()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const { dismiss } = useBottomSheetModal()
+  const [showAcceptedModal, setShowAcceptedModal] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const height = useWindowDimensions().height
   const inputRef = useRef<TextInput>(null)
@@ -151,12 +175,19 @@ const MessageButton = ({
       <TouchableOpacity
         className="rounded bg-blue-600 p-2"
         activeOpacity={0.7}
-        onPress={() => handlePresentModalPress()}
+        onPress={() => {
+          handlePresentModalPress()
+        }}
       >
         <Text className="text-white text-center text-xs font-semibold">
           Send Partner Request
         </Text>
       </TouchableOpacity>
+
+      <AcceptedModal
+        showAcceptedModal={showAcceptedModal}
+        setShowAcceptedModal={setShowAcceptedModal}
+      />
 
       <BottomSheetModal
         ref={bottomSheetModalRef}
@@ -208,7 +239,8 @@ const MessageButton = ({
                       message,
                       user.id,
                       profileId,
-                      profilePic
+                      profilePic,
+                      setShowAcceptedModal
                     )
 
                     setLoading(false)
