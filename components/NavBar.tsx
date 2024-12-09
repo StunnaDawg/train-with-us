@@ -162,8 +162,6 @@ const NavBar = ({
             onPressIn={() => handlePressIn("message")}
             onPressOut={() => handlePressOut("message")}
             onPress={() => {
-              setNewMessage(false)
-
               navigation.navigate("UserEditProfile", {
                 userProfile: userProfile,
               })
