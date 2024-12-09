@@ -1,14 +1,18 @@
-import { View, Text } from "react-native"
+import { View, Text, Platform } from "react-native"
 import React, { useEffect, useState } from "react"
 import { Events, Profile } from "../../../@types/supabaseTypes"
 import { useNavigation } from "@react-navigation/native"
 import { NavigationType } from "../../../@types/navigation"
 import Checkout from "./Checkout"
 import Ionicons from "@expo/vector-icons/Ionicons"
-import { useLocationContext } from "../../../context/LocationContext"
-import parsePostGISPoint from "../../../utilFunctions/parsePostGISPoint"
 import * as Location from "expo-location"
+import MapView, {
+  Marker,
+  PROVIDER_DEFAULT,
+  PROVIDER_GOOGLE,
+} from "react-native-maps"
 import getDistanceFromUserWithAddress from "../../../utilFunctions/getDistanceFromUserWithAddress"
+import { getLongAndLat } from "../../../utilFunctions/getLongAndLat"
 
 type ViewEventDetailsProps = {
   date: string | null | undefined
@@ -83,9 +87,12 @@ const ViewEventDetails = ({
 }: ViewEventDetailsProps) => {
   const navigation = useNavigation<NavigationType>()
   const [distance, setDistance] = useState<number | null>(null)
-
+  const [eventCoords, setEventCoords] = useState<
+    Location.LocationObject["coords"] | null
+  >(null)
   useEffect(() => {
     if (location && userProfile?.location) {
+      console.log("location", location)
       const getDistance = async () => {
         const distance = await getDistanceFromUserWithAddress(
           userProfile?.location,
@@ -96,6 +103,15 @@ const ViewEventDetails = ({
       getDistance()
     }
   }, [location, userProfile?.location])
+
+  useEffect(() => {
+    if (location) {
+      const getLongAndLatFunc = async () => {
+        await getLongAndLat(location, setEventCoords)
+      }
+      getLongAndLatFunc()
+    }
+  }, [location])
 
   return (
     <>
@@ -167,18 +183,35 @@ const ViewEventDetails = ({
               </Text>
             </View>
 
-            {/*<View className="mb-1">
-              <Text className="text-white/80 text-xs font-normal">
-                {location}
-              </Text>
-            </View> */}
-
             <View className="flex flex-row items-center mb-1">
               <Ionicons name="location-outline" size={16} color="white" />
               <Text className="text-white/80 text-xs font-normal">
                 {distance ? distance.toFixed(1) : 0} km away
               </Text>
             </View>
+            {eventCoords && (
+              <MapView
+                initialRegion={{
+                  latitude: eventCoords?.latitude,
+                  longitude: eventCoords?.longitude,
+                  latitudeDelta: 0.01, // Controls zoom level - smaller number = more zoomed in
+                  longitudeDelta: 0.01, // Controls zoom level - smaller number = more zoomed in
+                }}
+                showsUserLocation={true}
+                zoomEnabled={true}
+                provider={
+                  Platform.OS === "android" ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
+                }
+                style={{ height: 200, width: "100%" }}
+              >
+                <Marker
+                  coordinate={{
+                    latitude: eventCoords?.latitude,
+                    longitude: eventCoords?.longitude,
+                  }}
+                />
+              </MapView>
+            )}
           </View>
         </View>
       </View>
