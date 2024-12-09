@@ -24,7 +24,7 @@ type EventCardProps = {
   communityId: number | null
   eventCoverPhoto: string | null
   eventPrice: number | null
-  eventCompatibility?: number | null
+  eventCompatibility: number | null
   eventAddress: string | null
   userLocation: any
 }
@@ -87,7 +87,13 @@ const EventCard = ({
                 <View className="flex-row items-center justify-between">
                   <View className="flex-row items-center gap-1">
                     <FontAwesome5 name="fire-alt" size={16} color="green" />
-                    <Text className="text-lg font-bold text-white">98%</Text>
+                    <Text className="text-[16px] font-bold text-white">
+                      {eventCompatibility
+                        ? Number(eventCompatibility) > 100
+                          ? "100%"
+                          : `${eventCompatibility.toFixed(0)}%`
+                        : "0%"}
+                    </Text>
                   </View>
 
                   <View className="flex-row items-center gap-1">

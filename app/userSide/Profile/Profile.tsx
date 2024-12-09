@@ -14,6 +14,7 @@ import getAllUsersCommunities from "../../supabaseFunctions/getFuncs/getUsersCom
 import getFriendCount from "../../utilFunctions/getFriendCount"
 import getUsersEvents from "../../supabaseFunctions/getFuncs/getUsersEvents"
 import formatTimestampShort from "../../utilFunctions/formatTimeStampShort"
+import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommunity"
 
 type CommunityButtonProps = {
   backGroundColour: string
@@ -146,6 +147,7 @@ const ProfileView = () => {
   const [suggestedCommunities, setSuggestedCommunities] = useState<
     Communities[] | null
   >(null)
+  const [primaryGym, setPrimaryGym] = useState<Communities | null>(null)
   const [communityFriendCounts, setCommunityFriendCounts] = useState<{
     [key: number]: number
   }>({})
@@ -153,6 +155,7 @@ const ProfileView = () => {
     [key: number]: number
   }>({})
   const [loading, setLoading] = useState<boolean>(false)
+  const navigation = useNavigation<NavigationType>()
 
   const fetchSuggestedCommunities = async () => {
     const { data: communities, error } = await supabase
@@ -213,7 +216,6 @@ const ProfileView = () => {
         const listLength = await getFriendsLength(user.id)
         await getAllUsersCommunities(user.id, setLoading, setCommunities)
         await getUsersEvents(user.id, setEvents)
-
         setFriendsList(listLength)
 
         await fetchSuggestedCommunities()
@@ -221,6 +223,19 @@ const ProfileView = () => {
     }
     getUsersData()
   }, [user])
+
+  useEffect(() => {
+    const getUsersPrimaryGym = async () => {
+      if (userProfile?.primary_gym) {
+        await getSingleCommunity(
+          setLoading,
+          userProfile?.primary_gym,
+          setPrimaryGym
+        )
+      }
+    }
+    getUsersPrimaryGym()
+  }, [userProfile?.primary_gym])
 
   return (
     <SafeAreaView className="flex-1 bg-primary-900">
@@ -238,20 +253,49 @@ const ProfileView = () => {
             <View>
               <View>
                 <View className="items-center">
-                  <View className="items-center">
-                    <SinglePicCommunity
-                      size={50}
-                      avatarRadius={100}
-                      noAvatarRadius={100}
-                      item={userProfile?.profile_pic}
-                    />
-                    <Text className="text-white text-xl font-bold">
-                      Blended Athletics
-                    </Text>
-                  </View>
-                  <TouchableOpacity>
-                    <Text className="text-blue-600">Primary Location</Text>
-                  </TouchableOpacity>
+                  {userProfile?.primary_gym ? (
+                    <View className="items-center">
+                      <SinglePicCommunity
+                        size={50}
+                        avatarRadius={100}
+                        noAvatarRadius={100}
+                        item={primaryGym?.community_profile_pic}
+                      />
+                      <Text className="text-white text-xl font-bold">
+                        {primaryGym?.community_title}
+                      </Text>
+                    </View>
+                  ) : null}
+                  {userProfile?.primary_gym ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (primaryGym) {
+                          navigation.navigate("CommunityPage", {
+                            community: primaryGym,
+                          })
+                        }
+                      }}
+                    >
+                      <Text className="text-blue-600">Primary Community</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate("UserEditProfile", {
+                          userProfile: userProfile,
+                        })
+                      }}
+                    >
+                      <Text className="text-blue-600">
+                        Add Primary Community
+                      </Text>
+                      <Ionicons
+                        name="add-circle-outline"
+                        size={24}
+                        color="white"
+                      />
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
             </View>

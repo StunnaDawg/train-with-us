@@ -26,6 +26,7 @@ import checkIfWaitlisted from "../../supabaseFunctions/checkIfWaitlisted"
 import getWaitListUsers from "../../supabaseFunctions/getFuncs/getWaitlistUsers"
 import { NavBar } from "../../../components"
 import getSingleCommunity from "../../supabaseFunctions/getFuncs/getSingleCommunity"
+import supabase from "../../../lib/supabase"
 
 const ViewEvent = () => {
   const [loading, setLoading] = useState<boolean>(true)
@@ -36,6 +37,9 @@ const ViewEvent = () => {
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const [eventProfiles, setEventProfiles] = useState<Profile[] | null>(null)
   const [waitlistProfiles, setWaitlistProfiles] = useState<Profile[] | null>(
+    null
+  )
+  const [eventCompatibility, setEventCompatibility] = useState<number | null>(
     null
   )
   const [communityHost, setCommunityHost] = useState<Communities | null>(null)
@@ -58,6 +62,23 @@ const ViewEvent = () => {
   useEffect(() => {
     if (eventId === undefined) return
     getSingleEvent(setLoading, eventId, setEvent)
+  }, [])
+
+  useEffect(() => {
+    if (eventId === undefined) return
+    const rpcFunc = async () => {
+      const { data: score, error } = await supabase.rpc(
+        "get_event_compatibility",
+        {
+          user_id: userProfile?.id,
+          event_id: eventId,
+        }
+      )
+      if (error) throw error
+      console.log("eventCompatibility", score)
+      setEventCompatibility(score)
+    }
+    rpcFunc()
   }, [])
 
   useEffect(() => {
@@ -125,6 +146,7 @@ const ViewEvent = () => {
                   title={event?.event_title}
                   communityHost={communityHost}
                   event={event}
+                  matchPercentage={eventCompatibility}
                 />
               </View>
 

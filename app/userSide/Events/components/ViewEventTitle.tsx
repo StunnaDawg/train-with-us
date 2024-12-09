@@ -9,12 +9,14 @@ type ViewEventTitleProps = {
   title: string | null | undefined
   communityHost: Communities | null
   event: Events | null
+  matchPercentage: number | null
 }
 
 const ViewEventTitle = ({
   title,
   communityHost,
   event,
+  matchPercentage,
 }: ViewEventTitleProps) => {
   const screenWidth = Dimensions.get("window").width
   return (
@@ -22,7 +24,13 @@ const ViewEventTitle = ({
       <View className="flex flex-row justify-center items-center">
         <View className="flex flex-row justify-center items-center absolute top-0 z-10 bg-black/50 w-full p-3">
           <FontAwesome5 name="fire-alt" size={20} color="green" />
-          <Text className="text-green-400 text-sm font-bold mx-1">98%</Text>
+          <Text className="text-green-400 text-sm font-bold mx-1">
+            {matchPercentage
+              ? Number(matchPercentage) > 100
+                ? "100%"
+                : `${matchPercentage.toFixed(0)}%`
+              : "0%"}
+          </Text>
         </View>
         <EventCoverPic
           height={300}

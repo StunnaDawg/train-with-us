@@ -42,6 +42,9 @@
       ]
     ],
     "ios": {
+      "config": {
+        "googleMapsApiKey": "AIzaSyBPSbsh0bTdBJNKAGvvdYUhdu03_w9xW_w"
+      },
       "supportsTablet": true,
       "bundleIdentifier": "com.stunnacat.trainwithus",
       "buildNumber": "20",
